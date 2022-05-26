@@ -1,0 +1,33 @@
+[app]
+name = "mcenter"
+key  = "this is your app key"
+
+[app.http]
+host = "127.0.0.1"
+port = "8050"
+
+[app.grpc]
+host = "127.0.0.1"
+port = "18050"
+
+
+[keyauth]
+host = "127.0.0.1"
+port = "18050"
+client_id = "sdfdf"
+client_secret = "sdfsfd"
+
+
+
+
+[mongodb]
+endpoints = ["127.0.0.1:27017"]
+username = "mcenter"
+password = "123456"
+database = "mcenter"
+
+[log]
+level = "debug"
+path = "logs"
+format = "text"
+to = "stdout"

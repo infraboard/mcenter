@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package infraboard.mcenter.instance;
+option go_package = "github.com/infraboard/mcenter/apps/instance";
+
+// 服务实例信息
+message Instance {
+    // 实例所属环境, 默认default
+    // @gotags: bson:"environment" json:"environment"
+    string environment = 1;
+    // 实例所属分组,默认default
+    // @gotags: bson:"group" json:"group"
+    string group = 2;
+    // 实例所属应用Id
+    // @gotags: bson:"application_id" json:"application_id"
+    string application_id = 3;
+    // 实例名称
+    // @gotags: bson:"name" json:"name"
+    string name = 4;
+    // 实例地址
+    // @gotags: bson:"address" json:"address"
+    string address = 5;
+    // 实例标签, 可以根据标签快速过滤实例
+    // @gotags: bson:"lables" json:"lables"
+    map<string,string> lables = 6;
+    // 实例构建信息
+    // @gotags: bson:"build" json:"build"
+    Build build = 7;
+    // 实例状态
+    // @gotags: bson:"status" json:"status"
+    Status status = 8;
+}
+
+// 实例构建相关信息
+message Build {
+    // 实例版本
+    // @gotags: bson:"version" json:"version"
+    string version = 1;
+    // 实例代码构建对应分支
+    // @gotags: bson:"git_branch" json:"git_branch"
+    string git_branch = 2;
+    // 实例代码对应commit号
+    // @gotags: bson:"git_commit" json:"git_commit"
+    string git_commit = 3;
+    // 实例构建时间
+    // @gotags: bson:"build_at" json:"build_at"
+    int64 build_at = 4;
+}
+
+message Status {
+    // 上线时间
+    // @gotags: bson:"online" json:"online"
+    int64 online = 5;
+}
+
+
+// // Node todo
+// type Node struct {
+//     Region          string            `json:"region,omitempty"`
+//     ResourceVersion int64             `json:"resourceVersion,omitempty"`
+//     InstanceName    string            `json:"instance_name,omitempty"`
+//     ServiceName     string            `json:"service_name,omitempty"`
+//     Type            Type              `json:"type,omitempty"`
+//     Address         string            `json:"address,omitempty"`
+//     Version         string            `json:"version,omitempty"`
+//     GitBranch       string            `json:"git_branch,omitempty"`
+//     GitCommit       string            `json:"git_commit,omitempty"`
+//     BuildEnv        string            `json:"build_env,omitempty"`
+//     BuildAt         string            `json:"build_at,omitempty"`
+//     Online          int64             `json:"online,omitempty"`
+//     Tag             map[string]string `json:"tag,omitempty"`
+
+//     Prefix   string        `json:"-"`
+//     Interval time.Duration `json:"-"`
+//     TTL      int64         `json:"-"`
+// }

@@ -1,0 +1,9 @@
+pkg: github.com/infraboard/mcenter
+name: mcenter
+description: 基于Etcd的微服务注册中心
+enable_keyauth: true
+enable_mysql: false
+enable_mongodb: true
+gen_example: true
+http_framework: go-restful
+enable_cache: false
