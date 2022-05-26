@@ -29,48 +29,130 @@ message Application {
     // 微服务ID
     // @gotags: bson:"_id" json:"id"
     string id = 1;
-    // 服务所属域
-    // @gotags: bson:"domain" json:"domain"
-    string domain = 2;
-    // 创建人
-    // @gotags: bson:"creater" json:"creater"
-    string creater = 3;
     // 创建的时间
-    // @gotags: bson:"create_at" json:"create_at,omitempty"
+    // @gotags: bson:"create_at" json:"create_at"
     int64 create_at = 4;
     // 更新时间
-    // @gotags: bson:"update_at" json:"update_at,omitempty"
+    // @gotags: bson:"update_at" json:"update_at"
     int64 update_at = 5;
-    // 服务账号
-    // @gotags: bson:"account" json:"account"
-    string account = 6;
-    // 服务客户端ID
-    // @gotags: bson:"client_id" json:"client_id"
-    string client_id = 7;
-    // 服务客户端凭证
-    // @gotags: bson:"client_secret" json:"client_secret"
-    string client_secret = 8;
-    // 是否启动客户端
-    // @gotags: bson:"client_enabled" json:"client_enabled"
-    bool client_enabled = 9;
-    // 客户端刷新时间
-    // @gotags: bson:"client_refresh_at" json:"client_refresh_at"
-    int64 client_refresh_at = 10;
-    // 是否启用该服务
+    // 服务定义
+    // @gotags: bson:"spec" json:"spec"
+    CreateApplicationRequest spec = 6;
+    // 服务的凭证, 用于服务注册
+    // @gotags: bson:"credential" json:"credential"
+    Credential credential = 7;
+    // 服务安全所需配置
+    // @gotags: bson:"security" json:"security"
+    Security security = 8;
+}
+
+message CreateApplicationRequest {
+    // 服务所属域
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 1;
+    // 服务所属空间
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 2;
+    // 应用所有者
+    // @gotags: bson:"owner" json:"owner"
+    string owner = 3;
+    // 是否启用该服务, 服务如果被停用，将不会被发现
     // @gotags: bson:"enabled" json:"enabled"
-    bool enabled = 11;
+    bool enabled = 4;
     // 服务类型
     // @gotags: bson:"type" json:"type"
-    Type type = 12;
-    // 名称
+    Type type = 5;
+    // 服务名称
     // @gotags: bson:"name" json:"name"
-    string name = 13;
+    string name = 6;
+    // 服务描述信息
+    // @gotags: bson:"description" json:"description"
+    string description = 7;
+    // 仓库地址
+    // @gotags: bson:"repository" json:"repository"
+    Repository repository = 8;
     // 服务标签
     // @gotags: bson:"label" json:"label"
-    map<string, string> label = 14;
-    // 描述信息
-    // @gotags: bson:"description" json:"description,omitempty"
-    string description = 15;
+    map<string, string> tags = 14;
+}
+
+message Credential {
+    // 是否启动客户端
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 1;
+    // 凭证更新时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 2;
+    // 服务客户端ID
+    // @gotags: bson:"client_id" json:"client_id"
+    string client_id = 3;
+    // 服务客户端凭证
+    // @gotags: bson:"client_secret" json:"client_secret"
+    string client_secret = 4;
+}
+
+// SCM_TYPE 源码仓库类型
+enum SCM_PROVIDER {
+    // gitlab
+    GITLAB = 0;
+	// github
+	GITHUB = 1;
+	// coding.net
+	CODING = 2;
+}
+
+enum LANGUAGE {
+    JAVA = 0;
+    JAVASCRIPT = 1;
+    GOLANG = 2;
+    PYTHON = 3;
+    PHP = 4;
+    C_SHARP = 5;
+    C = 6;
+    C_PLUS_PLUS = 7;
+    SWIFT = 8;
+    OBJECT_C = 9;
+    RUST = 10;
+    RUBY = 11;
+    DART = 12;
+    KOTLIN = 13;
+    SHELL = 14;
+    POWER_SHELL = 15;
+}
+
+// 服务仓库信息
+message Repository {
+    // 仓库提供商
+    // @gotags: bson:"provider" json:"provider"
+    SCM_PROVIDER provider = 1;
+    // token 操作仓库, 比如设置回调
+    // @gotags: bson:"token" json:"token"
+    string token = 2;
+    // 仓库对应的项目Id
+    // @gotags: bson:"project_id" json:"project_id"
+    string project_id = 3;
+    // 仓库ssh url地址
+    // @gotags: bson:"ssh_url" json:"ssh_url"
+    string ssh_url = 4;
+    // 仓库http url地址
+    // @gotags: bson:"http_url" json:"http_url"
+    string http_url = 5;
+    // 源代码使用的编程语言, 构建时, 不同语言有不同的构建环境
+    // @gotags: bson:"language" json:"language"
+    LANGUAGE language = 6;
+    // scm设置Hook后返回的id, 用于删除应用时，取消hook使用
+    // @gotags: bson:"hook_id" json:"hook_id"
+    string hook_id = 7;
+    // 创建hook过程中的错误信息
+    // @gotags: bson:"hook_error" json:"hook_error"
+    string hook_error = 8;
+}
+
+// 服务安全相关信息
+message Security {
+    // 用于加密应用的铭感信息的key
+    // @gotags: bson:"encrypt_key" json:"encrypt_key"
+    string encrypt_key = 1;
 }
 
 message Set {

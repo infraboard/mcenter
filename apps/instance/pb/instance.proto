@@ -3,32 +3,35 @@ syntax = "proto3";
 package infraboard.mcenter.instance;
 option go_package = "github.com/infraboard/mcenter/apps/instance";
 
-// 服务实例信息
+// 服务实例信息, 比如 阿里云_杭州/生产环境/app01/default/instance01
 message Instance {
     // 实例所属环境, 默认default
+    // @gotags: bson:"region" json:"region"
+    string region = 1;
+    // 实例所属环境, 默认default
     // @gotags: bson:"environment" json:"environment"
-    string environment = 1;
+    string environment = 2;
     // 实例所属分组,默认default
     // @gotags: bson:"group" json:"group"
-    string group = 2;
+    string group = 3;
     // 实例所属应用Id
     // @gotags: bson:"application_id" json:"application_id"
-    string application_id = 3;
+    string application_id = 4;
     // 实例名称
     // @gotags: bson:"name" json:"name"
-    string name = 4;
+    string name = 5;
     // 实例地址
     // @gotags: bson:"address" json:"address"
-    string address = 5;
+    string address = 6;
     // 实例标签, 可以根据标签快速过滤实例
     // @gotags: bson:"lables" json:"lables"
-    map<string,string> lables = 6;
+    map<string,string> lables = 7;
     // 实例构建信息
     // @gotags: bson:"build" json:"build"
-    Build build = 7;
+    Build build = 8;
     // 实例状态
     // @gotags: bson:"status" json:"status"
-    Status status = 8;
+    Status status = 9;
 }
 
 // 实例构建相关信息
