@@ -3,8 +3,24 @@ syntax = "proto3";
 package infraboard.mcenter.instance;
 option go_package = "github.com/infraboard/mcenter/apps/instance";
 
+service Service {
+    rpc Registry(RegistryRequest) returns(RegistryResponse);
+}
+
 // 服务实例信息, 比如 阿里云_杭州/生产环境/app01/default/instance01
 message Instance {
+    // 实例所属应用Id
+    // @gotags: bson:"application_id" json:"application_id"
+    string application_id = 1;
+    // 实例注册相关信息
+    // @gotags: bson:"spec" json:"spec"
+    RegistryRequest spec = 2;
+    // 实例状态
+    // @gotags: bson:"status" json:"status"
+    Status status = 3;
+}
+
+message RegistryRequest {
     // 实例所属环境, 默认default
     // @gotags: bson:"region" json:"region"
     string region = 1;
@@ -14,24 +30,18 @@ message Instance {
     // 实例所属分组,默认default
     // @gotags: bson:"group" json:"group"
     string group = 3;
-    // 实例所属应用Id
-    // @gotags: bson:"application_id" json:"application_id"
-    string application_id = 4;
     // 实例名称
     // @gotags: bson:"name" json:"name"
-    string name = 5;
+    string name = 4;
     // 实例地址
     // @gotags: bson:"address" json:"address"
-    string address = 6;
+    string address = 5;
     // 实例标签, 可以根据标签快速过滤实例
-    // @gotags: bson:"lables" json:"lables"
-    map<string,string> lables = 7;
+    // @gotags: bson:"tags" json:"tags"
+    map<string,string> tags = 6;
     // 实例构建信息
     // @gotags: bson:"build" json:"build"
-    Build build = 8;
-    // 实例状态
-    // @gotags: bson:"status" json:"status"
-    Status status = 9;
+    Build build = 7;
 }
 
 // 实例构建相关信息
@@ -54,6 +64,21 @@ message Status {
     // 上线时间
     // @gotags: bson:"online" json:"online"
     int64 online = 5;
+}
+
+message RegistryResponse {
+    // 心跳设置
+    // @gotags: bson:"heart_beat" json:"heart_beat"
+    HeartBeat heart_beat = 1;
+}
+
+message HeartBeat {
+    // 心跳间隔
+    // @gotags: bson:"interval" json:"interval"
+    int32 interval = 1;
+    // 心跳超时时间, 单位秒
+    // @gotags: bson:"timeout" json:"timeout"
+    int32 timeout = 2;
 }
 
 
