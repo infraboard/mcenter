@@ -4,20 +4,42 @@ package infraboard.mcenter.instance;
 option go_package = "github.com/infraboard/mcenter/apps/instance";
 
 service Service {
+    // 实例注册
     rpc Registry(RegistryRequest) returns(RegistryResponse);
+    // 实例上报心跳
+    rpc Heartbeat(HeartbeatRequest) returns(HeartbeatResponse);
+    // 实例注销
+    rpc UnRegistry(UnregistryRequest) returns(UnregistryResponse);
+    // 实例搜索, 用于客户端做服务发现
+    rpc Search(SearchRequest) returns(InstanceSet);
 }
 
 // 服务实例信息, 比如 阿里云_杭州/生产环境/app01/default/instance01
 message Instance {
+    // 服务所属域
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 1;
+    // 服务所属空间
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 2;
     // 实例所属应用Id
-    // @gotags: bson:"application_id" json:"application_id"
-    string application_id = 1;
+    // @gotags: bson:"application_name" json:"application_name"
+    string application_name = 3;
     // 实例注册相关信息
-    // @gotags: bson:"spec" json:"spec"
-    RegistryRequest spec = 2;
+    // @gotags: bson:"registry_info" json:"registry_info"
+    RegistryRequest registry_info = 4;
     // 实例状态
     // @gotags: bson:"status" json:"status"
-    Status status = 3;
+    Status status = 5;
+}
+
+message InstanceSet {
+    // 总个数
+    // @gotags: bson:"status" json:"status"
+    int64 total = 1;
+    // 实例列表
+    // @gotags: bson:"status" json:"status"
+    repeated Instance items = 2;
 }
 
 message RegistryRequest {
@@ -69,10 +91,10 @@ message Status {
 message RegistryResponse {
     // 心跳设置
     // @gotags: bson:"heart_beat" json:"heart_beat"
-    HeartBeat heart_beat = 1;
+    HeartbeatConfig heartbeat = 1;
 }
 
-message HeartBeat {
+message HeartbeatConfig {
     // 心跳间隔
     // @gotags: bson:"interval" json:"interval"
     int32 interval = 1;
@@ -81,6 +103,43 @@ message HeartBeat {
     int32 timeout = 2;
 }
 
+message HeartbeatRequest {
+}
+
+message HeartbeatResponse {
+    // 客户端下一次心跳包的发送间隔, 单位秒
+    // @gotags: bson:"next" json:"next"
+    int32 next = 1;
+}
+
+message UnregistryRequest {
+
+}
+
+message UnregistryResponse {
+
+}
+
+message SearchRequest {
+    // 服务所属域
+    // @gotags: bson:"domain" json:"domain" validate:"required"
+    string domain = 1;
+    // 服务所属空间
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 2;
+    // 实例所属应用Id
+    // @gotags: bson:"application_name" json:"application_name"
+    string application_name = 3;
+    // 实例所属环境, 默认default
+    // @gotags: bson:"region" json:"region"
+    string region = 4;
+    // 实例所属环境, 默认default
+    // @gotags: bson:"environment" json:"environment"
+    string environment = 5;
+    // 实例所属分组,默认default
+    // @gotags: bson:"group" json:"group"
+    string group = 6;
+}
 
 // // Node todo
 // type Node struct {
