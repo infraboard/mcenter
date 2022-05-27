@@ -22,7 +22,14 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
+	// 实例注册
 	Registry(ctx context.Context, in *RegistryRequest, opts ...grpc.CallOption) (*RegistryResponse, error)
+	// 实例上报心跳
+	Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error)
+	// 实例注销
+	UnRegistry(ctx context.Context, in *UnregistryRequest, opts ...grpc.CallOption) (*UnregistryResponse, error)
+	// 实例搜索, 用于客户端做服务发现
+	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*InstanceSet, error)
 }
 
 type serviceClient struct {
@@ -42,11 +49,45 @@ func (c *serviceClient) Registry(ctx context.Context, in *RegistryRequest, opts 
 	return out, nil
 }
 
+func (c *serviceClient) Heartbeat(ctx context.Context, in *HeartbeatRequest, opts ...grpc.CallOption) (*HeartbeatResponse, error) {
+	out := new(HeartbeatResponse)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.Service/Heartbeat", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) UnRegistry(ctx context.Context, in *UnregistryRequest, opts ...grpc.CallOption) (*UnregistryResponse, error) {
+	out := new(UnregistryResponse)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.Service/UnRegistry", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*InstanceSet, error) {
+	out := new(InstanceSet)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.Service/Search", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ServiceServer is the server API for Service service.
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
 type ServiceServer interface {
+	// 实例注册
 	Registry(context.Context, *RegistryRequest) (*RegistryResponse, error)
+	// 实例上报心跳
+	Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error)
+	// 实例注销
+	UnRegistry(context.Context, *UnregistryRequest) (*UnregistryResponse, error)
+	// 实例搜索, 用于客户端做服务发现
+	Search(context.Context, *SearchRequest) (*InstanceSet, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -56,6 +97,15 @@ type UnimplementedServiceServer struct {
 
 func (UnimplementedServiceServer) Registry(context.Context, *RegistryRequest) (*RegistryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Registry not implemented")
+}
+func (UnimplementedServiceServer) Heartbeat(context.Context, *HeartbeatRequest) (*HeartbeatResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Heartbeat not implemented")
+}
+func (UnimplementedServiceServer) UnRegistry(context.Context, *UnregistryRequest) (*UnregistryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnRegistry not implemented")
+}
+func (UnimplementedServiceServer) Search(context.Context, *SearchRequest) (*InstanceSet, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -88,6 +138,60 @@ func _Service_Registry_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_Heartbeat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HeartbeatRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).Heartbeat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infraboard.mcenter.instance.Service/Heartbeat",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).Heartbeat(ctx, req.(*HeartbeatRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_UnRegistry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnregistryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).UnRegistry(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infraboard.mcenter.instance.Service/UnRegistry",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).UnRegistry(ctx, req.(*UnregistryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).Search(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infraboard.mcenter.instance.Service/Search",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).Search(ctx, req.(*SearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Service_ServiceDesc is the grpc.ServiceDesc for Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +202,18 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Registry",
 			Handler:    _Service_Registry_Handler,
+		},
+		{
+			MethodName: "Heartbeat",
+			Handler:    _Service_Heartbeat_Handler,
+		},
+		{
+			MethodName: "UnRegistry",
+			Handler:    _Service_UnRegistry_Handler,
+		},
+		{
+			MethodName: "Search",
+			Handler:    _Service_Search_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
