@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/infraboard/mcenter/apps/book"
+	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/client"
 )
 
@@ -21,9 +21,9 @@ func TestBookQuery(t *testing.T) {
 	// conf.SetClientCredentials("secret_id", "secret_key")
 	c, err := client.NewClient(conf)
 	if should.NoError(err) {
-		resp, err := c.Book().QueryBook(
+		resp, err := c.Instance().Search(
 			context.Background(),
-			book.NewQueryBookRequest(),
+			&instance.SearchRequest{},
 		)
 		should.NoError(err)
 		fmt.Println(resp.Items)

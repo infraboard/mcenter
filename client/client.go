@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/infraboard/mcenter/apps/book"
+	"github.com/infraboard/mcenter/apps/instance"
 )
 
 var (
@@ -50,7 +50,7 @@ type ClientSet struct {
 	log  logger.Logger
 }
 
-// Book服务的SDK
-func (c *ClientSet) Book() book.ServiceClient {
-	return book.NewServiceClient(c.conn)
+// Instance服务的SDK
+func (c *ClientSet) Instance() instance.ServiceClient {
+	return instance.NewServiceClient(c.conn)
 }

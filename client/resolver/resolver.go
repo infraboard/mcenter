@@ -1,6 +1,12 @@
 package resolver
 
 import (
+	"context"
+	"time"
+
+	"github.com/infraboard/mcenter/apps/instance"
+	"github.com/infraboard/mcube/logger"
+	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc/resolver"
 )
 
@@ -14,50 +20,69 @@ import (
 // is built for each ClientConn. The Resolver will watch the updates for the
 // target, and send updates to the ClientConn.
 
-// exampleResolverBuilder is a
-// ResolverBuilder(https://godoc.org/google.golang.org/grpc/resolver#Builder).
-type exampleResolverBuilder struct{}
+// McenterResolverBuilder is a ResolverBuilder.
+type McenterResolverBuilder struct{}
 
 var (
 	exampleServiceName = "test"
-	exampleScheme      = "mcenter"
-	backendAddr        = "127.0.0.1"
 )
 
-func (*exampleResolverBuilder) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOptions) (resolver.Resolver, error) {
-	r := &exampleResolver{
-		target: target,
-		cc:     cc,
-		addrsStore: map[string][]string{
-			exampleServiceName: {backendAddr},
-		},
+func (*McenterResolverBuilder) Build(
+	target resolver.Target,
+	cc resolver.ClientConn,
+	opts resolver.BuildOptions) (
+	resolver.Resolver, error) {
+	r := &mcenterResolver{
+		target:             target,
+		cc:                 cc,
+		queryTimeoutSecond: 3 * time.Second,
+		log:                zap.L().Named("Mcenter Resolver"),
 	}
-	r.start()
 	return r, nil
 }
-func (*exampleResolverBuilder) Scheme() string { return exampleScheme }
+
+func (*McenterResolverBuilder) Scheme() string {
+	return "mcenter"
+}
 
 // exampleResolver is a
 // Resolver(https://godoc.org/google.golang.org/grpc/resolver#Resolver).
-type exampleResolver struct {
-	target     resolver.Target
-	cc         resolver.ClientConn
-	addrsStore map[string][]string
+type mcenterResolver struct {
+	target             resolver.Target
+	cc                 resolver.ClientConn
+	mcenter            instance.ServiceClient
+	queryTimeoutSecond time.Duration
+	log                logger.Logger
 }
 
-func (r *exampleResolver) start() {
-	addrStrs := r.addrsStore[r.target.Endpoint]
-	addrs := make([]resolver.Address, len(addrStrs))
-	for i, s := range addrStrs {
-		addrs[i] = resolver.Address{Addr: s}
+func (m *mcenterResolver) ResolveNow(o resolver.ResolveNowOptions) {
+	// 设置查询的超时时间
+	ctx, cancel := context.WithTimeout(context.Background(), m.queryTimeoutSecond)
+	defer cancel()
+
+	// 从mcenter中查询该target对应的服务实例
+	searchReq := instance.NewSearchRequest()
+	addrStrs, err := m.mcenter.Search(ctx, searchReq)
+	if err != nil {
+		m.log.Errorf("search target %s error, %s", m.target, err)
+		return
 	}
-	r.cc.UpdateState(resolver.State{Addresses: addrs})
+
+	// 更新给client
+	addrs := make([]resolver.Address, len(addrStrs.Items))
+	for i, s := range addrStrs.Items {
+		addrs[i] = resolver.Address{Addr: s.RegistryInfo.Address}
+	}
+
+	m.cc.UpdateState(resolver.State{Addresses: addrs})
 }
-func (*exampleResolver) ResolveNow(o resolver.ResolveNowOptions) {}
-func (*exampleResolver) Close()                                  {}
+
+func (m *mcenterResolver) Close() {
+
+}
 
 func init() {
-	// Register the example ResolverBuilder. This is usually done in a package's
+	// Register the mcenter ResolverBuilder. This is usually done in a package's
 	// init() function.
-	resolver.Register(&exampleResolverBuilder{})
+	resolver.Register(&McenterResolverBuilder{})
 }
