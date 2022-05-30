@@ -17,9 +17,6 @@ port = "18050"
 client_id = "sdfdf"
 client_secret = "sdfsfd"
 
-
-
-
 [mongodb]
 endpoints = ["127.0.0.1:27017"]
 username = "mcenter"

@@ -1,10 +1,22 @@
 package client
 
-import (
-	kc "github.com/infraboard/keyauth/client"
-)
-
 // NewDefaultConfig todo
-func NewDefaultConfig() *kc.Config {
-	return kc.NewDefaultConfig()
+func NewDefaultConfig() *Config {
+	return &Config{
+		Address: "localhost:18050",
+	}
+}
+
+// Config 客户端配置
+type Config struct {
+	Address      string `toml:"adress" yaml:"adress" env:"MCENTER_ADDRESS"`
+	ClientID     string `toml:"client_id" yaml:"client_id" env:"MCENTER_CLINET_ID"`
+	ClientSecret string `toml:"client_secret" yaml:"client_secret" env:"MCENTER_CLIENT_SECRET"`
+}
+
+func (c *Config) Credentials() *Authentication {
+	return &Authentication{
+		clientID:     c.ClientID,
+		clientSecret: c.ClientSecret,
+	}
 }

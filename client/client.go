@@ -1,7 +1,7 @@
 package client
 
 import (
-	kc "github.com/infraboard/keyauth/client"
+	"github.com/caarlos0/env/v6"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -14,25 +14,37 @@ var (
 	client *ClientSet
 )
 
-// SetGlobal todo
-func SetGlobal(cli *ClientSet) {
-	client = cli
-}
-
-// C Global
 func C() *ClientSet {
+	if client == nil {
+		panic("mcenter client config not load")
+	}
 	return client
 }
 
+func LoadClientFromEnv() error {
+	conf := NewDefaultConfig()
+	err := env.Parse(conf)
+	if err != nil {
+		return err
+	}
+
+	client, err = NewClient(conf)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // NewClient todo
-func NewClient(conf *kc.Config) (*ClientSet, error) {
+func NewClient(conf *Config) (*ClientSet, error) {
 	zap.DevelopmentSetup()
 	log := zap.L()
 
 	conn, err := grpc.Dial(
-		conf.Address(),
+		conf.Address,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithPerRPCCredentials(conf.Authentication),
+		grpc.WithPerRPCCredentials(conf.Credentials()),
 	)
 	if err != nil {
 		return nil, err
