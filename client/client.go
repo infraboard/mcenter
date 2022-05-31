@@ -2,6 +2,7 @@ package client
 
 import (
 	"github.com/caarlos0/env/v6"
+	"github.com/infraboard/keyauth/apps/application"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -65,4 +66,9 @@ type ClientSet struct {
 // Instance服务的SDK
 func (c *ClientSet) Instance() instance.ServiceClient {
 	return instance.NewServiceClient(c.conn)
+}
+
+// Application服务的SDK
+func (c *ClientSet) Application() application.ServiceClient {
+	return application.NewServiceClient(c.conn)
 }

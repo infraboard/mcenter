@@ -7,12 +7,12 @@ import "github.com/infraboard/mcube/pb/page/page.proto";
 
 // Service 服务
 service Service {
-	rpc ValidateClientCredential(ValidateClientCredentialRequest) returns(Application);
+	rpc ValidateCredential(ValidateCredentialRequest) returns(Application);
 	rpc CreateService(CreateMicroRequest) returns(Application);
 	rpc QueryService(QueryMicroRequest) returns(Set);
 	rpc DescribeService(DescribeMicroRequest) returns(Application);
 	rpc DeleteService(DeleteMicroRequest) returns(Application);
-	rpc RefreshServiceClientSecret(DescribeMicroRequest) returns(Application);
+	rpc RefreshCredential(DescribeMicroRequest) returns(Application);
 }
 
 enum Type {
@@ -162,8 +162,8 @@ message Set {
     repeated Application items = 2;
 }
 
-// ValidateClientCredentialRequest 校验服务凭证
-message ValidateClientCredentialRequest {
+// ValidateCredentialRequest 校验服务凭证
+message ValidateCredentialRequest {
     // 服务客户端ID
     // @gotags: json:"client_id" validate:"required,lte=100"
     string client_id = 1;

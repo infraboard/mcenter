@@ -22,12 +22,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
-	ValidateClientCredential(ctx context.Context, in *ValidateClientCredentialRequest, opts ...grpc.CallOption) (*Application, error)
+	ValidateCredential(ctx context.Context, in *ValidateCredentialRequest, opts ...grpc.CallOption) (*Application, error)
 	CreateService(ctx context.Context, in *CreateMicroRequest, opts ...grpc.CallOption) (*Application, error)
 	QueryService(ctx context.Context, in *QueryMicroRequest, opts ...grpc.CallOption) (*Set, error)
 	DescribeService(ctx context.Context, in *DescribeMicroRequest, opts ...grpc.CallOption) (*Application, error)
 	DeleteService(ctx context.Context, in *DeleteMicroRequest, opts ...grpc.CallOption) (*Application, error)
-	RefreshServiceClientSecret(ctx context.Context, in *DescribeMicroRequest, opts ...grpc.CallOption) (*Application, error)
+	RefreshCredential(ctx context.Context, in *DescribeMicroRequest, opts ...grpc.CallOption) (*Application, error)
 }
 
 type serviceClient struct {
@@ -38,9 +38,9 @@ func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 	return &serviceClient{cc}
 }
 
-func (c *serviceClient) ValidateClientCredential(ctx context.Context, in *ValidateClientCredentialRequest, opts ...grpc.CallOption) (*Application, error) {
+func (c *serviceClient) ValidateCredential(ctx context.Context, in *ValidateCredentialRequest, opts ...grpc.CallOption) (*Application, error) {
 	out := new(Application)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.application.Service/ValidateClientCredential", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.application.Service/ValidateCredential", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -83,9 +83,9 @@ func (c *serviceClient) DeleteService(ctx context.Context, in *DeleteMicroReques
 	return out, nil
 }
 
-func (c *serviceClient) RefreshServiceClientSecret(ctx context.Context, in *DescribeMicroRequest, opts ...grpc.CallOption) (*Application, error) {
+func (c *serviceClient) RefreshCredential(ctx context.Context, in *DescribeMicroRequest, opts ...grpc.CallOption) (*Application, error) {
 	out := new(Application)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.application.Service/RefreshServiceClientSecret", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.application.Service/RefreshCredential", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -96,12 +96,12 @@ func (c *serviceClient) RefreshServiceClientSecret(ctx context.Context, in *Desc
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
 type ServiceServer interface {
-	ValidateClientCredential(context.Context, *ValidateClientCredentialRequest) (*Application, error)
+	ValidateCredential(context.Context, *ValidateCredentialRequest) (*Application, error)
 	CreateService(context.Context, *CreateMicroRequest) (*Application, error)
 	QueryService(context.Context, *QueryMicroRequest) (*Set, error)
 	DescribeService(context.Context, *DescribeMicroRequest) (*Application, error)
 	DeleteService(context.Context, *DeleteMicroRequest) (*Application, error)
-	RefreshServiceClientSecret(context.Context, *DescribeMicroRequest) (*Application, error)
+	RefreshCredential(context.Context, *DescribeMicroRequest) (*Application, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -109,8 +109,8 @@ type ServiceServer interface {
 type UnimplementedServiceServer struct {
 }
 
-func (UnimplementedServiceServer) ValidateClientCredential(context.Context, *ValidateClientCredentialRequest) (*Application, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidateClientCredential not implemented")
+func (UnimplementedServiceServer) ValidateCredential(context.Context, *ValidateCredentialRequest) (*Application, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateCredential not implemented")
 }
 func (UnimplementedServiceServer) CreateService(context.Context, *CreateMicroRequest) (*Application, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateService not implemented")
@@ -124,8 +124,8 @@ func (UnimplementedServiceServer) DescribeService(context.Context, *DescribeMicr
 func (UnimplementedServiceServer) DeleteService(context.Context, *DeleteMicroRequest) (*Application, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteService not implemented")
 }
-func (UnimplementedServiceServer) RefreshServiceClientSecret(context.Context, *DescribeMicroRequest) (*Application, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefreshServiceClientSecret not implemented")
+func (UnimplementedServiceServer) RefreshCredential(context.Context, *DescribeMicroRequest) (*Application, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshCredential not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -140,20 +140,20 @@ func RegisterServiceServer(s grpc.ServiceRegistrar, srv ServiceServer) {
 	s.RegisterService(&Service_ServiceDesc, srv)
 }
 
-func _Service_ValidateClientCredential_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ValidateClientCredentialRequest)
+func _Service_ValidateCredential_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateCredentialRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).ValidateClientCredential(ctx, in)
+		return srv.(ServiceServer).ValidateCredential(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.application.Service/ValidateClientCredential",
+		FullMethod: "/infraboard.mcenter.application.Service/ValidateCredential",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).ValidateClientCredential(ctx, req.(*ValidateClientCredentialRequest))
+		return srv.(ServiceServer).ValidateCredential(ctx, req.(*ValidateCredentialRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -230,20 +230,20 @@ func _Service_DeleteService_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_RefreshServiceClientSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Service_RefreshCredential_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DescribeMicroRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).RefreshServiceClientSecret(ctx, in)
+		return srv.(ServiceServer).RefreshCredential(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.application.Service/RefreshServiceClientSecret",
+		FullMethod: "/infraboard.mcenter.application.Service/RefreshCredential",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).RefreshServiceClientSecret(ctx, req.(*DescribeMicroRequest))
+		return srv.(ServiceServer).RefreshCredential(ctx, req.(*DescribeMicroRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -256,8 +256,8 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ValidateClientCredential",
-			Handler:    _Service_ValidateClientCredential_Handler,
+			MethodName: "ValidateCredential",
+			Handler:    _Service_ValidateCredential_Handler,
 		},
 		{
 			MethodName: "CreateService",
@@ -276,8 +276,8 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_DeleteService_Handler,
 		},
 		{
-			MethodName: "RefreshServiceClientSecret",
-			Handler:    _Service_RefreshServiceClientSecret_Handler,
+			MethodName: "RefreshCredential",
+			Handler:    _Service_RefreshCredential_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

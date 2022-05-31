@@ -17,23 +17,26 @@ service Service {
 // 服务实例信息, 比如 阿里云_杭州/生产环境/app01/default/instance01
 message Instance {
     // 服务所属域
+    // @gotags: bson:"_id" json:"id"
+    string id = 1;
+    // 服务所属域
     // @gotags: bson:"domain" json:"domain"
-    string domain = 1;
+    string domain = 2;
     // 服务所属空间
     // @gotags: bson:"namespace" json:"namespace"
-    string namespace = 2;
+    string namespace = 3;
     // 实例所属应用Id
     // @gotags: bson:"application_name" json:"application_name"
-    string application_name = 3;
+    string application_name = 4;
     // 实例注册相关信息
     // @gotags: bson:"registry_info" json:"registry_info"
-    RegistryRequest registry_info = 4;
+    RegistryRequest registry_info = 5;
     // 实例状态
     // @gotags: bson:"status" json:"status"
-    Status status = 5;
+    Status status = 6;
     // 实例配置
     // @gotags: bson:"config" json:"config"
-    Config config = 6;
+    Config config = 7;
 }
 
 message Config {
@@ -107,6 +110,9 @@ message Status {
 }
 
 message HeartbeatRequest {
+    // 实例Id列表, 允许多个实例
+    // @gotags: bson:"instance_id" json:"instance_id"
+    string instance_id = 1;
 }
 
 message HeartbeatResponse {

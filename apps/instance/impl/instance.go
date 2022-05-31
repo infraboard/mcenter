@@ -2,6 +2,7 @@ package impl
 
 import (
 	"context"
+	"io"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -25,7 +26,26 @@ func (i *impl) RegistryInstance(ctx context.Context, req *instance.RegistryReque
 }
 
 func (i *impl) Heartbeat(stream instance.Service_HeartbeatServer) error {
-	return nil
+	for {
+		// 处理请求
+		req, err := stream.Recv()
+		if err != nil {
+			// 如果遇到io.EOF表示客户端流被关闭
+			if err == io.EOF {
+				return nil
+			}
+		}
+
+		i.log.Debugf("instance %s", req.InstanceId)
+
+		// 发送响应
+		resp := instance.NewHeartbeatResponse()
+		err = stream.Send(resp)
+		if err != nil {
+			// 服务端发送异常, 函数退出, 服务端流关闭
+			return err
+		}
+	}
 }
 
 func (i *impl) UnRegistry(context.Context, *instance.UnregistryRequest) (
