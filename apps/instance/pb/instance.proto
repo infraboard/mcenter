@@ -110,15 +110,22 @@ message Status {
 }
 
 message HeartbeatRequest {
-    // 实例Id列表, 允许多个实例
+    // 实例Id
     // @gotags: bson:"instance_id" json:"instance_id"
     string instance_id = 1;
+}
+
+enum RemoteCommand {
+    UPDATE_INSTANCE = 0;
 }
 
 message HeartbeatResponse {
     // 客户端下一次心跳包的发送间隔, 单位秒
     // @gotags: bson:"next" json:"next"
     int32 next = 1;
+    // 客户端需要执行命令
+    // @gotags: bson:"remote_command" json:"remote_command"
+    optional RemoteCommand remote_command = 2;
 }
 
 message UnregistryRequest {
