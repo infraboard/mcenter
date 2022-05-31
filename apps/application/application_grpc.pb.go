@@ -24,7 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 type ServiceClient interface {
 	ValidateCredential(ctx context.Context, in *ValidateCredentialRequest, opts ...grpc.CallOption) (*Application, error)
 	CreateApplication(ctx context.Context, in *CreateApplicationRequest, opts ...grpc.CallOption) (*Application, error)
-	QueryApplication(ctx context.Context, in *QueryApplicationRequest, opts ...grpc.CallOption) (*Set, error)
+	UpdateApplication(ctx context.Context, in *UpdateApplicationRequest, opts ...grpc.CallOption) (*Application, error)
+	QueryApplication(ctx context.Context, in *QueryApplicationRequest, opts ...grpc.CallOption) (*ApplicationSet, error)
 	DescribeApplication(ctx context.Context, in *DescribeApplicationRequest, opts ...grpc.CallOption) (*Application, error)
 	DeleteApplication(ctx context.Context, in *DeleteApplicationRequest, opts ...grpc.CallOption) (*Application, error)
 	RefreshCredential(ctx context.Context, in *DescribeApplicationRequest, opts ...grpc.CallOption) (*Application, error)
@@ -56,8 +57,17 @@ func (c *serviceClient) CreateApplication(ctx context.Context, in *CreateApplica
 	return out, nil
 }
 
-func (c *serviceClient) QueryApplication(ctx context.Context, in *QueryApplicationRequest, opts ...grpc.CallOption) (*Set, error) {
-	out := new(Set)
+func (c *serviceClient) UpdateApplication(ctx context.Context, in *UpdateApplicationRequest, opts ...grpc.CallOption) (*Application, error) {
+	out := new(Application)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.application.Service/UpdateApplication", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) QueryApplication(ctx context.Context, in *QueryApplicationRequest, opts ...grpc.CallOption) (*ApplicationSet, error) {
+	out := new(ApplicationSet)
 	err := c.cc.Invoke(ctx, "/infraboard.mcenter.application.Service/QueryApplication", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -98,7 +108,8 @@ func (c *serviceClient) RefreshCredential(ctx context.Context, in *DescribeAppli
 type ServiceServer interface {
 	ValidateCredential(context.Context, *ValidateCredentialRequest) (*Application, error)
 	CreateApplication(context.Context, *CreateApplicationRequest) (*Application, error)
-	QueryApplication(context.Context, *QueryApplicationRequest) (*Set, error)
+	UpdateApplication(context.Context, *UpdateApplicationRequest) (*Application, error)
+	QueryApplication(context.Context, *QueryApplicationRequest) (*ApplicationSet, error)
 	DescribeApplication(context.Context, *DescribeApplicationRequest) (*Application, error)
 	DeleteApplication(context.Context, *DeleteApplicationRequest) (*Application, error)
 	RefreshCredential(context.Context, *DescribeApplicationRequest) (*Application, error)
@@ -115,7 +126,10 @@ func (UnimplementedServiceServer) ValidateCredential(context.Context, *ValidateC
 func (UnimplementedServiceServer) CreateApplication(context.Context, *CreateApplicationRequest) (*Application, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateApplication not implemented")
 }
-func (UnimplementedServiceServer) QueryApplication(context.Context, *QueryApplicationRequest) (*Set, error) {
+func (UnimplementedServiceServer) UpdateApplication(context.Context, *UpdateApplicationRequest) (*Application, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateApplication not implemented")
+}
+func (UnimplementedServiceServer) QueryApplication(context.Context, *QueryApplicationRequest) (*ApplicationSet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryApplication not implemented")
 }
 func (UnimplementedServiceServer) DescribeApplication(context.Context, *DescribeApplicationRequest) (*Application, error) {
@@ -172,6 +186,24 @@ func _Service_CreateApplication_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).CreateApplication(ctx, req.(*CreateApplicationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_UpdateApplication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateApplicationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).UpdateApplication(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infraboard.mcenter.application.Service/UpdateApplication",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).UpdateApplication(ctx, req.(*UpdateApplicationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -262,6 +294,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateApplication",
 			Handler:    _Service_CreateApplication_Handler,
+		},
+		{
+			MethodName: "UpdateApplication",
+			Handler:    _Service_UpdateApplication_Handler,
 		},
 		{
 			MethodName: "QueryApplication",

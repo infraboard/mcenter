@@ -4,12 +4,14 @@ package infraboard.mcenter.application;
 option go_package = "github.com/infraboard/mcenter/apps/application";
 
 import "github.com/infraboard/mcube/pb/page/page.proto";
+import "github.com/infraboard/mcube/pb/request/request.proto";
 
 // Service 服务
 service Service {
 	rpc ValidateCredential(ValidateCredentialRequest) returns(Application);
 	rpc CreateApplication(CreateApplicationRequest) returns(Application);
-	rpc QueryApplication(QueryApplicationRequest) returns(Set);
+    rpc UpdateApplication(UpdateApplicationRequest) returns(Application);
+	rpc QueryApplication(QueryApplicationRequest) returns(ApplicationSet);
 	rpc DescribeApplication(DescribeApplicationRequest) returns(Application);
 	rpc DeleteApplication(DeleteApplicationRequest) returns(Application);
 	rpc RefreshCredential(DescribeApplicationRequest) returns(Application);
@@ -35,15 +37,18 @@ message Application {
     // 更新时间
     // @gotags: bson:"update_at" json:"update_at"
     int64 update_at = 5;
+    // 更新人
+    // @gotags: bson:"update_by" json:"update_by"
+    string update_by = 6;
     // 服务定义
     // @gotags: bson:"spec" json:"spec"
-    CreateApplicationRequest spec = 6;
+    CreateApplicationRequest spec = 7;
     // 服务的凭证, 用于服务注册
     // @gotags: bson:"credential" json:"credential"
-    Credential credential = 7;
+    Credential credential = 8;
     // 服务安全所需配置
     // @gotags: bson:"security" json:"security"
-    Security security = 8;
+    Security security = 9;
 }
 
 message CreateApplicationRequest {
@@ -74,6 +79,24 @@ message CreateApplicationRequest {
     // 服务标签
     // @gotags: bson:"tags" json:"tags"
     map<string, string> tags = 14;
+}
+
+message UpdateApplicationRequest {
+    // book id
+    // @gotags: json:"id"
+    string id = 1;
+    // 更新模式
+    // @gotags: json:"update_mode"
+    infraboard.mcube.request.UpdateMode update_mode = 2;
+    // 更新人
+    // @gotags: json:"update_by"
+    string update_by = 3;
+    // 更新时间
+    // @gotags: json:"update_at"
+    int64 update_at = 4;
+    // 更新的书本信息
+    // @gotags: json:"spec"
+    CreateApplicationRequest spec = 5;
 }
 
 message Credential {
@@ -155,7 +178,7 @@ message Security {
     string encrypt_key = 1;
 }
 
-message Set {
+message ApplicationSet {
     // @gotags: bson:"total" json:"total"
     int64 total = 1;
     // @gotags: bson:"items" json:"items"
