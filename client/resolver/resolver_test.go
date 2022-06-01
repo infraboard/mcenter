@@ -14,7 +14,7 @@ import (
 )
 
 func TestResolver(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
 	conn, err := grpc.DialContext(
@@ -29,7 +29,7 @@ func TestResolver(t *testing.T) {
 	defer conn.Close()
 
 	// 更新resolver
-	resolver.M.Update()
+	// resolver.M.Update()
 }
 
 func init() {

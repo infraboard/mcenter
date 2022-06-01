@@ -59,7 +59,7 @@ message InstanceSet {
     // @gotags: bson:"status" json:"status"
     int64 total = 1;
     // 实例列表
-    // @gotags: bson:"status" json:"status"
+    // @gotags: bson:"items" json:"items"
     repeated Instance items = 2;
 }
 

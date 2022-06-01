@@ -10,14 +10,11 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/keyauth/apps/endpoint"
 	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
-	httpb "github.com/infraboard/mcube/pb/http"
 
 	"github.com/infraboard/mcenter/conf"
 	"github.com/infraboard/mcenter/swagger"
-	"github.com/infraboard/mcenter/version"
 )
 
 // NewHTTPService 构建函数
@@ -87,9 +84,6 @@ func (s *HTTPService) Start() error {
 	s.r.Add(restfulspec.NewOpenAPIService(config))
 	s.l.Infof("Get the API using http://%s%s", s.c.App.HTTP.Addr(), config.APIPath)
 
-	// 注册路由条目
-	s.RegistryEndpoint()
-
 	// 启动 HTTP服务
 	s.l.Infof("HTTP服务启动成功, 监听地址: %s", s.server.Addr)
 	if err := s.server.ListenAndServe(); err != nil {
@@ -111,38 +105,4 @@ func (s *HTTPService) Stop() error {
 		s.l.Errorf("graceful shutdown timeout, force exit")
 	}
 	return nil
-}
-
-func (s *HTTPService) RegistryEndpoint() {
-	// 注册服务权限条目
-	s.l.Info("start registry endpoints ...")
-
-	entries := []*httpb.Entry{}
-	wss := s.r.RegisteredWebServices()
-	for i := range wss {
-		for _, r := range wss[i].Routes() {
-			m := label.Meta(r.Metadata)
-			entries = append(entries, &httpb.Entry{
-				FunctionName:     r.Operation,
-				Path:             fmt.Sprintf("%s.%s", r.Method, r.Path),
-				Method:           r.Method,
-				Resource:         m.Resource(),
-				AuthEnable:       m.AuthEnable(),
-				PermissionEnable: m.PermissionEnable(),
-				Allow:            m.Allow(),
-				AuditLog:         m.AuditEnable(),
-				Labels: map[string]string{
-					label.Action: m.Action(),
-				},
-			})
-		}
-	}
-
-	req := endpoint.NewRegistryRequest(version.Short(), entries)
-	_, err := s.endpoint.RegistryEndpoint(context.Background(), req)
-	if err != nil {
-		s.l.Warnf("registry endpoints error, %s", err)
-	} else {
-		s.l.Debug("service endpoints registry success")
-	}
 }

@@ -55,5 +55,13 @@ func (i *impl) UnRegistry(context.Context, *instance.UnregistryRequest) (
 
 func (i *impl) Search(context.Context, *instance.SearchRequest) (
 	*instance.InstanceSet, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
+	i.log.Debugf("search ...")
+	set := instance.NewInstanceSet()
+	set.Add(&instance.Instance{
+		RegistryInfo: &instance.RegistryRequest{
+			Address: "127.0.0.1:18050",
+		},
+	})
+
+	return set, nil
 }

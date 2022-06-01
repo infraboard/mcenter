@@ -54,3 +54,13 @@ func NewRegistryRequest() *RegistryRequest {
 		Build: &Build{},
 	}
 }
+
+func NewInstanceSet() *InstanceSet {
+	return &InstanceSet{
+		Items: []*Instance{},
+	}
+}
+
+func (s *InstanceSet) Add(item *Instance) {
+	s.Items = append(s.Items, item)
+}

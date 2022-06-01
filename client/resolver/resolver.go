@@ -41,6 +41,10 @@ func (*McenterResolverBuilder) Build(
 		queryTimeoutSecond: 3 * time.Second,
 		log:                zap.L().Named("Mcenter Resolver"),
 	}
+
+	// 强制触发一次更新
+	r.ResolveNow(resolver.ResolveNowOptions{})
+
 	// 添加给Manger管理, Manager负责更新
 	M.add(r)
 	return r, nil

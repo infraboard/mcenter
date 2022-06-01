@@ -290,8 +290,8 @@ type InstanceSet struct {
 	// @gotags: bson:"status" json:"status"
 	Total int64 `protobuf:"varint,1,opt,name=total,proto3" json:"status" bson:"status"`
 	// 实例列表
-	// @gotags: bson:"status" json:"status"
-	Items []*Instance `protobuf:"bytes,2,rep,name=items,proto3" json:"status" bson:"status"`
+	// @gotags: bson:"items" json:"items"
+	Items []*Instance `protobuf:"bytes,2,rep,name=items,proto3" json:"items" bson:"items"`
 }
 
 func (x *InstanceSet) Reset() {
