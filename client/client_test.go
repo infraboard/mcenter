@@ -3,13 +3,17 @@ package client_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/client"
 )
 
+var (
+	c = client.C()
+)
+
 func TestInstanceQuery(t *testing.T) {
-	c := client.C()
 	resp, err := c.Instance().Search(
 		context.Background(),
 		&instance.SearchRequest{},
@@ -20,6 +24,15 @@ func TestInstanceQuery(t *testing.T) {
 	}
 
 	t.Log(resp)
+}
+
+func TestHeartbeat(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := c.Heartbeat(ctx); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func init() {
