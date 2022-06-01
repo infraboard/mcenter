@@ -42,6 +42,12 @@ func NewHeartbeatResponse() *HeartbeatResponse {
 	return &HeartbeatResponse{}
 }
 
+func NewHeartbeatRequest(id string) *HeartbeatRequest {
+	return &HeartbeatRequest{
+		InstanceId: id,
+	}
+}
+
 func NewRegistryRequest() *RegistryRequest {
 	return &RegistryRequest{
 		Tags:  map[string]string{},

@@ -24,10 +24,6 @@ import (
 // McenterResolverBuilder is a ResolverBuilder.
 type McenterResolverBuilder struct{}
 
-var (
-	exampleServiceName = "test"
-)
-
 func (*McenterResolverBuilder) Build(
 	target resolver.Target,
 	cc resolver.ClientConn,
@@ -41,6 +37,8 @@ func (*McenterResolverBuilder) Build(
 		queryTimeoutSecond: 3 * time.Second,
 		log:                zap.L().Named("Mcenter Resolver"),
 	}
+	// 添加给Manger管理, Manager负责更新
+	M.add(r)
 	return r, nil
 }
 
@@ -105,11 +103,6 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 	}
 
 	return addrs, nil
-}
-
-// 动态更新
-func (m *mcenterResolver) watch() {
-
 }
 
 func (m *mcenterResolver) Close() {

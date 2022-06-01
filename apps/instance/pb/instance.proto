@@ -115,8 +115,17 @@ message HeartbeatRequest {
     string instance_id = 1;
 }
 
-enum RemoteCommand {
+enum CommandType {
     UPDATE_INSTANCE = 0;
+}
+
+message RemoteCommand {
+    // 客户端需要执行命令类型
+    // @gotags: bson:"type" json:"type"
+    CommandType type = 1;
+    // 指令参数
+    // @gotags: bson:"params" json:"params"
+    map<string,string> params = 2;
 }
 
 message HeartbeatResponse {
