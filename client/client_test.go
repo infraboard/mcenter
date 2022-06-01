@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	c = client.C()
+	c *client.ClientSet
 )
 
 func TestInstanceQuery(t *testing.T) {
@@ -26,13 +26,18 @@ func TestInstanceQuery(t *testing.T) {
 	t.Log(resp)
 }
 
-func TestHeartbeat(t *testing.T) {
+func TestRegistry(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	if err := c.Heartbeat(ctx); err != nil {
+	// 注册
+	hb, err := c.Registry(ctx, nil)
+	if err != nil {
 		t.Fatal(err)
 	}
+
+	// 上报心跳
+	hb.Heartbeat(ctx)
 }
 
 func init() {
@@ -40,4 +45,5 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	c = client.C()
 }

@@ -11,6 +11,10 @@ import (
 	"google.golang.org/grpc/resolver"
 )
 
+const (
+	Scheme = "mcenter"
+)
+
 // Following is an example name resolver. It includes a
 // ResolverBuilder(https://godoc.org/google.golang.org/grpc/resolver#Builder)
 // and a Resolver(https://godoc.org/google.golang.org/grpc/resolver#Resolver).
@@ -43,7 +47,7 @@ func (*McenterResolverBuilder) Build(
 }
 
 func (*McenterResolverBuilder) Scheme() string {
-	return "mcenter"
+	return Scheme
 }
 
 // exampleResolver is a

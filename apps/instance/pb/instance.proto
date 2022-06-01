@@ -25,7 +25,7 @@ message Instance {
     // 服务所属空间
     // @gotags: bson:"namespace" json:"namespace"
     string namespace = 3;
-    // 实例所属应用Id
+    // 实例所属应用名称
     // @gotags: bson:"application_name" json:"application_name"
     string application_name = 4;
     // 实例注册相关信息
@@ -64,42 +64,42 @@ message InstanceSet {
 }
 
 message RegistryRequest {
-    // 实例所属环境, 默认default
-    // @gotags: bson:"region" json:"region" validate:"required"
+    // 实例所属地域, 默认default
+    // @gotags: bson:"region" json:"region" toml:"region" yaml:"region" env:"MCENTER_REGION" validate:"required"
     string region = 1;
     // 实例所属环境, 默认default
-    // @gotags: bson:"environment" json:"environment" validate:"required"
+    // @gotags: bson:"environment" json:"environment" toml:"environment" yaml:"environment" env:"MCENTER_ENV" validate:"required"
     string environment = 2;
     // 实例所属分组,默认default
-    // @gotags: bson:"group" json:"group" validate:"required"
+    // @gotags: bson:"group" json:"group" toml:"group" yaml:"group" env:"MCENTER_GROUP" validate:"required"
     string group = 3;
     // 实例名称
-    // @gotags: bson:"name" json:"name" validate:"required"
+    // @gotags: bson:"name" json:"name" toml:"name" yaml:"name" env:"MCENTER_NAME" validate:"required"
     string name = 4;
     // 实例地址
-    // @gotags: bson:"address" json:"address" validate:"required"
+    // @gotags: bson:"address" json:"address" toml:"address" yaml:"address" env:"MCENTER_ADDRESS" validate:"required"
     string address = 5;
     // 实例标签, 可以根据标签快速过滤实例
-    // @gotags: bson:"tags" json:"tags"
+    // @gotags: bson:"tags" json:"tags" toml:"tags" yaml:"tags" env:"MCENTER_TAGS"
     map<string,string> tags = 6;
     // 实例构建信息
-    // @gotags: bson:"build" json:"build"
+    // @gotags: bson:"build" json:"build" toml:"build" yaml:"build"
     Build build = 7;
 }
 
 // 实例构建相关信息
 message Build {
     // 实例版本
-    // @gotags: bson:"version" json:"version"
+    // @gotags: bson:"version" json:"version" toml:"version" yaml:"version" env:"MCENTER_BUILD_VERSION"
     string version = 1;
     // 实例代码构建对应分支
-    // @gotags: bson:"git_branch" json:"git_branch"
+    // @gotags: bson:"git_branch" json:"git_branch" toml:"git_branch" yaml:"git_branch" env:"MCENTER_BUILD_GIT_BRANCH"
     string git_branch = 2;
     // 实例代码对应commit号
-    // @gotags: bson:"git_commit" json:"git_commit"
+    // @gotags: bson:"git_commit" json:"git_commit" toml:"git_commit" yaml:"git_commit" env:"MCENTER_BUILD_GIT_COMMIT"
     string git_commit = 3;
     // 实例构建时间
-    // @gotags: bson:"build_at" json:"build_at"
+    // @gotags: bson:"build_at" json:"build_at" toml:"build_at" yaml:"build_at" env:"MCENTER_BUILD_AT"
     int64 build_at = 4;
 }
 
@@ -134,7 +134,7 @@ message HeartbeatResponse {
     int32 next = 1;
     // 客户端需要执行命令
     // @gotags: bson:"remote_command" json:"remote_command"
-    optional RemoteCommand remote_command = 2;
+    RemoteCommand remote_command = 2;
 }
 
 message UnregistryRequest {

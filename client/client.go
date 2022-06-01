@@ -2,12 +2,12 @@ package client
 
 import (
 	"github.com/caarlos0/env/v6"
-	"github.com/infraboard/keyauth/apps/application"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	"github.com/infraboard/mcenter/apps/application"
 	"github.com/infraboard/mcenter/apps/instance"
 )
 

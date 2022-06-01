@@ -66,7 +66,7 @@ func (a *http) Addr() string {
 func newDefaultHTTP() *http {
 	return &http{
 		Host: "127.0.0.1",
-		Port: "8050",
+		Port: "8010",
 	}
 }
 
