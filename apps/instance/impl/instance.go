@@ -13,6 +13,9 @@ import (
 
 func (i *impl) RegistryInstance(ctx context.Context, req *instance.RegistryRequest) (
 	*instance.Instance, error) {
+	// 补充实例应用相关信息
+	i.app.ValidateCredential(ctx, nil)
+
 	ins, err := instance.NewInstance(req)
 	if err != nil {
 		return nil, exception.NewBadRequest("validate create instance error, %s", err)

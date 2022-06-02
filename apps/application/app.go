@@ -35,6 +35,13 @@ func NewApplication(req *CreateApplicationRequest) (*Application, error) {
 	}, nil
 }
 
+func NewValidateCredentialRequest(clientId, clientSercet string) *ValidateCredentialRequest {
+	return &ValidateCredentialRequest{
+		ClientId:     clientId,
+		ClientSecret: clientSercet,
+	}
+}
+
 func (req *CreateApplicationRequest) Validate() error {
 	return validate.Struct(req)
 }

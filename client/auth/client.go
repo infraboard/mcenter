@@ -1,10 +1,18 @@
-package client
+package auth
 
 import (
 	"context"
 
 	"google.golang.org/grpc/metadata"
 )
+
+// 客户端携带的凭证
+func NewAuthentication(clientId, clientSecret string) *Authentication {
+	return &Authentication{
+		clientID:     clientId,
+		clientSecret: clientSecret,
+	}
+}
 
 // Authentication todo
 type Authentication struct {
@@ -32,11 +40,6 @@ func (a *Authentication) GetRequestMetadata(context.Context, ...string) (
 func (a *Authentication) RequireTransportSecurity() bool {
 	return false
 }
-
-const (
-	ClientHeaderKey = "client-id"
-	ClientSecretKey = "client-secret"
-)
 
 func GetClientCredential(ctx context.Context) (clientId, clientSecret string) {
 	// 重上下文中获取认证信息

@@ -2,6 +2,7 @@ package instance
 
 import (
 	"fmt"
+	"hash/fnv"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -43,6 +44,12 @@ func NewInstance(req *RegistryRequest) (*Instance, error) {
 func (i *Instance) FullName() string {
 	return fmt.Sprintf("%s.%s.%s-%s", i.Domain, i.Namespace, i.ApplicationName,
 		i.RegistryInfo.InstanceFullName())
+}
+
+func (i *Instance) FullNameHash() string {
+	hash := fnv.New32a()
+	hash.Write([]byte(i.FullName()))
+	return fmt.Sprintf("%x", hash.Sum32())
 }
 
 func NewHeartbeatResponse() *HeartbeatResponse {

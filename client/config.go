@@ -1,5 +1,7 @@
 package client
 
+import "github.com/infraboard/mcenter/client/auth"
+
 // NewDefaultConfig todo
 func NewDefaultConfig() *Config {
 	return &Config{
@@ -14,9 +16,6 @@ type Config struct {
 	ClientSecret string `json:"client_secret" toml:"client_secret" yaml:"client_secret" env:"MCENTER_CLIENT_SECRET"`
 }
 
-func (c *Config) Credentials() *Authentication {
-	return &Authentication{
-		clientID:     c.ClientID,
-		clientSecret: c.ClientSecret,
-	}
+func (c *Config) Credentials() *auth.Authentication {
+	return auth.NewAuthentication(c.ClientID, c.ClientSecret)
 }
