@@ -34,6 +34,9 @@ func (i *impl) Heartbeat(stream instance.Service_HeartbeatServer) error {
 			if err == io.EOF {
 				return nil
 			}
+
+			i.log.Warnf("receive heartbeat error, %s", err)
+			return nil
 		}
 
 		i.log.Debugf("instance %s", req.InstanceId)

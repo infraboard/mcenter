@@ -10,7 +10,7 @@ import (
 func (i *impl) save(ctx context.Context, ins *instance.Instance) error {
 	if _, err := i.col.InsertOne(ctx, ins); err != nil {
 		return exception.NewInternalServerError("inserted book(%s) document error, %s",
-			ins.ShortDesc(), err)
+			ins.FullName(), err)
 	}
 	return nil
 }

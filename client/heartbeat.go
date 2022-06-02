@@ -15,5 +15,4 @@ func (c *ClientSet) Registry(ctx context.Context, req *instance.RegistryRequest)
 
 	hb := heartbeat.NewHeartbeater(c.Instance(), ins)
 	return hb, nil
-
 }

@@ -40,8 +40,9 @@ func NewInstance(req *RegistryRequest) (*Instance, error) {
 	}, nil
 }
 
-func (i *Instance) ShortDesc() string {
-	return fmt.Sprintf("%s-%s-%s-%s", i.Domain, i.Namespace, i.ApplicationName, i.RegistryInfo.Name)
+func (i *Instance) FullName() string {
+	return fmt.Sprintf("%s.%s.%s-%s", i.Domain, i.Namespace, i.ApplicationName,
+		i.RegistryInfo.InstanceFullName())
 }
 
 func NewHeartbeatResponse() *HeartbeatResponse {
@@ -62,6 +63,10 @@ func NewRegistryRequest() *RegistryRequest {
 		Tags:        map[string]string{},
 		Build:       &Build{},
 	}
+}
+
+func (r *RegistryRequest) InstanceFullName() string {
+	return fmt.Sprintf("%s.%s.%s.%s.%s", r.Region, r.Environment, r.Group, r.Name, r.Protocal)
 }
 
 func NewInstanceSet() *InstanceSet {

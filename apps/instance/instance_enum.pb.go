@@ -9,6 +9,96 @@ import (
 	"strings"
 )
 
+// ParseProtocalFromString Parse Protocal from string
+func ParseProtocalFromString(str string) (Protocal, error) {
+	key := strings.Trim(string(str), `"`)
+	v, ok := Protocal_value[strings.ToUpper(key)]
+	if !ok {
+		return 0, fmt.Errorf("unknown Protocal: %s", str)
+	}
+
+	return Protocal(v), nil
+}
+
+// Equal type compare
+func (t Protocal) Equal(target Protocal) bool {
+	return t == target
+}
+
+// IsIn todo
+func (t Protocal) IsIn(targets ...Protocal) bool {
+	for _, target := range targets {
+		if t.Equal(target) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// MarshalJSON todo
+func (t Protocal) MarshalJSON() ([]byte, error) {
+	b := bytes.NewBufferString(`"`)
+	b.WriteString(strings.ToUpper(t.String()))
+	b.WriteString(`"`)
+	return b.Bytes(), nil
+}
+
+// UnmarshalJSON todo
+func (t *Protocal) UnmarshalJSON(b []byte) error {
+	ins, err := ParseProtocalFromString(string(b))
+	if err != nil {
+		return err
+	}
+	*t = ins
+	return nil
+}
+
+// ParseProviderFromString Parse Provider from string
+func ParseProviderFromString(str string) (Provider, error) {
+	key := strings.Trim(string(str), `"`)
+	v, ok := Provider_value[strings.ToUpper(key)]
+	if !ok {
+		return 0, fmt.Errorf("unknown Provider: %s", str)
+	}
+
+	return Provider(v), nil
+}
+
+// Equal type compare
+func (t Provider) Equal(target Provider) bool {
+	return t == target
+}
+
+// IsIn todo
+func (t Provider) IsIn(targets ...Provider) bool {
+	for _, target := range targets {
+		if t.Equal(target) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// MarshalJSON todo
+func (t Provider) MarshalJSON() ([]byte, error) {
+	b := bytes.NewBufferString(`"`)
+	b.WriteString(strings.ToUpper(t.String()))
+	b.WriteString(`"`)
+	return b.Bytes(), nil
+}
+
+// UnmarshalJSON todo
+func (t *Provider) UnmarshalJSON(b []byte) error {
+	ins, err := ParseProviderFromString(string(b))
+	if err != nil {
+		return err
+	}
+	*t = ins
+	return nil
+}
+
 // ParseCommandTypeFromString Parse CommandType from string
 func ParseCommandTypeFromString(str string) (CommandType, error) {
 	key := strings.Trim(string(str), `"`)
