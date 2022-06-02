@@ -2,6 +2,7 @@ package application
 
 import (
 	"fmt"
+	"hash/fnv"
 	"net/http"
 	"time"
 
@@ -10,10 +11,17 @@ import (
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
 	"github.com/rs/xid"
+
+	"github.com/infraboard/mcenter/common/tools"
 )
 
 const (
 	AppName = "application"
+)
+
+const (
+	DefaultDomain    = "default"
+	DefaultNamespace = "default"
 )
 
 var (
@@ -21,7 +29,13 @@ var (
 )
 
 func NewCreateApplicationRequest() *CreateApplicationRequest {
-	return &CreateApplicationRequest{}
+	return &CreateApplicationRequest{
+		Domain:     DefaultDomain,
+		Namespace:  DefaultNamespace,
+		Enabled:    true,
+		Repository: &Repository{},
+		Tags:       map[string]string{},
+	}
 }
 
 func NewApplication(req *CreateApplicationRequest) (*Application, error) {
@@ -29,11 +43,28 @@ func NewApplication(req *CreateApplicationRequest) (*Application, error) {
 		return nil, err
 	}
 
-	return &Application{
-		Id:       xid.New().String(),
-		CreateAt: time.Now().UnixMilli(),
-		Spec:     req,
-	}, nil
+	app := &Application{
+		Id:         xid.New().String(),
+		CreateAt:   time.Now().UnixMilli(),
+		Spec:       req,
+		Credential: NewRandomCredential(),
+		Security:   NewRandomSecurity(),
+	}
+	app.Id = app.FullNameHash()
+	return app, nil
+}
+
+func NewRandomCredential() *Credential {
+	return &Credential{
+		ClientId:     tools.MakeBearer(24),
+		ClientSecret: tools.MakeBearer(32),
+	}
+}
+
+func NewRandomSecurity() *Security {
+	return &Security{
+		EncryptKey: tools.MakeBearer(64),
+	}
 }
 
 func NewValidateCredentialRequest(clientId, clientSercet string) *ValidateCredentialRequest {
@@ -69,6 +100,12 @@ func NewDescribeApplicationRequest(id string) *DescribeApplicationRequest {
 	}
 }
 
+func NewQueryApplicationRequest() *QueryApplicationRequest {
+	return &QueryApplicationRequest{
+		Page: request.NewDefaultPageRequest(),
+	}
+}
+
 func NewQueryApplicationRequestFromHTTP(r *http.Request) *QueryApplicationRequest {
 	return &QueryApplicationRequest{
 		Page: request.NewPageRequestFromHTTP(r),
@@ -79,6 +116,16 @@ func NewDeleteApplicationRequestWithID(id string) *DeleteApplicationRequest {
 	return &DeleteApplicationRequest{
 		Id: id,
 	}
+}
+
+func (i *Application) FullNameHash() string {
+	hash := fnv.New32a()
+	hash.Write([]byte(i.FullName()))
+	return fmt.Sprintf("%x", hash.Sum32())
+}
+
+func (i *Application) FullName() string {
+	return fmt.Sprintf("%s.%s.%s", i.Spec.Domain, i.Spec.Namespace, i.Spec.Name)
 }
 
 func (i *Application) Update(req *UpdateApplicationRequest) {
