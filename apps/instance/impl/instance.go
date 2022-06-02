@@ -7,16 +7,22 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"github.com/infraboard/mcenter/apps/application"
 	"github.com/infraboard/mcenter/apps/instance"
+	"github.com/infraboard/mcenter/client/auth"
 	"github.com/infraboard/mcube/exception"
 )
 
 func (i *impl) RegistryInstance(ctx context.Context, req *instance.RegistryRequest) (
 	*instance.Instance, error) {
 	// 补充实例应用相关信息
-	i.app.ValidateCredential(ctx, nil)
+	clientId := auth.GetClientId(ctx)
+	app, err := i.app.DescribeApplication(ctx, application.NewDescribeApplicationRequestByClientId(clientId))
+	if err != nil {
+		return nil, err
+	}
 
-	ins, err := instance.NewInstance(req)
+	ins, err := instance.NewInstance(req, app)
 	if err != nil {
 		return nil, exception.NewBadRequest("validate create instance error, %s", err)
 	}

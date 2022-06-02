@@ -93,16 +93,24 @@ func (i *impl) query(ctx context.Context, req *queryRequest) (*application.Appli
 	return ApplicationSet, nil
 }
 
-func (i *impl) get(ctx context.Context, id string) (*application.Application, error) {
-	filter := bson.M{"_id": id}
+func (i *impl) get(ctx context.Context, req *application.DescribeApplicationRequest) (*application.Application, error) {
+	filter := bson.M{}
+	switch req.DescribeBy {
+	case application.DescribeBy_APP_ID:
+		filter["_id"] = req.Id
+	case application.DescribeBy_APP_CLIENT_ID:
+		filter["credential.client_id"] = req.ClientId
+	case application.DescribeBy_APP_NAME:
+		filter["spec.name"] = req.Name
+	}
 
 	ins := application.NewDefaultApplication()
 	if err := i.col.FindOne(ctx, filter).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, exception.NewNotFound("application %s not found", id)
+			return nil, exception.NewNotFound("application %s not found", req)
 		}
 
-		return nil, exception.NewInternalServerError("find application %s error, %s", id, err)
+		return nil, exception.NewInternalServerError("find application %s error, %s", req, err)
 	}
 
 	return ins, nil

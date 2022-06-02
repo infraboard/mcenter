@@ -70,7 +70,7 @@ func (m *mcenterResolver) ResolveNow(o resolver.ResolveNowOptions) {
 	// 从mcenter中查询该target对应的服务实例
 	addrs, err := m.search()
 	if err != nil {
-		m.log.Errorf("search target %s error, %s", m.target.URL, err)
+		m.log.Errorf("search target %s error, %s", m.target.URL.String(), err)
 	}
 
 	// 更新给client

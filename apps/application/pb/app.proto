@@ -204,14 +204,25 @@ message QueryApplicationRequest {
     Type type = 2;
 }
 
+enum DescribeBy {
+    // 通过App id查询应用详情
+    APP_ID = 0;
+    // 通过App name查询应用详情
+    APP_NAME = 1;
+    // 通过App client_id查询应用详情
+    APP_CLIENT_ID =2;
+}
+
 // DescribeMicroRequest 查询应用详情
 message DescribeApplicationRequest {
+    // @gotags: json:"describe_by"
+    DescribeBy describe_by = 1;
     // @gotags: json:"client_id"
-    string client_id = 1;
+    string client_id = 2;
     // @gotags: json:"name"
-    string name = 2;
+    string name = 3;
     // @gotags: json:"id"
-    string id = 3;
+    string id = 4;
 }
 
 // DeleteMicroRequest todo

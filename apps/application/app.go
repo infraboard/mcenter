@@ -1,6 +1,7 @@
 package application
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -108,4 +109,19 @@ func NewPatchApplicationRequest(id string) *UpdateApplicationRequest {
 		UpdateAt:   time.Now().UnixMilli(),
 		Spec:       NewCreateApplicationRequest(),
 	}
+}
+
+func NewDescribeApplicationRequestByClientId(clientId string) *DescribeApplicationRequest {
+	return &DescribeApplicationRequest{
+		DescribeBy: DescribeBy_APP_CLIENT_ID,
+		ClientId:   clientId,
+	}
+}
+
+func (c *Credential) Validate(clientSecret string) error {
+	if c.ClientSecret != clientSecret {
+		return fmt.Errorf("client_id or client_secret is not conrrect")
+	}
+
+	return nil
 }

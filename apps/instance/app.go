@@ -3,8 +3,10 @@ package instance
 import (
 	"fmt"
 	"hash/fnv"
+	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/infraboard/mcenter/apps/application"
 )
 
 const (
@@ -29,16 +31,34 @@ func (req *RegistryRequest) Validate() error {
 	return validate.Struct(req)
 }
 
-func NewInstance(req *RegistryRequest) (*Instance, error) {
+func NewInstance(req *RegistryRequest, app *application.Application) (*Instance, error) {
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
 
-	return &Instance{
-		RegistryInfo: req,
-		Status:       &Status{},
-		Config:       &Config{},
-	}, nil
+	ins := &Instance{
+		Domain:          app.Spec.Domain,
+		Namespace:       app.Spec.Namespace,
+		ApplicationName: app.Spec.Name,
+		RegistryInfo:    req,
+		Status:          NewDefaultStatus(),
+		Config:          NewDefaultConfig(),
+	}
+
+	ins.Id = ins.FullNameHash()
+	return ins, nil
+}
+
+func NewDefaultConfig() *Config {
+	return &Config{
+		Heartbeat: &HeartbeatConfig{},
+	}
+}
+
+func NewDefaultStatus() *Status {
+	return &Status{
+		Online: time.Now().UnixMilli(),
+	}
 }
 
 func (i *Instance) FullName() string {

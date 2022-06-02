@@ -13,7 +13,16 @@ import (
 
 func (i *impl) ValidateCredential(ctx context.Context, req *application.ValidateCredentialRequest) (
 	*application.Application, error) {
-	return nil, nil
+	app, err := i.DescribeApplication(ctx, application.NewDescribeApplicationRequestByClientId(req.ClientId))
+	if err != nil {
+		return nil, err
+	}
+
+	if err := app.Credential.Validate(req.ClientSecret); err != nil {
+		return nil, err
+	}
+
+	return app, nil
 }
 
 func (i *impl) CreateApplication(ctx context.Context, req *application.CreateApplicationRequest) (
@@ -67,7 +76,7 @@ func (i *impl) QueryApplication(ctx context.Context, req *application.QueryAppli
 
 func (i *impl) DescribeApplication(ctx context.Context, req *application.DescribeApplicationRequest) (
 	*application.Application, error) {
-	return i.get(ctx, req.Id)
+	return i.get(ctx, req)
 }
 
 func (i *impl) DeleteApplication(ctx context.Context, req *application.DeleteApplicationRequest) (
