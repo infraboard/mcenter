@@ -10,6 +10,12 @@ const (
 	AppName = "instance"
 )
 
+const (
+	DefaultRegion      = "default"
+	DefaultEnvironment = "default"
+	DefaultGroup       = "default"
+)
+
 var (
 	validate = validator.New()
 )
@@ -50,8 +56,11 @@ func NewHeartbeatRequest(id string) *HeartbeatRequest {
 
 func NewRegistryRequest() *RegistryRequest {
 	return &RegistryRequest{
-		Tags:  map[string]string{},
-		Build: &Build{},
+		Region:      DefaultRegion,
+		Environment: DefaultEnvironment,
+		Group:       DefaultGroup,
+		Tags:        map[string]string{},
+		Build:       &Build{},
 	}
 }
 

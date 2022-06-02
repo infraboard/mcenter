@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/client"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -17,9 +18,10 @@ func TestResolver(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
+	// 连接到服务
 	conn, err := grpc.DialContext(
 		ctx,
-		fmt.Sprintf("%s:///%s", resolver.Scheme, "keyauth"), // Dial to "mcenter:///keyauth"
+		fmt.Sprintf("%s://%s", resolver.Scheme, "keyauth"), // Dial to "mcenter://keyauth"
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock(),
 	)
@@ -28,8 +30,17 @@ func TestResolver(t *testing.T) {
 	}
 	defer conn.Close()
 
-	// 更新resolver
-	// resolver.M.Update()
+	// 注册服务实例
+	req := instance.NewRegistryRequest()
+	req.Name = "cmdb"
+	req.Address = "127.0.0.1:18050"
+	hb, err := client.C().Registry(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// 上报实例心跳
+	hb.Heartbeat(ctx)
 }
 
 func init() {

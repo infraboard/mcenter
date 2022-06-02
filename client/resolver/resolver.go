@@ -2,6 +2,7 @@ package resolver
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
@@ -79,10 +80,8 @@ func (m *mcenterResolver) ResolveNow(o resolver.ResolveNowOptions) {
 // 构建mcenter实例查询参数
 func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
 	searchReq := instance.NewSearchRequest()
+	searchReq.ApplicationName = m.target.URL.Host
 
-	// 1. 验证服务客户端凭证
-
-	// 2. 获取URL参数
 	qs := m.target.URL.Query()
 	searchReq.Region = qs.Get("region")
 	searchReq.Environment = qs.Get("environment")
@@ -94,6 +93,10 @@ func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
 // 查询名称对应的实例
 func (m *mcenterResolver) search() ([]resolver.Address, error) {
 	req := m.buildSerchReq()
+
+	if req.ApplicationName == "" {
+		return nil, fmt.Errorf("application name required")
+	}
 
 	// 设置查询的超时时间
 	ctx, cancel := context.WithTimeout(context.Background(), m.queryTimeoutSecond)
@@ -109,6 +112,7 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 	for i, s := range set.Items {
 		addrs[i] = resolver.Address{Addr: s.RegistryInfo.Address}
 	}
+	m.log.Infof("search application address: %s", addrs)
 
 	return addrs, nil
 }
