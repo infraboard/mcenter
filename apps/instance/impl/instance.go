@@ -27,7 +27,7 @@ func (i *impl) RegistryInstance(ctx context.Context, req *instance.RegistryReque
 		return nil, exception.NewBadRequest("validate create instance error, %s", err)
 	}
 
-	if err := i.save(ctx, ins); err != nil {
+	if err := i.upsert(ctx, ins); err != nil {
 		return nil, err
 	}
 

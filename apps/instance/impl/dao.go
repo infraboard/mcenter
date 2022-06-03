@@ -9,8 +9,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (i *impl) save(ctx context.Context, ins *instance.Instance) error {
-	if _, err := i.col.InsertOne(ctx, ins); err != nil {
+// https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/upsert/#upsert
+func (i *impl) upsert(ctx context.Context, ins *instance.Instance) error {
+	filter := bson.D{{Key: "_id", Value: ins.Id}}
+	update := bson.D{{Key: "$set", Value: ins}}
+	opts := options.Update().SetUpsert(true)
+	if _, err := i.col.UpdateOne(ctx, filter, update, opts); err != nil {
 		return exception.NewInternalServerError("inserted instance(%s) document error, %s",
 			ins.FullName(), err)
 	}

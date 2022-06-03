@@ -43,6 +43,8 @@ func TestResolver(t *testing.T) {
 
 	// 上报实例心跳
 	hb.Heartbeat(ctx)
+
+	time.Sleep(15 * time.Second)
 }
 
 func init() {
