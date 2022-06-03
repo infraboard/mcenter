@@ -3,6 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.instance;
 option go_package = "github.com/infraboard/mcenter/apps/instance";
 
+import "github.com/infraboard/mcube/pb/page/page.proto";
+
 service Service {
     // 实例注册
     rpc RegistryInstance(RegistryRequest) returns(Instance);
@@ -100,7 +102,7 @@ message RegistryRequest {
     // 实例地址
     // @gotags: bson:"address" json:"address" toml:"address" yaml:"address" env:"MCENTER_ADDRESS" validate:"required"
     string address = 7;
-    // 实例标签, 可以根据标签快速过滤实例l
+    // 实例标签, 可以根据标签快速过滤实例
     // @gotags: bson:"tags" json:"tags" toml:"tags" yaml:"tags" env:"MCENTER_TAGS"
     map<string,string> tags = 8;
     // 实例构建信息
@@ -167,22 +169,28 @@ message UnregistryResponse {
 }
 
 message SearchRequest {
+    // 分页参数
+    // @gotags: json:"page" 
+    infraboard.mcube.page.PageRequest page = 1;
     // 服务所属域
     // @gotags: bson:"domain" json:"domain" validate:"required"
-    string domain = 1;
+    string domain = 2;
     // 服务所属空间
     // @gotags: bson:"namespace" json:"namespace"
-    string namespace = 2;
+    string namespace = 3;
     // 实例所属应用Id
     // @gotags: bson:"application_name" json:"application_name"
-    string application_name = 3;
+    string application_name = 4;
     // 实例所属环境, 默认default
     // @gotags: bson:"region" json:"region"
-    string region = 4;
+    string region = 5;
     // 实例所属环境, 默认default
     // @gotags: bson:"environment" json:"environment"
-    string environment = 5;
+    string environment = 6;
     // 实例所属分组,默认default
     // @gotags: bson:"group" json:"group"
-    string group = 6;
+    string group = 7;
+    // 实例标签, 可以根据标签快速过滤实例
+    // @gotags: bson:"tags" json:"tags" 
+    map<string,string> tags = 8;
 }

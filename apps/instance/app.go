@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcube/http/request"
 )
 
 const (
@@ -24,11 +25,27 @@ var (
 )
 
 func NewSearchRequest() *SearchRequest {
-	return &SearchRequest{}
+	return &SearchRequest{
+		Page: request.NewDefaultPageRequest(),
+		Tags: map[string]string{},
+	}
 }
 
 func (req *RegistryRequest) Validate() error {
 	return validate.Struct(req)
+}
+
+func NewDefaultInstance() *Instance {
+	req := NewRegistryRequest()
+	app := application.NewDefaultApplication()
+	return &Instance{
+		Domain:          app.Spec.Domain,
+		Namespace:       app.Spec.Namespace,
+		ApplicationName: app.Spec.Name,
+		RegistryInfo:    req,
+		Status:          NewDefaultStatus(),
+		Config:          NewDefaultConfig(),
+	}
 }
 
 func NewInstance(req *RegistryRequest, app *application.Application) (*Instance, error) {
