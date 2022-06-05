@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/client"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -31,20 +30,6 @@ func TestResolver(t *testing.T) {
 		t.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-
-	// 注册服务实例
-	req := instance.NewRegistryRequest()
-	req.Name = "cmdb"
-	req.Address = "127.0.0.1:18050"
-	lf, err := client.C().Registry(ctx, req)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// 上报实例心跳
-	lf.Heartbeat(ctx)
-	time.Sleep(15 * time.Second)
-	lf.UnRegistry(context.Background())
 }
 
 func init() {
