@@ -5,7 +5,7 @@ import "github.com/infraboard/mcenter/client/auth"
 // NewDefaultConfig todo
 func NewDefaultConfig() *Config {
 	return &Config{
-		Address: "localhost:18050",
+		Address: "localhost:18010",
 	}
 }
 
