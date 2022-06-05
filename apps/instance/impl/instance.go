@@ -4,9 +4,6 @@ import (
 	"context"
 	"io"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/infraboard/mcenter/apps/application"
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/client/auth"
@@ -60,9 +57,24 @@ func (i *impl) Heartbeat(stream instance.Service_HeartbeatServer) error {
 	}
 }
 
-func (i *impl) UnRegistry(context.Context, *instance.UnregistryRequest) (
-	*instance.UnregistryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UnRegistry not implemented")
+func (i *impl) DescribeInstance(ctx context.Context, req *instance.DescribeInstanceRequest) (
+	*instance.Instance, error) {
+	return i.get(ctx, req.Id)
+}
+
+// 实例注销
+func (i *impl) UnRegistry(ctx context.Context, req *instance.UnregistryRequest) (
+	*instance.Instance, error) {
+	ins, err := i.DescribeInstance(ctx, instance.NewDescribeInstanceRequest(req.InstanceId))
+	if err != nil {
+		return nil, err
+	}
+
+	if err := i.delete(ctx, ins); err != nil {
+		return nil, err
+	}
+
+	return ins, nil
 }
 
 func (i *impl) Search(ctx context.Context, r *instance.SearchRequest) (

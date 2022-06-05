@@ -36,15 +36,15 @@ func TestResolver(t *testing.T) {
 	req := instance.NewRegistryRequest()
 	req.Name = "cmdb"
 	req.Address = "127.0.0.1:18050"
-	hb, err := client.C().Registry(ctx, req)
+	lf, err := client.C().Registry(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// 上报实例心跳
-	hb.Heartbeat(ctx)
-
+	lf.Heartbeat(ctx)
 	time.Sleep(15 * time.Second)
+	lf.UnRegistry(context.Background())
 }
 
 func init() {

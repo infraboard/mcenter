@@ -2,10 +2,12 @@ package impl
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcube/exception"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -95,4 +97,36 @@ func (i *impl) search(ctx context.Context, req *searchRequest) (*instance.Instan
 	set.Total = count
 
 	return set, nil
+}
+
+func (i *impl) get(ctx context.Context, id string) (*instance.Instance, error) {
+	filter := bson.M{"_id": id}
+
+	ins := instance.NewDefaultInstance()
+	if err := i.col.FindOne(ctx, filter).Decode(ins); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, exception.NewNotFound("instance %s not found", id)
+		}
+
+		return nil, exception.NewInternalServerError("find instance %s error, %s", id, err)
+	}
+
+	return ins, nil
+}
+
+func (i *impl) delete(ctx context.Context, ins *instance.Instance) error {
+	if ins == nil || ins.Id == "" {
+		return fmt.Errorf("instance is nil")
+	}
+
+	result, err := i.col.DeleteOne(ctx, bson.M{"_id": ins.Id})
+	if err != nil {
+		return exception.NewInternalServerError("delete instance(%s) error, %s", ins.Id, err)
+	}
+
+	if result.DeletedCount == 0 {
+		return exception.NewNotFound("instance %s not found", ins.Id)
+	}
+
+	return nil
 }

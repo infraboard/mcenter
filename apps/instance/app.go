@@ -122,3 +122,15 @@ func NewInstanceSet() *InstanceSet {
 func (s *InstanceSet) Add(item *Instance) {
 	s.Items = append(s.Items, item)
 }
+
+func NewDescribeInstanceRequest(id string) *DescribeInstanceRequest {
+	return &DescribeInstanceRequest{
+		Id: id,
+	}
+}
+
+func NewUnregistryRequest(instanceId string) *UnregistryRequest {
+	return &UnregistryRequest{
+		InstanceId: instanceId,
+	}
+}

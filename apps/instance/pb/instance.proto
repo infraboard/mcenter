@@ -11,9 +11,11 @@ service Service {
     // 实例上报心跳
     rpc Heartbeat(stream HeartbeatRequest) returns(stream HeartbeatResponse);
     // 实例注销
-    rpc UnRegistry(UnregistryRequest) returns(UnregistryResponse);
+    rpc UnRegistry(UnregistryRequest) returns(Instance);
     // 实例搜索, 用于客户端做服务发现
     rpc Search(SearchRequest) returns(InstanceSet);
+    // 查询实例详情
+    rpc DescribeInstance(DescribeInstanceRequest) returns(Instance);
 }
 
 // 实例注册的协议类型
@@ -102,12 +104,15 @@ message RegistryRequest {
     // 实例地址
     // @gotags: bson:"address" json:"address" toml:"address" yaml:"address" env:"MCENTER_ADDRESS" validate:"required"
     string address = 7;
+    // 该地址是否对外暴露, 如果暴露, 会被注册到网关
+    // @gotags: bson:"export" json:"export" toml:"export" yaml:"export" env:"MCENTER_EXPORT"
+    bool export = 8;
     // 实例标签, 可以根据标签快速过滤实例
     // @gotags: bson:"tags" json:"tags" toml:"tags" yaml:"tags" env:"MCENTER_TAGS"
-    map<string,string> tags = 8;
+    map<string,string> tags = 9;
     // 实例构建信息
     // @gotags: bson:"build" json:"build" toml:"build" yaml:"build"
-    Build build = 9;
+    Build build = 10;
 }
 
 // 实例构建相关信息
@@ -161,11 +166,9 @@ message HeartbeatResponse {
 }
 
 message UnregistryRequest {
-
-}
-
-message UnregistryResponse {
-
+    // 需要注销的实例Id
+    // @gotags: json:"instance_id"
+    string instance_id = 1;
 }
 
 message SearchRequest {
@@ -193,4 +196,10 @@ message SearchRequest {
     // 实例标签, 可以根据标签快速过滤实例
     // @gotags: bson:"tags" json:"tags" 
     map<string,string> tags = 8;
+}
+
+message DescribeInstanceRequest {
+    // 实例的Id
+    // @gotags: json:"id"
+    string id = 1;
 }
