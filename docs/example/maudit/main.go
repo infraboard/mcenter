@@ -1,15 +1,26 @@
-package client_test
+package main
 
 import (
 	"context"
-	"testing"
 	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/client"
 )
 
-func TestLifecycle(t *testing.T) {
+func main() {
+	// maudit客户端配置
+	conf := client.NewDefaultConfig()
+	conf.Address = "127.0.0.1:18010"
+	conf.ClientID = "LRmqB9tQ0VLf0v1lpwzJnypX"
+	conf.ClientSecret = "YRBi946B4wqqDHrfSWa4CecIDTzlBQ6N"
+
+	// 提前加载好 mcenter客户端
+	err := client.LoadClientFromConfig(conf)
+	if err != nil {
+		panic(err)
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
@@ -18,20 +29,13 @@ func TestLifecycle(t *testing.T) {
 	req.Address = "127.0.0.1:18050"
 	lf, err := client.C().Registry(ctx, req)
 	if err != nil {
-		t.Fatal(err)
+		panic(err)
 	}
 
 	// 上报实例心跳
 	lf.Heartbeat(ctx)
 	time.Sleep(15 * time.Second)
+
 	// 注销实例
 	lf.UnRegistry(context.Background())
-}
-
-func init() {
-	// 提前加载好 mcenter客户端, resolver需要使用
-	err := client.LoadClientFromEnv()
-	if err != nil {
-		panic(err)
-	}
 }

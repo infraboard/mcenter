@@ -37,6 +37,15 @@ func LoadClientFromEnv() error {
 	return nil
 }
 
+func LoadClientFromConfig(conf *Config) error {
+	c, err := NewClient(conf)
+	if err != nil {
+		return err
+	}
+	client = c
+	return nil
+}
+
 // NewClient todo
 func NewClient(conf *Config) (*ClientSet, error) {
 	zap.DevelopmentSetup()

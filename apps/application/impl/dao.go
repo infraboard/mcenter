@@ -72,7 +72,7 @@ func (i *impl) query(ctx context.Context, req *queryRequest) (*application.Appli
 		return nil, exception.NewInternalServerError("find book error, error is %s", err)
 	}
 
-	ApplicationSet := application.NewApplicationApplicationSet()
+	ApplicationSet := application.NewApplicationSet()
 	// 循环
 	for resp.Next(ctx) {
 		ins := application.NewDefaultApplication()

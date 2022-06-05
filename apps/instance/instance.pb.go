@@ -455,9 +455,9 @@ type RegistryRequest struct {
 	// 实例所属分组,默认default
 	// @gotags: bson:"group" json:"group" toml:"group" yaml:"group" env:"MCENTER_GROUP" validate:"required"
 	Group string `protobuf:"bytes,4,opt,name=group,proto3" json:"group" bson:"group" toml:"group" yaml:"group" env:"MCENTER_GROUP" validate:"required"`
-	// 实例名称
-	// @gotags: bson:"name" json:"name" toml:"name" yaml:"name" env:"MCENTER_NAME" validate:"required"
-	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name" bson:"name" toml:"name" yaml:"name" env:"MCENTER_NAME" validate:"required"`
+	// 实例名称, 如果不传, 则会随机生成
+	// @gotags: bson:"name" json:"name" toml:"name" yaml:"name" env:"MCENTER_NAME"
+	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name" bson:"name" toml:"name" yaml:"name" env:"MCENTER_NAME"`
 	// 注册的对外的访问的协议
 	// @gotags: bson:"protocal" json:"protocal" toml:"protocal" yaml:"protocal" env:"MCENTER_PROTOCAL"
 	Protocal Protocal `protobuf:"varint,6,opt,name=protocal,proto3,enum=infraboard.mcenter.instance.Protocal" json:"protocal" bson:"protocal" toml:"protocal" yaml:"protocal" env:"MCENTER_PROTOCAL"`

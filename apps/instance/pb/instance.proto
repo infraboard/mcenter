@@ -95,8 +95,8 @@ message RegistryRequest {
     // 实例所属分组,默认default
     // @gotags: bson:"group" json:"group" toml:"group" yaml:"group" env:"MCENTER_GROUP" validate:"required"
     string group = 4;
-    // 实例名称
-    // @gotags: bson:"name" json:"name" toml:"name" yaml:"name" env:"MCENTER_NAME" validate:"required"
+    // 实例名称, 如果不传, 则会随机生成
+    // @gotags: bson:"name" json:"name" toml:"name" yaml:"name" env:"MCENTER_NAME"
     string name = 5;
     // 注册的对外的访问的协议
     // @gotags: bson:"protocal" json:"protocal" toml:"protocal" yaml:"protocal" env:"MCENTER_PROTOCAL"

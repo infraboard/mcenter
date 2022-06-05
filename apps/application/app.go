@@ -78,7 +78,7 @@ func (req *CreateApplicationRequest) Validate() error {
 	return validate.Struct(req)
 }
 
-func NewApplicationApplicationSet() *ApplicationSet {
+func NewApplicationSet() *ApplicationSet {
 	return &ApplicationSet{
 		Items: []*Application{},
 	}

@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcenter/common/tools"
 	"github.com/infraboard/mcube/http/request"
 )
 
@@ -51,6 +52,10 @@ func NewDefaultInstance() *Instance {
 func NewInstance(req *RegistryRequest, app *application.Application) (*Instance, error) {
 	if err := req.Validate(); err != nil {
 		return nil, err
+	}
+
+	if req.Name == "" {
+		req.Name = "ins-" + tools.MakeBearer(8)
 	}
 
 	ins := &Instance{
