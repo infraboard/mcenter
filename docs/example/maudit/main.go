@@ -2,14 +2,18 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"time"
 
-	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/client"
+	"github.com/infraboard/mcenter/client/auth"
+	"github.com/infraboard/mcenter/client/resolver"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
-	// maudit客户端配置
+	// demo客户端配置
 	conf := client.NewDefaultConfig()
 	conf.Address = "127.0.0.1:18010"
 	conf.ClientID = "LRmqB9tQ0VLf0v1lpwzJnypX"
@@ -24,18 +28,18 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	// 注册服务实例
-	req := instance.NewRegistryRequest()
-	req.Address = "127.0.0.1:18050"
-	lf, err := client.C().Registry(ctx, req)
+	// 连接到服务
+	conn, err := grpc.DialContext(
+		ctx,
+		fmt.Sprintf("%s://%s", resolver.Scheme, "keyauth"), // Dial to "mcenter://keyauth"
+		grpc.WithPerRPCCredentials(auth.NewAuthentication("abc", "1123")),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`),
+		grpc.WithBlock(),
+	)
 	if err != nil {
 		panic(err)
 	}
 
-	// 上报实例心跳
-	lf.Heartbeat(ctx)
-	time.Sleep(15 * time.Second)
-
-	// 注销实例
-	lf.UnRegistry(context.Background())
+	defer conn.Close()
 }
