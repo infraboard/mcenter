@@ -3,6 +3,7 @@ package rest
 import (
 	"context"
 
+	"github.com/go-resty/resty/v2"
 	"github.com/infraboard/mcenter/apps/instance"
 )
 
@@ -15,4 +16,28 @@ type InstanceService interface {
 	Search(context.Context, *instance.SearchRequest) (*instance.InstanceSet, error)
 	// 查询实例详情
 	DescribeInstance(context.Context, *instance.DescribeInstanceRequest) (*instance.Instance, error)
+}
+
+type insImpl struct {
+	client *resty.Client
+}
+
+func (i *insImpl) RegistryInstance(ctx context.Context, req *instance.RegistryRequest) (
+	*instance.Instance, error) {
+	return nil, nil
+}
+
+func (i *insImpl) UnRegistry(ctx context.Context, req *instance.UnregistryRequest) (
+	*instance.Instance, error) {
+	return nil, nil
+}
+
+func (i *insImpl) Search(context.Context, *instance.SearchRequest) (
+	*instance.InstanceSet, error) {
+	return nil, nil
+}
+
+func (i *insImpl) DescribeInstance(ctx context.Context, req *instance.DescribeInstanceRequest) (
+	*instance.Instance, error) {
+	return nil, nil
 }
