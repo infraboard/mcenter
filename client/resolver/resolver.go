@@ -83,9 +83,9 @@ func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
 	searchReq.ApplicationName = m.target.URL.Host
 
 	qs := m.target.URL.Query()
+	searchReq.Page.PageSize = 500
 	searchReq.Region = qs.Get("region")
 	searchReq.Environment = qs.Get("environment")
-	searchReq.Group = qs.Get("group")
 
 	return searchReq
 }
@@ -108,8 +108,14 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 		return nil, err
 	}
 
-	addrs := make([]resolver.Address, len(set.Items))
-	for i, s := range set.Items {
+	// 优先获取对应匹配的组, 如果没匹配的，则使用最老的那个组
+	items := set.GetGroupInstance(req.Group)
+	if len(items) == 0 {
+		items = set.GetOldestGroup()
+	}
+
+	addrs := make([]resolver.Address, len(items))
+	for i, s := range items {
 		addrs[i] = resolver.Address{Addr: s.RegistryInfo.Address}
 	}
 	m.log.Infof("search application address: %s", addrs)

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package infraboard.mcenter.policy;
+option go_package = "github.com/infraboard/mcenter/apps/policy";
+
+service Service {
+}
+
+message Policy {
+    // 策略Id
+    // @gotags: bson:"_id" json:"id"
+    string id = 1;
+    // 录入时间
+    // @gotags: json:"create_at" bson:"create_at"
+    int64 create_at = 2;
+    // 更新时间
+    // @gotags: json:"update_at" bson:"update_at"
+    int64 update_at = 3;
+    // 更新人
+    // @gotags: json:"update_by" bson:"update_by"
+    string update_by = 4;
+    // 策略定义
+    // @gotags: json:"data" bson:"data"
+    CreatePolicyRequest data = 5;
+}
+
+message CreatePolicyRequest {
+    // 创建人
+    // @gotags: json:"create_by" bson:"create_by"
+    string create_by = 1;
+    // 应用
+    // @gotags: json:"application" bson:"application" validate:"required"
+    string application = 2;
+}

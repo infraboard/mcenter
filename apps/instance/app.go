@@ -3,6 +3,7 @@ package instance
 import (
 	"fmt"
 	"hash/fnv"
+	"sort"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -126,6 +127,38 @@ func NewInstanceSet() *InstanceSet {
 
 func (s *InstanceSet) Add(item *Instance) {
 	s.Items = append(s.Items, item)
+}
+
+func (s *InstanceSet) GetGroupInstance(group string) (items []*Instance) {
+	for i := range s.Items {
+		if s.Items[i].RegistryInfo.Group == group {
+			items = append(items, s.Items[i])
+		}
+	}
+
+	return
+}
+
+func (s *InstanceSet) GetOldestGroup() (items []*Instance) {
+	sort.Sort(s)
+	if s.Len() > 0 {
+		og := s.Items[0].RegistryInfo.Group
+		return s.GetGroupInstance(og)
+	}
+
+	return nil
+}
+
+func (s *InstanceSet) Len() int {
+	return len(s.Items)
+}
+
+func (s *InstanceSet) Less(i, j int) bool {
+	return s.Items[i].Status.Online < s.Items[j].Status.Online
+}
+
+func (s *InstanceSet) Swap(i, j int) {
+	s.Items[i], s.Items[j] = s.Items[j], s.Items[i]
 }
 
 func NewDescribeInstanceRequest(id string) *DescribeInstanceRequest {
