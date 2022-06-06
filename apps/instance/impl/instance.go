@@ -6,7 +6,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/application"
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client/auth"
+	"github.com/infraboard/mcenter/client/rpc/auth"
 	"github.com/infraboard/mcube/exception"
 )
 

@@ -1,10 +1,10 @@
-package client
+package rpc
 
 import (
 	"context"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client/lifecycle"
+	"github.com/infraboard/mcenter/client/rpc/lifecycle"
 )
 
 func (c *ClientSet) Registry(ctx context.Context, req *instance.RegistryRequest) (lifecycle.Lifecycler, error) {

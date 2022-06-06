@@ -1,4 +1,4 @@
-package client_test
+package rpc_test
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client"
+	"github.com/infraboard/mcenter/client/rpc"
 )
 
 func TestLifecycle(t *testing.T) {
@@ -16,7 +16,7 @@ func TestLifecycle(t *testing.T) {
 	// 注册服务实例
 	req := instance.NewRegistryRequest()
 	req.Address = "127.0.0.1:18050"
-	lf, err := client.C().Registry(ctx, req)
+	lf, err := rpc.C().Registry(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -30,7 +30,7 @@ func TestLifecycle(t *testing.T) {
 
 func init() {
 	// 提前加载好 mcenter客户端, resolver需要使用
-	err := client.LoadClientFromEnv()
+	err := rpc.LoadClientFromEnv()
 	if err != nil {
 		panic(err)
 	}

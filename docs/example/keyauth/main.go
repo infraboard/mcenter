@@ -5,18 +5,18 @@ import (
 	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client"
+	"github.com/infraboard/mcenter/client/rpc"
 )
 
 func main() {
 	// keyauth客户端配置
-	conf := client.NewDefaultConfig()
+	conf := rpc.NewDefaultConfig()
 	conf.Address = "127.0.0.1:18010"
 	conf.ClientID = "8yJ3p8XSaNhwmnyNV4V413LK"
 	conf.ClientSecret = "8rISq5gwdCQGZWEEHxsLa5qfx0eWYcjo"
 
 	// 提前加载好 mcenter客户端
-	err := client.LoadClientFromConfig(conf)
+	err := rpc.LoadClientFromConfig(conf)
 	if err != nil {
 		panic(err)
 	}
@@ -27,7 +27,7 @@ func main() {
 	// 注册服务实例
 	req := instance.NewRegistryRequest()
 	req.Address = "127.0.0.1:18050"
-	lf, err := client.C().Registry(ctx, req)
+	lf, err := rpc.C().Registry(ctx, req)
 	if err != nil {
 		panic(err)
 	}

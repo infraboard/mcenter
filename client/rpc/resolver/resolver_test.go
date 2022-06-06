@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/infraboard/mcenter/client"
+	"github.com/infraboard/mcenter/client/rpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/infraboard/mcenter/client/auth"
-	"github.com/infraboard/mcenter/client/resolver"
+	"github.com/infraboard/mcenter/client/rpc/auth"
+	"github.com/infraboard/mcenter/client/rpc/resolver"
 )
 
 func TestResolver(t *testing.T) {
@@ -34,7 +34,7 @@ func TestResolver(t *testing.T) {
 
 func init() {
 	// 提前加载好 mcenter客户端, resolver需要使用
-	err := client.LoadClientFromEnv()
+	err := rpc.LoadClientFromEnv()
 	if err != nil {
 		panic(err)
 	}

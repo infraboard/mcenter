@@ -1,10 +1,10 @@
-package client
+package rpc
 
 import (
 	"net/url"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client/auth"
+	"github.com/infraboard/mcenter/client/rpc/auth"
 )
 
 // NewDefaultConfig todo

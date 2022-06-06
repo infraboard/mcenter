@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/infraboard/mcenter/apps/application"
-	"github.com/infraboard/mcenter/client/auth"
+	"github.com/infraboard/mcenter/client/rpc/auth"
 )
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.

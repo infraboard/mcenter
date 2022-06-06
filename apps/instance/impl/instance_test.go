@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client/auth"
+	"github.com/infraboard/mcenter/client/rpc/auth"
 	"github.com/infraboard/mcenter/conf"
 
 	// 注册所有服务

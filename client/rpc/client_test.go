@@ -1,15 +1,15 @@
-package client_test
+package rpc_test
 
 import (
 	"context"
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client"
+	"github.com/infraboard/mcenter/client/rpc"
 )
 
 var (
-	c *client.ClientSet
+	c *rpc.ClientSet
 )
 
 func TestInstanceQuery(t *testing.T) {
@@ -26,9 +26,9 @@ func TestInstanceQuery(t *testing.T) {
 }
 
 func init() {
-	err := client.LoadClientFromEnv()
+	err := rpc.LoadClientFromEnv()
 	if err != nil {
 		panic(err)
 	}
-	c = client.C()
+	c = rpc.C()
 }

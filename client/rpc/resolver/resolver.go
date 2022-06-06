@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client"
+	"github.com/infraboard/mcenter/client/rpc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc/resolver"
@@ -36,7 +36,7 @@ func (*McenterResolverBuilder) Build(
 	resolver.Resolver, error) {
 
 	r := &mcenterResolver{
-		mcenter:            client.C().Instance(),
+		mcenter:            rpc.C().Instance(),
 		target:             target,
 		cc:                 cc,
 		queryTimeoutSecond: 3 * time.Second,

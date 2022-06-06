@@ -5,22 +5,22 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/infraboard/mcenter/client"
-	"github.com/infraboard/mcenter/client/auth"
-	"github.com/infraboard/mcenter/client/resolver"
+	"github.com/infraboard/mcenter/client/rpc"
+	"github.com/infraboard/mcenter/client/rpc/auth"
+	"github.com/infraboard/mcenter/client/rpc/resolver"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
 	// demo客户端配置
-	conf := client.NewDefaultConfig()
+	conf := rpc.NewDefaultConfig()
 	conf.Address = "127.0.0.1:18010"
 	conf.ClientID = "LRmqB9tQ0VLf0v1lpwzJnypX"
 	conf.ClientSecret = "YRBi946B4wqqDHrfSWa4CecIDTzlBQ6N"
 
 	// 提前加载好 mcenter客户端
-	err := client.LoadClientFromConfig(conf)
+	err := rpc.LoadClientFromConfig(conf)
 	if err != nil {
 		panic(err)
 	}
