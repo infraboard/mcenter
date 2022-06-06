@@ -5,7 +5,7 @@ import "github.com/go-resty/resty/v2"
 func NewClient(conf *Config) *ClientSet {
 	c := resty.New()
 	c.SetAuthToken(conf.Token)
-	c.SetBaseURL(conf.Address)
+	c.SetBaseURL(conf.Address + conf.PathPrefix)
 	return &ClientSet{
 		c: c,
 	}
