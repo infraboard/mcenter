@@ -36,8 +36,9 @@ func (m *manager) Heartbeat(ctx context.Context) error {
 	}
 	m.stream = stream
 
+	go m.sender(ctx)
 	go m.receiver(ctx)
-	return m.sender(ctx)
+	return nil
 }
 
 func (m *manager) HeartbeatInterval() time.Duration {
@@ -49,13 +50,19 @@ func (m *manager) HeartbeatInterval() time.Duration {
 }
 
 // 发送心跳
-func (m *manager) sender(ctx context.Context) error {
+func (m *manager) sender(ctx context.Context) {
+	defer func() {
+		if err := recover(); err != nil {
+			m.log.Errorf("sender panic: %s", err)
+		}
+	}()
+
 	tk := time.NewTicker(m.HeartbeatInterval())
 	for {
 		select {
 		case <-ctx.Done():
 			m.log.Infof("heartbeat sender stoped")
-			return nil
+			return
 		case <-tk.C:
 			if err := m.stream.Send(instance.NewHeartbeatRequest(m.ins.Id)); err != nil {
 				m.log.Errorf("send heartbeat error, %s", err)
