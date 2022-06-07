@@ -37,7 +37,7 @@ func (h *handler) Version() string {
 func (h *handler) Registry(ws *restful.WebService) {
 	tags := []string{"applications"}
 
-	ws.Route(ws.POST("").To(h.CreateApplication).
+	ws.Route(ws.POST("/").To(h.CreateApplication).
 		Doc("create a application").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(application.CreateApplicationRequest{}).

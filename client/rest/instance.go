@@ -3,8 +3,9 @@ package rest
 import (
 	"context"
 
-	"github.com/go-resty/resty/v2"
 	"github.com/infraboard/mcenter/apps/instance"
+	"github.com/infraboard/mcube/client/rest"
+	"github.com/infraboard/mcube/http/response"
 )
 
 type InstanceService interface {
@@ -19,25 +20,85 @@ type InstanceService interface {
 }
 
 type insImpl struct {
-	client *resty.Client
+	client *rest.RESTClient
 }
 
 func (i *insImpl) RegistryInstance(ctx context.Context, req *instance.RegistryRequest) (
 	*instance.Instance, error) {
-	return nil, nil
+	ins := instance.NewDefaultInstance()
+	resp := response.NewData(ins)
+
+	err := i.client.
+		Post("instance").
+		Body(req).
+		Do(ctx).
+		Into(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Error() != nil {
+		return nil, err
+	}
+
+	return ins, nil
 }
 
 func (i *insImpl) UnRegistry(ctx context.Context, req *instance.UnregistryRequest) (
 	*instance.Instance, error) {
-	return nil, nil
+	ins := instance.NewDefaultInstance()
+	resp := response.NewData(ins)
+
+	err := i.client.
+		Delete("instance/" + req.InstanceId).
+		Do(ctx).
+		Into(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Error() != nil {
+		return nil, err
+	}
+	return ins, nil
 }
 
-func (i *insImpl) Search(context.Context, *instance.SearchRequest) (
+func (i *insImpl) Search(ctx context.Context, req *instance.SearchRequest) (
 	*instance.InstanceSet, error) {
-	return nil, nil
+	set := instance.NewInstanceSet()
+	resp := response.NewData(set)
+
+	err := i.client.
+		Get("instance/").
+		Do(ctx).
+		Into(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Error() != nil {
+		return nil, err
+	}
+
+	return set, nil
 }
 
 func (i *insImpl) DescribeInstance(ctx context.Context, req *instance.DescribeInstanceRequest) (
 	*instance.Instance, error) {
-	return nil, nil
+	ins := instance.NewDefaultInstance()
+	resp := response.NewData(ins)
+
+	err := i.client.
+		Get("instance/" + req.Id).
+		Do(ctx).
+		Into(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Error() != nil {
+		return nil, err
+	}
+
+	return ins, nil
 }

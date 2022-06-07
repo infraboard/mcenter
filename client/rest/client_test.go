@@ -13,13 +13,14 @@ var (
 )
 
 func TestCreateApplicaiton(t *testing.T) {
-	app, err := c.Application().CreateApplication(context.TODO(), application.NewCreateApplicationRequest())
+	set, err := c.Application().QueryApplication(context.TODO(), application.NewQueryApplicationRequest())
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(app)
+
+	t.Log(set)
 }
 
 func init() {
-
+	c = rest.NewClient(rest.NewDefaultConfig())
 }

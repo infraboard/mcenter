@@ -10,10 +10,9 @@ require (
 	github.com/emicklei/go-restful/v3 v3.7.4
 	github.com/go-openapi/spec v0.20.6
 	github.com/go-playground/validator/v10 v10.11.0
-	github.com/go-resty/resty/v2 v2.7.0
 	github.com/imdario/mergo v0.3.13
 	github.com/infraboard/keyauth v0.7.9
-	github.com/infraboard/mcube v1.8.13
+	github.com/infraboard/mcube v1.9.0
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0
 	go.mongodb.org/mongo-driver v1.9.1

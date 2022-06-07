@@ -140,6 +140,15 @@ func (i *Application) Patch(req *UpdateApplicationRequest) error {
 	return mergo.MergeWithOverwrite(i.Spec, req.Spec)
 }
 
+func NewUpdateApplicationRequest(id string) *UpdateApplicationRequest {
+	return &UpdateApplicationRequest{
+		Id:         id,
+		UpdateMode: pb_request.UpdateMode_PUT,
+		UpdateAt:   time.Now().UnixMilli(),
+		Spec:       NewCreateApplicationRequest(),
+	}
+}
+
 func NewPutApplicationRequest(id string) *UpdateApplicationRequest {
 	return &UpdateApplicationRequest{
 		Id:         id,

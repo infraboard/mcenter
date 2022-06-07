@@ -1,10 +1,12 @@
 package rest
 
-import "github.com/go-resty/resty/v2"
+import (
+	"github.com/infraboard/mcube/client/rest"
+)
 
 func NewClient(conf *Config) *ClientSet {
-	c := resty.New()
-	c.SetAuthToken(conf.Token)
+	c := rest.NewRESTClient()
+	c.SetBearerTokenAuth(conf.Token)
 	c.SetBaseURL(conf.Address + conf.PathPrefix)
 	return &ClientSet{
 		c: c,
@@ -12,7 +14,7 @@ func NewClient(conf *Config) *ClientSet {
 }
 
 type ClientSet struct {
-	c *resty.Client
+	c *rest.RESTClient
 }
 
 func (c *ClientSet) Application() ApplicationService {
