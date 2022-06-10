@@ -3,6 +3,7 @@ package resolver_test
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -22,7 +23,7 @@ func TestResolver(t *testing.T) {
 	conn, err := grpc.DialContext(
 		ctx,
 		fmt.Sprintf("%s://%s", resolver.Scheme, "keyauth"), // Dial to "mcenter://keyauth"
-		grpc.WithPerRPCCredentials(auth.NewAuthentication("abc", "1123")),
+		grpc.WithPerRPCCredentials(auth.NewAuthentication(os.Getenv("MCENTER_CLINET_ID"), os.Getenv("MCENTER_CLIENT_SECRET"))),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock(),
 	)

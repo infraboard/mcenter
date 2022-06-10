@@ -45,8 +45,8 @@ message Instance {
     // @gotags: bson:"namespace" json:"namespace"
     string namespace = 3;
     // 实例所属应用名称
-    // @gotags: bson:"application_name" json:"application_name"
-    string application_name = 4;
+    // @gotags: bson:"service_name" json:"service_name"
+    string service_name = 4;
     // 实例注册相关信息
     // @gotags: bson:"registry_info" json:"registry_info"
     RegistryRequest registry_info = 5;
@@ -185,8 +185,8 @@ message SearchRequest {
     // @gotags: bson:"namespace" json:"namespace"
     string namespace = 3;
     // 实例所属应用Id
-    // @gotags: bson:"application_name" json:"application_name"
-    string application_name = 4;
+    // @gotags: bson:"service_name" json:"service_name"
+    string service_name = 4;
     // 实例所属环境, 默认default
     // @gotags: bson:"region" json:"region"
     string region = 5;

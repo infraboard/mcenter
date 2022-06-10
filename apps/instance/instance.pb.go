@@ -177,8 +177,8 @@ type Instance struct {
 	// @gotags: bson:"namespace" json:"namespace"
 	Namespace string `protobuf:"bytes,3,opt,name=namespace,proto3" json:"namespace" bson:"namespace"`
 	// 实例所属应用名称
-	// @gotags: bson:"application_name" json:"application_name"
-	ApplicationName string `protobuf:"bytes,4,opt,name=application_name,json=applicationName,proto3" json:"application_name" bson:"application_name"`
+	// @gotags: bson:"service_name" json:"service_name"
+	ApplicationName string `protobuf:"bytes,4,opt,name=service_name,json=applicationName,proto3" json:"service_name" bson:"service_name"`
 	// 实例注册相关信息
 	// @gotags: bson:"registry_info" json:"registry_info"
 	RegistryInfo *RegistryRequest `protobuf:"bytes,5,opt,name=registry_info,json=registryInfo,proto3" json:"registry_info" bson:"registry_info"`
@@ -947,8 +947,8 @@ type SearchRequest struct {
 	// @gotags: bson:"namespace" json:"namespace"
 	Namespace string `protobuf:"bytes,3,opt,name=namespace,proto3" json:"namespace" bson:"namespace"`
 	// 实例所属应用Id
-	// @gotags: bson:"application_name" json:"application_name"
-	ApplicationName string `protobuf:"bytes,4,opt,name=application_name,json=applicationName,proto3" json:"application_name" bson:"application_name"`
+	// @gotags: bson:"service_name" json:"service_name"
+	ApplicationName string `protobuf:"bytes,4,opt,name=service_name,json=applicationName,proto3" json:"service_name" bson:"service_name"`
 	// 实例所属环境, 默认default
 	// @gotags: bson:"region" json:"region"
 	Region string `protobuf:"bytes,5,opt,name=region,proto3" json:"region" bson:"region"`

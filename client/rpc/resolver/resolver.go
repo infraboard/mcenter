@@ -86,7 +86,6 @@ func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
 	searchReq.Page.PageSize = 500
 	searchReq.Region = qs.Get("region")
 	searchReq.Environment = qs.Get("environment")
-
 	return searchReq
 }
 

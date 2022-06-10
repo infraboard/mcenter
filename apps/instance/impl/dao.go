@@ -57,7 +57,7 @@ func (r *searchRequest) FindFilter() bson.M {
 		filter["namespace"] = r.Namespace
 	}
 	if r.ApplicationName != "" {
-		filter["application_name"] = r.ApplicationName
+		filter["service_name"] = r.ApplicationName
 	}
 	if r.Region != "" {
 		filter["registry_info.region"] = r.Region
