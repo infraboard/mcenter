@@ -25,7 +25,7 @@ func (i *impl) ValidateCredential(ctx context.Context, req *service.ValidateCred
 	return app, nil
 }
 
-func (i *impl) Createservice(ctx context.Context, req *service.CreateServiceRequest) (
+func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequest) (
 	*service.Service, error) {
 	ins, err := service.NewService(req)
 	if err != nil {
@@ -39,7 +39,7 @@ func (i *impl) Createservice(ctx context.Context, req *service.CreateServiceRequ
 	return ins, nil
 }
 
-func (i *impl) Updateservice(ctx context.Context, req *service.UpdateServiceRequest) (
+func (i *impl) UpdateService(ctx context.Context, req *service.UpdateServiceRequest) (
 	*service.Service, error) {
 	ins, err := i.Describeservice(ctx, service.NewDescribeServiceRequest(req.Id))
 	if err != nil {
@@ -68,7 +68,7 @@ func (i *impl) Updateservice(ctx context.Context, req *service.UpdateServiceRequ
 	return ins, nil
 }
 
-func (i *impl) Queryservice(ctx context.Context, req *service.QueryServiceRequest) (
+func (i *impl) QueryService(ctx context.Context, req *service.QueryServiceRequest) (
 	*service.ServiceSet, error) {
 	query := newQueryRequest(req)
 	return i.query(ctx, query)
@@ -79,7 +79,7 @@ func (i *impl) Describeservice(ctx context.Context, req *service.DescribeService
 	return i.get(ctx, req)
 }
 
-func (i *impl) Deleteservice(ctx context.Context, req *service.DeleteServiceRequest) (
+func (i *impl) DeleteService(ctx context.Context, req *service.DeleteServiceRequest) (
 	*service.Service, error) {
 	ins, err := i.Describeservice(ctx, service.NewDescribeServiceRequest(req.Id))
 	if err != nil {

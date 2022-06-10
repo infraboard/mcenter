@@ -23,23 +23,22 @@ type impl struct {
 	service.UnimplementedMetaServiceServer
 }
 
-func (s *impl) Config() error {
-
+func (i *impl) Config() error {
 	db, err := conf.C().Mongo.GetDB()
 	if err != nil {
 		return err
 	}
-	s.col = db.Collection(s.Name())
+	i.col = db.Collection(i.Name())
 
-	s.log = zap.L().Named(s.Name())
+	i.log = zap.L().Named(i.Name())
 	return nil
 }
 
-func (s *impl) Name() string {
+func (i *impl) Name() string {
 	return service.AppName
 }
 
-func (s *impl) Registry(server *grpc.Server) {
+func (i *impl) Registry(server *grpc.Server) {
 	service.RegisterMetaServiceServer(server, svr)
 }
 

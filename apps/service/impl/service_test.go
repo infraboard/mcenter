@@ -17,7 +17,7 @@ var (
 	impl service.MetaServiceServer
 )
 
-func TestCreateApplication(t *testing.T) {
+func TestCreateService(t *testing.T) {
 	req := service.NewCreateServiceRequest()
 	req.Name = "cmdb"
 	req.Description = "资源中心"
@@ -29,7 +29,7 @@ func TestCreateApplication(t *testing.T) {
 	t.Log(app)
 }
 
-func TestQueryApplication(t *testing.T) {
+func TestQueryService(t *testing.T) {
 	req := service.NewQueryServiceRequest()
 	set, err := impl.QueryService(context.Background(), req)
 	if err != nil {
