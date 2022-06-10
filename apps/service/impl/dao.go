@@ -118,7 +118,7 @@ func (i *impl) get(ctx context.Context, req *service.DescribeServiceRequest) (*s
 
 func (i *impl) delete(ctx context.Context, ins *service.Service) error {
 	if ins == nil || ins.Id == "" {
-		return fmt.Errorf("Service is nil")
+		return fmt.Errorf("service is nil")
 	}
 
 	result, err := i.col.DeleteOne(ctx, bson.M{"_id": ins.Id})
