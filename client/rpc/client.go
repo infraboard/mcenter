@@ -7,8 +7,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/infraboard/mcenter/apps/application"
 	"github.com/infraboard/mcenter/apps/instance"
+	"github.com/infraboard/mcenter/apps/service"
 )
 
 var (
@@ -78,6 +78,6 @@ func (c *ClientSet) Instance() instance.ServiceClient {
 }
 
 // Application服务的SDK
-func (c *ClientSet) Application() application.ServiceClient {
-	return application.NewServiceClient(c.conn)
+func (c *ClientSet) Service() service.MetaServiceClient {
+	return service.NewMetaServiceClient(c.conn)
 }

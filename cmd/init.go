@@ -7,7 +7,7 @@ import (
 
 	// 注册所有服务
 	_ "github.com/infraboard/mcenter/apps/all"
-	"github.com/infraboard/mcenter/apps/application"
+	meta "github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -39,10 +39,10 @@ var initCmd = &cobra.Command{
 		apps.Add("demo", "测试样例")
 		log := zap.L().Named("init")
 
-		impl := app.GetGrpcApp(application.AppName).(application.ServiceServer)
+		impl := app.GetGrpcApp(meta.AppName).(meta.MetaServiceServer)
 
 		for _, req := range apps.items {
-			app, err := impl.CreateApplication(context.Background(), req)
+			app, err := impl.CreateService(context.Background(), req)
 			if err != nil {
 				log.Errorf("init app %s error, %s", req.Name, err)
 				continue
@@ -60,16 +60,16 @@ var initCmd = &cobra.Command{
 
 func NewInitApps() *InitApps {
 	return &InitApps{
-		items: []*application.CreateApplicationRequest{},
+		items: []*meta.CreateServiceRequest{},
 	}
 }
 
 type InitApps struct {
-	items []*application.CreateApplicationRequest
+	items []*meta.CreateServiceRequest
 }
 
 func (i *InitApps) Add(name, descrption string) {
-	req := application.NewCreateApplicationRequest()
+	req := meta.NewCreateServiceRequest()
 	req.Name = name
 	req.Description = descrption
 	req.Owner = "admin"

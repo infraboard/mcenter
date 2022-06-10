@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/common/tools"
 	"github.com/infraboard/mcube/http/request"
 )
@@ -39,7 +39,7 @@ func (req *RegistryRequest) Validate() error {
 
 func NewDefaultInstance() *Instance {
 	req := NewRegistryRequest()
-	app := application.NewDefaultApplication()
+	app := service.NewDefaultService()
 	return &Instance{
 		Domain:          app.Spec.Domain,
 		Namespace:       app.Spec.Namespace,
@@ -50,7 +50,7 @@ func NewDefaultInstance() *Instance {
 	}
 }
 
-func NewInstance(req *RegistryRequest, app *application.Application) (*Instance, error) {
+func NewInstance(req *RegistryRequest, app *service.Service) (*Instance, error) {
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}

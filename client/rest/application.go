@@ -3,33 +3,33 @@ package rest
 import (
 	"context"
 
-	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcube/client/rest"
 	"github.com/infraboard/mcube/http/response"
 	"github.com/infraboard/mcube/pb/request"
 )
 
-type ApplicationService interface {
-	ValidateCredential(context.Context, *application.ValidateCredentialRequest) (*application.Application, error)
-	CreateApplication(context.Context, *application.CreateApplicationRequest) (*application.Application, error)
-	UpdateApplication(context.Context, *application.UpdateApplicationRequest) (*application.Application, error)
-	QueryApplication(context.Context, *application.QueryApplicationRequest) (*application.ApplicationSet, error)
-	DescribeApplication(context.Context, *application.DescribeApplicationRequest) (*application.Application, error)
-	DeleteApplication(context.Context, *application.DeleteApplicationRequest) (*application.Application, error)
-	RefreshCredential(context.Context, *application.DescribeApplicationRequest) (*application.Application, error)
+type MetaService interface {
+	ValidateCredential(context.Context, *service.ValidateCredentialRequest) (*service.Service, error)
+	CreateService(context.Context, *service.CreateServiceRequest) (*service.Service, error)
+	UpdateService(context.Context, *service.UpdateServiceRequest) (*service.Service, error)
+	QueryService(context.Context, *service.QueryServiceRequest) (*service.ServiceSet, error)
+	DescribeService(context.Context, *service.DescribeServiceRequest) (*service.Service, error)
+	DeleteService(context.Context, *service.DeleteServiceRequest) (*service.Service, error)
+	RefreshCredential(context.Context, *service.DescribeServiceRequest) (*service.Service, error)
 }
 
 type appImpl struct {
 	client *rest.RESTClient
 }
 
-func (i *appImpl) ValidateCredential(ctx context.Context, req *application.ValidateCredentialRequest) (
-	*application.Application, error) {
-	ins := application.NewDefaultApplication()
+func (i *appImpl) ValidateCredential(ctx context.Context, req *service.ValidateCredentialRequest) (
+	*service.Service, error) {
+	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
 
 	err := i.client.
-		Post("application").
+		Post("service").
 		Body(req).
 		Do(ctx).
 		Into(resp)
@@ -40,13 +40,13 @@ func (i *appImpl) ValidateCredential(ctx context.Context, req *application.Valid
 	return ins, nil
 }
 
-func (i *appImpl) CreateApplication(ctx context.Context, req *application.CreateApplicationRequest) (
-	*application.Application, error) {
-	ins := application.NewDefaultApplication()
+func (i *appImpl) CreateService(ctx context.Context, req *service.CreateServiceRequest) (
+	*service.Service, error) {
+	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
 
 	err := i.client.
-		Post("application").
+		Post("service").
 		Body(req).
 		Do(ctx).
 		Into(resp)
@@ -60,22 +60,22 @@ func (i *appImpl) CreateApplication(ctx context.Context, req *application.Create
 	return ins, nil
 }
 
-func (i *appImpl) UpdateApplication(ctx context.Context, req *application.UpdateApplicationRequest) (
-	*application.Application, error) {
-	ins := application.NewDefaultApplication()
+func (i *appImpl) UpdateService(ctx context.Context, req *service.UpdateServiceRequest) (
+	*service.Service, error) {
+	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
 
 	var err error
 	switch req.UpdateMode {
 	case request.UpdateMode_PUT:
 		err = i.client.
-			Put("application/" + req.Id).
+			Put("service/" + req.Id).
 			Body(req.Spec).
 			Do(ctx).
 			Into(resp)
 	case request.UpdateMode_PATCH:
 		err = i.client.
-			Patch("application/" + req.Id).
+			Patch("service/" + req.Id).
 			Body(req.Spec).
 			Do(ctx).
 			Into(resp)
@@ -92,13 +92,13 @@ func (i *appImpl) UpdateApplication(ctx context.Context, req *application.Update
 	return ins, nil
 }
 
-func (i *appImpl) QueryApplication(ctx context.Context, req *application.QueryApplicationRequest) (
-	*application.ApplicationSet, error) {
-	set := application.NewApplicationSet()
+func (i *appImpl) QueryService(ctx context.Context, req *service.QueryServiceRequest) (
+	*service.ServiceSet, error) {
+	set := service.NewServiceSet()
 	resp := response.NewData(set)
 
 	err := i.client.
-		Get("application").
+		Get("service").
 		Do(ctx).
 		Into(resp)
 	if err != nil {
@@ -112,13 +112,13 @@ func (i *appImpl) QueryApplication(ctx context.Context, req *application.QueryAp
 	return set, nil
 }
 
-func (i *appImpl) DescribeApplication(ctx context.Context, req *application.DescribeApplicationRequest) (
-	*application.Application, error) {
-	ins := application.NewDefaultApplication()
+func (i *appImpl) DescribeService(ctx context.Context, req *service.DescribeServiceRequest) (
+	*service.Service, error) {
+	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
 
 	err := i.client.
-		Get("application/" + req.Id).
+		Get("service/" + req.Id).
 		Do(ctx).
 		Into(resp)
 	if err != nil {
@@ -131,13 +131,13 @@ func (i *appImpl) DescribeApplication(ctx context.Context, req *application.Desc
 	return ins, nil
 }
 
-func (i *appImpl) DeleteApplication(ctx context.Context, req *application.DeleteApplicationRequest) (
-	*application.Application, error) {
-	ins := application.NewDefaultApplication()
+func (i *appImpl) DeleteService(ctx context.Context, req *service.DeleteServiceRequest) (
+	*service.Service, error) {
+	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
 
 	err := i.client.
-		Delete("application/" + req.Id).
+		Delete("service/" + req.Id).
 		Do(ctx).
 		Into(resp)
 	if err != nil {
@@ -150,7 +150,7 @@ func (i *appImpl) DeleteApplication(ctx context.Context, req *application.Delete
 	return ins, nil
 }
 
-func (i *appImpl) RefreshCredential(ctx context.Context, req *application.DescribeApplicationRequest) (
-	*application.Application, error) {
+func (i *appImpl) RefreshCredential(ctx context.Context, req *service.DescribeServiceRequest) (
+	*service.Service, error) {
 	return nil, nil
 }

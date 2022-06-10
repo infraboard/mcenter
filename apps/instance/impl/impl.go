@@ -8,8 +8,8 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 
-	"github.com/infraboard/mcenter/apps/application"
 	"github.com/infraboard/mcenter/apps/instance"
+	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/conf"
 )
 
@@ -23,7 +23,7 @@ type impl struct {
 	log logger.Logger
 	instance.UnimplementedServiceServer
 
-	app application.ServiceServer
+	app service.MetaServiceServer
 }
 
 func (i *impl) Config() error {
@@ -34,7 +34,7 @@ func (i *impl) Config() error {
 	i.col = db.Collection(i.Name())
 	i.log = zap.L().Named(i.Name())
 
-	i.app = app.GetGrpcApp(application.AppName).(application.ServiceServer)
+	i.app = app.GetGrpcApp(service.AppName).(service.MetaServiceServer)
 	return nil
 }
 

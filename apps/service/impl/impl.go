@@ -8,7 +8,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 
-	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/conf"
 )
 
@@ -20,7 +20,7 @@ var (
 type impl struct {
 	col *mongo.Collection
 	log logger.Logger
-	application.UnimplementedServiceServer
+	service.UnimplementedMetaServiceServer
 }
 
 func (s *impl) Config() error {
@@ -36,11 +36,11 @@ func (s *impl) Config() error {
 }
 
 func (s *impl) Name() string {
-	return application.AppName
+	return service.AppName
 }
 
 func (s *impl) Registry(server *grpc.Server) {
-	application.RegisterServiceServer(server, svr)
+	service.RegisterMetaServiceServer(server, svr)
 }
 
 func init() {

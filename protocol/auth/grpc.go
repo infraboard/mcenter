@@ -11,16 +11,16 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/client/rpc/auth"
 )
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
-func GrpcAuthUnaryServerInterceptor(app application.ServiceServer) grpc.UnaryServerInterceptor {
+func GrpcAuthUnaryServerInterceptor(app service.MetaServiceServer) grpc.UnaryServerInterceptor {
 	return newGrpcAuther(app).Auth
 }
 
-func newGrpcAuther(app application.ServiceServer) *grpcAuther {
+func newGrpcAuther(app service.MetaServiceServer) *grpcAuther {
 	return &grpcAuther{
 		log: zap.L().Named("Grpc Auther"),
 		app: app,
@@ -30,7 +30,7 @@ func newGrpcAuther(app application.ServiceServer) *grpcAuther {
 // internal todo
 type grpcAuther struct {
 	log logger.Logger
-	app application.ServiceServer
+	app service.MetaServiceServer
 }
 
 func (a *grpcAuther) Auth(
@@ -73,7 +73,7 @@ func (a *grpcAuther) validateServiceCredential(clientId, clientSecret string) er
 		return status.Errorf(codes.Unauthenticated, "client_id or client_secret is \"\"")
 	}
 
-	vsReq := application.NewValidateCredentialRequest(clientId, clientSecret)
+	vsReq := service.NewValidateCredentialRequest(clientId, clientSecret)
 	_, err := a.app.ValidateCredential(context.Background(), vsReq)
 	if err != nil {
 		return status.Errorf(codes.Unauthenticated, "service auth error, %s", err)

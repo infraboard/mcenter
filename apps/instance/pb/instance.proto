@@ -134,7 +134,10 @@ message Build {
 message Status {
     // 上线时间
     // @gotags: bson:"online" json:"online"
-    int64 online = 5;
+    int64 online = 1;
+    // 是否健康
+    // @gotags: bson:"healthy" json:"healthy"
+    bool healthy = 2;
 }
 
 message HeartbeatRequest {

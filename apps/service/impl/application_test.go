@@ -10,19 +10,19 @@ import (
 
 	// 注册所有服务
 	_ "github.com/infraboard/mcenter/apps/all"
-	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcenter/apps/service"
 )
 
 var (
-	impl application.ServiceServer
+	impl service.MetaServiceServer
 )
 
 func TestCreateApplication(t *testing.T) {
-	req := application.NewCreateApplicationRequest()
+	req := service.NewCreateServiceRequest()
 	req.Name = "cmdb"
 	req.Description = "资源中心"
 	req.Owner = "admin"
-	app, err := impl.CreateApplication(context.Background(), req)
+	app, err := impl.CreateService(context.Background(), req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -30,8 +30,8 @@ func TestCreateApplication(t *testing.T) {
 }
 
 func TestQueryApplication(t *testing.T) {
-	req := application.NewQueryApplicationRequest()
-	set, err := impl.QueryApplication(context.Background(), req)
+	req := service.NewQueryServiceRequest()
+	set, err := impl.QueryService(context.Background(), req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,5 +49,5 @@ func init() {
 		panic(err)
 	}
 
-	impl = app.GetGrpcApp(application.AppName).(application.ServiceServer)
+	impl = app.GetGrpcApp(service.AppName).(service.MetaServiceServer)
 }

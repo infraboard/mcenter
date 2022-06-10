@@ -1,4 +1,4 @@
-package application
+package service
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	AppName = "application"
+	AppName = "service"
 )
 
 const (
@@ -28,8 +28,8 @@ var (
 	validate = validator.New()
 )
 
-func NewCreateApplicationRequest() *CreateApplicationRequest {
-	return &CreateApplicationRequest{
+func NewCreateServiceRequest() *CreateServiceRequest {
+	return &CreateServiceRequest{
 		Domain:     DefaultDomain,
 		Namespace:  DefaultNamespace,
 		Enabled:    true,
@@ -38,12 +38,12 @@ func NewCreateApplicationRequest() *CreateApplicationRequest {
 	}
 }
 
-func NewApplication(req *CreateApplicationRequest) (*Application, error) {
+func NewService(req *CreateServiceRequest) (*Service, error) {
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
 
-	app := &Application{
+	app := &Service{
 		Id:         xid.New().String(),
 		CreateAt:   time.Now().UnixMilli(),
 		Spec:       req,
@@ -74,102 +74,102 @@ func NewValidateCredentialRequest(clientId, clientSercet string) *ValidateCreden
 	}
 }
 
-func (req *CreateApplicationRequest) Validate() error {
+func (req *CreateServiceRequest) Validate() error {
 	return validate.Struct(req)
 }
 
-func NewApplicationSet() *ApplicationSet {
-	return &ApplicationSet{
-		Items: []*Application{},
+func NewServiceSet() *ServiceSet {
+	return &ServiceSet{
+		Items: []*Service{},
 	}
 }
 
-func (s *ApplicationSet) Add(item *Application) {
+func (s *ServiceSet) Add(item *Service) {
 	s.Items = append(s.Items, item)
 }
 
-func NewDefaultApplication() *Application {
-	return &Application{
-		Spec: &CreateApplicationRequest{},
+func NewDefaultService() *Service {
+	return &Service{
+		Spec: &CreateServiceRequest{},
 	}
 }
 
-func NewDescribeApplicationRequest(id string) *DescribeApplicationRequest {
-	return &DescribeApplicationRequest{
+func NewDescribeServiceRequest(id string) *DescribeServiceRequest {
+	return &DescribeServiceRequest{
 		Id: id,
 	}
 }
 
-func NewQueryApplicationRequest() *QueryApplicationRequest {
-	return &QueryApplicationRequest{
+func NewQueryServiceRequest() *QueryServiceRequest {
+	return &QueryServiceRequest{
 		Page: request.NewDefaultPageRequest(),
 	}
 }
 
-func NewQueryApplicationRequestFromHTTP(r *http.Request) *QueryApplicationRequest {
-	return &QueryApplicationRequest{
+func NewQueryServiceRequestFromHTTP(r *http.Request) *QueryServiceRequest {
+	return &QueryServiceRequest{
 		Page: request.NewPageRequestFromHTTP(r),
 	}
 }
 
-func NewDeleteApplicationRequestWithID(id string) *DeleteApplicationRequest {
-	return &DeleteApplicationRequest{
+func NewDeleteServiceRequestWithID(id string) *DeleteServiceRequest {
+	return &DeleteServiceRequest{
 		Id: id,
 	}
 }
 
-func (i *Application) FullNameHash() string {
+func (i *Service) FullNameHash() string {
 	hash := fnv.New32a()
 	hash.Write([]byte(i.FullName()))
 	return fmt.Sprintf("%x", hash.Sum32())
 }
 
-func (i *Application) FullName() string {
+func (i *Service) FullName() string {
 	return fmt.Sprintf("%s.%s.%s", i.Spec.Domain, i.Spec.Namespace, i.Spec.Name)
 }
 
-func (i *Application) Update(req *UpdateApplicationRequest) {
+func (i *Service) Update(req *UpdateServiceRequest) {
 	i.UpdateAt = time.Now().UnixMilli()
 	i.UpdateBy = req.UpdateBy
 	i.Spec = req.Spec
 }
 
-func (i *Application) Patch(req *UpdateApplicationRequest) error {
+func (i *Service) Patch(req *UpdateServiceRequest) error {
 	i.UpdateAt = time.Now().UnixMicro()
 	i.UpdateBy = req.UpdateBy
 	return mergo.MergeWithOverwrite(i.Spec, req.Spec)
 }
 
-func NewUpdateApplicationRequest(id string) *UpdateApplicationRequest {
-	return &UpdateApplicationRequest{
+func NewUpdateServiceRequest(id string) *UpdateServiceRequest {
+	return &UpdateServiceRequest{
 		Id:         id,
 		UpdateMode: pb_request.UpdateMode_PUT,
 		UpdateAt:   time.Now().UnixMilli(),
-		Spec:       NewCreateApplicationRequest(),
+		Spec:       NewCreateServiceRequest(),
 	}
 }
 
-func NewPutApplicationRequest(id string) *UpdateApplicationRequest {
-	return &UpdateApplicationRequest{
+func NewPutServiceRequest(id string) *UpdateServiceRequest {
+	return &UpdateServiceRequest{
 		Id:         id,
 		UpdateMode: pb_request.UpdateMode_PUT,
 		UpdateAt:   time.Now().UnixMilli(),
-		Spec:       NewCreateApplicationRequest(),
+		Spec:       NewCreateServiceRequest(),
 	}
 }
 
-func NewPatchApplicationRequest(id string) *UpdateApplicationRequest {
-	return &UpdateApplicationRequest{
+func NewPatchServiceRequest(id string) *UpdateServiceRequest {
+	return &UpdateServiceRequest{
 		Id:         id,
 		UpdateMode: pb_request.UpdateMode_PATCH,
 		UpdateAt:   time.Now().UnixMilli(),
-		Spec:       NewCreateApplicationRequest(),
+		Spec:       NewCreateServiceRequest(),
 	}
 }
 
-func NewDescribeApplicationRequestByClientId(clientId string) *DescribeApplicationRequest {
-	return &DescribeApplicationRequest{
-		DescribeBy: DescribeBy_APP_CLIENT_ID,
+func NewDescribeServiceRequestByClientId(clientId string) *DescribeServiceRequest {
+	return &DescribeServiceRequest{
+		DescribeBy: DescribeBy_SERVICE_CLIENT_ID,
 		ClientId:   clientId,
 	}
 }

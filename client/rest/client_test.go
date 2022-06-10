@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/client/rest"
 )
 
@@ -13,7 +13,7 @@ var (
 )
 
 func TestCreateApplicaiton(t *testing.T) {
-	set, err := c.Application().QueryApplication(context.TODO(), application.NewQueryApplicationRequest())
+	set, err := c.Application().QueryService(context.TODO(), service.NewQueryServiceRequest())
 	if err != nil {
 		t.Fatal(err)
 	}

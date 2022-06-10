@@ -1,20 +1,20 @@
 syntax = "proto3";
 
-package infraboard.mcenter.application;
-option go_package = "github.com/infraboard/mcenter/apps/application";
+package infraboard.mcenter.service;
+option go_package = "github.com/infraboard/mcenter/apps/service";
 
 import "github.com/infraboard/mcube/pb/page/page.proto";
 import "github.com/infraboard/mcube/pb/request/request.proto";
 
-// Service 服务
-service Service {
-	rpc ValidateCredential(ValidateCredentialRequest) returns(Application);
-	rpc CreateApplication(CreateApplicationRequest) returns(Application);
-    rpc UpdateApplication(UpdateApplicationRequest) returns(Application);
-	rpc QueryApplication(QueryApplicationRequest) returns(ApplicationSet);
-	rpc DescribeApplication(DescribeApplicationRequest) returns(Application);
-	rpc DeleteApplication(DeleteApplicationRequest) returns(Application);
-	rpc RefreshCredential(DescribeApplicationRequest) returns(Application);
+// MetaService 服务
+service MetaService {
+	rpc ValidateCredential(ValidateCredentialRequest) returns(Service);
+	rpc CreateService(CreateServiceRequest) returns(Service);
+    rpc UpdateService(UpdateServiceRequest) returns(Service);
+	rpc QueryService(QueryServiceRequest) returns(ServiceSet);
+	rpc DescribeService(DescribeServiceRequest) returns(Service);
+	rpc DeleteService(DeleteServiceRequest) returns(Service);
+	rpc RefreshCredential(DescribeServiceRequest) returns(Service);
 }
 
 enum Type {
@@ -26,8 +26,8 @@ enum Type {
 	THIRD = 9;
 }
 
-// Application is service provider
-message Application {
+// Service is service provider
+message Service {
     // 微服务ID
     // @gotags: bson:"_id" json:"id"
     string id = 1;
@@ -42,7 +42,7 @@ message Application {
     string update_by = 6;
     // 服务定义
     // @gotags: bson:"spec" json:"spec"
-    CreateApplicationRequest spec = 7;
+    CreateServiceRequest spec = 7;
     // 服务的凭证, 用于服务注册
     // @gotags: bson:"credential" json:"credential"
     Credential credential = 8;
@@ -51,7 +51,7 @@ message Application {
     Security security = 9;
 }
 
-message CreateApplicationRequest {
+message CreateServiceRequest {
     // 服务所属域
     // @gotags: bson:"domain" json:"domain"
     string domain = 1;
@@ -81,7 +81,7 @@ message CreateApplicationRequest {
     map<string, string> tags = 14;
 }
 
-message UpdateApplicationRequest {
+message UpdateServiceRequest {
     // book id
     // @gotags: json:"id"
     string id = 1;
@@ -96,7 +96,7 @@ message UpdateApplicationRequest {
     int64 update_at = 4;
     // 更新的书本信息
     // @gotags: json:"spec"
-    CreateApplicationRequest spec = 5;
+    CreateServiceRequest spec = 5;
 }
 
 message Credential {
@@ -178,11 +178,11 @@ message Security {
     string encrypt_key = 1;
 }
 
-message ApplicationSet {
+message ServiceSet {
     // @gotags: bson:"total" json:"total"
     int64 total = 1;
     // @gotags: bson:"items" json:"items"
-    repeated Application items = 2;
+    repeated Service items = 2;
 }
 
 // ValidateCredentialRequest 校验服务凭证
@@ -196,7 +196,7 @@ message ValidateCredentialRequest {
 }
 
 // QueryMicroRequest 查询应用列表
-message QueryApplicationRequest {
+message QueryServiceRequest {
     // @gotags: json:"page"
    infraboard.mcube.page.PageRequest page = 1;
     // 服务类型
@@ -205,16 +205,16 @@ message QueryApplicationRequest {
 }
 
 enum DescribeBy {
-    // 通过App id查询应用详情
-    APP_ID = 0;
-    // 通过App name查询应用详情
-    APP_NAME = 1;
-    // 通过App client_id查询应用详情
-    APP_CLIENT_ID =2;
+    // 通过service id查询应用详情
+    SERVICE_ID = 0;
+    // 通过service name查询应用详情
+    SERVICE_NAME = 1;
+    // 通过service client_id查询应用详情
+    SERVICE_CLIENT_ID =2;
 }
 
 // DescribeMicroRequest 查询应用详情
-message DescribeApplicationRequest {
+message DescribeServiceRequest {
     // @gotags: json:"describe_by"
     DescribeBy describe_by = 1;
     // @gotags: json:"client_id"
@@ -226,7 +226,7 @@ message DescribeApplicationRequest {
 }
 
 // DeleteMicroRequest todo
-message DeleteApplicationRequest {
+message DeleteServiceRequest {
     // @gotags: json:"id"
     string id = 1;
 }

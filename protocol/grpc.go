@@ -10,7 +10,7 @@ import (
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
-	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/conf"
 	"github.com/infraboard/mcenter/protocol/auth"
 )
@@ -18,7 +18,7 @@ import (
 // NewGRPCService todo
 func NewGRPCService() *GRPCService {
 	log := zap.L().Named("GRPC Service")
-	appImpl := app.GetGrpcApp(application.AppName).(application.ServiceServer)
+	appImpl := app.GetGrpcApp(service.AppName).(service.MetaServiceServer)
 
 	rc := recovery.NewInterceptor(recovery.NewZapRecoveryHandler())
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(

@@ -9,34 +9,34 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/infraboard/mcenter/apps/application"
+	"github.com/infraboard/mcenter/apps/service"
 )
 
-func (i *impl) save(ctx context.Context, ins *application.Application) error {
+func (i *impl) save(ctx context.Context, ins *service.Service) error {
 	if _, err := i.col.InsertOne(ctx, ins); err != nil {
-		return exception.NewInternalServerError("inserted application(%s) document error, %s",
+		return exception.NewInternalServerError("inserted Service(%s) document error, %s",
 			ins.Spec.Name, err)
 	}
 	return nil
 }
 
-func (i *impl) update(ctx context.Context, ins *application.Application) error {
+func (i *impl) update(ctx context.Context, ins *service.Service) error {
 	if _, err := i.col.UpdateByID(ctx, ins.Id, ins); err != nil {
-		return exception.NewInternalServerError("inserted application(%s) document error, %s",
+		return exception.NewInternalServerError("inserted Service(%s) document error, %s",
 			ins.Spec.Name, err)
 	}
 
 	return nil
 }
 
-func newQueryRequest(r *application.QueryApplicationRequest) *queryRequest {
+func newQueryRequest(r *service.QueryServiceRequest) *queryRequest {
 	return &queryRequest{
 		r,
 	}
 }
 
 type queryRequest struct {
-	*application.QueryApplicationRequest
+	*service.QueryServiceRequest
 }
 
 func (r *queryRequest) FindOptions() *options.FindOptions {
@@ -65,69 +65,69 @@ func (r *queryRequest) FindFilter() bson.M {
 	return filter
 }
 
-func (i *impl) query(ctx context.Context, req *queryRequest) (*application.ApplicationSet, error) {
+func (i *impl) query(ctx context.Context, req *queryRequest) (*service.ServiceSet, error) {
 	resp, err := i.col.Find(ctx, req.FindFilter(), req.FindOptions())
 
 	if err != nil {
 		return nil, exception.NewInternalServerError("find book error, error is %s", err)
 	}
 
-	ApplicationSet := application.NewApplicationSet()
+	ServiceSet := service.NewServiceSet()
 	// 循环
 	for resp.Next(ctx) {
-		ins := application.NewDefaultApplication()
+		ins := service.NewDefaultService()
 		if err := resp.Decode(ins); err != nil {
 			return nil, exception.NewInternalServerError("decode book error, error is %s", err)
 		}
 
-		ApplicationSet.Add(ins)
+		ServiceSet.Add(ins)
 	}
 
 	// count
 	count, err := i.col.CountDocuments(ctx, req.FindFilter())
 	if err != nil {
-		return nil, exception.NewInternalServerError("get application count error, error is %s", err)
+		return nil, exception.NewInternalServerError("get Service count error, error is %s", err)
 	}
-	ApplicationSet.Total = count
+	ServiceSet.Total = count
 
-	return ApplicationSet, nil
+	return ServiceSet, nil
 }
 
-func (i *impl) get(ctx context.Context, req *application.DescribeApplicationRequest) (*application.Application, error) {
+func (i *impl) get(ctx context.Context, req *service.DescribeServiceRequest) (*service.Service, error) {
 	filter := bson.M{}
 	switch req.DescribeBy {
-	case application.DescribeBy_APP_ID:
+	case service.DescribeBy_SERVICE_ID:
 		filter["_id"] = req.Id
-	case application.DescribeBy_APP_CLIENT_ID:
+	case service.DescribeBy_SERVICE_CLIENT_ID:
 		filter["credential.client_id"] = req.ClientId
-	case application.DescribeBy_APP_NAME:
+	case service.DescribeBy_SERVICE_NAME:
 		filter["spec.name"] = req.Name
 	}
 
-	ins := application.NewDefaultApplication()
+	ins := service.NewDefaultService()
 	if err := i.col.FindOne(ctx, filter).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, exception.NewNotFound("application %s not found", req)
+			return nil, exception.NewNotFound("Service %s not found", req)
 		}
 
-		return nil, exception.NewInternalServerError("find application %s error, %s", req, err)
+		return nil, exception.NewInternalServerError("find Service %s error, %s", req, err)
 	}
 
 	return ins, nil
 }
 
-func (i *impl) delete(ctx context.Context, ins *application.Application) error {
+func (i *impl) delete(ctx context.Context, ins *service.Service) error {
 	if ins == nil || ins.Id == "" {
-		return fmt.Errorf("application is nil")
+		return fmt.Errorf("Service is nil")
 	}
 
 	result, err := i.col.DeleteOne(ctx, bson.M{"_id": ins.Id})
 	if err != nil {
-		return exception.NewInternalServerError("delete application(%s) error, %s", ins.Id, err)
+		return exception.NewInternalServerError("delete Service(%s) error, %s", ins.Id, err)
 	}
 
 	if result.DeletedCount == 0 {
-		return exception.NewNotFound("application %s not found", ins.Id)
+		return exception.NewNotFound("Service %s not found", ins.Id)
 	}
 
 	return nil

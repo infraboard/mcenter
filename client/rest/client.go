@@ -17,7 +17,7 @@ type ClientSet struct {
 	c *rest.RESTClient
 }
 
-func (c *ClientSet) Application() ApplicationService {
+func (c *ClientSet) Application() MetaService {
 	return &appImpl{client: c.c}
 }
 
