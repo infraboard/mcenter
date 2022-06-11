@@ -85,8 +85,8 @@ func (i *impl) Search(ctx context.Context, r *instance.SearchRequest) (
 		return nil, err
 	}
 
-	if req.ApplicationName != "" {
-		i.log.Debugf("search %s, address: %s", req.ApplicationName, set.Items)
+	if req.ServiceName != "" {
+		i.log.Debugf("search %s, address: %s", req.ServiceName, set.Items)
 	}
 
 	return set, nil

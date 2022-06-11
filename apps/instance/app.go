@@ -41,12 +41,12 @@ func NewDefaultInstance() *Instance {
 	req := NewRegistryRequest()
 	app := service.NewDefaultService()
 	return &Instance{
-		Domain:          app.Spec.Domain,
-		Namespace:       app.Spec.Namespace,
-		ApplicationName: app.Spec.Name,
-		RegistryInfo:    req,
-		Status:          NewDefaultStatus(),
-		Config:          NewDefaultConfig(),
+		Domain:       app.Spec.Domain,
+		Namespace:    app.Spec.Namespace,
+		ServiceName:  app.Spec.Name,
+		RegistryInfo: req,
+		Status:       NewDefaultStatus(),
+		Config:       NewDefaultConfig(),
 	}
 }
 
@@ -60,12 +60,12 @@ func NewInstance(req *RegistryRequest, app *service.Service) (*Instance, error) 
 	}
 
 	ins := &Instance{
-		Domain:          app.Spec.Domain,
-		Namespace:       app.Spec.Namespace,
-		ApplicationName: app.Spec.Name,
-		RegistryInfo:    req,
-		Status:          NewDefaultStatus(),
-		Config:          NewDefaultConfig(),
+		Domain:       app.Spec.Domain,
+		Namespace:    app.Spec.Namespace,
+		ServiceName:  app.Spec.Name,
+		RegistryInfo: req,
+		Status:       NewDefaultStatus(),
+		Config:       NewDefaultConfig(),
 	}
 
 	ins.Id = ins.FullNameHash()
@@ -85,7 +85,7 @@ func NewDefaultStatus() *Status {
 }
 
 func (i *Instance) FullName() string {
-	return fmt.Sprintf("%s.%s.%s-%s", i.Domain, i.Namespace, i.ApplicationName,
+	return fmt.Sprintf("%s.%s.%s-%s", i.Domain, i.Namespace, i.ServiceName,
 		i.RegistryInfo.InstanceFullName())
 }
 
