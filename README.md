@@ -2,7 +2,25 @@
 
 基于Etcd的微服务注册中心
 
+1. 配置MongoDB
+```
+use mcenter
+db.createUser({user: "mcenter", pwd: "123456", roles: [{ role: "dbOwner", db: "mcenter" }]})
+```
+
+2. 初始化内置服务
+```
+make init
+
+2022-06-11T17:36:23.304+0800    INFO    [INIT]  cmd/start.go:153        log level: debug
+2022-06-11T17:36:23.356+0800    INFO    [init]  cmd/init.go:50  init app keyauth success, client_id: 4x6O2CgbiySkgswh7Ans2qCj, client_secret: idoeBMUAiSjcYJZfIIb7ptpKDiTtU5IQ
+2022-06-11T17:36:23.359+0800    INFO    [init]  cmd/init.go:50  init app maudit success, client_id: 0y36drkRdoYKj7Jx3489AXB1, client_secret: t1rv1MJFyjO0wENEP1AodbgpuNiWUCEA
+2022-06-11T17:36:23.361+0800    INFO    [init]  cmd/init.go:50  init app cmdb success, client_id: AB4S5Xl1zDgdYUh55q38XqB1, client_secret: niA8DYeRkbZFV2QIXutdAl4MZGdCIYEV
+```
+
 ## 架构图
+
+
 
 ## 项目说明
 
