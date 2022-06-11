@@ -80,7 +80,7 @@ func (m *mcenterResolver) ResolveNow(o resolver.ResolveNowOptions) {
 // 构建mcenter实例查询参数
 func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
 	searchReq := instance.NewSearchRequest()
-	searchReq.ApplicationName = m.target.URL.Host
+	searchReq.ServiceName = m.target.URL.Host
 
 	qs := m.target.URL.Query()
 	searchReq.Page.PageSize = 500
@@ -93,7 +93,7 @@ func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
 func (m *mcenterResolver) search() ([]resolver.Address, error) {
 	req := m.buildSerchReq()
 
-	if req.ApplicationName == "" {
+	if req.ServiceName == "" {
 		return nil, fmt.Errorf("application name required")
 	}
 
