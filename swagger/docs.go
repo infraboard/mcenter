@@ -9,7 +9,7 @@ func Docs(swo *spec.Swagger) {
 	swo.Info = &spec.Info{
 		InfoProps: spec.InfoProps{
 			Title:       "注册中心",
-			Description: "Resource for managing Application Instances",
+			Description: "Resource for managing Service Instances",
 			Contact: &spec.ContactInfo{
 				ContactInfoProps: spec.ContactInfoProps{
 					Name:  "john",

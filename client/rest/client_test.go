@@ -13,7 +13,7 @@ var (
 )
 
 func TestCreateApplicaiton(t *testing.T) {
-	set, err := c.Application().QueryService(context.TODO(), service.NewQueryServiceRequest())
+	set, err := c.Service().QueryService(context.TODO(), service.NewQueryServiceRequest())
 	if err != nil {
 		t.Fatal(err)
 	}

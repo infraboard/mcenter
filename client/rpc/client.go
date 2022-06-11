@@ -77,7 +77,7 @@ func (c *ClientSet) Instance() instance.ServiceClient {
 	return instance.NewServiceClient(c.conn)
 }
 
-// Application服务的SDK
+// Service服务的SDK
 func (c *ClientSet) Service() service.MetaServiceClient {
 	return service.NewMetaServiceClient(c.conn)
 }

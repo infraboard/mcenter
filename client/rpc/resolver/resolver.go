@@ -3,6 +3,7 @@ package resolver
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
@@ -113,11 +114,13 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 		items = set.GetOldestGroup()
 	}
 
+	addrString := []string{}
 	addrs := make([]resolver.Address, len(items))
 	for i, s := range items {
 		addrs[i] = resolver.Address{Addr: s.RegistryInfo.Address}
+		addrString = append(addrString, s.RegistryInfo.Address)
 	}
-	m.log.Infof("search application address: %s", addrs)
+	m.log.Infof("search service [%s] address: %s", req.ServiceName, strings.Join(addrString, ","))
 
 	return addrs, nil
 }

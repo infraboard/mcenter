@@ -28,7 +28,7 @@ message CreatePolicyRequest {
     // 创建人
     // @gotags: json:"create_by" bson:"create_by"
     string create_by = 1;
-    // 应用
-    // @gotags: json:"application" bson:"application" validate:"required"
-    string application = 2;
+    // 服务
+    // @gotags: json:"service" bson:"service" validate:"required"
+    string service = 2;
 }
