@@ -13,16 +13,16 @@ import (
 
 func (i *impl) ValidateCredential(ctx context.Context, req *service.ValidateCredentialRequest) (
 	*service.Service, error) {
-	app, err := i.DescribeService(ctx, service.NewDescribeServiceRequestByClientId(req.ClientId))
+	svr, err := i.DescribeService(ctx, service.NewDescribeServiceRequestByClientId(req.ClientId))
 	if err != nil {
 		return nil, err
 	}
 
-	if err := app.Credential.Validate(req.ClientSecret); err != nil {
+	if err := svr.Credential.Validate(req.ClientSecret); err != nil {
 		return nil, err
 	}
 
-	return app, nil
+	return svr, nil
 }
 
 func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequest) (

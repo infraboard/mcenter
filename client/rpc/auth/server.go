@@ -20,21 +20,21 @@ const (
 )
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
-func GrpcAuthUnaryServerInterceptor(app service.MetaServiceClient) grpc.UnaryServerInterceptor {
-	return newGrpcAuther(app).Auth
+func GrpcAuthUnaryServerInterceptor(svr service.MetaServiceClient) grpc.UnaryServerInterceptor {
+	return newGrpcAuther(svr).Auth
 }
 
-func newGrpcAuther(app service.MetaServiceClient) *grpcAuther {
+func newGrpcAuther(svr service.MetaServiceClient) *grpcAuther {
 	return &grpcAuther{
-		log: zap.L().Named("Grpc Auther"),
-		app: app,
+		log:     zap.L().Named("Grpc Auther"),
+		service: svr,
 	}
 }
 
 // internal todo
 type grpcAuther struct {
-	log logger.Logger
-	app service.MetaServiceClient
+	log     logger.Logger
+	service service.MetaServiceClient
 }
 
 func (a *grpcAuther) Auth(
@@ -78,7 +78,7 @@ func (a *grpcAuther) validateServiceCredential(clientId, clientSecret string) er
 	}
 
 	vsReq := service.NewValidateCredentialRequest(clientId, clientSecret)
-	app, err := a.app.ValidateCredential(context.Background(), vsReq)
+	app, err := a.service.ValidateCredential(context.Background(), vsReq)
 	if err != nil {
 		return status.Errorf(codes.Unauthenticated, "service auth error, %s", err)
 	}
