@@ -2,7 +2,6 @@ package lifecycle
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"time"
 
@@ -85,7 +84,7 @@ func (m *manager) receiver(ctx context.Context) {
 			m.log.Infof("heartbeat receiver stoped")
 			return
 		default:
-			resp, err := m.stream.Recv()
+			_, err := m.stream.Recv()
 			if err != nil {
 				if err == io.EOF {
 					m.log.Infof("receive heartbeat response error, server close")
@@ -93,7 +92,6 @@ func (m *manager) receiver(ctx context.Context) {
 				}
 				m.log.Errorf("receive heartbeat receive error, %s", err)
 			}
-			fmt.Println(resp)
 		}
 	}
 }
