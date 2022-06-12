@@ -78,12 +78,10 @@ func (a *grpcAuther) validateServiceCredential(clientId, clientSecret string) er
 	}
 
 	vsReq := service.NewValidateCredentialRequest(clientId, clientSecret)
-	app, err := a.service.ValidateCredential(context.Background(), vsReq)
+	_, err := a.service.ValidateCredential(context.Background(), vsReq)
 	if err != nil {
 		return status.Errorf(codes.Unauthenticated, "service auth error, %s", err)
 	}
-
-	fmt.Println(app)
 
 	return nil
 }
