@@ -8,7 +8,6 @@ import (
 
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/keyauth/apps/endpoint"
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -19,11 +18,6 @@ import (
 
 // NewHTTPService 构建函数
 func NewHTTPService() *HTTPService {
-	c, err := conf.C().Keyauth.Client()
-	if err != nil {
-		panic(err)
-	}
-
 	r := restful.DefaultContainer
 	// Optionally, you can install the Swagger Service which provides a nice Web UI on your REST API
 	// You need to download the Swagger HTML5 assets and change the FilePath location in the config below.
@@ -49,11 +43,10 @@ func NewHTTPService() *HTTPService {
 	}
 
 	return &HTTPService{
-		r:        r,
-		server:   server,
-		l:        zap.L().Named("HTTP Service"),
-		c:        conf.C(),
-		endpoint: c.Endpoint(),
+		r:      r,
+		server: server,
+		l:      zap.L().Named("HTTP Service"),
+		c:      conf.C(),
 	}
 }
 
@@ -63,8 +56,6 @@ type HTTPService struct {
 	l      logger.Logger
 	c      *conf.Config
 	server *http.Server
-
-	endpoint endpoint.ServiceClient
 }
 
 func (s *HTTPService) PathPrefix() string {
