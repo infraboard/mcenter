@@ -41,7 +41,6 @@ func NewDefaultInstance() *Instance {
 	req := NewRegistryRequest()
 	app := service.NewDefaultService()
 	return &Instance{
-		Domain:       app.Spec.Domain,
 		Namespace:    app.Spec.Namespace,
 		ServiceName:  app.Spec.Name,
 		RegistryInfo: req,
@@ -60,7 +59,6 @@ func NewInstance(req *RegistryRequest, app *service.Service) (*Instance, error) 
 	}
 
 	ins := &Instance{
-		Domain:       app.Spec.Domain,
 		Namespace:    app.Spec.Namespace,
 		ServiceName:  app.Spec.Name,
 		RegistryInfo: req,
@@ -85,7 +83,7 @@ func NewDefaultStatus() *Status {
 }
 
 func (i *Instance) FullName() string {
-	return fmt.Sprintf("%s.%s.%s-%s", i.Domain, i.Namespace, i.ServiceName,
+	return fmt.Sprintf("%s.%s-%s", i.Namespace, i.ServiceName,
 		i.RegistryInfo.InstanceFullName())
 }
 

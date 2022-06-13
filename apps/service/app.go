@@ -20,7 +20,6 @@ const (
 )
 
 const (
-	DefaultDomain    = "default"
 	DefaultNamespace = "default"
 )
 
@@ -30,7 +29,6 @@ var (
 
 func NewCreateServiceRequest() *CreateServiceRequest {
 	return &CreateServiceRequest{
-		Domain:     DefaultDomain,
 		Namespace:  DefaultNamespace,
 		Enabled:    true,
 		Repository: &Repository{},
@@ -125,7 +123,7 @@ func (i *Service) FullNameHash() string {
 }
 
 func (i *Service) FullName() string {
-	return fmt.Sprintf("%s.%s.%s", i.Spec.Domain, i.Spec.Namespace, i.Spec.Name)
+	return fmt.Sprintf("%s.%s", i.Spec.Namespace, i.Spec.Name)
 }
 
 func (i *Service) Update(req *UpdateServiceRequest) {
