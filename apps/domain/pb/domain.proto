@@ -1,0 +1,215 @@
+syntax = "proto3";
+
+package infraboard.mcenter.domain;
+option go_package = "github.com/infraboard/mcenter/apps/domain";
+
+import "github.com/infraboard/mcube/pb/request/request.proto";
+
+// Service 用户服务
+service RPC {
+    // 创建域
+    rpc CreateDomain(CreateDomainRequest) returns(Domain);
+    // 更新域
+	rpc UpdateDomain(UpdateDomainRequest) returns(Domain);
+    // 查询域
+	rpc DescribeDomain(DescribeDomainRequest) returns(Domain);
+}
+
+message Domain  {
+    // 公司或者组织名称
+    // @gotags: bson:"_id" json:"name"
+    string name = 1;
+    // 创建时间
+    // @gotags: bson:"create_at" json:"create_at"
+    int64 create_at = 2;
+    // 更新时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 3;
+    // 域拥有者
+    // @gotags: bson:"owner" json:"owner"
+    string owner = 4;
+    // 域状态, 是否需要冻结该域, 冻结时, 该域下面所有用户禁止登录
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 5;
+    // Profile 具体属性
+    // @gotags: bson:"profile" json:"profile"
+    Profile profile = 6;
+    // SecuritySetting 域安全设置
+    // @gotags: bson:"security_setting" json:"security_setting"
+    SecuritySetting security_setting = 7;
+}
+
+message CreateDomainRequest {
+       // 公司或者组织名称
+    // @gotags: bson:"name" json:"name"
+    string name = 1;
+    // 归属人
+    // @gotags: bson:"owner" json:"owner"
+    string owner = 2;
+    // Profile 需要修改内容
+    // @gotags: bson:"profile" json:"profile"
+    Profile profile = 3;
+}
+
+message Profile {
+    // 全称
+    // @gotags: bson:"display_name" json:"display_name"
+    string display_name = 5;
+    // 公司LOGO图片的URL
+    // @gotags: bson:"logo_path" json:"logo_path"
+    string logo_path = 6;
+    // 描述
+    // @gotags: bson:"description" json:"description"
+    string description = 7;
+    // 电话
+    // @gotags: bson:"phone" json:"phone"
+    string phone = 9;
+    // 规模: 50人以下, 50~100, ...
+    // @gotags: bson:"size" json:"size"
+    string size = 10;
+    // 位置: 指城市, 比如 中国,四川,成都
+    // @gotags: bson:"location" json:"location"
+    string location = 11;
+    // 地址: 比如环球中心 10F 1034
+    // @gotags: bson:"address" json:"address"
+    string address = 12;
+    // 所属行业: 比如, 互联网
+    // @gotags: bson:"industry" json:"industry"
+    string industry = 13;
+    // 传真
+    // @gotags: bson:"fax" json:"fax"
+    string fax = 14;
+    // 联系人
+    // @gotags: bson:"contack" json:"contack"
+    Contact contack = 15;    
+}
+
+// 联系人
+message Contact {
+    // 姓名
+    // @gotags: bson:"name" json:"name"
+    string name = 1;
+    // 职位
+    // @gotags: bson:"title" json:"title"
+    string title = 2;
+    // 电话
+    // @gotags: bson:"phone" json:"phone"
+    string phone = 3;
+    // 邮箱
+     // @gotags: bson:"email" json:"email"
+    string email = 4;
+}
+
+// SecuritySetting 安全策略
+message SecuritySetting {
+    // 密码安全
+    // @gotags: bson:"password_security" json:"password_security"
+    PasswordSecurity password_security = 1;
+    // 登录安全
+    // @gotags: bson:"login_security" json:"login_security"
+    LoginSecurity login_security = 2;      
+}
+
+// PasswordSecurity 密码安全设置
+message PasswordSecurity {
+    // 密码长度
+    // @gotags: bson:"length" json:"length" validate:"required,min=8,max=64"
+    int32 length = 1;
+    // 包含数字
+    // @gotags: bson:"include_number" json:"include_number"
+    bool include_number = 2;
+    // 包含小写字母
+    // @gotags: bson:"include_lower_letter" json:"include_lower_letter"
+    bool include_lower_letter = 3;
+    // 包含大写字母
+    // @gotags: bson:"include_upper_letter" json:"include_upper_letter"
+    bool include_upper_letter = 4;
+    // 包含特殊字符
+    // @gotags: bson:"include_symbols" json:"include_symbols"
+    bool include_symbols = 5;
+    // 重复限制
+    // @gotags: bson:"repeate_limite" json:"repeate_limite" validate:"required,min=1,max=24"
+    uint32 repeate_limite = 6;
+    // 密码过期时间, 密码过期后要求用户重置密码
+    // @gotags: bson:"password_expired_days" json:"password_expired_days" validate:"required,min=0,max=365"
+    uint32 password_expired_days = 7;
+    // 密码过期前多少天开始提醒
+    // @gotags: bson:"before_expired_remind_days" json:"before_expired_remind_days" validate:"required,min=0,max=365"
+    uint32 before_expired_remind_days = 8;
+}
+
+// ExceptionLockConfig todo
+message ExceptionLockConfig {
+    // 异地登录
+    // @gotags: bson:"other_place_login" json:"other_place_login"
+    bool other_place_login = 1;
+    // 未登录天数
+    // @gotags: bson:"not_login_days" json:"not_login_days"
+    uint32 not_login_days = 2;     
+}
+
+// IPLimiteConfig todo
+message IPLimiteConfig {
+    // 黑名单还是白名单
+    // @gotags: bson:"type" json:"type"
+    string type = 1;
+    // ip列表
+    // @gotags: bson:"ip" json:"ip"
+    repeated string ip = 2;   
+}
+
+// RetryLockConfig 重试锁配置
+message RetryLockConfig {
+    // 重试限制
+    // @gotags: bson:"retry_limite" json:"retry_limite"
+    uint32 retry_limite = 1;
+    // 锁定时长
+    // @gotags: bson:"locked_minite" json:"locked_minite"
+    uint32 locked_minite = 2;
+}
+
+// LoginSecurity 登录安全
+message LoginSecurity {
+    // 异常登录锁
+    // @gotags: bson:"exception_lock" json:"exception_lock"
+    bool exception_lock = 1;
+    // 异常配置
+    // @gotags: bson:"exception_lock_config" json:"exception_lock_config"
+    ExceptionLockConfig exception_lock_config = 2;
+    // 重试锁
+    // @gotags: bson:"retry_lock" json:"retry_lock"
+    bool retry_lock = 3;
+    // 重试锁配置
+    // @gotags: bson:"retry_lock_config" json:"retry_lock_config"
+    RetryLockConfig retry_lock_config = 4;
+    // IP限制
+    // @gotags: bson:"ip_limite" json:"ip_limite"
+    bool ip_limite = 5;
+    // IP限制配置
+     // @gotags: bson:"ip_limite_config" json:"ip_limite_config"
+    IPLimiteConfig ip_limite_config = 6;          
+}
+
+message UpdateDomainRequest  {
+    // 更新模式
+    // @gotags: json:"update_mode"
+    infraboard.mcube.request.UpdateMode update_mode = 1;
+    // 公司或者组织名称
+    // @gotags: bson:"name" json:"name"
+    string name = 2;
+    // CreateDomainRequest 需要修改内容
+    // @gotags: bson:"profile" json:"profile"
+    Profile profile = 3;
+    // SecuritySetting 域安全设置
+    // @gotags: bson:"security_setting" json:"security_setting"
+    SecuritySetting security_setting = 4; 
+    // 所有者
+    // @gotags: bson:"owner" json:"owner"
+    string owner = 5;
+}
+
+// DescribeDomainRequest 查询domain详情请求
+message DescribeDomainRequest {
+    // @gotags: bson:"name" json:"name"
+   string name = 1;
+}

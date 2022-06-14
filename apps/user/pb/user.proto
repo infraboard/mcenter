@@ -1,0 +1,276 @@
+syntax = "proto3";
+
+package infraboard.mcenter.user;
+option go_package = "github.com/infraboard/mcenter/apps/user";
+
+import "github.com/infraboard/mcube/pb/page/page.proto";
+import "github.com/infraboard/mcube/pb/request/request.proto";
+
+// Service 用户服务
+service RPC {
+    // 创建用户
+    rpc CreateUser(CreateUserRequest) returns(User);
+	// 查询用户列表
+	rpc QueryUser(QueryUserRequest) returns(UserSet);
+    // 查询用户详情
+    rpc DescribeUser(DescribeUserRequest) returns(User);
+    // 删除用户
+    rpc DeleteUser(DeleteUserRequest) returns(UserSet);
+    // 修改用户信息
+    rpc UpdateUser(UpdateUserRequest) returns(User);
+    // 修改用户密码, 用户需要知道原先密码
+	rpc UpdatePassword(UpdatePasswordRequest) returns(Password);
+    // 重置密码, 无需知道原先密码, 主账号执行
+    rpc ResetPassword(ResetPasswordRequest) returns(Password);
+}
+
+message Password {
+    // hash过后的密码
+    // @gotags: bson:"password" json:"password,omitempty"
+    string password = 1;
+    // 密码创建时间
+    // @gotags: bson:"create_at" json:"create_at"
+    int64 create_at = 2;
+    // 密码更新时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 3;
+    // 密码需要被重置
+    // @gotags: bson:"need_reset" json:"need_reset"
+    bool need_reset = 4;
+    // 需要重置的原因
+    // @gotags: bson:"reset_reason" json:"reset_reason"
+    string reset_reason = 5;
+    // 历史密码
+    // @gotags: bson:"history" json:"history,omitempty"
+    repeated string history = 6;
+}
+
+// Status 用户状态
+message Status {
+    // 是否冻结
+    // @gotags: bson:"locked" json:"locked"
+    bool locked = 1;
+    // 冻结时间
+    // @gotags: bson:"locked_time" json:"locked_time"
+    int64 locked_time = 2;
+    // 冻结原因
+    // @gotags: bson:"locked_reson" json:"locked_reson"
+    string locked_reson = 3;
+    // 解冻时间
+    // @gotags: bson:"unlock_time" json:"unlock_time"
+    int64 unlock_time = 4;  
+}
+
+enum PROVIDER {
+    // 本地数据库
+    LOCAL = 0;
+    // 来源LDAP
+    LDAP = 1;
+}
+
+// 为了防止越权, 用户可以调整的权限范围只有10已下的权限
+enum TYPE {
+    // 子账号, 无用户中心后台管理权限
+    SUB = 0;
+    // 主账号, 具有本域的所有权限
+    PRIMARY = 10;
+    // 超级管理员, 系统管理员, 万能的人, 不受权限系统约束
+    SUPPER = 15;
+}
+
+// User 用户账号
+message User {
+    // 用户Id
+    // @gotags: bson:"_id" json:"create_at"
+    string id = 1;
+    // 用户创建的时间
+    // @gotags: bson:"create_at" json:"create_at"
+    int64 create_at = 2;
+    // 修改时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 3;
+    // 定义信息
+    // @gotags: bson:"spec" json:"spec"
+    CreateUserRequest spec = 4;
+    // Profile信息
+    // @gotags: json:"profile"
+    Profile profile = 5;
+    // 用户是否初始化
+    // @gotags: bson:"is_initialized" json:"is_initialized"
+    bool is_initialized = 6; 
+    // 密码相关信息
+    // @gotags: bson:"password" json:"password"
+    Password password = 7;
+    // 用户状态
+    // @gotags: bson:"status" json:"status"
+    Status status = 8; 
+}
+
+enum Gender {
+    // 保密
+    UNKNOWN = 0;
+    // 男
+    MALE = 1;
+    // 女
+    FEMALE = 2;
+}
+
+// Profile todo
+message Profile {
+    // 用户真实姓名
+    // @gotags: bson:"real_name" json:"real_name" validate:"lte=10"
+    string real_name = 1;
+    // 用户昵称, 用于在界面进行展示
+    // @gotags: bson:"nick_name" json:"nick_name" validate:"lte=30"
+    string nick_name = 2;
+    // 手机号码, 用户可以通过手机进行注册和密码找回, 还可以通过手机号进行登录
+    // @gotags: bson:"phone" json:"phone" validate:"lte=30"
+    string phone = 3;
+    // 邮箱, 用户可以通过邮箱进行注册和照明密码
+    // @gotags: bson:"email" json:"email" validate:"lte=30"
+    string email = 4;
+    // 用户住址
+    // @gotags: bson:"address" json:"address" validate:"lte=120"
+    string address = 5;
+    // 性别
+    // @gotags: bson:"gender" json:"gender" validate:"lte=10"
+    Gender gender = 6;
+    // 头像
+    // @gotags: bson:"avatar" json:"avatar" validate:"lte=300"
+    string avatar = 7;
+    // 用户使用的语言
+    // @gotags: bson:"language" json:"language" validate:"lte=40"
+    string language = 8;
+    // 用户所在的城市
+    // @gotags: bson:"city" json:"city" validate:"lte=40"
+    string city = 9;
+    // 用户所在的省
+    // @gotags: bson:"province" json:"province" validate:"lte=40"
+    string province = 10;                
+}
+
+// CreateUserRequest 创建用户请求
+message CreateUserRequest {
+    // 账号提供方
+    // @gotags: json:"provider" bson:"provider"
+    PROVIDER provider = 1;
+    // 用户类型
+    // @gotags: json:"type" bson:"type"
+    TYPE type = 2;
+    // 域信息
+    // @gotags: json:"domain" bson:"domain" validate:"required"
+    string domain = 3;
+    // 用户账号名称
+    // @gotags: json:"username" bson:"username" validate:"required,lte=60"
+    string username = 4;
+    // 密码相关信息
+    // @gotags: json:"password" bson:"-" validate:"required,lte=80"
+    string password = 5;
+    // 用户描述
+    // @gotags: json:"description"
+    string description = 6;
+}
+
+// QueryUserRequest 获取子账号列表
+message QueryUserRequest {
+    // 分页参数
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+    // 用户所属Domain
+    // @gotags: json:"domain" validate:"required"
+    string domain = 2;
+    // 账号提供方
+    // @gotags: json:"provider"
+    optional PROVIDER provider = 3;
+    // 用户类型
+    // @gotags: json:"type"
+    optional TYPE type = 4;
+    // 通过Id
+    // @gotags: json:"user_ids"
+    repeated string user_ids = 5;
+    // 是否获取数据
+    // @gotags: json:"skip_items"
+    bool skip_items = 8;
+    // 关键字查询
+    // @gotags: json:"keywords"
+    string keywords = 9;
+}
+
+message UserSet {
+    // 总数量
+    // @gotags: bson:"total" json:"total"
+    int64 total = 1;
+    // 数据项
+    // @gotags: bson:"items" json:"items"
+    repeated User items = 2;
+}
+
+enum DESCRIBE_BY {
+    // 通过UserId查询用户
+    USER_ID = 0;
+}
+
+// DescribeUserRequest 查询用户详情
+message DescribeUserRequest {
+    // 查询方式
+    // @gotags: json:"describe_by"
+    DESCRIBE_BY describe_by = 1;
+    // 用户账号id
+    // @gotags: json:"id" validate:"required,lte=60"
+    string id = 2;
+}
+
+// UpdatePasswordRequest todo
+message UpdatePasswordRequest {
+    // 用户Id
+    // @gotags: json:"user_id"
+    string user_id = 1;
+    // 旧密码
+    // @gotags: json:"old_pass"
+    string old_pass = 2;
+    // 新密码
+    // @gotags: json:"new_pass"
+    string new_pass = 3;
+    // 是否重置
+    // @gotags: json:"is_reset"
+    bool is_reset = 4;
+    // 重置原因
+    // @gotags: json:"reset_reason"
+    string reset_reason = 5;
+}
+
+// 重置密码
+message ResetPasswordRequest {
+    // 用户名
+    // @gotags: json:"user_id"
+    string user_id = 1;
+    // 新密码
+    // @gotags: json:"new_pass"
+    string new_pass = 3;
+    // 是否重置
+    // @gotags: json:"is_reset"
+    bool is_reset = 4;
+    // 重置原因
+    // @gotags: json:"reset_reason"
+    string reset_reason = 5;
+}
+
+message DeleteUserRequest {
+    // 用户账号id
+    // @gotags: json:"user_ids" validate:"required,lte=60"
+    repeated string user_ids = 2;
+}
+
+// UpdateUserRequest todo
+message UpdateUserRequest {
+    // 更新模式
+    // @gotags: json:"update_mode"
+    infraboard.mcube.request.UpdateMode update_mode = 1;
+    // 用户Id
+    // @gotags: json:"user_id" validate:"required,lte=120"
+    string user_id = 2;
+    // profile 账号profile
+    // @gotags: json:"profile"
+	Profile profile = 3;
+}
+
