@@ -5,6 +5,12 @@ option go_package = "github.com/infraboard/mcenter/apps/token";
 
 import "apps/user/pb/user.proto";
 
+// Token服务
+service RPC {
+    // 校验Token
+    rpc ValidateToken(ValidateTokenRequest) returns (Token) {};
+}
+
 // 授权类型
 enum GRANT_TYPE {
     // 用户密码授权
@@ -130,4 +136,64 @@ message TokenSet {
     // 列表
     // @gotags: bson:"items" json:"items"
     repeated Token items = 2;
+}
+
+message IssueTokenRequest {
+    // 授权类型
+    // @gotags: json:"grant_type"
+    GRANT_TYPE grant_type = 1;
+    // 令牌类型
+    // @gotags: json:"type"
+    TOKEN_TYPE type = 2;
+    // 令牌过期时间
+    // @gotags: json:"expired_at"
+    int64 expired_at = 3;
+    // 令牌访问空间
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 4;
+    // 空间内的过滤条件, 格式key=value
+    // @gotags: bson:"scope" json:"scope,omitempty"
+    string scope = 5;
+    // PASSWORD授权时, 用户名
+    // @gotags: json:"username,omitempty"
+    string username = 6;
+    // PASSWORD授权时, 用户密码
+    // @gotags: json:"password,omitempty"
+    string password = 7;
+    // REFRESH授权时, 刷新令牌
+    // @gotags: json:"refresh_token,omitempty"
+    string refresh_token = 8;
+    // PRIVATE_TOKEN授权时, 访问令牌
+    // @gotags: json:"access_token,omitempty"
+    string access_token = 9;
+    // PRIVATE_TOKEN授权时, 描述信息
+    // @gotags: json:"description"
+    string description = 10;
+    // AUTH_CODE授权时, Code
+    // @gotags: json:"auth_code"
+    string auth_code = 11;
+    // AUTH_CODE授权时, State
+    // @gotags: json:"state"
+    string state = 12;
+    // 二次认证时验证码
+    // @gotags: json:"verify_code"
+    string verify_code = 13;
+    // 令牌办法给客户端信息
+    // @gotags: bson:"location" json:"location,omitempty"
+    Location location = 14;
+}
+
+message ValidateTokenRequest {
+    // 令牌
+    // @gotags: json:"access_token"
+    string access_token = 1;
+}
+
+message RevolkTokenRequest {
+    // 令牌
+    // @gotags: json:"access_token"
+    string access_token = 1;
+    // 刷新令牌
+    // @gotags: json:"refresh_token"
+    string refresh_token = 5;
 }
