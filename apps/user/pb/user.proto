@@ -156,7 +156,7 @@ message CreateUserRequest {
     // @gotags: json:"type" bson:"type"
     TYPE type = 2;
     // 创建类型
-    // @gotags: json:"type" bson:"type"
+    // @gotags: json:"create_by" bson:"create_by"
     CREATE_BY create_by = 3;
     // 域信息
     // @gotags: json:"domain" bson:"domain" validate:"required"

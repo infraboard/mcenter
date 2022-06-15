@@ -719,8 +719,8 @@ type CreateUserRequest struct {
 	// @gotags: json:"type" bson:"type"
 	Type TYPE `protobuf:"varint,2,opt,name=type,proto3,enum=infraboard.mcenter.user.TYPE" json:"type" bson:"type"`
 	// 创建类型
-	// @gotags: json:"type" bson:"type"
-	CreateBy CREATE_BY `protobuf:"varint,3,opt,name=create_by,json=createBy,proto3,enum=infraboard.mcenter.user.CREATE_BY" json:"type" bson:"type"`
+	// @gotags: json:"create_by" bson:"create_by"
+	CreateBy CREATE_BY `protobuf:"varint,3,opt,name=create_by,json=createBy,proto3,enum=infraboard.mcenter.user.CREATE_BY" json:"create_by" bson:"create_by"`
 	// 域信息
 	// @gotags: json:"domain" bson:"domain" validate:"required"
 	Domain string `protobuf:"bytes,4,opt,name=domain,proto3" json:"domain" bson:"domain" validate:"required"`
