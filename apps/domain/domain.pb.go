@@ -185,8 +185,8 @@ type Profile struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 全称
-	// @gotags: bson:"name" json:"name"
-	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name" bson:"name"`
+	// @gotags: bson:"name" json:"name"  validate:"required"
+	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name" bson:"name" validate:"required"`
 	// 公司LOGO图片的URL
 	// @gotags: bson:"logo_path" json:"logo_path"
 	LogoPath string `protobuf:"bytes,6,opt,name=logo_path,json=logoPath,proto3" json:"logo_path" bson:"logo_path"`
@@ -866,12 +866,12 @@ type UpdateDomainRequest struct {
 	// 更新模式
 	// @gotags: json:"update_mode"
 	UpdateMode request.UpdateMode `protobuf:"varint,1,opt,name=update_mode,json=updateMode,proto3,enum=infraboard.mcube.request.UpdateMode" json:"update_mode"`
-	// 公司或者组织名称
-	// @gotags: bson:"id" json:"id"
-	Id string `protobuf:"bytes,2,opt,name=id,proto3" json:"id" bson:"id"`
+	// 公司或者组织Id
+	// @gotags: json:"id" validate:"required"
+	Id string `protobuf:"bytes,2,opt,name=id,proto3" json:"id" validate:"required"`
 	// 修改的内容
-	// @gotags: bson:"spec" json:"spec"
-	Spec *CreateDomainRequest `protobuf:"bytes,4,opt,name=spec,proto3" json:"spec" bson:"spec"`
+	// @gotags: json:"spec" validate:"required"
+	Spec *CreateDomainRequest `protobuf:"bytes,4,opt,name=spec,proto3" json:"spec" validate:"required"`
 }
 
 func (x *UpdateDomainRequest) Reset() {
@@ -933,8 +933,8 @@ type DescribeDomainRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @gotags: bson:"id" json:"id"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id" bson:"id"`
+	// @gotags: json:"id" validate:"required"
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id" validate:"required"`
 }
 
 func (x *DescribeDomainRequest) Reset() {

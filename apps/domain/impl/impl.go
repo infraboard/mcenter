@@ -5,7 +5,6 @@ import (
 
 	"github.com/infraboard/mcube/app"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/x/bsonx"
 	"google.golang.org/grpc"
 
@@ -19,9 +18,7 @@ var (
 )
 
 type service struct {
-	col           *mongo.Collection
-	enableCache   bool
-	notifyCachPre string
+	col *mongo.Collection
 	domain.UnimplementedRPCServer
 }
 
@@ -33,14 +30,6 @@ func (s *service) Config() error {
 
 	dc := db.Collection("domain")
 	indexs := []mongo.IndexModel{
-		{
-			Keys:    bsonx.Doc{{Key: "name", Value: bsonx.Int32(-1)}},
-			Options: options.Index().SetUnique(true),
-		},
-		{
-			Keys:    bsonx.Doc{{Key: "ldap_config.base_dn", Value: bsonx.Int32(-1)}},
-			Options: options.Index().SetUnique(true),
-		},
 		{
 			Keys: bsonx.Doc{{Key: "create_at", Value: bsonx.Int32(-1)}},
 		},
@@ -65,5 +54,6 @@ func (s *service) Registry(server *grpc.Server) {
 }
 
 func init() {
+	app.RegistryInternalApp(svr)
 	app.RegistryGrpcApp(svr)
 }
