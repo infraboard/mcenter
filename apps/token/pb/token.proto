@@ -3,88 +3,131 @@ syntax = "proto3";
 package infraboard.mcenter.token;
 option go_package = "github.com/infraboard/mcenter/apps/token";
 
+import "apps/user/pb/user.proto";
+
 // 授权类型
 enum GRANT_TYPE {
+    // 用户密码授权
     PASSWORD = 0;
+    // LDAP授权
     LDAP = 1;
+    // 刷新授权
     REFRESH = 2;
-    ACCESS = 3;
+    // 私有令牌, 用于编程使用
+    PRIVATE_TOKEN = 3;
+    // 客户端授权
     CLIENT = 4;
+    // Oauth2.0 Auth Code授权
     AUTH_CODE = 5;
+    // 隐式授权
     IMPLICIT = 6;
+    // 微信授权
     WECHAT_WORK = 7;
 }
 
 // 令牌类型
 enum TOKEN_TYPE {
+    // Bearer Token
     BEARER = 0;
+    // 基于Mac的Token
     MAC = 1;
+    // Json Web Token
     JWT = 2;
 }
 
 // 冻结类型
 enum BLOCK_TYPE {
-    SESSION_TERMINATED = 0;
-    OTHER_CLIENT_LOGGED_IN = 1;
-    OTHER_PLACE_LOGGED_IN = 2;
-    OTHER_IP_LOGGED_IN = 3;
+    // 刷新Token过期, 回话中断
+    REFRESH_TOKEN_EXPIRED = 0;
+    // 异地登陆
+    OTHER_PLACE_LOGGED_IN = 1;
+    // 异常Ip登陆
+    OTHER_IP_LOGGED_IN = 2;
 }
 
 message Token {
-    // @gotags: bson:"session_id" json:"session_id"
-    string session_id = 2;
+    // 访问令牌
     // @gotags: bson:"_id" json:"access_token"
-    string access_token = 3;
-    // @gotags: bson:"refresh_token" json:"refresh_token,omitempty"
-    string refresh_token = 4;
-    // @gotags: bson:"create_at" json:"create_at,omitempty"
-    int64 create_at = 5;
-    // @gotags: bson:"access_expired_at" json:"access_expired_at,omitempty"
-    int64 access_expired_at = 6;
-    // @gotags: bson:"refresh_expired_at" json:"refresh_expired_at,omitempty"
-    int64 refresh_expired_at = 7;
-    // @gotags: bson:"domain" json:"domain,omitempty"
-    string domain = 8;
-    // // @gotags: bson:"user_type" json:"user_type"
-    // user.UserType user_type = 9;
-    // @gotags: bson:"account" json:"account"
-    string account = 10;
-    // @gotags: bson:"application_id" json:"application_id"
-    string application_id = 11;
-    // @gotags: bson:"application_name" json:"application_name"
-    string application_name = 12;
-    // @gotags: bson:"client_id" json:"client_id"
-    string client_id = 13;
-    GRANT_TYPE grant_type = 15;
+    string access_token = 1;
+    // 刷新令牌, 当访问令牌过期时, 可以刷新令牌进行刷新
+    // @gotags: bson:"refresh_token" json:"refresh_token"
+    string refresh_token = 2;
+    // 颁发时间
+    // @gotags: bson:"issue_at" json:"issue_at"
+    int64 issue_at = 3;
+    // 访问令牌过期时间
+    // @gotags: bson:"access_expired_at" json:"access_expired_at"
+    int64 access_expired_at = 4;
+    // 刷新令牌过期时间
+    // @gotags: bson:"refresh_expired_at" json:"refresh_expired_at"
+    int64 refresh_expired_at = 5;
+    // 用户类型
+    // @gotags: bson:"user_type" json:"user_type"
+    user.TYPE user_type = 6;
+    // 用户当前所处域
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 7;
+    // 用户名
+    // @gotags: bson:"username" json:"username"
+    string username = 8;
+    // 用户Id
+    // @gotags: bson:"user_id" json:"user_id"
+    string user_id = 9;
+    // 授权类型
+    // @gotags: bson:"grant_type" json:"grant_type"
+    GRANT_TYPE grant_type = 10;
+    // 令牌类型
     // @gotags: bson:"type" json:"type"
-    TOKEN_TYPE type = 16;
-    // @gotags: bson:"namespace_id" json:"namespace_id"
-    string namespace_id = 25;
-    // @gotags: bson:"namespace_name" json:"namespace_name"
-    string namespace_name = 27;
-    // @gotags: bson:"scope" json:"scope"
-    string scope = 17;
-    // @gotags: bson:"description" json:"description"
-    string description = 18;
+    TOKEN_TYPE type = 11;
+    // 当前空间
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 12;
+    // 空间内的过来条件, 格式key=value
+    // @gotags: bson:"scope" json:"scope,omitempty"
+    string scope = 13;
+    // 令牌描述信息, 当授权类型为Private Token时, 做描述使用
+    // @gotags: bson:"description" json:"description,omitempty"
+    string description = 14;
+    // 可选名称空间
+    // @gotags: bson:"-" json:"available_namespace,omitempty"
+    repeated string available_namespace = 15;
+    // 令牌状态
+    // @gotags: bson:"status" json:"status,omitempty"
+    Status status = 16;
+    // 令牌办法给客户端信息
+    // @gotags: bson:"location" json:"location,omitempty"
+    Location location = 17;
+}
+
+message Status {
+    // 是否冻结
     // @gotags: bson:"is_block" json:"is_block"
-    bool is_block = 19;
+    bool is_block = 1;
+    // 冻结类型
     // @gotags: bson:"block_type" json:"block_type"
-    BLOCK_TYPE block_type = 20;
+    BLOCK_TYPE block_type = 2;
+    // 冻结时间
     // @gotags: bson:"block_at" json:"block_at"
-    int64 block_at = 21;
+    int64 block_at = 3;
+    // 冻结原因
     // @gotags: bson:"block_reason" json:"block_reason"
-    string block_reason = 22;
-    // @gotags: bson:"-" json:"-"
-    string remote_ip = 23;
-    // @gotags: bson:"-" json:"-"
-    string user_agent = 24;
-    // @gotags: bson:"-" json:"available_namespace"
-    repeated string available_namespace = 26;
+    string block_reason = 4;
+}
+
+message Location {
+    // 令牌申请者IP地址
+    // @gotags: bson:"remote_ip" json:"remote_ip"
+    string remote_ip = 1;
+    // 令牌申请者UA
+    // @gotags: bson:"user_agent" json:"user_agent"
+    string user_agent = 2;
 }
 
 message TokenSet {
+    // 总数量
     // @gotags: bson:"total" json:"total"
     int64 total = 1;
+    // 列表
     // @gotags: bson:"items" json:"items"
     repeated Token items = 2;
 }
