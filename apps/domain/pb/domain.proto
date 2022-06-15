@@ -7,54 +7,44 @@ import "github.com/infraboard/mcube/pb/request/request.proto";
 
 // Service 用户服务
 service RPC {
-    // 创建域
-    rpc CreateDomain(CreateDomainRequest) returns(Domain);
-    // 更新域
-	rpc UpdateDomain(UpdateDomainRequest) returns(Domain);
     // 查询域
 	rpc DescribeDomain(DescribeDomainRequest) returns(Domain);
 }
 
 message Domain  {
     // 公司或者组织名称
-    // @gotags: bson:"_id" json:"name"
-    string name = 1;
+    // @gotags: bson:"_id" json:"id"
+    string id = 1;
     // 创建时间
     // @gotags: bson:"create_at" json:"create_at"
     int64 create_at = 2;
     // 更新时间
     // @gotags: bson:"update_at" json:"update_at"
     int64 update_at = 3;
-    // 域拥有者
-    // @gotags: bson:"owner" json:"owner"
-    string owner = 4;
-    // 域状态, 是否需要冻结该域, 冻结时, 该域下面所有用户禁止登录
-    // @gotags: bson:"enabled" json:"enabled"
-    bool enabled = 5;
-    // Profile 具体属性
-    // @gotags: bson:"profile" json:"profile"
-    Profile profile = 6;
-    // SecuritySetting 域安全设置
-    // @gotags: bson:"security_setting" json:"security_setting"
-    SecuritySetting security_setting = 7;
+    // 创建信息
+    // @gotags: bson:"spec" json:"spec"
+    CreateDomainRequest spec = 4;
 }
 
 message CreateDomainRequest {
-       // 公司或者组织名称
-    // @gotags: bson:"name" json:"name"
-    string name = 1;
+    // 域状态, 是否需要冻结该域, 冻结时, 该域下面所有用户禁止登录
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 2;
     // 归属人
     // @gotags: bson:"owner" json:"owner"
-    string owner = 2;
+    string owner = 3;
     // Profile 需要修改内容
     // @gotags: bson:"profile" json:"profile"
-    Profile profile = 3;
+    Profile profile = 4;
+    // SecuritySetting 域安全设置
+    // @gotags: bson:"security_setting" json:"security_setting"
+    SecuritySetting security_setting = 5;
 }
 
 message Profile {
     // 全称
-    // @gotags: bson:"display_name" json:"display_name"
-    string display_name = 5;
+    // @gotags: bson:"name" json:"name"
+    string name = 5;
     // 公司LOGO图片的URL
     // @gotags: bson:"logo_path" json:"logo_path"
     string logo_path = 6;
@@ -194,22 +184,16 @@ message UpdateDomainRequest  {
     // 更新模式
     // @gotags: json:"update_mode"
     infraboard.mcube.request.UpdateMode update_mode = 1;
-    // 公司或者组织名称
-    // @gotags: bson:"name" json:"name"
-    string name = 2;
-    // CreateDomainRequest 需要修改内容
-    // @gotags: bson:"profile" json:"profile"
-    Profile profile = 3;
-    // SecuritySetting 域安全设置
-    // @gotags: bson:"security_setting" json:"security_setting"
-    SecuritySetting security_setting = 4; 
-    // 所有者
-    // @gotags: bson:"owner" json:"owner"
-    string owner = 5;
+    // 公司或者组织Id
+    // @gotags: bson:"id" json:"id"
+    string id = 2;
+    // 修改的内容
+    // @gotags: bson:"spec" json:"spec"
+    CreateDomainRequest spec = 4;
 }
 
 // DescribeDomainRequest 查询domain详情请求
 message DescribeDomainRequest {
-    // @gotags: bson:"name" json:"name"
-   string name = 1;
+    // @gotags: bson:"id" json:"id"
+   string id = 1;
 }

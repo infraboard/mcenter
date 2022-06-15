@@ -22,10 +22,6 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	// 创建域
-	CreateDomain(ctx context.Context, in *CreateDomainRequest, opts ...grpc.CallOption) (*Domain, error)
-	// 更新域
-	UpdateDomain(ctx context.Context, in *UpdateDomainRequest, opts ...grpc.CallOption) (*Domain, error)
 	// 查询域
 	DescribeDomain(ctx context.Context, in *DescribeDomainRequest, opts ...grpc.CallOption) (*Domain, error)
 }
@@ -36,24 +32,6 @@ type rPCClient struct {
 
 func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 	return &rPCClient{cc}
-}
-
-func (c *rPCClient) CreateDomain(ctx context.Context, in *CreateDomainRequest, opts ...grpc.CallOption) (*Domain, error) {
-	out := new(Domain)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.domain.RPC/CreateDomain", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPCClient) UpdateDomain(ctx context.Context, in *UpdateDomainRequest, opts ...grpc.CallOption) (*Domain, error) {
-	out := new(Domain)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.domain.RPC/UpdateDomain", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *rPCClient) DescribeDomain(ctx context.Context, in *DescribeDomainRequest, opts ...grpc.CallOption) (*Domain, error) {
@@ -69,10 +47,6 @@ func (c *rPCClient) DescribeDomain(ctx context.Context, in *DescribeDomainReques
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	// 创建域
-	CreateDomain(context.Context, *CreateDomainRequest) (*Domain, error)
-	// 更新域
-	UpdateDomain(context.Context, *UpdateDomainRequest) (*Domain, error)
 	// 查询域
 	DescribeDomain(context.Context, *DescribeDomainRequest) (*Domain, error)
 	mustEmbedUnimplementedRPCServer()
@@ -82,12 +56,6 @@ type RPCServer interface {
 type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedRPCServer) CreateDomain(context.Context, *CreateDomainRequest) (*Domain, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateDomain not implemented")
-}
-func (UnimplementedRPCServer) UpdateDomain(context.Context, *UpdateDomainRequest) (*Domain, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateDomain not implemented")
-}
 func (UnimplementedRPCServer) DescribeDomain(context.Context, *DescribeDomainRequest) (*Domain, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DescribeDomain not implemented")
 }
@@ -102,42 +70,6 @@ type UnsafeRPCServer interface {
 
 func RegisterRPCServer(s grpc.ServiceRegistrar, srv RPCServer) {
 	s.RegisterService(&RPC_ServiceDesc, srv)
-}
-
-func _RPC_CreateDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDomainRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).CreateDomain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.domain.RPC/CreateDomain",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).CreateDomain(ctx, req.(*CreateDomainRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_UpdateDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDomainRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).UpdateDomain(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.domain.RPC/UpdateDomain",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).UpdateDomain(ctx, req.(*UpdateDomainRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _RPC_DescribeDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -165,14 +97,6 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "infraboard.mcenter.domain.RPC",
 	HandlerType: (*RPCServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "CreateDomain",
-			Handler:    _RPC_CreateDomain_Handler,
-		},
-		{
-			MethodName: "UpdateDomain",
-			Handler:    _RPC_UpdateDomain_Handler,
-		},
 		{
 			MethodName: "DescribeDomain",
 			Handler:    _RPC_DescribeDomain_Handler,

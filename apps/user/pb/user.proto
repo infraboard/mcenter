@@ -8,20 +8,10 @@ import "github.com/infraboard/mcube/pb/request/request.proto";
 
 // Service 用户服务
 service RPC {
-    // 创建用户
-    rpc CreateUser(CreateUserRequest) returns(User);
 	// 查询用户列表
 	rpc QueryUser(QueryUserRequest) returns(UserSet);
     // 查询用户详情
     rpc DescribeUser(DescribeUserRequest) returns(User);
-    // 删除用户
-    rpc DeleteUser(DeleteUserRequest) returns(UserSet);
-    // 修改用户信息
-    rpc UpdateUser(UpdateUserRequest) returns(User);
-    // 修改用户密码, 用户需要知道原先密码
-	rpc UpdatePassword(UpdatePasswordRequest) returns(Password);
-    // 重置密码, 无需知道原先密码, 主账号执行
-    rpc ResetPassword(ResetPasswordRequest) returns(Password);
 }
 
 message Password {
