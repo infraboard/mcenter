@@ -132,3 +132,8 @@ func NewPatchDomainRequest(id string) *UpdateDomainRequest {
 		Spec:       &CreateDomainRequest{},
 	}
 }
+
+// LockedMiniteDuration todo
+func (c *RetryLockConfig) LockedMiniteDuration() time.Duration {
+	return time.Duration(c.LockedMinite) * time.Minute
+}

@@ -30,9 +30,15 @@ message Password {
     // 需要重置的原因
     // @gotags: bson:"reset_reason" json:"reset_reason"
     string reset_reason = 5;
+    // 密码过期时间, 密码过期后要求用户重置密码
+    // @gotags: bson:"expired_days" json:"expired_days"
+    uint32 expired_days = 6;
+    // 密码过期前多少天开始提醒
+    // @gotags: bson:"expired_remind" json:"expired_remind"
+    uint32 expired_remind = 7;
     // 历史密码
     // @gotags: bson:"history" json:"history,omitempty"
-    repeated string history = 6;
+    repeated string history = 8;
 }
 
 // Status 用户状态

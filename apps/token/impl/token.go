@@ -9,12 +9,16 @@ import (
 	"github.com/infraboard/mcube/exception"
 )
 
+var (
+	AUTH_FAILED = exception.NewUnauthorized("user or password not connrect")
+)
+
 func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	*token.Token, error) {
 	switch req.GrantType {
 	case token.GRANT_TYPE_PASSWORD:
 		if req.Username == "" || req.Password == "" {
-			return nil, exception.NewBadRequest("username and password required")
+			return nil, AUTH_FAILED
 		}
 
 		// 1. 检测用户的密码是否正确
@@ -23,7 +27,7 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 			return nil, err
 		}
 		if err := u.Password.CheckPassword(req.Password); err != nil {
-			return nil, exception.NewUnauthorized("user or password not connrect")
+			return nil, AUTH_FAILED
 		}
 
 		// 2. 检测密码是否过期
@@ -38,17 +42,24 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 			ps := d.Spec.SecuritySetting.PasswordSecurity
 			expiredRemain, expiredDays = uint(ps.BeforeExpiredRemindDays), uint(ps.PasswordExpiredDays)
 		default:
-
+			// 2.2 主账号和管理员密码过期策略
+			expiredRemain, expiredDays = uint(u.Password.ExpiredRemind), uint(u.Password.ExpiredDays)
 		}
 
 		err = u.Password.CheckPasswordExpired(expiredRemain, expiredDays)
 		if err != nil {
 			return nil, err
 		}
+
+		// 3. 颁发Token
+		tk := token.NewToken(req)
+		tk.Domain = u.Spec.Domain
+		tk.Username = u.Spec.Username
+		tk.UserId = u.Id
+		return tk, nil
 	default:
 		return nil, exception.NewBadRequest("grant type %s not implemented", req.GrantType)
 	}
-	return nil, nil
 }
 
 // 撤销Token

@@ -143,3 +143,48 @@ func (t *BLOCK_TYPE) UnmarshalJSON(b []byte) error {
 	*t = ins
 	return nil
 }
+
+// ParsePLATFORMFromString Parse PLATFORM from string
+func ParsePLATFORMFromString(str string) (PLATFORM, error) {
+	key := strings.Trim(string(str), `"`)
+	v, ok := PLATFORM_value[strings.ToUpper(key)]
+	if !ok {
+		return 0, fmt.Errorf("unknown PLATFORM: %s", str)
+	}
+
+	return PLATFORM(v), nil
+}
+
+// Equal type compare
+func (t PLATFORM) Equal(target PLATFORM) bool {
+	return t == target
+}
+
+// IsIn todo
+func (t PLATFORM) IsIn(targets ...PLATFORM) bool {
+	for _, target := range targets {
+		if t.Equal(target) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// MarshalJSON todo
+func (t PLATFORM) MarshalJSON() ([]byte, error) {
+	b := bytes.NewBufferString(`"`)
+	b.WriteString(strings.ToUpper(t.String()))
+	b.WriteString(`"`)
+	return b.Bytes(), nil
+}
+
+// UnmarshalJSON todo
+func (t *PLATFORM) UnmarshalJSON(b []byte) error {
+	ins, err := ParsePLATFORMFromString(string(b))
+	if err != nil {
+		return err
+	}
+	*t = ins
+	return nil
+}

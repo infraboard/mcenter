@@ -3,6 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.token;
 option go_package = "github.com/infraboard/mcenter/apps/token";
 
+import "github.com/infraboard/mcube/pb/page/page.proto";
 import "apps/user/pb/user.proto";
 
 // Token服务
@@ -51,58 +52,68 @@ enum BLOCK_TYPE {
     OTHER_IP_LOGGED_IN = 2;
 }
 
+enum PLATFORM {
+    // Web 登陆授权
+    WEB = 0;
+    // API 访问授权
+    API = 1;
+}
+
 message Token {
+    // 颁发平台, 根据授权方式判断
+    // @gotags: bson:"platform" json:"platform"
+    PLATFORM platform = 1;
     // 访问令牌
     // @gotags: bson:"_id" json:"access_token"
-    string access_token = 1;
+    string access_token = 2;
     // 刷新令牌, 当访问令牌过期时, 可以刷新令牌进行刷新
     // @gotags: bson:"refresh_token" json:"refresh_token"
-    string refresh_token = 2;
+    string refresh_token = 3;
     // 颁发时间
     // @gotags: bson:"issue_at" json:"issue_at"
-    int64 issue_at = 3;
+    int64 issue_at = 4;
     // 访问令牌过期时间
     // @gotags: bson:"access_expired_at" json:"access_expired_at"
-    int64 access_expired_at = 4;
+    int64 access_expired_at = 5;
     // 刷新令牌过期时间
     // @gotags: bson:"refresh_expired_at" json:"refresh_expired_at"
-    int64 refresh_expired_at = 5;
+    int64 refresh_expired_at = 6;
     // 用户类型
     // @gotags: bson:"user_type" json:"user_type"
-    user.TYPE user_type = 6;
+    user.TYPE user_type = 7;
     // 用户当前所处域
     // @gotags: bson:"domain" json:"domain"
-    string domain = 7;
+    string domain = 8;
     // 用户名
     // @gotags: bson:"username" json:"username"
-    string username = 8;
+    string username = 9;
     // 用户Id
     // @gotags: bson:"user_id" json:"user_id"
-    string user_id = 9;
+    string user_id = 10;
     // 授权类型
     // @gotags: bson:"grant_type" json:"grant_type"
-    GRANT_TYPE grant_type = 10;
+    GRANT_TYPE grant_type = 11;
     // 令牌类型
     // @gotags: bson:"type" json:"type"
-    TOKEN_TYPE type = 11;
+    TOKEN_TYPE type = 12;
     // 当前空间
     // @gotags: bson:"namespace" json:"namespace"
-    string namespace = 12;
+    string namespace = 13;
     // 空间内的过来条件, 格式key=value
     // @gotags: bson:"scope" json:"scope,omitempty"
-    string scope = 13;
+    string scope = 14;
     // 令牌描述信息, 当授权类型为Private Token时, 做描述使用
     // @gotags: bson:"description" json:"description,omitempty"
-    string description = 14;
+    string description = 15;
     // 可选名称空间
     // @gotags: bson:"-" json:"available_namespace,omitempty"
-    repeated string available_namespace = 15;
+    repeated string available_namespace = 16;
     // 令牌状态
     // @gotags: bson:"status" json:"status,omitempty"
-    Status status = 16;
+    Status status = 17;
     // 令牌办法给客户端信息
     // @gotags: bson:"location" json:"location,omitempty"
-    Location location = 17;
+    Location location = 18;
 }
 
 message Status {
@@ -122,11 +133,58 @@ message Status {
 
 message Location {
     // 令牌申请者IP地址
-    // @gotags: bson:"remote_ip" json:"remote_ip"
-    string remote_ip = 1;
+    // @gotags: bson:"ip_location" json:"ip_location"
+    IPLocation ip_location = 1;
     // 令牌申请者UA
     // @gotags: bson:"user_agent" json:"user_agent"
-    string user_agent = 2;
+    UserAgent user_agent = 2;
+}
+
+// IPLocation 客户端地理位置信息
+message IPLocation {
+    // 令牌申请者IP地址
+    // @gotags: bson:"remote_ip" json:"remote_ip"
+    string remote_ip = 1;
+    // 城市编号
+    // @gotags: bson:"city_id" json:"city_id"
+    int64 city_id = 2;
+    // 国家
+    // @gotags: bson:"country" json:"country"
+    string country = 3;
+    // 地区
+    // @gotags: bson:"region" json:"region"
+    string region = 4;
+    // 省
+    // @gotags: bson:"province" json:"province"
+    string province = 5;
+    // 城
+    // @gotags: bson:"city" json:"city"
+    string city = 6;
+    // 服务商
+    // @gotags: bson:"isp" json:"isp"
+    string isp = 7;
+}
+
+// UserAgent todo
+message UserAgent {
+    // 系统OS
+    // @gotags: bson:"os" json:"os"
+    string os = 1;
+    // 客户端平台
+    // @gotags: bson:"platform" json:"platform"
+    string platform = 2;
+    // 内核名称
+    // @gotags: bson:"engine_name" json:"engine_name"
+    string engine_name = 3;
+    // 内核版本
+    // @gotags: bson:"engine_version" json:"engine_version"
+    string engine_version = 4;
+    // 浏览器名称
+    // @gotags: bson:"browser_name" json:"browser_name"
+    string browser_name = 5;
+    // 浏览器版本
+    // @gotags: bson:"browser_version" json:"browser_version"
+    string browser_version = 6;
 }
 
 message TokenSet {
@@ -149,10 +207,10 @@ message IssueTokenRequest {
     // @gotags: json:"expired_at"
     int64 expired_at = 3;
     // 令牌访问空间
-    // @gotags: bson:"namespace" json:"namespace"
+    // @gotags: json:"namespace"
     string namespace = 4;
     // 空间内的过滤条件, 格式key=value
-    // @gotags: bson:"scope" json:"scope,omitempty"
+    // @gotags: json:"scope,omitempty"
     string scope = 5;
     // PASSWORD授权时, 用户名
     // @gotags: json:"username,omitempty"
@@ -179,7 +237,7 @@ message IssueTokenRequest {
     // @gotags: json:"verify_code"
     string verify_code = 13;
     // 令牌办法给客户端信息
-    // @gotags: bson:"location" json:"location,omitempty"
+    // @gotags: json:"location,omitempty"
     Location location = 14;
 }
 
@@ -205,4 +263,49 @@ message ChangeNamespaceRequest {
     // 空间名称
     // @gotags: json:"namespace" validate:"required"
     string namespace = 2;
+}
+
+message QueryTokenRequest {
+    // 分页参数
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+   // 颁发平台, 根据授权方式判断
+    // @gotags: bson:"platform" json:"platform"
+    optional PLATFORM platform = 2;
+    // 访问令牌
+    // @gotags: json:"access_token"
+    string access_token = 3;
+    // 刷新令牌, 当访问令牌过期时, 可以刷新令牌进行刷新
+    // @gotags: json:"refresh_token"
+    string refresh_token = 4;
+    // 用户类型
+    // @gotags: json:"user_type"
+    optional user.TYPE user_type = 5;
+    // 用户当前所处域
+    // @gotags: json:"domain"
+    string domain = 6;
+    // 用户名
+    // @gotags: json:"username"
+    string username = 7;
+    // 用户Id
+    // @gotags: json:"user_id"
+    string user_id = 8;
+    // 授权类型
+    // @gotags: json:"grant_type"
+    optional GRANT_TYPE grant_type = 9;
+    // 令牌类型
+    // @gotags: json:"type"
+    optional TOKEN_TYPE type = 10;
+    // 当前空间
+    // @gotags: json:"namespace"
+    string namespace = 11;
+    // 令牌描述信息, 当授权类型为Private Token时, 做描述使用
+    // @gotags: json:"description"
+    string description = 12;
+    // 是否冻结
+    // @gotags: json:"is_block"
+    optional bool is_block = 13;
+    // 冻结类型
+    // @gotags: json:"block_type"
+    optional BLOCK_TYPE block_type = 14;
 }

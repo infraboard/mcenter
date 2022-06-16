@@ -57,8 +57,10 @@ func NewHashedPassword(password string) (*Password, error) {
 	}
 
 	return &Password{
-		Password: string(bytes),
-		CreateAt: time.Now().UnixMilli(),
+		Password:      string(bytes),
+		CreateAt:      time.Now().UnixMilli(),
+		ExpiredDays:   90,
+		ExpiredRemind: 30,
 	}, nil
 }
 
@@ -168,8 +170,12 @@ func (p *Password) CheckPassword(password string) error {
 // CheckPasswordExpired 检测password是否已经过期
 // remindDays 提前多少天提醒用户修改密码
 // expiredDays 多少天后密码过期
-
 func (p *Password) CheckPasswordExpired(remindDays, expiredDays uint) error {
+	// 永不过期
+	if expiredDays == 0 {
+		return nil
+	}
+
 	now := time.Now()
 	expiredAt := time.UnixMilli(p.UpdateAt).Add(time.Duration(expiredDays) * time.Hour * 24)
 

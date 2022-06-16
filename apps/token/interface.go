@@ -9,6 +9,8 @@ type Service interface {
 	RevolkToken(context.Context, *RevolkTokenRequest) (*Token, error)
 	// 切换Token空间
 	ChangeNamespace(context.Context, *ChangeNamespaceRequest) (*Token, error)
+	// 查询Token, 用于查询Token颁发记录, 也就是登陆日志
+	QueryToken(context.Context, *QueryTokenRequest) (*TokenSet, error)
 	// RPC
 	RPCServer
 }
