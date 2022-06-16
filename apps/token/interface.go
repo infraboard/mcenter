@@ -7,6 +7,8 @@ type Service interface {
 	IssueToken(context.Context, *IssueTokenRequest) (*Token, error)
 	// 撤销Token
 	RevolkToken(context.Context, *RevolkTokenRequest) (*Token, error)
+	// 切换Token空间
+	ChangeNamespace(context.Context, *ChangeNamespaceRequest) (*Token, error)
 	// RPC
 	RPCServer
 }

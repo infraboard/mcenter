@@ -197,3 +197,12 @@ message RevolkTokenRequest {
     // @gotags: json:"refresh_token"
     string refresh_token = 5;
 }
+
+message ChangeNamespaceRequest {
+    // 需要切换空间令牌
+    // @gotags: json:"token" validate:"required"
+    string token = 1;
+    // 空间名称
+    // @gotags: json:"namespace" validate:"required"
+    string namespace = 2;
+}
