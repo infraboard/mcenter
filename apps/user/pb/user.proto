@@ -209,6 +209,8 @@ message UserSet {
 enum DESCRIBE_BY {
     // 通过UserId查询用户
     USER_ID = 0;
+    // 通过Username查询用户
+    USER_NAME = 1;
 }
 
 // DescribeUserRequest 查询用户详情
@@ -217,8 +219,14 @@ message DescribeUserRequest {
     // @gotags: json:"describe_by"
     DESCRIBE_BY describe_by = 1;
     // 用户账号id
-    // @gotags: json:"id" validate:"required,lte=60"
+    // @gotags: json:"id"
     string id = 2;
+    // 用户域
+    // @gotags: json:"domain"
+    string domain = 3;
+    // 用户账号
+    // @gotags: json:"username"
+    string username = 4;
 }
 
 // UpdatePasswordRequest todo

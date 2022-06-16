@@ -110,6 +110,15 @@ func NewDescriptUserRequestWithId(id string) *DescribeUserRequest {
 	}
 }
 
+// NewDescriptUserRequestWithId 查询详情请求
+func NewDescriptUserRequestWithName(domain, username string) *DescribeUserRequest {
+	return &DescribeUserRequest{
+		DescribeBy: DESCRIBE_BY_USER_NAME,
+		Domain:     domain,
+		Username:   username,
+	}
+}
+
 // NewPatchAccountRequest todo
 func NewPutUserRequest(userId string) *UpdateUserRequest {
 	return &UpdateUserRequest{
