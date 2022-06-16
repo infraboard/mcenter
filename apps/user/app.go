@@ -154,3 +154,31 @@ func NewResetPasswordRequest() *ResetPasswordRequest {
 func NewUpdatePasswordRequest() *UpdatePasswordRequest {
 	return &UpdatePasswordRequest{}
 }
+
+// CheckPassword 判断password 是否正确
+func (p *Password) CheckPassword(password string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(p.Password), []byte(password))
+	if err != nil {
+		return exception.NewUnauthorized("user or password not connrect")
+	}
+
+	return nil
+}
+
+// CheckPasswordExpired 检测password是否已经过期
+// remindDays 提前多少天提醒用户修改密码
+// expiredDays 多少天后密码过期
+
+func (p *Password) CheckPasswordExpired(remindDays, expiredDays uint) error {
+	now := time.Now()
+	expiredAt := time.UnixMilli(p.UpdateAt).Add(time.Duration(expiredDays) * time.Hour * 24)
+
+	ex := now.Sub(expiredAt).Hours() / 24
+	if ex > 0 {
+		return exception.NewPasswordExired("password expired %f days", ex)
+	} else if ex >= -float64(remindDays) {
+		p.SetNeedReset("密码%f天后过期, 请重置密码", -ex)
+	}
+
+	return nil
+}

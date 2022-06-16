@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/x/bsonx"
 	"google.golang.org/grpc"
 
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/conf"
@@ -26,7 +27,8 @@ type service struct {
 	token.UnimplementedRPCServer
 	log logger.Logger
 
-	user user.Service
+	user   user.Service
+	domain domain.Service
 }
 
 func (s *service) Config() error {
@@ -55,7 +57,7 @@ func (s *service) Config() error {
 
 	s.log = zap.L().Named(s.Name())
 	s.user = app.GetInternalApp(user.AppName).(user.Service)
-
+	s.domain = app.GetInternalApp(domain.AppName).(domain.Service)
 	return nil
 }
 

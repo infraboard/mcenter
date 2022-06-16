@@ -2,8 +2,8 @@ package impl
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
@@ -16,11 +16,35 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 		if req.Username == "" || req.Password == "" {
 			return nil, exception.NewBadRequest("username and password required")
 		}
+
+		// 1. 检测用户的密码是否正确
 		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Username))
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println(u)
+		if err := u.Password.CheckPassword(req.Password); err != nil {
+			return nil, exception.NewUnauthorized("user or password not connrect")
+		}
+
+		// 2. 检测密码是否过期
+		var expiredRemain, expiredDays uint
+		switch u.Spec.Type {
+		case user.TYPE_SUB:
+			// 2.1 子账号过期策略
+			d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequest(u.Spec.Domain))
+			if err != nil {
+				return nil, err
+			}
+			ps := d.Spec.SecuritySetting.PasswordSecurity
+			expiredRemain, expiredDays = uint(ps.BeforeExpiredRemindDays), uint(ps.PasswordExpiredDays)
+		default:
+
+		}
+
+		err = u.Password.CheckPasswordExpired(expiredRemain, expiredDays)
+		if err != nil {
+			return nil, err
+		}
 	default:
 		return nil, exception.NewBadRequest("grant type %s not implemented", req.GrantType)
 	}
