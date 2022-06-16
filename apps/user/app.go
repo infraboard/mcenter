@@ -111,10 +111,9 @@ func NewDescriptUserRequestWithId(id string) *DescribeUserRequest {
 }
 
 // NewDescriptUserRequestWithId 查询详情请求
-func NewDescriptUserRequestWithName(domain, username string) *DescribeUserRequest {
+func NewDescriptUserRequestWithName(username string) *DescribeUserRequest {
 	return &DescribeUserRequest{
 		DescribeBy: DESCRIBE_BY_USER_NAME,
-		Domain:     domain,
 		Username:   username,
 	}
 }

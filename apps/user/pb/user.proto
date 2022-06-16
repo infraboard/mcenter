@@ -221,12 +221,9 @@ message DescribeUserRequest {
     // 用户账号id
     // @gotags: json:"id"
     string id = 2;
-    // 用户域
-    // @gotags: json:"domain"
-    string domain = 3;
     // 用户账号
     // @gotags: json:"username"
-    string username = 4;
+    string username = 3;
 }
 
 // UpdatePasswordRequest todo

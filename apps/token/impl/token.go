@@ -16,7 +16,7 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 		if req.Username == "" || req.Password == "" {
 			return nil, exception.NewBadRequest("username and password required")
 		}
-		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.GetDomainWithDefault(), req.Username))
+		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Username))
 		if err != nil {
 			return nil, err
 		}

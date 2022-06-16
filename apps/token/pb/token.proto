@@ -148,42 +148,39 @@ message IssueTokenRequest {
     // 令牌过期时间
     // @gotags: json:"expired_at"
     int64 expired_at = 3;
-    // 令牌访问域
-    // @gotags: bson:"domain" json:"domain"
-    string domain = 4;
     // 令牌访问空间
     // @gotags: bson:"namespace" json:"namespace"
-    string namespace = 5;
+    string namespace = 4;
     // 空间内的过滤条件, 格式key=value
     // @gotags: bson:"scope" json:"scope,omitempty"
-    string scope = 6;
+    string scope = 5;
     // PASSWORD授权时, 用户名
     // @gotags: json:"username,omitempty"
-    string username = 7;
+    string username = 6;
     // PASSWORD授权时, 用户密码
     // @gotags: json:"password,omitempty"
-    string password = 8;
+    string password = 7;
     // REFRESH授权时, 刷新令牌
     // @gotags: json:"refresh_token,omitempty"
-    string refresh_token = 9;
+    string refresh_token = 8;
     // PRIVATE_TOKEN授权时, 访问令牌
     // @gotags: json:"access_token,omitempty"
-    string access_token = 10;
+    string access_token = 9;
     // PRIVATE_TOKEN授权时, 描述信息
     // @gotags: json:"description"
-    string description = 11;
+    string description = 10;
     // AUTH_CODE授权时, Code
     // @gotags: json:"auth_code"
-    string auth_code = 12;
+    string auth_code = 11;
     // AUTH_CODE授权时, State
     // @gotags: json:"state"
-    string state = 13;
+    string state = 12;
     // 二次认证时验证码
     // @gotags: json:"verify_code"
-    string verify_code = 14;
+    string verify_code = 13;
     // 令牌办法给客户端信息
     // @gotags: bson:"location" json:"location,omitempty"
-    Location location = 15;
+    Location location = 14;
 }
 
 message ValidateTokenRequest {
