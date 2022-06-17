@@ -176,6 +176,10 @@ github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.7.1 h1:5TQK59W5E3v0r2duFAb7P95B6hEeOyEnHRa8MjYSMTY=
 github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.422 h1:S0z2OIUWMBVEJx+rGaaM05dc1owJwLA0ecOdQ6gIcjg=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.422/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.422 h1:j9bQ9Sl3YYoFhhafBCWwA0p8O6jN+mXfd2UuxCaacQI=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.422/go.mod h1:VFCee6lIfoDPOFirvOod51mzN4rSXVat/qh+ZDhAH+s=
 github.com/tidwall/pretty v1.0.0 h1:HsD+QiTn7sK6flMKIvNmpqz1qrpP3Ps6jOKIKMooyg4=
 github.com/tidwall/pretty v1.0.0/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
 github.com/ugorji/go v1.1.7/go.mod h1:kZn38zHttfInRq0xu/PH0az30d+z6vm202qpg1oXVMw=
