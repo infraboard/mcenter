@@ -185,10 +185,10 @@ message ServiceSet {
 // ValidateCredentialRequest 校验服务凭证
 message ValidateCredentialRequest {
     // 服务客户端ID
-    // @gotags: json:"client_id" validate:"required,lte=100"
+    // @gotags: json:"client_id" yaml:"client_id" validate:"required,lte=100"
     string client_id = 1;
     // 服务客户端凭证
-    // @gotags: json:"client_secret" validate:"required,lte=100"
+    // @gotags: json:"client_secret" yaml:"client_secret" validate:"required,lte=100"
     string client_secret = 2;                  
 }
 
@@ -197,7 +197,7 @@ message QueryServiceRequest {
     // @gotags: json:"page"
    infraboard.mcube.page.PageRequest page = 1;
     // 服务类型
-    // @gotags: json:"type"
+    // @gotags: json:"type" yaml:"type"
     Type type = 2;
 }
 
@@ -212,18 +212,23 @@ enum DescribeBy {
 
 // DescribeMicroRequest 查询应用详情
 message DescribeServiceRequest {
-    // @gotags: json:"describe_by"
+    // 查询详情的方式
+    // @gotags: json:"describe_by" yaml:"describe_by"
     DescribeBy describe_by = 1;
-    // @gotags: json:"client_id"
+    // 服务客户端Id
+    // @gotags: json:"client_id" yaml:"client_id"
     string client_id = 2;
-    // @gotags: json:"name"
+    // 服务名称
+    // @gotags: json:"name" yaml:"name"
     string name = 3;
-    // @gotags: json:"id"
+    // 服务Id
+    // @gotags: json:"id" yaml:"id"
     string id = 4;
 }
 
 // DeleteMicroRequest todo
 message DeleteServiceRequest {
-    // @gotags: json:"id"
+    // 服务Id
+    // @gotags: json:"id" yaml:"id"
     string id = 1;
 }

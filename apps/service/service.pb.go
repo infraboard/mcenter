@@ -898,11 +898,11 @@ type ValidateCredentialRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 服务客户端ID
-	// @gotags: json:"client_id" validate:"required,lte=100"
-	ClientId string `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id" validate:"required,lte=100"`
+	// @gotags: json:"client_id" yaml:"client_id" validate:"required,lte=100"
+	ClientId string `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id" yaml:"client_id" validate:"required,lte=100"`
 	// 服务客户端凭证
-	// @gotags: json:"client_secret" validate:"required,lte=100"
-	ClientSecret string `protobuf:"bytes,2,opt,name=client_secret,json=clientSecret,proto3" json:"client_secret" validate:"required,lte=100"`
+	// @gotags: json:"client_secret" yaml:"client_secret" validate:"required,lte=100"
+	ClientSecret string `protobuf:"bytes,2,opt,name=client_secret,json=clientSecret,proto3" json:"client_secret" yaml:"client_secret" validate:"required,lte=100"`
 }
 
 func (x *ValidateCredentialRequest) Reset() {
@@ -960,8 +960,8 @@ type QueryServiceRequest struct {
 	// @gotags: json:"page"
 	Page *request1.PageRequest `protobuf:"bytes,1,opt,name=page,proto3" json:"page"`
 	// 服务类型
-	// @gotags: json:"type"
-	Type Type `protobuf:"varint,2,opt,name=type,proto3,enum=infraboard.mcenter.service.Type" json:"type"`
+	// @gotags: json:"type" yaml:"type"
+	Type Type `protobuf:"varint,2,opt,name=type,proto3,enum=infraboard.mcenter.service.Type" json:"type" yaml:"type"`
 }
 
 func (x *QueryServiceRequest) Reset() {
@@ -1016,14 +1016,18 @@ type DescribeServiceRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @gotags: json:"describe_by"
-	DescribeBy DescribeBy `protobuf:"varint,1,opt,name=describe_by,json=describeBy,proto3,enum=infraboard.mcenter.service.DescribeBy" json:"describe_by"`
-	// @gotags: json:"client_id"
-	ClientId string `protobuf:"bytes,2,opt,name=client_id,json=clientId,proto3" json:"client_id"`
-	// @gotags: json:"name"
-	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name"`
-	// @gotags: json:"id"
-	Id string `protobuf:"bytes,4,opt,name=id,proto3" json:"id"`
+	// 查询详情的方式
+	// @gotags: json:"describe_by" yaml:"describe_by"
+	DescribeBy DescribeBy `protobuf:"varint,1,opt,name=describe_by,json=describeBy,proto3,enum=infraboard.mcenter.service.DescribeBy" json:"describe_by" yaml:"describe_by"`
+	// 服务客户端Id
+	// @gotags: json:"client_id" yaml:"client_id"
+	ClientId string `protobuf:"bytes,2,opt,name=client_id,json=clientId,proto3" json:"client_id" yaml:"client_id"`
+	// 服务名称
+	// @gotags: json:"name" yaml:"name"
+	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name" yaml:"name"`
+	// 服务Id
+	// @gotags: json:"id" yaml:"id"
+	Id string `protobuf:"bytes,4,opt,name=id,proto3" json:"id" yaml:"id"`
 }
 
 func (x *DescribeServiceRequest) Reset() {
@@ -1092,8 +1096,9 @@ type DeleteServiceRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @gotags: json:"id"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id"`
+	// 服务Id
+	// @gotags: json:"id" yaml:"id"
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id" yaml:"id"`
 }
 
 func (x *DeleteServiceRequest) Reset() {
