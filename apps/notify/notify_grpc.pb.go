@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	// 发生短信
+	// 发送短信
 	SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*SendResponse, error)
 }
 
@@ -47,7 +47,7 @@ func (c *rPCClient) SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grp
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	// 发生短信
+	// 发送短信
 	SendSMS(context.Context, *SendSMSRequest) (*SendResponse, error)
 	mustEmbedUnimplementedRPCServer()
 }

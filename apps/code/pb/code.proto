@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package infraboard.mcenter.code;
+option go_package = "github.com/infraboard/mcenter/apps/code";
+
+// RPC 验证码服务
+service RPC {
+	rpc IssueCode(IssueCodeRequest) returns(IssueCodeResponse);
+	rpc VerifyCode(VerifyCodeRequest) returns(Code);
+}
+
+// Code 验证码
+message Code {
+    // 验证码
+    // @gotags: bson:"_id" json:"id"
+    string code = 1;
+    // 用户Id
+    // @gotags: json:"username" validate:"required"
+    string username = 2;
+    // 颁发时间
+    // @gotags: bson:"issue_at" json:"issue_at"
+    int64 issue_at = 3;
+    // 验证码过期时间
+    // @gotags: bson:"expired_minite" json:"expired_minite"
+    uint32 expired_minite = 4;  
+}
+
+enum ISSUE_BY {
+    // 通过用户名密码 颁发验证码
+    PASSWORD = 0;
+    // 通过AccessToken颁发验证码
+    ACCESS_TOKEN = 1;
+}
+
+// IssueCodeRequest 验证码申请请求
+message IssueCodeRequest {
+    // 颁发方式
+    // @gotags: json:"issue_by"
+    ISSUE_BY issue_by = 1;
+    // 用户名
+    // @gotags: json:"username"
+    string username = 2;
+    // 密码
+    // @gotags: json:"password" 
+    string password = 3;
+    // 令牌
+    // @gotags: json:"access_token"
+    string access_token = 6;
+}
+
+// IssueCodeResponse todo
+message IssueCodeResponse {
+    // 颁发后返回的消息, 比如以发送到xxx手机
+    // @gotags: json:"message"
+    string message = 1;
+}
+
+// VerifyCodeRequest 验证码校验请求
+message VerifyCodeRequest {
+    // 用户名
+    // @gotags: json:"username" validate:"required"
+    string username = 1;
+    // 验证码
+    // @gotags: json:"code" validate:"required"
+    string code = 2;
+}
