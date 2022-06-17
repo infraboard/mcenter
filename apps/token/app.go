@@ -85,3 +85,7 @@ func NewQueryUserWebLastToken(uid string) *QueryTokenRequest {
 func (s *TokenSet) Length() int {
 	return len(s.Items)
 }
+
+const (
+	TOKEN_COOKIE_NAME = ""
+)

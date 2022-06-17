@@ -15,13 +15,13 @@ func (h *handler) IssueToken(r *restful.Request, w *restful.Response) {
 		return
 	}
 
-	set, err := h.service.IssueToken(r.Request.Context(), req)
+	tk, err := h.service.IssueToken(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w.ResponseWriter, err)
 		return
 	}
 
-	response.Success(w.ResponseWriter, set)
+	response.Success(w.ResponseWriter, tk)
 }
 
 func (u *handler) RevolkToken(r *restful.Request, w *restful.Response) {
