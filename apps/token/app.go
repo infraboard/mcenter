@@ -17,8 +17,19 @@ func NewIssueTokenRequest() *IssueTokenRequest {
 }
 
 // AbnormalUserCheckKey todo
-func (m *IssueTokenRequest) AbnormalUserCheckKey() string {
-	return "abnormal_" + m.Username
+func (req *IssueTokenRequest) AbnormalUserCheckKey() string {
+	key := ""
+	switch req.GrantType {
+	case GRANT_TYPE_PASSWORD, GRANT_TYPE_LDAP:
+		key = req.Username
+	case GRANT_TYPE_PRIVATE_TOKEN:
+		key = req.AccessToken
+	case GRANT_TYPE_REFRESH:
+		key = req.RefreshToken
+	case GRANT_TYPE_AUTH_CODE:
+		key = req.AuthCode
+	}
+	return "abnormal_" + key
 }
 
 // NewRevolkTokenRequest 撤销Token请求

@@ -29,8 +29,16 @@ func (s *service) DescribeDomain(ctx context.Context, req *domain.DescribeDomain
 		return nil, exception.NewBadRequest(err.Error())
 	}
 
+	filter := bson.M{}
+	switch req.DescribeBy {
+	case domain.DESCRIBE_BY_ID:
+		filter["_id"] = req.Id
+	case domain.DESCRIBE_BY_NAME:
+		filter["name"] = req.Name
+	}
+
 	d := domain.NewDefault()
-	if err := s.col.FindOne(context.TODO(), bson.M{"_id": req.Id}).Decode(d); err != nil {
+	if err := s.col.FindOne(context.TODO(), filter).Decode(d); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("domain %s not found", req)
 		}

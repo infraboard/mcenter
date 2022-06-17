@@ -2,6 +2,7 @@ package impl
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/logger"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
+	"github.com/infraboard/mcenter/apps/token/security"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/conf"
 )
@@ -27,8 +29,9 @@ type service struct {
 	token.UnimplementedRPCServer
 	log logger.Logger
 
-	user   user.Service
-	domain domain.Service
+	checker security.Checker
+	user    user.Service
+	domain  domain.Service
 }
 
 func (s *service) Config() error {
@@ -58,6 +61,11 @@ func (s *service) Config() error {
 	s.log = zap.L().Named(s.Name())
 	s.user = app.GetInternalApp(user.AppName).(user.Service)
 	s.domain = app.GetInternalApp(domain.AppName).(domain.Service)
+
+	s.checker, err = security.NewChecker()
+	if err != nil {
+		return fmt.Errorf("new checker error, %s", err)
+	}
 	return nil
 }
 

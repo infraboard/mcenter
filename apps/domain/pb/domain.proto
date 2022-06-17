@@ -192,8 +192,20 @@ message UpdateDomainRequest  {
     CreateDomainRequest spec = 4;
 }
 
+enum DESCRIBE_BY {
+    ID = 0;
+    NAME = 1;
+}
+
 // DescribeDomainRequest 查询domain详情请求
 message DescribeDomainRequest {
-    // @gotags: json:"id" validate:"required"
-   string id = 1;
+    // 查询方式
+    // @gotags: json:"describe_by"
+    DESCRIBE_BY describe_by = 1;
+    // 通过Id查询
+    // @gotags: json:"id"
+   string id = 2;
+    // 通过名称查询
+    // @gotags: json:"name"
+    string name = 3;
 }

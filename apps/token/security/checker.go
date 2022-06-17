@@ -96,7 +96,7 @@ func (c *checker) UpdateFailedRetry(ctx context.Context, req *token.IssueTokenRe
 }
 
 func (c *checker) OtherPlaceLoggedInChecK(ctx context.Context, tk *token.Token) error {
-	ss := c.getOrDefaultSecuritySettingWithDomain(ctx, tk.Account, tk.Domain)
+	ss := c.getOrDefaultSecuritySettingWithDomain(ctx, tk.Domain)
 	if !ss.LoginSecurity.ExceptionLock {
 		c.log.Debugf("exception check disabled, don't check")
 		return nil
@@ -145,7 +145,7 @@ func (c *checker) OtherPlaceLoggedInChecK(ctx context.Context, tk *token.Token) 
 }
 
 func (c *checker) NotLoginDaysChecK(ctx context.Context, tk *token.Token) error {
-	ss := c.getOrDefaultSecuritySettingWithUser(ctx, tk.Account)
+	ss := c.getOrDefaultSecuritySettingWithUser(ctx, tk.Username)
 	if !ss.LoginSecurity.ExceptionLock {
 		c.log.Debugf("exception check disabled, don't check")
 		return nil
@@ -164,7 +164,7 @@ func (c *checker) NotLoginDaysChecK(ctx context.Context, tk *token.Token) error 
 	}
 	ltk := lastTKSet.Items[0]
 
-	days := uint32(time.Now().Sub(time.Unix(ltk.IssueAt/1000, 0)).Hours() / 24)
+	days := uint32(time.Since(time.UnixMilli(ltk.IssueAt)).Hours() / 24)
 	c.log.Debugf("user %d days not login", days)
 	maxDays := ss.LoginSecurity.ExceptionLockConfig.NotLoginDays
 	if days > maxDays {
@@ -187,18 +187,18 @@ func (c *checker) IPProtectCheck(ctx context.Context, req *token.IssueTokenReque
 	return nil
 }
 
-func (c *checker) getOrDefaultSecuritySettingWithUser(ctx context.Context, account string) *domain.SecuritySetting {
+func (c *checker) getOrDefaultSecuritySettingWithUser(ctx context.Context, username string) *domain.SecuritySetting {
 	ss := domain.NewDefaultSecuritySetting()
-	u, err := c.user.DescribeUser(ctx, user.NewDescriptAccountRequestWithAccount(account))
+	u, err := c.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(username))
 	if err != nil {
-		c.log.Errorf("get user account error, %s, use default setting to check", err)
+		c.log.Errorf("get user error, %s, use default setting to check", err)
 		return ss
 	}
 
-	return c.getOrDefaultSecuritySettingWithDomain(ctx, u.Account, u.Domain)
+	return c.getOrDefaultSecuritySettingWithDomain(ctx, u.Spec.Domain)
 }
 
-func (c *checker) getOrDefaultSecuritySettingWithDomain(ctx context.Context, account, domainName string) *domain.SecuritySetting {
+func (c *checker) getOrDefaultSecuritySettingWithDomain(ctx context.Context, domainName string) *domain.SecuritySetting {
 	ss := domain.NewDefaultSecuritySetting()
 	d, err := c.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestWithName(domainName))
 	if err != nil {
@@ -206,5 +206,5 @@ func (c *checker) getOrDefaultSecuritySettingWithDomain(ctx context.Context, acc
 		return ss
 	}
 
-	return d.SecuritySetting
+	return d.Spec.SecuritySetting
 }

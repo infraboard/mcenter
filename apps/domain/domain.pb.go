@@ -21,6 +21,52 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type DESCRIBE_BY int32
+
+const (
+	DESCRIBE_BY_ID   DESCRIBE_BY = 0
+	DESCRIBE_BY_NAME DESCRIBE_BY = 1
+)
+
+// Enum value maps for DESCRIBE_BY.
+var (
+	DESCRIBE_BY_name = map[int32]string{
+		0: "ID",
+		1: "NAME",
+	}
+	DESCRIBE_BY_value = map[string]int32{
+		"ID":   0,
+		"NAME": 1,
+	}
+)
+
+func (x DESCRIBE_BY) Enum() *DESCRIBE_BY {
+	p := new(DESCRIBE_BY)
+	*p = x
+	return p
+}
+
+func (x DESCRIBE_BY) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DESCRIBE_BY) Descriptor() protoreflect.EnumDescriptor {
+	return file_apps_domain_pb_domain_proto_enumTypes[0].Descriptor()
+}
+
+func (DESCRIBE_BY) Type() protoreflect.EnumType {
+	return &file_apps_domain_pb_domain_proto_enumTypes[0]
+}
+
+func (x DESCRIBE_BY) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DESCRIBE_BY.Descriptor instead.
+func (DESCRIBE_BY) EnumDescriptor() ([]byte, []int) {
+	return file_apps_domain_pb_domain_proto_rawDescGZIP(), []int{0}
+}
+
 type Domain struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -933,8 +979,15 @@ type DescribeDomainRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// @gotags: json:"id" validate:"required"
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id" validate:"required"`
+	// 查询方式
+	// @gotags: json:"describe_by"
+	DescribeBy DESCRIBE_BY `protobuf:"varint,1,opt,name=describe_by,json=describeBy,proto3,enum=infraboard.mcenter.domain.DESCRIBE_BY" json:"describe_by"`
+	// 通过Id查询
+	// @gotags: json:"id"
+	Id string `protobuf:"bytes,2,opt,name=id,proto3" json:"id"`
+	// 通过名称查询
+	// @gotags: json:"name"
+	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name"`
 }
 
 func (x *DescribeDomainRequest) Reset() {
@@ -969,9 +1022,23 @@ func (*DescribeDomainRequest) Descriptor() ([]byte, []int) {
 	return file_apps_domain_pb_domain_proto_rawDescGZIP(), []int{11}
 }
 
+func (x *DescribeDomainRequest) GetDescribeBy() DESCRIBE_BY {
+	if x != nil {
+		return x.DescribeBy
+	}
+	return DESCRIBE_BY_ID
+}
+
 func (x *DescribeDomainRequest) GetId() string {
 	if x != nil {
 		return x.Id
+	}
+	return ""
+}
+
+func (x *DescribeDomainRequest) GetName() string {
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
@@ -1120,20 +1187,28 @@ var file_apps_domain_pb_domain_proto_rawDesc = []byte{
 	0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2e, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61,
 	0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x64, 0x6f, 0x6d, 0x61, 0x69,
 	0x6e, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x04, 0x73, 0x70, 0x65, 0x63, 0x22, 0x27, 0x0a, 0x15, 0x44,
-	0x65, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x02, 0x69, 0x64, 0x32, 0x6c, 0x0a, 0x03, 0x52, 0x50, 0x43, 0x12, 0x65, 0x0a, 0x0e, 0x44,
-	0x65, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x30, 0x2e,
-	0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74,
-	0x65, 0x72, 0x2e, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x2e, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69,
-	0x62, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
-	0x21, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65,
-	0x6e, 0x74, 0x65, 0x72, 0x2e, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x2e, 0x44, 0x6f, 0x6d, 0x61,
-	0x69, 0x6e, 0x42, 0x2b, 0x5a, 0x29, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
-	0x2f, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2f, 0x6d, 0x63, 0x65, 0x6e,
-	0x74, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x04, 0x73, 0x70, 0x65, 0x63, 0x22, 0x84, 0x01, 0x0a, 0x15,
+	0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x47, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x62,
+	0x65, 0x5f, 0x62, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x26, 0x2e, 0x69, 0x6e, 0x66,
+	0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e,
+	0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x2e, 0x44, 0x45, 0x53, 0x43, 0x52, 0x49, 0x42, 0x45, 0x5f,
+	0x42, 0x59, 0x52, 0x0a, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x42, 0x79, 0x12, 0x0e,
+	0x0a, 0x02, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12,
+	0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61,
+	0x6d, 0x65, 0x2a, 0x1f, 0x0a, 0x0b, 0x44, 0x45, 0x53, 0x43, 0x52, 0x49, 0x42, 0x45, 0x5f, 0x42,
+	0x59, 0x12, 0x06, 0x0a, 0x02, 0x49, 0x44, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x4e, 0x41, 0x4d,
+	0x45, 0x10, 0x01, 0x32, 0x6c, 0x0a, 0x03, 0x52, 0x50, 0x43, 0x12, 0x65, 0x0a, 0x0e, 0x44, 0x65,
+	0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x12, 0x30, 0x2e, 0x69,
+	0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65,
+	0x72, 0x2e, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x2e, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x62,
+	0x65, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x21,
+	0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e,
+	0x74, 0x65, 0x72, 0x2e, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x2e, 0x44, 0x6f, 0x6d, 0x61, 0x69,
+	0x6e, 0x42, 0x2b, 0x5a, 0x29, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
+	0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2f, 0x6d, 0x63, 0x65, 0x6e, 0x74,
+	0x65, 0x72, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x64, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1148,41 +1223,44 @@ func file_apps_domain_pb_domain_proto_rawDescGZIP() []byte {
 	return file_apps_domain_pb_domain_proto_rawDescData
 }
 
+var file_apps_domain_pb_domain_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_apps_domain_pb_domain_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_apps_domain_pb_domain_proto_goTypes = []interface{}{
-	(*Domain)(nil),                // 0: infraboard.mcenter.domain.Domain
-	(*CreateDomainRequest)(nil),   // 1: infraboard.mcenter.domain.CreateDomainRequest
-	(*Profile)(nil),               // 2: infraboard.mcenter.domain.Profile
-	(*Contact)(nil),               // 3: infraboard.mcenter.domain.Contact
-	(*SecuritySetting)(nil),       // 4: infraboard.mcenter.domain.SecuritySetting
-	(*PasswordSecurity)(nil),      // 5: infraboard.mcenter.domain.PasswordSecurity
-	(*ExceptionLockConfig)(nil),   // 6: infraboard.mcenter.domain.ExceptionLockConfig
-	(*IPLimiteConfig)(nil),        // 7: infraboard.mcenter.domain.IPLimiteConfig
-	(*RetryLockConfig)(nil),       // 8: infraboard.mcenter.domain.RetryLockConfig
-	(*LoginSecurity)(nil),         // 9: infraboard.mcenter.domain.LoginSecurity
-	(*UpdateDomainRequest)(nil),   // 10: infraboard.mcenter.domain.UpdateDomainRequest
-	(*DescribeDomainRequest)(nil), // 11: infraboard.mcenter.domain.DescribeDomainRequest
-	(request.UpdateMode)(0),       // 12: infraboard.mcube.request.UpdateMode
+	(DESCRIBE_BY)(0),              // 0: infraboard.mcenter.domain.DESCRIBE_BY
+	(*Domain)(nil),                // 1: infraboard.mcenter.domain.Domain
+	(*CreateDomainRequest)(nil),   // 2: infraboard.mcenter.domain.CreateDomainRequest
+	(*Profile)(nil),               // 3: infraboard.mcenter.domain.Profile
+	(*Contact)(nil),               // 4: infraboard.mcenter.domain.Contact
+	(*SecuritySetting)(nil),       // 5: infraboard.mcenter.domain.SecuritySetting
+	(*PasswordSecurity)(nil),      // 6: infraboard.mcenter.domain.PasswordSecurity
+	(*ExceptionLockConfig)(nil),   // 7: infraboard.mcenter.domain.ExceptionLockConfig
+	(*IPLimiteConfig)(nil),        // 8: infraboard.mcenter.domain.IPLimiteConfig
+	(*RetryLockConfig)(nil),       // 9: infraboard.mcenter.domain.RetryLockConfig
+	(*LoginSecurity)(nil),         // 10: infraboard.mcenter.domain.LoginSecurity
+	(*UpdateDomainRequest)(nil),   // 11: infraboard.mcenter.domain.UpdateDomainRequest
+	(*DescribeDomainRequest)(nil), // 12: infraboard.mcenter.domain.DescribeDomainRequest
+	(request.UpdateMode)(0),       // 13: infraboard.mcube.request.UpdateMode
 }
 var file_apps_domain_pb_domain_proto_depIdxs = []int32{
-	1,  // 0: infraboard.mcenter.domain.Domain.spec:type_name -> infraboard.mcenter.domain.CreateDomainRequest
-	2,  // 1: infraboard.mcenter.domain.CreateDomainRequest.profile:type_name -> infraboard.mcenter.domain.Profile
-	4,  // 2: infraboard.mcenter.domain.CreateDomainRequest.security_setting:type_name -> infraboard.mcenter.domain.SecuritySetting
-	3,  // 3: infraboard.mcenter.domain.Profile.contack:type_name -> infraboard.mcenter.domain.Contact
-	5,  // 4: infraboard.mcenter.domain.SecuritySetting.password_security:type_name -> infraboard.mcenter.domain.PasswordSecurity
-	9,  // 5: infraboard.mcenter.domain.SecuritySetting.login_security:type_name -> infraboard.mcenter.domain.LoginSecurity
-	6,  // 6: infraboard.mcenter.domain.LoginSecurity.exception_lock_config:type_name -> infraboard.mcenter.domain.ExceptionLockConfig
-	8,  // 7: infraboard.mcenter.domain.LoginSecurity.retry_lock_config:type_name -> infraboard.mcenter.domain.RetryLockConfig
-	7,  // 8: infraboard.mcenter.domain.LoginSecurity.ip_limite_config:type_name -> infraboard.mcenter.domain.IPLimiteConfig
-	12, // 9: infraboard.mcenter.domain.UpdateDomainRequest.update_mode:type_name -> infraboard.mcube.request.UpdateMode
-	1,  // 10: infraboard.mcenter.domain.UpdateDomainRequest.spec:type_name -> infraboard.mcenter.domain.CreateDomainRequest
-	11, // 11: infraboard.mcenter.domain.RPC.DescribeDomain:input_type -> infraboard.mcenter.domain.DescribeDomainRequest
-	0,  // 12: infraboard.mcenter.domain.RPC.DescribeDomain:output_type -> infraboard.mcenter.domain.Domain
-	12, // [12:13] is the sub-list for method output_type
-	11, // [11:12] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	2,  // 0: infraboard.mcenter.domain.Domain.spec:type_name -> infraboard.mcenter.domain.CreateDomainRequest
+	3,  // 1: infraboard.mcenter.domain.CreateDomainRequest.profile:type_name -> infraboard.mcenter.domain.Profile
+	5,  // 2: infraboard.mcenter.domain.CreateDomainRequest.security_setting:type_name -> infraboard.mcenter.domain.SecuritySetting
+	4,  // 3: infraboard.mcenter.domain.Profile.contack:type_name -> infraboard.mcenter.domain.Contact
+	6,  // 4: infraboard.mcenter.domain.SecuritySetting.password_security:type_name -> infraboard.mcenter.domain.PasswordSecurity
+	10, // 5: infraboard.mcenter.domain.SecuritySetting.login_security:type_name -> infraboard.mcenter.domain.LoginSecurity
+	7,  // 6: infraboard.mcenter.domain.LoginSecurity.exception_lock_config:type_name -> infraboard.mcenter.domain.ExceptionLockConfig
+	9,  // 7: infraboard.mcenter.domain.LoginSecurity.retry_lock_config:type_name -> infraboard.mcenter.domain.RetryLockConfig
+	8,  // 8: infraboard.mcenter.domain.LoginSecurity.ip_limite_config:type_name -> infraboard.mcenter.domain.IPLimiteConfig
+	13, // 9: infraboard.mcenter.domain.UpdateDomainRequest.update_mode:type_name -> infraboard.mcube.request.UpdateMode
+	2,  // 10: infraboard.mcenter.domain.UpdateDomainRequest.spec:type_name -> infraboard.mcenter.domain.CreateDomainRequest
+	0,  // 11: infraboard.mcenter.domain.DescribeDomainRequest.describe_by:type_name -> infraboard.mcenter.domain.DESCRIBE_BY
+	12, // 12: infraboard.mcenter.domain.RPC.DescribeDomain:input_type -> infraboard.mcenter.domain.DescribeDomainRequest
+	1,  // 13: infraboard.mcenter.domain.RPC.DescribeDomain:output_type -> infraboard.mcenter.domain.Domain
+	13, // [13:14] is the sub-list for method output_type
+	12, // [12:13] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_apps_domain_pb_domain_proto_init() }
@@ -1341,13 +1419,14 @@ func file_apps_domain_pb_domain_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_apps_domain_pb_domain_proto_rawDesc,
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_apps_domain_pb_domain_proto_goTypes,
 		DependencyIndexes: file_apps_domain_pb_domain_proto_depIdxs,
+		EnumInfos:         file_apps_domain_pb_domain_proto_enumTypes,
 		MessageInfos:      file_apps_domain_pb_domain_proto_msgTypes,
 	}.Build()
 	File_apps_domain_pb_domain_proto = out.File

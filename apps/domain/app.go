@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -98,8 +99,26 @@ func (req *CreateDomainRequest) Validate() error {
 	return validate.Struct(req)
 }
 
+func NewDescribeDomainRequestWithName(name string) *DescribeDomainRequest {
+	return &DescribeDomainRequest{
+		DescribeBy: DESCRIBE_BY_NAME,
+		Name:       name,
+	}
+}
+
 // Validate 校验请求是否合法
 func (req *DescribeDomainRequest) Validate() error {
+	switch req.DescribeBy {
+	case DESCRIBE_BY_ID:
+		if req.Id == "" {
+			return fmt.Errorf("id required")
+		}
+	case DESCRIBE_BY_NAME:
+		if req.Name == "" {
+			return fmt.Errorf("name required")
+		}
+	}
+
 	return validate.Struct(req)
 }
 
@@ -111,7 +130,8 @@ func (req *UpdateDomainRequest) Validate() error {
 // NewDescribeDomainRequest 查询详情请求
 func NewDescribeDomainRequest(id string) *DescribeDomainRequest {
 	return &DescribeDomainRequest{
-		Id: id,
+		DescribeBy: DESCRIBE_BY_ID,
+		Id:         id,
 	}
 }
 
