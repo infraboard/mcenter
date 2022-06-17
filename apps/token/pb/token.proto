@@ -197,6 +197,9 @@ message TokenSet {
 }
 
 message IssueTokenRequest {
+    // 测试颁发
+    // @gotags: json:"dry_run"
+    bool dry_run = 15;
     // 授权类型
     // @gotags: json:"grant_type"
     GRANT_TYPE grant_type = 1;

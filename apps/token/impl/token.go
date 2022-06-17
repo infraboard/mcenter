@@ -26,7 +26,7 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 		return nil, err
 	}
 
-	// 登陆前安全检查
+	// 登陆后安全检查
 	if err := s.AfterLoginSecurityCheck(ctx, req.VerifyCode, tk); err != nil {
 		return nil, exception.NewBadRequest(err.Error())
 	}
@@ -76,6 +76,14 @@ func (s *service) IssueTokenNow(ctx context.Context, req *token.IssueTokenReques
 		tk.Domain = u.Spec.Domain
 		tk.Username = u.Spec.Username
 		tk.UserId = u.Id
+
+		// 4. 入库保存
+		if !req.DryRun {
+			if err := s.save(ctx, tk); err != nil {
+				return nil, err
+			}
+		}
+
 		return tk, nil
 	default:
 		return nil, exception.NewBadRequest("grant type %s not implemented", req.GrantType)
