@@ -29,15 +29,6 @@ type Notify struct {
 	Code *Code `bson:"code" json:"code"`
 }
 
-type Code struct {
-	// 验证码默认过期时间
-	ExpireMinutes uint `bson:"expire_minutes" json:"expire_minutes" validate:"required"`
-	// 邮件通知时的模板
-	MailTemplate string `bson:"mail_template" json:"mail_template"`
-	// 短信通知时的云商模板ID
-	SmsTemplateID string `bson:"sms_template_id" json:"sms_template_id"`
-}
-
 type SMS struct {
 	// 短信服务商
 	Provider SMS_PROVIDER `bson:"Provider" json:"Provider"`
@@ -45,4 +36,13 @@ type SMS struct {
 	TencentConfig *tencent.Config `bson:"tencent_config" json:"tencent_config"`
 	// 阿里云短信服务配置
 	AliConfig *ali.Config `bson:"ali_config" json:"ali_config"`
+}
+
+type Code struct {
+	// 验证码默认过期时间
+	ExpireMinutes uint `bson:"expire_minutes" json:"expire_minutes" validate:"required"`
+	// 邮件通知时的模板
+	MailTemplate string `bson:"mail_template" json:"mail_template"`
+	// 短信通知时的云商模板ID
+	SmsTemplateID string `bson:"sms_template_id" json:"sms_template_id"`
 }
