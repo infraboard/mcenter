@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package infraboard.mcenter.setting;
+option go_package = "github.com/infraboard/mcenter/apps/setting";
+
+enum SMS_PROVIDER {
+    // 腾讯短信服务
+    TENCENT = 0;
+    // 阿里短信服务
+    ALI = 1;
+}
+
+enum NOTIFY_TYPE {
+    // 邮件通知
+    MAIL = 0;
+    // 短信通知
+    SMS = 1;
+}

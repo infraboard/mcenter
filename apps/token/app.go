@@ -1,6 +1,7 @@
 package token
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/infraboard/mcenter/common/tools"
@@ -89,3 +90,11 @@ func (s *TokenSet) Length() int {
 const (
 	TOKEN_COOKIE_NAME = ""
 )
+
+// 基于令牌创建HTTP Cookie 用于Web登陆场景
+func NewCookie(tk *Token) *http.Cookie {
+	return &http.Cookie{
+		Name:  TOKEN_COOKIE_NAME,
+		Value: tk.AccessToken,
+	}
+}
