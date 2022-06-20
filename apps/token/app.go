@@ -98,3 +98,9 @@ func NewCookie(tk *Token) *http.Cookie {
 		Value: tk.AccessToken,
 	}
 }
+
+func NewValidateTokenRequestByAccessToken(accessToken string) *ValidateTokenRequest {
+	return &ValidateTokenRequest{
+		AccessToken: accessToken,
+	}
+}
