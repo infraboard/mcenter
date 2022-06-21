@@ -78,8 +78,8 @@ type Code struct {
 	// @gotags: bson:"_id" json:"id"
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id" bson:"_id"`
 	// 验证码
-	// @gotags: bson:"_id" json:"id"
-	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"id" bson:"_id"`
+	// @gotags: bson:"code" json:"code"
+	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"code" bson:"code"`
 	// 用户Id
 	// @gotags: json:"username" validate:"required"
 	Username string `protobuf:"bytes,3,opt,name=username,proto3" json:"username" validate:"required"`

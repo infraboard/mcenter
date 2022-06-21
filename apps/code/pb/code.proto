@@ -15,7 +15,7 @@ message Code {
     // @gotags: bson:"_id" json:"id"
     string id = 1;
     // 验证码
-    // @gotags: bson:"_id" json:"id"
+    // @gotags: bson:"code" json:"code"
     string code = 2;
     // 用户Id
     // @gotags: json:"username" validate:"required"
