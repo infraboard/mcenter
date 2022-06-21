@@ -1,6 +1,6 @@
 package setting
 
 type Service interface {
-	DescribeSetting() (*Setting, error)
+	GetSetting() (*Setting, error)
 	UpdateSetting(*Setting) error
 }

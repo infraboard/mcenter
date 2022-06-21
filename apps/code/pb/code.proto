@@ -11,18 +11,21 @@ service RPC {
 
 // Code 验证码
 message Code {
+    // 编号
+    // @gotags: bson:"_id" json:"id"
+    string id = 1;
     // 验证码
     // @gotags: bson:"_id" json:"id"
-    string code = 1;
+    string code = 2;
     // 用户Id
     // @gotags: json:"username" validate:"required"
-    string username = 2;
+    string username = 3;
     // 颁发时间
     // @gotags: bson:"issue_at" json:"issue_at"
-    int64 issue_at = 3;
+    int64 issue_at = 4;
     // 验证码过期时间
     // @gotags: bson:"expired_minite" json:"expired_minite"
-    uint32 expired_minite = 4;  
+    uint32 expired_minite = 5;  
 }
 
 enum ISSUE_BY {
