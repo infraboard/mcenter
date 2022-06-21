@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/code"
+	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/setting"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
@@ -30,6 +31,7 @@ type service struct {
 	user    user.Service
 	token   token.Service
 	setting setting.Service
+	notify  notify.Service
 }
 
 func (s *service) Config() error {
@@ -55,6 +57,7 @@ func (s *service) Config() error {
 	s.user = app.GetInternalApp(user.AppName).(user.Service)
 	s.token = app.GetInternalApp(token.AppName).(token.Service)
 	s.setting = app.GetInternalApp(setting.AppName).(setting.Service)
+	s.notify = app.GetInternalApp(notify.AppName).(notify.Service)
 	return nil
 }
 

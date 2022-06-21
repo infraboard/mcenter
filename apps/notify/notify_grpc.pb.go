@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 type RPCClient interface {
 	// 发送短信
 	SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*SendResponse, error)
+	// 邮件通知
+	SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*SendResponse, error)
 }
 
 type rPCClient struct {
@@ -43,12 +45,23 @@ func (c *rPCClient) SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grp
 	return out, nil
 }
 
+func (c *rPCClient) SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*SendResponse, error) {
+	out := new(SendResponse)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.notify.RPC/SendMail", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RPCServer is the server API for RPC service.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
 	// 发送短信
 	SendSMS(context.Context, *SendSMSRequest) (*SendResponse, error)
+	// 邮件通知
+	SendMail(context.Context, *SendMailRequest) (*SendResponse, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -58,6 +71,9 @@ type UnimplementedRPCServer struct {
 
 func (UnimplementedRPCServer) SendSMS(context.Context, *SendSMSRequest) (*SendResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendSMS not implemented")
+}
+func (UnimplementedRPCServer) SendMail(context.Context, *SendMailRequest) (*SendResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMail not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -90,6 +106,24 @@ func _RPC_SendSMS_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RPC_SendMail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendMailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).SendMail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infraboard.mcenter.notify.RPC/SendMail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).SendMail(ctx, req.(*SendMailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +134,10 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendSMS",
 			Handler:    _RPC_SendSMS_Handler,
+		},
+		{
+			MethodName: "SendMail",
+			Handler:    _RPC_SendMail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -69,9 +69,13 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 
 	switch system.Notify.Type {
 	case setting.NOTIFY_TYPE_MAIL:
+		// 邮件通知
 		s.log.Debugf("mail to user %s", u.Profile.Email)
+		s.notify.SendMail(ctx, nil)
 	case setting.NOTIFY_TYPE_SMS:
+		// 短信通知
 		s.log.Debugf("sms to user %s", u.Profile.Phone)
+		s.notify.SendSMS(ctx, nil)
 	default:
 		return "", fmt.Errorf("unknown notify type %s", system.Notify.Type)
 	}
