@@ -43,3 +43,16 @@ func (req *SendSMSRequest) InjectDefaultIsoCode() {
 		}
 	}
 }
+
+// NewSendMailRequest todo
+func NewSendMailRequest(to []string, title, content string) *SendMailRequest {
+	return &SendMailRequest{
+		To:      to,
+		Title:   title,
+		Content: content,
+	}
+}
+
+func NewSendResponse() *SendResponse {
+	return &SendResponse{}
+}

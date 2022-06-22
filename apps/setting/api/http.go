@@ -8,7 +8,7 @@ import (
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
-	"github.com/infraboard/mcenter/apps/code"
+	"github.com/infraboard/mcenter/apps/setting"
 )
 
 var (
@@ -16,18 +16,18 @@ var (
 )
 
 type handler struct {
-	service code.Service
+	service setting.Service
 	log     logger.Logger
 }
 
 func (h *handler) Config() error {
-	h.log = zap.L().Named(code.AppName)
-	h.service = app.GetInternalApp(code.AppName).(code.Service)
+	h.log = zap.L().Named(setting.AppName)
+	h.service = app.GetInternalApp(setting.AppName).(setting.Service)
 	return nil
 }
 
 func (h *handler) Name() string {
-	return code.AppName
+	return setting.AppName
 }
 
 func (h *handler) Version() string {
@@ -37,11 +37,19 @@ func (h *handler) Version() string {
 func (h *handler) Registry(ws *restful.WebService) {
 	tags := []string{h.Name()}
 
-	ws.Route(ws.POST("/").To(h.IssueCode).
-		Doc("issue verify code").
+	ws.Route(ws.POST("/").To(h.UpdateSetting).
+		Doc("update a setting").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Reads(code.IssueCodeRequest{}).
-		Writes(response.NewData(code.Code{})))
+		Reads(setting.Setting{}).
+		Writes(response.NewData(setting.Setting{})))
+
+	ws.Route(ws.GET("/").To(h.GetSetting).
+		Doc("get all setting").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata("action", "get").
+		Reads(setting.Setting{}).
+		Writes(response.NewData(setting.Setting{})).
+		Returns(200, "OK", setting.Setting{}))
 }
 
 func init() {

@@ -1,6 +1,7 @@
 package tencent
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -42,7 +43,7 @@ type Sender struct {
 }
 
 // Send todo
-func (s *Sender) Send(req *notify.SendSMSRequest) error {
+func (s *Sender) Send(ctx context.Context, req *notify.SendSMSRequest) error {
 	// 补充默认+86
 	req.InjectDefaultIsoCode()
 
@@ -58,7 +59,7 @@ func (s *Sender) Send(req *notify.SendSMSRequest) error {
 	request.SmsSdkAppid = common.StringPtr(s.conf.AppID)
 	request.Sign = common.StringPtr(s.conf.Sign)
 
-	response, err := s.sms.SendSms(request)
+	response, err := s.sms.SendSmsWithContext(ctx, request)
 	if err != nil {
 		return err
 	}

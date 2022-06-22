@@ -1,5 +1,9 @@
 package mail
 
+func NewDefaultConfig() *Config {
+	return &Config{}
+}
+
 type Config struct {
 	Host     string `bson:"host" json:"host" env:"MAIL_HOST"`
 	Port     int    `bson:"port" json:"port" env:"MAIL_HORT"`

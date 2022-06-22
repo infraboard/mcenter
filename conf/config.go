@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/infraboard/mcube/cache/memory"
+	"github.com/infraboard/mcube/cache/redis"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -16,9 +18,9 @@ var (
 
 func newConfig() *Config {
 	return &Config{
-		App: newDefaultAPP(),
-		Log: newDefaultLog(),
-
+		App:   newDefaultAPP(),
+		Log:   newDefaultLog(),
+		Cache: newDefaultCache(),
 		Mongo: newDefaultMongoDB(),
 	}
 }
@@ -28,6 +30,7 @@ type Config struct {
 	App   *app     `toml:"app"`
 	Log   *log     `toml:"log"`
 	Mongo *mongodb `toml:"mongodb"`
+	Cache *_cache  `toml:"cache"`
 }
 
 type app struct {
@@ -166,4 +169,18 @@ func (m *mongodb) getClient() (*mongo.Client, error) {
 	}
 
 	return client, nil
+}
+
+func newDefaultCache() *_cache {
+	return &_cache{
+		Type:   "memory",
+		Memory: memory.NewDefaultConfig(),
+		Redis:  redis.NewDefaultConfig(),
+	}
+}
+
+type _cache struct {
+	Type   string         `toml:"type" json:"type" yaml:"type" env:"K_CACHE_TYPE"`
+	Memory *memory.Config `toml:"memory" json:"memory" yaml:"memory"`
+	Redis  *redis.Config  `toml:"redis" json:"redis" yaml:"redis"`
 }

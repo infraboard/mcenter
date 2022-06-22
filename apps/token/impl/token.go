@@ -3,6 +3,7 @@ package impl
 import (
 	"context"
 
+	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
@@ -106,17 +107,17 @@ func (s *service) BeforeLoginSecurityCheck(ctx context.Context, req *token.Issue
 	return nil
 }
 
-func (s *service) AfterLoginSecurityCheck(ctx context.Context, code string, tk *token.Token) error {
+func (s *service) AfterLoginSecurityCheck(ctx context.Context, verifyCode string, tk *token.Token) error {
 	// 如果有校验码, 则直接通过校验码检测用户身份安全
-	// if code != "" {
-	// 	s.log.Debugf("verify code provided, check code ...")
-	// 	_, err := s.code.CheckCode(ctx, verifycode.NewCheckCodeRequest(tk.Account, code))
-	// 	if err != nil {
-	// 		return exception.NewPermissionDeny("verify code invalidate, error, %s", err)
-	// 	}
-	// 	s.log.Debugf("verfiy code check passed")
-	// 	return nil
-	// }
+	if verifyCode != "" {
+		s.log.Debugf("verify code provided, check code ...")
+		_, err := s.code.VerifyCode(ctx, code.NewVerifyCodeRequest(tk.Username, verifyCode))
+		if err != nil {
+			return exception.NewPermissionDeny("verify code invalidate, error, %s", err)
+		}
+		s.log.Debugf("verfiy code check passed")
+		return nil
+	}
 
 	// 异地登录检测
 	err := s.checker.OtherPlaceLoggedInChecK(ctx, tk)
@@ -148,5 +149,10 @@ func (s *service) ChangeNamespace(ctx context.Context, req *token.ChangeNamespac
 // 校验Token
 func (s *service) ValidateToken(ctx context.Context, req *token.ValidateTokenRequest) (
 	*token.Token, error) {
+	return nil, nil
+}
+
+// 查询Token, 用于查询Token颁发记录, 也就是登陆日志
+func (s *service) QueryToken(ctx context.Context, req *token.QueryTokenRequest) (*token.TokenSet, error) {
 	return nil, nil
 }

@@ -46,6 +46,16 @@ func NewCode(req *IssueCodeRequest) (*Code, error) {
 	return c, nil
 }
 
+// IsExpired todo
+func (c *Code) IsExpired() bool {
+	return time.Since(time.UnixMilli(c.IssueAt)).Minutes() > float64(c.ExpiredMinite)
+}
+
+// ExpiredMiniteString todo
+func (c *Code) ExpiredMiniteString() string {
+	return fmt.Sprintf("%d", c.ExpiredMinite)
+}
+
 // GenRandomCode todo
 func GenRandomCode(length uint) string {
 	numbers := []string{}
@@ -74,4 +84,29 @@ func HashID(username, code string) string {
 // NewIssueCodeResponse todo
 func NewIssueCodeResponse(message string) *IssueCodeResponse {
 	return &IssueCodeResponse{Message: message}
+}
+
+// Validate todo
+func (req *VerifyCodeRequest) Validate() error {
+	return validate.Struct(req)
+}
+
+// HashID todo
+func (req *VerifyCodeRequest) HashID() string {
+	hash := fnv.New32a()
+	hash.Write([]byte(req.Username))
+	hash.Write([]byte(req.Code))
+	return fmt.Sprintf("%x", hash.Sum32())
+}
+
+// NewDefaultCode todo
+func NewDefaultCode() *Code {
+	return &Code{}
+}
+
+func NewVerifyCodeRequest(username, code string) *VerifyCodeRequest {
+	return &VerifyCodeRequest{
+		Username: username,
+		Code:     code,
+	}
 }

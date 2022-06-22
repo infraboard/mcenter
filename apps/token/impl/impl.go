@@ -12,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/x/bsonx"
 	"google.golang.org/grpc"
 
+	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/security"
@@ -32,6 +33,7 @@ type service struct {
 	checker security.Checker
 	user    user.Service
 	domain  domain.Service
+	code    code.Service
 }
 
 func (s *service) Config() error {
@@ -61,6 +63,7 @@ func (s *service) Config() error {
 	s.log = zap.L().Named(s.Name())
 	s.user = app.GetInternalApp(user.AppName).(user.Service)
 	s.domain = app.GetInternalApp(domain.AppName).(domain.Service)
+	s.code = app.GetInternalApp(code.AppName).(code.Service)
 
 	s.checker, err = security.NewChecker()
 	if err != nil {
