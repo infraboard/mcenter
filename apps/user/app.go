@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/imdario/mergo"
 	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
@@ -187,4 +188,42 @@ func (p *Password) CheckPasswordExpired(remindDays, expiredDays uint) error {
 	}
 
 	return nil
+}
+
+func NewUserSet() *UserSet {
+	return &UserSet{
+		Items: []*User{},
+	}
+}
+
+func (s *UserSet) Add(item *User) {
+	s.Items = append(s.Items, item)
+}
+
+func (s *UserSet) HasUser(userId string) bool {
+	for i := range s.Items {
+		if s.Items[i].Id == userId {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (s *UserSet) UserIds() (uids []string) {
+	for i := range s.Items {
+		uids = append(uids, s.Items[i].Id)
+	}
+
+	return
+}
+
+func (i *User) Update(req *UpdateUserRequest) {
+	i.UpdateAt = time.Now().UnixMicro()
+	i.Profile = req.Profile
+}
+
+func (i *User) Patch(req *UpdateUserRequest) error {
+	i.UpdateAt = time.Now().UnixMicro()
+	return mergo.MergeWithOverwrite(i.Profile, req.Profile)
 }

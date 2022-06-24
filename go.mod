@@ -9,6 +9,7 @@ require (
 	github.com/emicklei/go-restful-openapi/v2 v2.9.0
 	github.com/emicklei/go-restful/v3 v3.8.0
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
+	github.com/go-ldap/ldap/v3 v3.4.3
 	github.com/go-openapi/spec v0.20.6
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/imdario/mergo v0.3.13
@@ -18,16 +19,18 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.422
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.422
 	go.mongodb.org/mongo-driver v1.9.1
-	golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838
+	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29
 	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.27.1
 )
 
 require (
+	github.com/Azure/go-ntlmssp v0.0.0-20211209120228-48547f28849e // indirect
 	github.com/bluele/gcache v0.0.2 // indirect
 	github.com/emicklei/go-restful v2.9.6+incompatible // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.7.7 // indirect
+	github.com/go-asn1-ber/asn1-ber v1.5.4 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect

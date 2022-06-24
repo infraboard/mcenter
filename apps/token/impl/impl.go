@@ -13,10 +13,8 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/code"
-	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/security"
-	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/conf"
 )
 
@@ -31,8 +29,6 @@ type service struct {
 	log logger.Logger
 
 	checker security.Checker
-	user    user.Service
-	domain  domain.Service
 	code    code.Service
 }
 
@@ -61,8 +57,6 @@ func (s *service) Config() error {
 	s.col = dc
 
 	s.log = zap.L().Named(s.Name())
-	s.user = app.GetInternalApp(user.AppName).(user.Service)
-	s.domain = app.GetInternalApp(domain.AppName).(domain.Service)
 	s.code = app.GetInternalApp(code.AppName).(code.Service)
 
 	s.checker, err = security.NewChecker()

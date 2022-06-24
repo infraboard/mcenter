@@ -209,3 +209,49 @@ message DescribeDomainRequest {
     // @gotags: json:"name"
     string name = 3;
 }
+
+message LDAP {
+    // ldap服务URL地址
+    // @gotags: bson:"url" json:"url"
+    string url = 1;
+    // ldap忽略校验
+    // @gotags: bson:"skip_verify" json:"skip_verify"
+    bool skip_verify = 2;
+    // 用户名称
+    // @gotags: bson:"user" json:"user"
+    string auth_user = 8;
+    // 用户名称
+    // @gotags: bson:"password" json:"password"
+    string password = 9;
+
+    // base dn
+    // @gotags: bson:"base_dn" json:"base_dn"
+    string base_dn = 3;
+    // user dn
+    // @gotags: bson:"user_dn" json:"user_dn"
+    string user_dn = 4;
+    // user 过滤器
+    // @gotags: bson:"users_filter" json:"users_filter"
+    string users_filter = 5;
+    // group dn
+    // @gotags: bson:"groups_dn" json:"groups_dn"
+    string groups_dn = 6;
+    // group 过滤器
+    // @gotags: bson:"groups_filter" json:"groups_filter"
+    string groups_filter = 7;
+}
+
+message Attribute {
+    // 组名称
+    // @gotags: bson:"group_name" json:"group_name"
+    string group_name = 1;
+    // 用户名称
+    // @gotags: bson:"user_name" json:"user_name"
+    string user_name = 2;
+    // 邮箱
+    // @gotags: bson:"mail" json:"mail"
+    string mail = 3;
+    // 用户中文名称
+    // @gotags: bson:"display_name" json:"display_name"
+    string display_name = 4;  
+}
