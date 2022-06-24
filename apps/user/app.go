@@ -218,6 +218,10 @@ func (s *UserSet) UserIds() (uids []string) {
 	return
 }
 
+func NewDefaultUser() *User {
+	return &User{}
+}
+
 func (i *User) Update(req *UpdateUserRequest) {
 	i.UpdateAt = time.Now().UnixMicro()
 	i.Profile = req.Profile

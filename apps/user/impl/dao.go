@@ -8,6 +8,7 @@ import (
 	"github.com/infraboard/mcube/exception"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (s *service) save(ctx context.Context, u *user.User) error {
@@ -51,4 +52,45 @@ func (s *service) delete(ctx context.Context, set *user.UserSet) error {
 	}
 
 	return nil
+}
+
+func newQueryRequest(r *user.QueryUserRequest) *queryRequest {
+	return &queryRequest{
+		r,
+	}
+}
+
+type queryRequest struct {
+	*user.QueryUserRequest
+}
+
+func (r *queryRequest) FindOptions() *options.FindOptions {
+	pageSize := int64(r.Page.PageSize)
+	skip := int64(r.Page.PageSize) * int64(r.Page.PageNumber-1)
+
+	opt := &options.FindOptions{
+		Sort: bson.D{
+			{Key: "create_at", Value: -1},
+		},
+		Limit: &pageSize,
+		Skip:  &skip,
+	}
+
+	return opt
+}
+
+func (r *queryRequest) FindFilter() bson.M {
+	filter := bson.M{"domain": r.Domain}
+
+	if r.Provider != nil {
+		filter["spec.provider"] = r.Provider
+	}
+	if r.Type != nil {
+		filter["spec.type"] = r.Type
+	}
+	if len(r.UserIds) > 0 {
+		filter["_id"] = bson.M{"$in": r.UserIds}
+	}
+
+	return filter
 }

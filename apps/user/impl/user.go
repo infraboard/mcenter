@@ -6,6 +6,8 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/pb/request"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func (s *service) CreateUser(ctx context.Context, req *user.CreateUserRequest) (*user.User, error) {
@@ -29,12 +31,57 @@ func (s *service) CreateUser(ctx context.Context, req *user.CreateUserRequest) (
 
 // 查询用户列表
 func (s *service) QueryUser(ctx context.Context, req *user.QueryUserRequest) (*user.UserSet, error) {
-	return nil, nil
+	r := newQueryRequest(req)
+	resp, err := s.col.Find(ctx, r.FindFilter(), r.FindOptions())
+
+	if err != nil {
+		return nil, exception.NewInternalServerError("find user error, error is %s", err)
+	}
+
+	set := user.NewUserSet()
+	// 循环
+	if !req.SkipItems {
+		for resp.Next(ctx) {
+			ins := user.NewDefaultUser()
+			if err := resp.Decode(ins); err != nil {
+				return nil, exception.NewInternalServerError("decode user error, error is %s", err)
+			}
+
+			set.Add(ins)
+		}
+	}
+
+	// count
+	count, err := s.col.CountDocuments(ctx, r.FindFilter())
+	if err != nil {
+		return nil, exception.NewInternalServerError("get user count error, error is %s", err)
+	}
+	set.Total = count
+	return set, nil
 }
 
 // 查询用户详情
 func (s *service) DescribeUser(ctx context.Context, req *user.DescribeUserRequest) (*user.User, error) {
-	return nil, nil
+	filter := bson.M{}
+	switch req.DescribeBy {
+	case user.DESCRIBE_BY_USER_ID:
+		filter["_id"] = req.Id
+	case user.DESCRIBE_BY_USER_NAME:
+		filter["spec.username"] = req.Username
+	default:
+		return nil, exception.NewBadRequest("unknow desribe by %s", req.DescribeBy)
+	}
+
+	ins := user.NewDefaultUser()
+	if err := s.col.FindOne(ctx, filter).Decode(ins); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, exception.NewNotFound("user %s not found", req)
+		}
+
+		return nil, exception.NewInternalServerError("user %s error, %s", req, err)
+	}
+
+	return ins, nil
 }
 
 // 修改用户信息
