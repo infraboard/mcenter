@@ -14,8 +14,11 @@ import (
 
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/token"
+	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/token/security"
 	"github.com/infraboard/mcenter/conf"
+
+	_ "github.com/infraboard/mcenter/apps/token/provider/all"
 )
 
 var (
@@ -63,6 +66,12 @@ func (s *service) Config() error {
 	if err != nil {
 		return fmt.Errorf("new checker error, %s", err)
 	}
+
+	// 初始化所有的auth provider
+	if err := provider.Init(); err != nil {
+		return err
+	}
+
 	return nil
 }
 

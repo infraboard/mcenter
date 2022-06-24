@@ -11,7 +11,15 @@ import (
 	"github.com/infraboard/mcube/exception"
 )
 
+var (
+	emailRE = regexp.MustCompile(`([a-zA-Z0-9]+)@([a-zA-Z0-9\.]+)\.([a-zA-Z0-9]+)`)
+)
+
 type issuer struct {
+}
+
+func (i *issuer) Init() error {
+	return nil
 }
 
 func (i *issuer) GrantType() token.GRANT_TYPE {
@@ -23,14 +31,11 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	if err != nil {
 		return nil, err
 	}
+
 	fmt.Println(userName, dn)
 
 	return nil, nil
 }
-
-var (
-	emailRE = regexp.MustCompile(`([a-zA-Z0-9]+)@([a-zA-Z0-9\.]+)\.([a-zA-Z0-9]+)`)
-)
 
 func (i *issuer) genBaseDN(username string) (string, string, error) {
 	match := emailRE.FindAllStringSubmatch(username, -1)
