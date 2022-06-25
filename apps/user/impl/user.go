@@ -46,7 +46,7 @@ func (s *service) QueryUser(ctx context.Context, req *user.QueryUserRequest) (*u
 			if err := resp.Decode(ins); err != nil {
 				return nil, exception.NewInternalServerError("decode user error, error is %s", err)
 			}
-
+			ins.Desensitize()
 			set.Add(ins)
 		}
 	}

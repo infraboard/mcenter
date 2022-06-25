@@ -60,6 +60,7 @@ func NewHashedPassword(password string) (*Password, error) {
 	return &Password{
 		Password:      string(bytes),
 		CreateAt:      time.Now().UnixMilli(),
+		UpdateAt:      time.Now().UnixMilli(),
 		ExpiredDays:   90,
 		ExpiredRemind: 30,
 	}, nil
@@ -220,6 +221,14 @@ func (s *UserSet) UserIds() (uids []string) {
 
 func NewDefaultUser() *User {
 	return &User{}
+}
+
+// Desensitize 关键数据脱敏
+func (u *User) Desensitize() {
+	if u.Password != nil {
+		u.Password.Password = ""
+		u.Password.History = []string{}
+	}
 }
 
 func (i *User) Update(req *UpdateUserRequest) {
