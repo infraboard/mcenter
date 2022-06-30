@@ -25,7 +25,7 @@ func (h *primary) Config() error {
 }
 
 func (h *primary) Name() string {
-	return "primary"
+	return user.AppName
 }
 
 func (h *primary) Version() string {

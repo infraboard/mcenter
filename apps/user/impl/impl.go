@@ -7,6 +7,7 @@ import (
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/x/bsonx"
 	"google.golang.org/grpc"
 
@@ -39,6 +40,13 @@ func (s *service) Config() error {
 	indexs := []mongo.IndexModel{
 		{
 			Keys: bsonx.Doc{{Key: "create_at", Value: bsonx.Int32(-1)}},
+		},
+		{
+			Keys: bsonx.Doc{
+				{Key: "spec.domain", Value: bsonx.Int32(-1)},
+				{Key: "spec.username", Value: bsonx.Int32(-1)},
+			},
+			Options: options.Index().SetUnique(true),
 		},
 	}
 

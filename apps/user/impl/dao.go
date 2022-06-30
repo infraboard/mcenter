@@ -80,8 +80,11 @@ func (r *queryRequest) FindOptions() *options.FindOptions {
 }
 
 func (r *queryRequest) FindFilter() bson.M {
-	filter := bson.M{"domain": r.Domain}
+	filter := bson.M{}
 
+	if r.Domain != "" {
+		filter["spec.domain"] = r.Domain
+	}
 	if r.Provider != nil {
 		filter["spec.provider"] = r.Provider
 	}
