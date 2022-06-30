@@ -16,13 +16,13 @@ var (
 )
 
 type handler struct {
-	service service.MetaServiceServer
+	service service.MetaService
 	log     logger.Logger
 }
 
 func (h *handler) Config() error {
 	h.log = zap.L().Named(service.AppName)
-	h.service = app.GetGrpcApp(service.AppName).(service.MetaServiceServer)
+	h.service = app.GetInternalApp(service.AppName).(service.MetaService)
 	return nil
 }
 

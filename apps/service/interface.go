@@ -1,6 +1,7 @@
 package service
 
 import (
+	context "context"
 	"fmt"
 	"hash/fnv"
 	"net/http"
@@ -24,6 +25,14 @@ const (
 var (
 	validate = validator.New()
 )
+
+type MetaService interface {
+	CreateService(context.Context, *CreateServiceRequest) (*Service, error)
+	UpdateService(context.Context, *UpdateServiceRequest) (*Service, error)
+	DeleteService(context.Context, *DeleteServiceRequest) (*Service, error)
+	RefreshCredential(context.Context, *DescribeServiceRequest) (*Service, error)
+	RPCServer
+}
 
 func NewCreateServiceRequest() *CreateServiceRequest {
 	return &CreateServiceRequest{

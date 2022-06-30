@@ -2,7 +2,6 @@ package impl
 
 import (
 	"context"
-	"io"
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/service"
@@ -31,39 +30,13 @@ func (i *impl) RegistryInstance(ctx context.Context, req *instance.RegistryReque
 	return ins, nil
 }
 
-func (i *impl) Heartbeat(stream instance.Service_HeartbeatServer) error {
-	for {
-		// 处理请求
-		req, err := stream.Recv()
-		if err != nil {
-			// 如果遇到io.EOF表示客户端流被关闭
-			if err == io.EOF {
-				return nil
-			}
-
-			i.log.Warnf("receive heartbeat error, %s", err)
-			return nil
-		}
-
-		i.log.Debugf("instance %s", req.InstanceId)
-
-		// 发送响应
-		resp := instance.NewHeartbeatResponse()
-		err = stream.Send(resp)
-		if err != nil {
-			// 服务端发送异常, 函数退出, 服务端流关闭
-			return err
-		}
-	}
-}
-
 func (i *impl) DescribeInstance(ctx context.Context, req *instance.DescribeInstanceRequest) (
 	*instance.Instance, error) {
 	return i.get(ctx, req.Id)
 }
 
 // 实例注销
-func (i *impl) UnRegistry(ctx context.Context, req *instance.UnregistryRequest) (
+func (i *impl) UnRegistryInstance(ctx context.Context, req *instance.UnregistryRequest) (
 	*instance.Instance, error) {
 	ins, err := i.DescribeInstance(ctx, instance.NewDescribeInstanceRequest(req.InstanceId))
 	if err != nil {

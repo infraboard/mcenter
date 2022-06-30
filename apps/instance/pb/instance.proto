@@ -5,17 +5,15 @@ option go_package = "github.com/infraboard/mcenter/apps/instance";
 
 import "github.com/infraboard/mcube/pb/page/page.proto";
 
-service Service {
+service RPC {
     // 实例注册
     rpc RegistryInstance(RegistryRequest) returns(Instance);
-    // 实例上报心跳
-    rpc Heartbeat(stream HeartbeatRequest) returns(stream HeartbeatResponse);
     // 实例注销
-    rpc UnRegistry(UnregistryRequest) returns(Instance);
-    // 实例搜索, 用于客户端做服务发现
-    rpc Search(SearchRequest) returns(InstanceSet);
+    rpc UnRegistryInstance(UnregistryRequest) returns(Instance);
     // 查询实例详情
     rpc DescribeInstance(DescribeInstanceRequest) returns(Instance);
+    // 实例搜索, 用于客户端做服务发现
+    rpc Search(SearchRequest) returns(InstanceSet);
 }
 
 // 实例注册的协议类型

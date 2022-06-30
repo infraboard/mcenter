@@ -18,275 +18,204 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// ServiceClient is the client API for Service service.
+// RPCClient is the client API for RPC service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ServiceClient interface {
+type RPCClient interface {
 	// 实例注册
 	RegistryInstance(ctx context.Context, in *RegistryRequest, opts ...grpc.CallOption) (*Instance, error)
-	// 实例上报心跳
-	Heartbeat(ctx context.Context, opts ...grpc.CallOption) (Service_HeartbeatClient, error)
 	// 实例注销
-	UnRegistry(ctx context.Context, in *UnregistryRequest, opts ...grpc.CallOption) (*Instance, error)
-	// 实例搜索, 用于客户端做服务发现
-	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*InstanceSet, error)
+	UnRegistryInstance(ctx context.Context, in *UnregistryRequest, opts ...grpc.CallOption) (*Instance, error)
 	// 查询实例详情
 	DescribeInstance(ctx context.Context, in *DescribeInstanceRequest, opts ...grpc.CallOption) (*Instance, error)
+	// 实例搜索, 用于客户端做服务发现
+	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*InstanceSet, error)
 }
 
-type serviceClient struct {
+type rPCClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
-	return &serviceClient{cc}
+func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
+	return &rPCClient{cc}
 }
 
-func (c *serviceClient) RegistryInstance(ctx context.Context, in *RegistryRequest, opts ...grpc.CallOption) (*Instance, error) {
+func (c *rPCClient) RegistryInstance(ctx context.Context, in *RegistryRequest, opts ...grpc.CallOption) (*Instance, error) {
 	out := new(Instance)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.Service/RegistryInstance", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.RPC/RegistryInstance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) Heartbeat(ctx context.Context, opts ...grpc.CallOption) (Service_HeartbeatClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Service_ServiceDesc.Streams[0], "/infraboard.mcenter.instance.Service/Heartbeat", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &serviceHeartbeatClient{stream}
-	return x, nil
-}
-
-type Service_HeartbeatClient interface {
-	Send(*HeartbeatRequest) error
-	Recv() (*HeartbeatResponse, error)
-	grpc.ClientStream
-}
-
-type serviceHeartbeatClient struct {
-	grpc.ClientStream
-}
-
-func (x *serviceHeartbeatClient) Send(m *HeartbeatRequest) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *serviceHeartbeatClient) Recv() (*HeartbeatResponse, error) {
-	m := new(HeartbeatResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func (c *serviceClient) UnRegistry(ctx context.Context, in *UnregistryRequest, opts ...grpc.CallOption) (*Instance, error) {
+func (c *rPCClient) UnRegistryInstance(ctx context.Context, in *UnregistryRequest, opts ...grpc.CallOption) (*Instance, error) {
 	out := new(Instance)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.Service/UnRegistry", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.RPC/UnRegistryInstance", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*InstanceSet, error) {
+func (c *rPCClient) DescribeInstance(ctx context.Context, in *DescribeInstanceRequest, opts ...grpc.CallOption) (*Instance, error) {
+	out := new(Instance)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.RPC/DescribeInstance", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rPCClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*InstanceSet, error) {
 	out := new(InstanceSet)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.Service/Search", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.RPC/Search", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) DescribeInstance(ctx context.Context, in *DescribeInstanceRequest, opts ...grpc.CallOption) (*Instance, error) {
-	out := new(Instance)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.instance.Service/DescribeInstance", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// ServiceServer is the server API for Service service.
-// All implementations must embed UnimplementedServiceServer
+// RPCServer is the server API for RPC service.
+// All implementations must embed UnimplementedRPCServer
 // for forward compatibility
-type ServiceServer interface {
+type RPCServer interface {
 	// 实例注册
 	RegistryInstance(context.Context, *RegistryRequest) (*Instance, error)
-	// 实例上报心跳
-	Heartbeat(Service_HeartbeatServer) error
 	// 实例注销
-	UnRegistry(context.Context, *UnregistryRequest) (*Instance, error)
-	// 实例搜索, 用于客户端做服务发现
-	Search(context.Context, *SearchRequest) (*InstanceSet, error)
+	UnRegistryInstance(context.Context, *UnregistryRequest) (*Instance, error)
 	// 查询实例详情
 	DescribeInstance(context.Context, *DescribeInstanceRequest) (*Instance, error)
-	mustEmbedUnimplementedServiceServer()
+	// 实例搜索, 用于客户端做服务发现
+	Search(context.Context, *SearchRequest) (*InstanceSet, error)
+	mustEmbedUnimplementedRPCServer()
 }
 
-// UnimplementedServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedServiceServer struct {
+// UnimplementedRPCServer must be embedded to have forward compatible implementations.
+type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedServiceServer) RegistryInstance(context.Context, *RegistryRequest) (*Instance, error) {
+func (UnimplementedRPCServer) RegistryInstance(context.Context, *RegistryRequest) (*Instance, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegistryInstance not implemented")
 }
-func (UnimplementedServiceServer) Heartbeat(Service_HeartbeatServer) error {
-	return status.Errorf(codes.Unimplemented, "method Heartbeat not implemented")
+func (UnimplementedRPCServer) UnRegistryInstance(context.Context, *UnregistryRequest) (*Instance, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnRegistryInstance not implemented")
 }
-func (UnimplementedServiceServer) UnRegistry(context.Context, *UnregistryRequest) (*Instance, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UnRegistry not implemented")
-}
-func (UnimplementedServiceServer) Search(context.Context, *SearchRequest) (*InstanceSet, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
-}
-func (UnimplementedServiceServer) DescribeInstance(context.Context, *DescribeInstanceRequest) (*Instance, error) {
+func (UnimplementedRPCServer) DescribeInstance(context.Context, *DescribeInstanceRequest) (*Instance, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DescribeInstance not implemented")
 }
-func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
+func (UnimplementedRPCServer) Search(context.Context, *SearchRequest) (*InstanceSet, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
+}
+func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
-// UnsafeServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ServiceServer will
+// UnsafeRPCServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to RPCServer will
 // result in compilation errors.
-type UnsafeServiceServer interface {
-	mustEmbedUnimplementedServiceServer()
+type UnsafeRPCServer interface {
+	mustEmbedUnimplementedRPCServer()
 }
 
-func RegisterServiceServer(s grpc.ServiceRegistrar, srv ServiceServer) {
-	s.RegisterService(&Service_ServiceDesc, srv)
+func RegisterRPCServer(s grpc.ServiceRegistrar, srv RPCServer) {
+	s.RegisterService(&RPC_ServiceDesc, srv)
 }
 
-func _Service_RegistryInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RPC_RegistryInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RegistryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).RegistryInstance(ctx, in)
+		return srv.(RPCServer).RegistryInstance(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.instance.Service/RegistryInstance",
+		FullMethod: "/infraboard.mcenter.instance.RPC/RegistryInstance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).RegistryInstance(ctx, req.(*RegistryRequest))
+		return srv.(RPCServer).RegistryInstance(ctx, req.(*RegistryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_Heartbeat_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ServiceServer).Heartbeat(&serviceHeartbeatServer{stream})
-}
-
-type Service_HeartbeatServer interface {
-	Send(*HeartbeatResponse) error
-	Recv() (*HeartbeatRequest, error)
-	grpc.ServerStream
-}
-
-type serviceHeartbeatServer struct {
-	grpc.ServerStream
-}
-
-func (x *serviceHeartbeatServer) Send(m *HeartbeatResponse) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func (x *serviceHeartbeatServer) Recv() (*HeartbeatRequest, error) {
-	m := new(HeartbeatRequest)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func _Service_UnRegistry_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RPC_UnRegistryInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UnregistryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).UnRegistry(ctx, in)
+		return srv.(RPCServer).UnRegistryInstance(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.instance.Service/UnRegistry",
+		FullMethod: "/infraboard.mcenter.instance.RPC/UnRegistryInstance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).UnRegistry(ctx, req.(*UnregistryRequest))
+		return srv.(RPCServer).UnRegistryInstance(ctx, req.(*UnregistryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).Search(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.instance.Service/Search",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).Search(ctx, req.(*SearchRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Service_DescribeInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RPC_DescribeInstance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DescribeInstanceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).DescribeInstance(ctx, in)
+		return srv.(RPCServer).DescribeInstance(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.instance.Service/DescribeInstance",
+		FullMethod: "/infraboard.mcenter.instance.RPC/DescribeInstance",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).DescribeInstance(ctx, req.(*DescribeInstanceRequest))
+		return srv.(RPCServer).DescribeInstance(ctx, req.(*DescribeInstanceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Service_ServiceDesc is the grpc.ServiceDesc for Service service.
+func _RPC_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).Search(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infraboard.mcenter.instance.RPC/Search",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).Search(ctx, req.(*SearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Service_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "infraboard.mcenter.instance.Service",
-	HandlerType: (*ServiceServer)(nil),
+var RPC_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "infraboard.mcenter.instance.RPC",
+	HandlerType: (*RPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "RegistryInstance",
-			Handler:    _Service_RegistryInstance_Handler,
+			Handler:    _RPC_RegistryInstance_Handler,
 		},
 		{
-			MethodName: "UnRegistry",
-			Handler:    _Service_UnRegistry_Handler,
-		},
-		{
-			MethodName: "Search",
-			Handler:    _Service_Search_Handler,
+			MethodName: "UnRegistryInstance",
+			Handler:    _RPC_UnRegistryInstance_Handler,
 		},
 		{
 			MethodName: "DescribeInstance",
-			Handler:    _Service_DescribeInstance_Handler,
+			Handler:    _RPC_DescribeInstance_Handler,
 		},
-	},
-	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Heartbeat",
-			Handler:       _Service_Heartbeat_Handler,
-			ServerStreams: true,
-			ClientStreams: true,
+			MethodName: "Search",
+			Handler:    _RPC_Search_Handler,
 		},
 	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "apps/instance/pb/instance.proto",
 }

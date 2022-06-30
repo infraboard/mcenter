@@ -18,302 +18,158 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// MetaServiceClient is the client API for MetaService service.
+// RPCClient is the client API for RPC service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type MetaServiceClient interface {
+type RPCClient interface {
 	ValidateCredential(ctx context.Context, in *ValidateCredentialRequest, opts ...grpc.CallOption) (*Service, error)
-	CreateService(ctx context.Context, in *CreateServiceRequest, opts ...grpc.CallOption) (*Service, error)
-	UpdateService(ctx context.Context, in *UpdateServiceRequest, opts ...grpc.CallOption) (*Service, error)
 	QueryService(ctx context.Context, in *QueryServiceRequest, opts ...grpc.CallOption) (*ServiceSet, error)
 	DescribeService(ctx context.Context, in *DescribeServiceRequest, opts ...grpc.CallOption) (*Service, error)
-	DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*Service, error)
-	RefreshCredential(ctx context.Context, in *DescribeServiceRequest, opts ...grpc.CallOption) (*Service, error)
 }
 
-type metaServiceClient struct {
+type rPCClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMetaServiceClient(cc grpc.ClientConnInterface) MetaServiceClient {
-	return &metaServiceClient{cc}
+func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
+	return &rPCClient{cc}
 }
 
-func (c *metaServiceClient) ValidateCredential(ctx context.Context, in *ValidateCredentialRequest, opts ...grpc.CallOption) (*Service, error) {
+func (c *rPCClient) ValidateCredential(ctx context.Context, in *ValidateCredentialRequest, opts ...grpc.CallOption) (*Service, error) {
 	out := new(Service)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.MetaService/ValidateCredential", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.RPC/ValidateCredential", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *metaServiceClient) CreateService(ctx context.Context, in *CreateServiceRequest, opts ...grpc.CallOption) (*Service, error) {
-	out := new(Service)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.MetaService/CreateService", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *metaServiceClient) UpdateService(ctx context.Context, in *UpdateServiceRequest, opts ...grpc.CallOption) (*Service, error) {
-	out := new(Service)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.MetaService/UpdateService", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *metaServiceClient) QueryService(ctx context.Context, in *QueryServiceRequest, opts ...grpc.CallOption) (*ServiceSet, error) {
+func (c *rPCClient) QueryService(ctx context.Context, in *QueryServiceRequest, opts ...grpc.CallOption) (*ServiceSet, error) {
 	out := new(ServiceSet)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.MetaService/QueryService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.RPC/QueryService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *metaServiceClient) DescribeService(ctx context.Context, in *DescribeServiceRequest, opts ...grpc.CallOption) (*Service, error) {
+func (c *rPCClient) DescribeService(ctx context.Context, in *DescribeServiceRequest, opts ...grpc.CallOption) (*Service, error) {
 	out := new(Service)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.MetaService/DescribeService", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.RPC/DescribeService", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *metaServiceClient) DeleteService(ctx context.Context, in *DeleteServiceRequest, opts ...grpc.CallOption) (*Service, error) {
-	out := new(Service)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.MetaService/DeleteService", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *metaServiceClient) RefreshCredential(ctx context.Context, in *DescribeServiceRequest, opts ...grpc.CallOption) (*Service, error) {
-	out := new(Service)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.service.MetaService/RefreshCredential", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// MetaServiceServer is the server API for MetaService service.
-// All implementations must embed UnimplementedMetaServiceServer
+// RPCServer is the server API for RPC service.
+// All implementations must embed UnimplementedRPCServer
 // for forward compatibility
-type MetaServiceServer interface {
+type RPCServer interface {
 	ValidateCredential(context.Context, *ValidateCredentialRequest) (*Service, error)
-	CreateService(context.Context, *CreateServiceRequest) (*Service, error)
-	UpdateService(context.Context, *UpdateServiceRequest) (*Service, error)
 	QueryService(context.Context, *QueryServiceRequest) (*ServiceSet, error)
 	DescribeService(context.Context, *DescribeServiceRequest) (*Service, error)
-	DeleteService(context.Context, *DeleteServiceRequest) (*Service, error)
-	RefreshCredential(context.Context, *DescribeServiceRequest) (*Service, error)
-	mustEmbedUnimplementedMetaServiceServer()
+	mustEmbedUnimplementedRPCServer()
 }
 
-// UnimplementedMetaServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedMetaServiceServer struct {
+// UnimplementedRPCServer must be embedded to have forward compatible implementations.
+type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedMetaServiceServer) ValidateCredential(context.Context, *ValidateCredentialRequest) (*Service, error) {
+func (UnimplementedRPCServer) ValidateCredential(context.Context, *ValidateCredentialRequest) (*Service, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateCredential not implemented")
 }
-func (UnimplementedMetaServiceServer) CreateService(context.Context, *CreateServiceRequest) (*Service, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateService not implemented")
-}
-func (UnimplementedMetaServiceServer) UpdateService(context.Context, *UpdateServiceRequest) (*Service, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateService not implemented")
-}
-func (UnimplementedMetaServiceServer) QueryService(context.Context, *QueryServiceRequest) (*ServiceSet, error) {
+func (UnimplementedRPCServer) QueryService(context.Context, *QueryServiceRequest) (*ServiceSet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryService not implemented")
 }
-func (UnimplementedMetaServiceServer) DescribeService(context.Context, *DescribeServiceRequest) (*Service, error) {
+func (UnimplementedRPCServer) DescribeService(context.Context, *DescribeServiceRequest) (*Service, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DescribeService not implemented")
 }
-func (UnimplementedMetaServiceServer) DeleteService(context.Context, *DeleteServiceRequest) (*Service, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteService not implemented")
-}
-func (UnimplementedMetaServiceServer) RefreshCredential(context.Context, *DescribeServiceRequest) (*Service, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefreshCredential not implemented")
-}
-func (UnimplementedMetaServiceServer) mustEmbedUnimplementedMetaServiceServer() {}
+func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
-// UnsafeMetaServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MetaServiceServer will
+// UnsafeRPCServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to RPCServer will
 // result in compilation errors.
-type UnsafeMetaServiceServer interface {
-	mustEmbedUnimplementedMetaServiceServer()
+type UnsafeRPCServer interface {
+	mustEmbedUnimplementedRPCServer()
 }
 
-func RegisterMetaServiceServer(s grpc.ServiceRegistrar, srv MetaServiceServer) {
-	s.RegisterService(&MetaService_ServiceDesc, srv)
+func RegisterRPCServer(s grpc.ServiceRegistrar, srv RPCServer) {
+	s.RegisterService(&RPC_ServiceDesc, srv)
 }
 
-func _MetaService_ValidateCredential_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RPC_ValidateCredential_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ValidateCredentialRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MetaServiceServer).ValidateCredential(ctx, in)
+		return srv.(RPCServer).ValidateCredential(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.service.MetaService/ValidateCredential",
+		FullMethod: "/infraboard.mcenter.service.RPC/ValidateCredential",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetaServiceServer).ValidateCredential(ctx, req.(*ValidateCredentialRequest))
+		return srv.(RPCServer).ValidateCredential(ctx, req.(*ValidateCredentialRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MetaService_CreateService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateServiceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MetaServiceServer).CreateService(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.service.MetaService/CreateService",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetaServiceServer).CreateService(ctx, req.(*CreateServiceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MetaService_UpdateService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateServiceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MetaServiceServer).UpdateService(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.service.MetaService/UpdateService",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetaServiceServer).UpdateService(ctx, req.(*UpdateServiceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MetaService_QueryService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RPC_QueryService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MetaServiceServer).QueryService(ctx, in)
+		return srv.(RPCServer).QueryService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.service.MetaService/QueryService",
+		FullMethod: "/infraboard.mcenter.service.RPC/QueryService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetaServiceServer).QueryService(ctx, req.(*QueryServiceRequest))
+		return srv.(RPCServer).QueryService(ctx, req.(*QueryServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MetaService_DescribeService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RPC_DescribeService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DescribeServiceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MetaServiceServer).DescribeService(ctx, in)
+		return srv.(RPCServer).DescribeService(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.service.MetaService/DescribeService",
+		FullMethod: "/infraboard.mcenter.service.RPC/DescribeService",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetaServiceServer).DescribeService(ctx, req.(*DescribeServiceRequest))
+		return srv.(RPCServer).DescribeService(ctx, req.(*DescribeServiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MetaService_DeleteService_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteServiceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MetaServiceServer).DeleteService(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.service.MetaService/DeleteService",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetaServiceServer).DeleteService(ctx, req.(*DeleteServiceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MetaService_RefreshCredential_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DescribeServiceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MetaServiceServer).RefreshCredential(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.service.MetaService/RefreshCredential",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetaServiceServer).RefreshCredential(ctx, req.(*DescribeServiceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// MetaService_ServiceDesc is the grpc.ServiceDesc for MetaService service.
+// RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var MetaService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "infraboard.mcenter.service.MetaService",
-	HandlerType: (*MetaServiceServer)(nil),
+var RPC_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "infraboard.mcenter.service.RPC",
+	HandlerType: (*RPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "ValidateCredential",
-			Handler:    _MetaService_ValidateCredential_Handler,
-		},
-		{
-			MethodName: "CreateService",
-			Handler:    _MetaService_CreateService_Handler,
-		},
-		{
-			MethodName: "UpdateService",
-			Handler:    _MetaService_UpdateService_Handler,
+			Handler:    _RPC_ValidateCredential_Handler,
 		},
 		{
 			MethodName: "QueryService",
-			Handler:    _MetaService_QueryService_Handler,
+			Handler:    _RPC_QueryService_Handler,
 		},
 		{
 			MethodName: "DescribeService",
-			Handler:    _MetaService_DescribeService_Handler,
-		},
-		{
-			MethodName: "DeleteService",
-			Handler:    _MetaService_DeleteService_Handler,
-		},
-		{
-			MethodName: "RefreshCredential",
-			Handler:    _MetaService_RefreshCredential_Handler,
+			Handler:    _RPC_DescribeService_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

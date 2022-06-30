@@ -21,7 +21,7 @@ var (
 type impl struct {
 	col *mongo.Collection
 	log logger.Logger
-	instance.UnimplementedServiceServer
+	instance.UnimplementedRPCServer
 
 	app service.MetaServiceServer
 }
@@ -43,9 +43,10 @@ func (i *impl) Name() string {
 }
 
 func (i *impl) Registry(server *grpc.Server) {
-	instance.RegisterServiceServer(server, svr)
+	instance.RegisterRPCServer(server, svr)
 }
 
 func init() {
+	app.RegistryInternalApp(svr)
 	app.RegistryGrpcApp(svr)
 }

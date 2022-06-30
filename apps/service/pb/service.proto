@@ -6,15 +6,11 @@ option go_package = "github.com/infraboard/mcenter/apps/service";
 import "github.com/infraboard/mcube/pb/page/page.proto";
 import "github.com/infraboard/mcube/pb/request/request.proto";
 
-// MetaService 服务
-service MetaService {
+// RPC 服务
+service RPC {
 	rpc ValidateCredential(ValidateCredentialRequest) returns(Service);
-	rpc CreateService(CreateServiceRequest) returns(Service);
-    rpc UpdateService(UpdateServiceRequest) returns(Service);
 	rpc QueryService(QueryServiceRequest) returns(ServiceSet);
 	rpc DescribeService(DescribeServiceRequest) returns(Service);
-	rpc DeleteService(DeleteServiceRequest) returns(Service);
-	rpc RefreshCredential(DescribeServiceRequest) returns(Service);
 }
 
 enum Type {

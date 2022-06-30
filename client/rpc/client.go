@@ -73,11 +73,11 @@ type ClientSet struct {
 }
 
 // Instance服务的SDK
-func (c *ClientSet) Instance() instance.ServiceClient {
-	return instance.NewServiceClient(c.conn)
+func (c *ClientSet) Instance() instance.RPCClient {
+	return instance.NewRPCClient(c.conn)
 }
 
 // Service服务的SDK
-func (c *ClientSet) Service() service.MetaServiceClient {
-	return service.NewMetaServiceClient(c.conn)
+func (c *ClientSet) Service() service.RPCClient {
+	return service.NewRPCClient(c.conn)
 }

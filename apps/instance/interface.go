@@ -26,6 +26,10 @@ var (
 	validate = validator.New()
 )
 
+type Service interface {
+	RPCServer
+}
+
 func NewSearchRequest() *SearchRequest {
 	return &SearchRequest{
 		Page: request.NewDefaultPageRequest(),

@@ -20,7 +20,7 @@ var (
 type impl struct {
 	col *mongo.Collection
 	log logger.Logger
-	service.UnimplementedMetaServiceServer
+	service.UnimplementedRPCServer
 }
 
 func (i *impl) Config() error {
@@ -39,9 +39,10 @@ func (i *impl) Name() string {
 }
 
 func (i *impl) Registry(server *grpc.Server) {
-	service.RegisterMetaServiceServer(server, svr)
+	service.RegisterRPCServer(server, svr)
 }
 
 func init() {
+	app.RegistryInternalApp(svr)
 	app.RegistryGrpcApp(svr)
 }
