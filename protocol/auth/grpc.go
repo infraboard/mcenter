@@ -16,11 +16,11 @@ import (
 )
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
-func GrpcAuthUnaryServerInterceptor(app service.MetaServiceServer) grpc.UnaryServerInterceptor {
+func GrpcAuthUnaryServerInterceptor(app service.MetaService) grpc.UnaryServerInterceptor {
 	return newGrpcAuther(app).Auth
 }
 
-func newGrpcAuther(app service.MetaServiceServer) *grpcAuther {
+func newGrpcAuther(app service.MetaService) *grpcAuther {
 	return &grpcAuther{
 		log: zap.L().Named("Grpc Auther"),
 		app: app,
@@ -30,7 +30,7 @@ func newGrpcAuther(app service.MetaServiceServer) *grpcAuther {
 // internal todo
 type grpcAuther struct {
 	log logger.Logger
-	app service.MetaServiceServer
+	app service.MetaService
 }
 
 func (a *grpcAuther) Auth(

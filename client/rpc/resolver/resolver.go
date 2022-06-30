@@ -59,7 +59,7 @@ func (*McenterResolverBuilder) Scheme() string {
 // exampleResolver is a
 // Resolver(https://godoc.org/google.golang.org/grpc/resolver#Resolver).
 type mcenterResolver struct {
-	mcenter instance.ServiceClient
+	mcenter instance.RPCClient
 
 	target             resolver.Target
 	cc                 resolver.ClientConn

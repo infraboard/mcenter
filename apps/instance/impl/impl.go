@@ -23,7 +23,7 @@ type impl struct {
 	log logger.Logger
 	instance.UnimplementedRPCServer
 
-	app service.MetaServiceServer
+	app service.MetaService
 }
 
 func (i *impl) Config() error {
@@ -34,7 +34,7 @@ func (i *impl) Config() error {
 	i.col = db.Collection(i.Name())
 	i.log = zap.L().Named(i.Name())
 
-	i.app = app.GetGrpcApp(service.AppName).(service.MetaServiceServer)
+	i.app = app.GetGrpcApp(service.AppName).(service.MetaService)
 	return nil
 }
 

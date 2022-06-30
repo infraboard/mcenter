@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	impl instance.ServiceServer
+	impl instance.Service
 )
 
 func TestSearch(t *testing.T) {
@@ -54,5 +54,5 @@ func init() {
 		panic(err)
 	}
 
-	impl = app.GetGrpcApp(instance.AppName).(instance.ServiceServer)
+	impl = app.GetInternalApp(instance.AppName).(instance.Service)
 }

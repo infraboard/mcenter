@@ -39,7 +39,7 @@ var initCmd = &cobra.Command{
 		apps.Add("cmdb", "资源中心")
 		log := zap.L().Named("init")
 
-		impl := app.GetGrpcApp(meta.AppName).(meta.MetaServiceServer)
+		impl := app.GetInternalApp(meta.AppName).(meta.MetaService)
 
 		for _, req := range apps.items {
 			app, err := impl.CreateService(context.Background(), req)

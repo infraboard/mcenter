@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	impl service.MetaServiceServer
+	impl service.MetaService
 )
 
 func TestCreateService(t *testing.T) {
@@ -49,5 +49,5 @@ func init() {
 		panic(err)
 	}
 
-	impl = app.GetGrpcApp(service.AppName).(service.MetaServiceServer)
+	impl = app.GetInternalApp(service.AppName).(service.MetaService)
 }

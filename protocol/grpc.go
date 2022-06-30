@@ -18,7 +18,7 @@ import (
 // NewGRPCService todo
 func NewGRPCService() *GRPCService {
 	log := zap.L().Named("GRPC Service")
-	appImpl := app.GetGrpcApp(service.AppName).(service.MetaServiceServer)
+	appImpl := app.GetGrpcApp(service.AppName).(service.MetaService)
 
 	rc := recovery.NewInterceptor(recovery.NewZapRecoveryHandler())
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(

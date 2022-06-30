@@ -27,15 +27,14 @@ func main() {
 	// 注册服务实例
 	req := instance.NewRegistryRequest()
 	req.Address = "127.0.0.1:18050"
-	lf, err := rpc.C().Registry(ctx, req)
+	ins, err := rpc.C().Instance().RegistryInstance(ctx, req)
 	if err != nil {
 		panic(err)
 	}
 
 	// 上报实例心跳
-	lf.Heartbeat(ctx)
 	time.Sleep(15 * time.Second)
 
 	// 注销实例
-	lf.UnRegistry(context.Background())
+	rpc.C().Instance().UnRegistryInstance(context.Background(), instance.NewUnregistryRequest(ins.Id))
 }

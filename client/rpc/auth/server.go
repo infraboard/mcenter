@@ -20,11 +20,11 @@ const (
 )
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
-func GrpcAuthUnaryServerInterceptor(svr service.MetaServiceClient) grpc.UnaryServerInterceptor {
+func GrpcAuthUnaryServerInterceptor(svr service.RPCClient) grpc.UnaryServerInterceptor {
 	return newGrpcAuther(svr).Auth
 }
 
-func newGrpcAuther(svr service.MetaServiceClient) *grpcAuther {
+func newGrpcAuther(svr service.RPCClient) *grpcAuther {
 	return &grpcAuther{
 		log:     zap.L().Named("Grpc Auther"),
 		service: svr,
@@ -34,7 +34,7 @@ func newGrpcAuther(svr service.MetaServiceClient) *grpcAuther {
 // internal todo
 type grpcAuther struct {
 	log     logger.Logger
-	service service.MetaServiceClient
+	service service.RPCClient
 }
 
 func (a *grpcAuther) Auth(
