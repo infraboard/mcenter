@@ -12,15 +12,13 @@ import (
 	pb_request "github.com/infraboard/mcube/pb/request"
 	"github.com/rs/xid"
 
+	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/common/tools"
 )
 
 const (
 	AppName = "service"
-)
-
-const (
-	DefaultNamespace = "default"
 )
 
 var (
@@ -29,7 +27,8 @@ var (
 
 func NewCreateServiceRequest() *CreateServiceRequest {
 	return &CreateServiceRequest{
-		Namespace:  DefaultNamespace,
+		Domain:     domain.DEFAULT_DOMAIN,
+		Namespace:  namespace.DEFAULT_NAMESPACE,
 		Enabled:    true,
 		Repository: &Repository{},
 		Tags:       map[string]string{},

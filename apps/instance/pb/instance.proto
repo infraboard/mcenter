@@ -35,9 +35,12 @@ enum Provider {
 
 // 服务实例信息, 比如 阿里云_杭州/生产环境/app01/default/instance01
 message Instance {
-    // 服务所属域
+    // 实例Id
     // @gotags: bson:"_id" json:"id"
     string id = 1;
+    // 服务所属域
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 2;
     // 服务所属空间
     // @gotags: bson:"namespace" json:"namespace"
     string namespace = 3;

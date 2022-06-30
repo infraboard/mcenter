@@ -59,6 +59,7 @@ func NewInstance(req *RegistryRequest, app *service.Service) (*Instance, error) 
 	}
 
 	ins := &Instance{
+		Domain:       app.Spec.Domain,
 		Namespace:    app.Spec.Namespace,
 		ServiceName:  app.Spec.Name,
 		RegistryInfo: req,

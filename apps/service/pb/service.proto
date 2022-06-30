@@ -52,6 +52,9 @@ message Service {
 }
 
 message CreateServiceRequest {
+    // 服务所属域
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 1;
     // 服务所属空间
     // @gotags: bson:"namespace" json:"namespace"
     string namespace = 2;
