@@ -2,6 +2,7 @@ package token
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/infraboard/mcenter/common/tools"
@@ -90,6 +91,16 @@ func (s *TokenSet) Length() int {
 const (
 	TOKEN_COOKIE_NAME = ""
 )
+
+func GetTokenFromHTTPHeader(r *http.Request) string {
+	auth := r.Header.Get("Authorization")
+	info := strings.Split(auth, " ")
+	if len(info) > 1 {
+		return info[1]
+	}
+
+	return ""
+}
 
 // 基于令牌创建HTTP Cookie 用于Web登陆场景
 func NewCookie(tk *Token) *http.Cookie {

@@ -25,11 +25,10 @@ func (h *handler) IssueToken(r *restful.Request, w *restful.Response) {
 }
 
 func (u *handler) RevolkToken(r *restful.Request, w *restful.Response) {
+	qs := r.Request.URL.Query()
 	req := token.NewRevolkTokenRequest()
-	if err := r.ReadEntity(req); err != nil {
-		response.Failed(w.ResponseWriter, err)
-		return
-	}
+	req.AccessToken = token.GetTokenFromHTTPHeader(r.Request)
+	req.RefreshToken = qs.Get("refresh_token")
 
 	ins, err := h.service.RevolkToken(r.Request.Context(), req)
 	if err != nil {
