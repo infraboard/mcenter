@@ -94,7 +94,19 @@ func (s *service) AfterLoginSecurityCheck(ctx context.Context, verifyCode string
 // 撤销Token
 func (s *service) RevolkToken(ctx context.Context, req *token.RevolkTokenRequest) (
 	*token.Token, error) {
-	return nil, nil
+	tk, err := s.get(ctx, req.AccessToken)
+	if err != nil {
+		return nil, err
+	}
+
+	if tk.RefreshToken != req.RefreshToken {
+		return nil, exception.NewBadRequest("refresh token not connrect")
+	}
+
+	if err := s.delete(ctx, tk); err != nil {
+		return nil, err
+	}
+	return tk, nil
 }
 
 // 切换Token空间

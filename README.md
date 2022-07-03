@@ -118,6 +118,8 @@ $ make run
 
 ## 相关文档
 
+https://petstore.swagger.io/#/
+
 # cmdb 和 keyauth services 配置
 traefik/http/services/cmdb/loadBalancer/servers/0/url	http://127.0.0.1:8060
 traefik/http/services/cmdb/loadBalancer/servers/0/url	h2c://127.0.0.1:18060
