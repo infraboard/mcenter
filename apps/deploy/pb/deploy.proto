@@ -25,6 +25,19 @@ enum TYPE {
     HOST = 1;
 }
 
+// K8sTypeConfig yaml文本格式的k8s部署相关配置文件
+message K8sTypeConfig {
+    // 部署集群的名称
+    // @gotags: bson:"cluster_name" json:"cluster_name" validate:"required"
+    string cluster_name = 1;
+    // k8s yaml配置, 支持deploy/statfulset/daemonset/job/cronjob
+    // @gotags: bson:"workload" json:"workload" validate:"required"
+    string workload = 2;
+    // k8s service配置
+    // @gotags: bson:"service" json:"service" validate:"required"
+    string service = 3;
+}
+
 message CreateDeployRequest {
     // 那个服务的部署
     // @gotags: bson:"service_id" json:"service_id"
@@ -41,6 +54,9 @@ message CreateDeployRequest {
     // 部署方式
     // @gotags: bson:"type" json:"type"
     TYPE type = 5;
+    // k8s模式下的部署配置
+    // @gotags: json:"k8s_type_config" bson:"k8s_type_config"
+    K8sTypeConfig k8s_type_config = 11;
     // 部署的名称
     // @gotags: bson:"name" json:"name"
     string name = 6;
