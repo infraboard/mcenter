@@ -18,5 +18,6 @@ coverage.txt
 etc/mcenter.toml
 etc/mcenter.env
 etc/unit_test.env
+etc/config.prod.toml
 etc/ssl
 mcenter

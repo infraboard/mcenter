@@ -49,6 +49,9 @@ init: dep ## Inital project
 run: install dep ## Run Server
 	@go run main.go start
 
+runp: install dep ## Run product Server
+	@go run main.go start -f etc/config.prod.toml
+
 clean: ## Remove previous build
 	@go clean .
 	@rm -f dist/${PROJECT_NAME}

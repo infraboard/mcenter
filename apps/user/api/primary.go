@@ -42,7 +42,7 @@ func (h *primary) Registry(ws *restful.WebService) {
 		Writes(response.NewData(user.User{})))
 
 	ws.Route(ws.GET("/").To(h.QueryUser).
-		Doc("create a user").
+		Doc("query a user").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(user.CreateUserRequest{}).
 		Writes(response.NewData(user.User{})))

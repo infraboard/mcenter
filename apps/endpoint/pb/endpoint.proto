@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package infraboard.mcenter.endpoint;
+option go_package = "github.com/infraboard/mcenter/apps/endpoint";
+
+import "github.com/infraboard/mcube/pb/page/page.proto";
+import "github.com/infraboard/mcube/pb/http/entry.proto";
+
+// RPC endpoint管理
+service RPC {
+	rpc DescribeEndpoint(DescribeEndpointRequest) returns(Endpoint);
+	rpc QueryEndpoints(QueryEndpointRequest) returns(EndpointSet);
+	rpc RegistryEndpoint(RegistryRequest) returns(RegistryResponse);
+	rpc DeleteEndpoint(DeleteEndpointRequest) returns(Endpoint);
+}
+
+// Endpoint Service's features
+message Endpoint {
+    // 端点名称
+    // @gotags: bson:"_id" json:"id" validate:"required,lte=64"
+    string id = 1;
+    // 创建时间
+    // @gotags: bson:"create_at" json:"create_at,omitempty"
+    int64 create_at = 2;
+    // 更新时间
+    // @gotags: bson:"update_at" json:"update_at,omitempty"
+    int64 update_at = 3;
+    // 该功能属于那个服务
+    // @gotags: bson:"service_id" json:"service_id,omitempty" validate:"required,lte=64"
+    string service_id= 4;
+    // 服务那个版本的功能
+    // @gotags: bson:"version" json:"version,omitempty" validate:"required,lte=64"
+    string version = 5;
+    // 路由条目信息
+    // @gotags: bson:"entry" json:"entry" validate:"required"
+    mcube.http.Entry entry = 6;
+}
+
+message EndpointSet {
+    // @gotags: bson:"total" json:"total"
+    int64 total = 1;
+    // @gotags: bson:"items" json:"items"
+    repeated Endpoint items = 2;
+}
+
+
+// RegistryRequest 服务注册请求
+message RegistryRequest {
+    // @gotags: json:"client_id" validate:"required"
+    string client_id = 1;
+    // @gotags: json:"client_secret" validate:"required"
+    string client_secret = 2;
+    // @gotags: json:"version" validate:"required,lte=32"
+string version = 3;
+     // @gotags: json:"entries"
+repeated infraboard.mcube.http.Entry entries = 4;
+}
+
+// RegistryReponse todo
+message RegistryResponse {
+    // @gotags: json:"message"
+string message = 1;
+}
+
+// DescribeEndpointRequest todo
+message DescribeEndpointRequest {
+    // @gotags: json:"id"
+string id = 1;
+}
+
+
+// QueryEndpointRequest 查询应用列表
+message QueryEndpointRequest {
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"service_ids"
+    repeated string service_ids = 2;
+        // @gotags: json:"path"
+    string path = 3;
+        // @gotags: json:"method"
+    string method = 4;
+        // @gotags: json:"function_name"
+    string function_name = 5;
+    // @gotags: json:"resources"
+    repeated string resources = 6;
+    // @gotags: json:"labels"
+    map<string, string> labels = 7;
+    // @gotags: json:"permission_enable"
+    optional bool permission_enable = 8;
+}
+
+// DeleteEndpointRequest todo
+message DeleteEndpointRequest {
+    // @gotags: json:"service_id"
+string service_id = 1;
+}
