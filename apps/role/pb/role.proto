@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package infraboard.mcenter.role;
+option go_package = "github.com/infraboard/mcenter/apps/role";
+
+import "github.com/infraboard/mcube/pb/page/page.proto";
+
+// RPC 角色RPC服务
+service RPC {
+	rpc CreateRole(CreateRoleRequest) returns(Role);
+	rpc QueryRole(QueryRoleRequest) returns(RoleSet);
+	rpc DescribeRole(DescribeRoleRequest) returns(Role);
+	rpc DeleteRole(DeleteRoleRequest) returns(Role);
+}
+
+// RoleType 角色
+enum RoleType {
+    // 内建角色, 系统初始时创建
+    BUILDIN = 0;
+    // 管理员创建的一些角色, 全局可用
+    GLOBAL = 1;
+    // 用户自定义的角色, 仅域内可见
+    CUSTOM = 2;
+}
+
+// Role is rbac's role
+message Role {
+    // 角色ID
+    // @gotags: bson:"_id" json:"id"
+    string id = 1;
+    // 创建时间
+    // @gotags: bson:"create_at" json:"create_at"
+    int64 create_at = 2;
+    // 更新时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 3;
+    // 角色所属域
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 4;
+    // 创建人
+    // @gotags: bson:"creater" json:"creater"
+    string creater = 5;
+    // 角色类型
+    // @gotags: bson:"type" json:"type"
+    RoleType type = 6;
+    // 应用名称
+    // @gotags: bson:"name" json:"name"
+    string name = 7;
+    // 应用简单的描述
+    // @gotags: bson:"description" json:"description"
+    string description =8;
+    // 角色关联的一些额外的meta信息, 比如前端视图
+    // @gotags: bson:"meta" json:"meta"
+    map<string, string> meta =10;
+    // 范围, 角色范围限制, 由策略引擎动态补充
+    // @gotags: bson:"-" json:"scope"
+    string scope = 11;
+}
+
+message RoleSet {
+    // @gotags: bson:"total" json:"total"
+    int64 total = 1;
+    // @gotags: bson:"items" json:"items"
+    repeated Role items = 2;
+}
+
+// CreateRoleRequest 创建角色请求
+message CreateRoleRequest {
+    // 角色类型
+    // @gotags: bson:"type" json:"type"
+    RoleType type = 1;
+    // 角色名称
+    // @gotags: bson:"name" json:"name" validate:"required,lte=30"
+    string name = 2;
+    // 角色描述
+    // @gotags: bson:"description" json:"description" validate:"lte=400"
+    string description =3;
+    // 角色关联的其他信息，比如展示的视图
+    // @gotags: bson:"meta" json:"meta" validate:"lte=400"
+    map<string,string> meta =4;
+    // 所属域
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 5;
+    // 创建者ID
+    // @gotags: bson:"create_by" json:"create_by"
+    string create_by = 6;                  
+}
+
+// QueryRoleRequest 列表查询
+message QueryRoleRequest {
+    // @gotags: json:"page"
+   infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"type"
+    optional RoleType type = 2;
+    // @gotags: json:"domain"
+    string domain = 3;  
+}
+
+// DescribeRoleRequest role详情
+message DescribeRoleRequest {
+    // @gotags: json:"id"
+    string id = 1;
+    // @gotags: json:"name,omitempty" validate:"required,lte=64"
+    string name = 2;
+    // @gotags: bson:"type" json:"type"
+    RoleType type = 4;
+}
+
+// DeleteRoleRequest role删除
+message DeleteRoleRequest {
+    // @gotags: json:"id" validate:"required,lte=64"
+    string id = 1;
+    // @gotags: json:"delete_policy"
+    bool delete_policy = 2;
+}

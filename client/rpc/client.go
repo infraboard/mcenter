@@ -2,13 +2,16 @@ package rpc
 
 import (
 	"github.com/caarlos0/env/v6"
+
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/infraboard/mcenter/apps/instance"
+	"github.com/infraboard/mcenter/apps/permission"
 	"github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcenter/apps/token"
 )
 
 var (
@@ -61,6 +64,7 @@ func NewClient(conf *Config) (*ClientSet, error) {
 	}
 
 	return &ClientSet{
+		conf: conf,
 		conn: conn,
 		log:  log,
 	}, nil
@@ -68,8 +72,13 @@ func NewClient(conf *Config) (*ClientSet, error) {
 
 // Client 客户端
 type ClientSet struct {
+	conf *Config
 	conn *grpc.ClientConn
 	log  logger.Logger
+}
+
+func (c *ClientSet) GetClientID() string {
+	return c.conf.ClientID
 }
 
 // Instance服务的SDK
@@ -79,5 +88,20 @@ func (c *ClientSet) Instance() instance.RPCClient {
 
 // Service服务的SDK
 func (c *ClientSet) Service() service.RPCClient {
+	return service.NewRPCClient(c.conn)
+}
+
+// Token服务的SDK
+func (c *ClientSet) Token() token.RPCClient {
+	return token.NewRPCClient(c.conn)
+}
+
+// Permission服务的SDK
+func (c *ClientSet) Permission() permission.RPCClient {
+	return permission.NewRPCClient(c.conn)
+}
+
+// Service服务的SDK
+func (c *ClientSet) Serivce() service.RPCClient {
 	return service.NewRPCClient(c.conn)
 }

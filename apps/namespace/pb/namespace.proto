@@ -20,15 +20,18 @@ enum Visible {
 
 // Namespace tenant resource container
 message Namespace {
+    // 空间Id
+    // @gotags: bson:"_id" json:"id"
+    string id = 1;
     // 创建时间
     // @gotags: bson:"create_at" json:"create_at"
-    int64 create_at = 1;
+    int64 create_at = 2;
     // 项目修改时间
     // @gotags: bson:"update_at" json:"update_at"
-    int64 update_at = 2;
+    int64 update_at = 3;
     // 空间定义
     // @gotags: bson:"spec" json:"spec"
-    CreateNamespaceRequest spec = 3;
+    CreateNamespaceRequest spec = 4;
 }
 
 message CreateNamespaceRequest {
@@ -78,6 +81,9 @@ message QueryNamespaceRequest {
     // 空间的名称
     // @gotags: json:"name"
     repeated string name = 5;
+    // 该用户加入的空间
+    // @gotags: json:"username"
+    string username  = 6;
 }
 
 // DescriptNamespaceRequest 查询应用详情
