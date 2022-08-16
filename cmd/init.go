@@ -28,6 +28,11 @@ var initCmd = &cobra.Command{
 			return err
 		}
 
+		// 加载缓存
+		if err := loadCache(); err != nil {
+			return err
+		}
+
 		// 初始化全局app
 		if err := app.InitAllApp(); err != nil {
 			return err
