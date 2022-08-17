@@ -12,10 +12,27 @@ var (
 	c *rpc.ClientSet
 )
 
-func TestInstanceQuery(t *testing.T) {
+func TestInstanceSearch(t *testing.T) {
+	req := instance.NewSearchRequest()
 	resp, err := c.Instance().Search(
 		context.Background(),
-		&instance.SearchRequest{},
+		req,
+	)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(resp)
+}
+
+func TestInstanceRegistry(t *testing.T) {
+	req := instance.NewRegistryRequest()
+	req.Name = "test_instance_01"
+	req.Address = "127.0.0.1:1100"
+	resp, err := c.Instance().RegistryInstance(
+		context.Background(),
+		req,
 	)
 
 	if err != nil {

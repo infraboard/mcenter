@@ -115,6 +115,8 @@ func NewRegistryRequest() *RegistryRequest {
 		Group:       DefaultGroup,
 		Tags:        map[string]string{},
 		Build:       &Build{},
+		Provider:    Provider_SDK,
+		Protocal:    Protocal_GRPC,
 	}
 }
 
