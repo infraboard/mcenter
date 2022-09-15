@@ -2,6 +2,7 @@ package impl
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/request"
@@ -19,6 +20,14 @@ func (s *impl) CreateNamespace(ctx context.Context, req *namespace.CreateNamespa
 	ins, err := s.newNamespace(ctx, req)
 	if err != nil {
 		return nil, err
+	}
+
+	if req.ParentId != "" {
+		c, err := s.counter.GetNextSequenceValue(req.ParentId)
+		if err != nil {
+			return nil, err
+		}
+		ins.Id = fmt.Sprintf("%s-%d", req.ParentId, c.Value)
 	}
 
 	if _, err := s.col.InsertOne(context.TODO(), ins); err != nil {
@@ -67,10 +76,10 @@ func (s *impl) QueryNamespace(ctx context.Context, req *namespace.QueryNamespace
 		nss, total := ps.GetNamespaceWithPage(req.Page)
 		r.AddNamespace(nss)
 		set.Total = total
+		return set, nil
 	}
 
 	resp, err := s.col.Find(context.TODO(), r.FindFilter(), r.FindOptions())
-
 	if err != nil {
 		return nil, exception.NewInternalServerError("find namespace error, error is %s", err)
 	}

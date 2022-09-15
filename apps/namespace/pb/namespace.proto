@@ -38,27 +38,30 @@ message CreateNamespaceRequest {
     // 所属域ID
     // @gotags: bson:"domain" json:"domain"
     string domain = 1;
+    // 父Namespace Id
+    // @gotags: bson:"parent_id" json:"parent_id"
+    string parent_id = 2;
     // 空间名称, 不允许修改
     // @gotags: bson:"name" json:"name"
-    string name = 2;
+    string name = 3;
     // 空间负责人
     // @gotags: bson:"owner" json:"owner"
-    string owner = 3;
+    string owner = 4;
     // 禁用项目, 该项目所有人暂时都无法访问
     // @gotags: bson:"enabled" json:"enabled"
-    bool enabled = 4;
+    bool enabled = 5;
     // 项目描述图片
     // @gotags: bson:"picture" json:"picture"
-    string picture =5;
+    string picture =6;
     // 项目描述
     // @gotags: bson:"description" json:"description"
-    string description = 6;
+    string description = 7;
     // 空间可见性, 默认是私有空间
     // @gotags: bson:"visible" json:"visible"
-    Visible visible = 7;
+    Visible visible = 8;
     // 扩展信息
     // @gotags: bson:"meta" json:"meta"
-    map<string,string> meta = 8;
+    map<string,string> meta = 9;
 }
 
 message NamespaceSet {
@@ -80,8 +83,14 @@ message QueryNamespaceRequest {
     string domain = 2;
     // 空间的名称
     // @gotags: json:"name"
-    repeated string name = 5;
-    // 该用户加入的空间
+    repeated string name = 3;
+    // 命名空间的id列表
+    // @gotags: json:"ids"
+    repeated string ids  = 4;
+    // 是否查询子空间
+    // @gotags: json:"with_sub"
+    bool with_sub  = 5;
+    // 用户加入的空间
     // @gotags: json:"username"
     string username  = 6;
 }

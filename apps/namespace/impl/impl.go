@@ -8,6 +8,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 
+	"github.com/infraboard/mcenter/apps/counter"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
@@ -24,8 +25,9 @@ type impl struct {
 	log logger.Logger
 	namespace.UnimplementedRPCServer
 
-	role   role.Service
-	policy policy.Service
+	counter counter.Service
+	role    role.Service
+	policy  policy.Service
 }
 
 func (i *impl) Config() error {
@@ -38,6 +40,7 @@ func (i *impl) Config() error {
 
 	i.role = app.GetInternalApp(role.AppName).(role.Service)
 	i.policy = app.GetInternalApp(policy.AppName).(policy.Service)
+	i.counter = app.GetInternalApp(counter.AppName).(counter.Service)
 	return nil
 }
 
