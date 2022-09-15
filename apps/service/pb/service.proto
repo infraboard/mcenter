@@ -69,9 +69,12 @@ message CreateServiceRequest {
     // 服务描述信息
     // @gotags: bson:"description" json:"description"
     string description = 7;
+    // 服务等级, 默认0
+    // @gotags: bson:"level" json:"level"
+    uint32 level = 8;
     // 仓库地址
     // @gotags: bson:"repository" json:"repository"
-    Repository repository = 8;
+    Repository repository = 9;
     // 服务标签
     // @gotags: bson:"tags" json:"tags"
     map<string, string> tags = 14;
