@@ -14,7 +14,7 @@ var (
 
 func TestInstanceRegistry(t *testing.T) {
 	req := instance.NewRegistryRequest()
-	req.Name = "keyauth"
+	req.Name = "maudit_test_01"
 	req.Address = "127.0.0.1:1100"
 	resp, err := c.Instance().RegistryInstance(
 		context.Background(),
