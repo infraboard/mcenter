@@ -12,23 +12,9 @@ var (
 	c *rpc.ClientSet
 )
 
-func TestInstanceSearch(t *testing.T) {
-	req := instance.NewSearchRequest()
-	resp, err := c.Instance().Search(
-		context.Background(),
-		req,
-	)
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	t.Log(resp)
-}
-
 func TestInstanceRegistry(t *testing.T) {
 	req := instance.NewRegistryRequest()
-	req.Name = "test_instance_01"
+	req.Name = "keyauth"
 	req.Address = "127.0.0.1:1100"
 	resp, err := c.Instance().RegistryInstance(
 		context.Background(),
@@ -40,6 +26,23 @@ func TestInstanceRegistry(t *testing.T) {
 	}
 
 	t.Log(resp)
+}
+
+func TestInstanceSearch(t *testing.T) {
+	req := instance.NewSearchRequest()
+	req.ServiceName = "maudit"
+	resp, err := c.Instance().Search(
+		context.Background(),
+		req,
+	)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for i := range resp.Items {
+		t.Log(resp.Items[i])
+	}
 }
 
 func init() {

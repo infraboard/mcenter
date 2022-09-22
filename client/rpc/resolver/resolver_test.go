@@ -22,7 +22,7 @@ func TestResolver(t *testing.T) {
 	// 连接到服务
 	conn, err := grpc.DialContext(
 		ctx,
-		fmt.Sprintf("%s://%s", resolver.Scheme, "keyauth"), // Dial to "mcenter://keyauth"
+		fmt.Sprintf("%s://%s", resolver.Scheme, "maudit"), // Dial to "mcenter://keyauth"
 		grpc.WithPerRPCCredentials(auth.NewAuthentication(os.Getenv("MCENTER_CLINET_ID"), os.Getenv("MCENTER_CLIENT_SECRET"))),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock(),
