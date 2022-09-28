@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/infraboard/mcenter/apps/scm/gitlab"
+	"github.com/infraboard/mcenter/apps/scm/provider/gitlab"
 	"github.com/stretchr/testify/assert"
 )
 

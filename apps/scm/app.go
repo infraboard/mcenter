@@ -9,6 +9,14 @@ const (
 	AppName = "scm"
 )
 
+type Service interface {
+	RPCServer
+}
+
+func NewQueryProjectRequest() *QueryProjectRequest {
+	return &QueryProjectRequest{}
+}
+
 func NewDefaultWebHookEvent() *WebHookEvent {
 	return &WebHookEvent{
 		Commits: []*Commit{},

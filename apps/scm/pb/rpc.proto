@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package infraboard.mcenter.scm;
+option go_package = "github.com/infraboard/mcenter/apps/scm";
+
+import "apps/scm/pb/scm.proto";
+
+service RPC {
+    // 查询项目列表
+    rpc QueryProject(QueryProjectRequest) returns(ProjectSet);
+    // 应用事件处理
+    rpc HandleEvent(WebHookEvent) returns(WebHookEvent);
+}
+
+
+message QueryProjectRequest {
+    // 仓库类型
+    // @gotags: json:"type" validate:"required"
+    TYPE type = 1;
+    // 仓库地址
+    // @gotags: json:"address" validate:"required"
+    string address = 2;
+    // 仓库访问凭证
+    // @gotags: json:"token" validate:"required"
+    string token = 3;
+}
