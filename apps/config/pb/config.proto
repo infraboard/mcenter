@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package infraboard.mcenter.config;
+option go_package = "github.com/infraboard/mcenter/apps/config";
+
+
+message ConfigSet {
+    // 总数量
+    // @gotags: json:"total"
+    int64 total = 1;
+    // 列表
+    // @gotags: json:"items"
+    repeated Config items = 2;
+}
+
+enum TYPE {
+    // KV格式, 环境变量格式
+    KV = 0;
+    // 文件
+    FILE = 1;
+}
+
+message Config {
+    // 所属域
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 10;
+    // 范围
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 11;
+    // 创建的时间
+    // @gotags: bson:"create_at" json:"create_at"
+    int64 create_at = 1;
+    // 配置版本号
+    // @gotags: bson:"version" json:"version"
+    int64 version = 2;
+    // 配置名称
+    // @gotags: bson:"name" json:"name"
+    string name = 3;
+    // 配置类型
+    // @gotags: bson:"type" json:"type"
+    TYPE type = 4;
+    // kv配置
+    // @gotags: bson:"kv_config" json:"kv_config"
+    KVConfig kv_config = 5;
+    // 文件配置
+    // @gotags: bson:"file_config" json:"file_config"
+    FileConfig file_config = 6;
+}
+
+// 文件格式配置
+message FileConfig {
+    // 文件内容
+    // @gotags: bson:"content" json:"content"
+    string content = 1;
+    // 文件挂载时路径名称
+    // @gotags: bson:"path" json:"path"
+    string path = 2;
+}
+
+// kv格式配置
+message KVConfig {
+    // 具体的配置项
+    // @gotags: bson:"items" json:"items"
+    repeated KVItem items = 1;
+}
+
+// 配置项
+message KVItem {
+    // 创建的时间
+    // @gotags: bson:"create_at" json:"create_at"
+    int64 create_at = 1;
+    // 更新时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 2;
+    // 配置项名称
+    // @gotags: bson:"name" json:"name"
+    string name = 5;
+    // 配置项值
+    // @gotags: bson:"value" json:"value"
+    string value = 6;
+    // 配置项值是否加密
+    // @gotags: bson:"is_encrypt" json:"is_encrypt"
+    bool is_encrypt = 7;
+    // 配置项描述
+    // @gotags: bson:"description" json:"description"
+    string description = 8;
+}
