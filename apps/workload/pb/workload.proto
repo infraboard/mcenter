@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package infraboard.mcenter.workload;
+option go_package = "github.com/infraboard/mcenter/apps/workload";
+
+
+message WorkLoad {
+    // 用户
+    // @gotags: json:"user" validate:"required"
+    string user = 1;
+    // 空间
+    // @gotags: json:"namespace" validate:"required"
+    string namespace = 2;
+    // 年
+    // @gotags: json:"year" validate:"required"
+    int64 year = 3;
+    // 月
+    // @gotags: json:"month" validate:"required"
+    int32 month = 4;
+    // 日
+    // @gotags: json:"day" validate:"required"
+    int32 day = 5;
+    // 开始时间
+    // @gotags: json:"start_houre" validate:"required"
+    int32 start_houre = 6;
+    // 结束时间
+    // @gotags: json:"end_houre" validate:"required"
+    int32 end_houre = 7;
+}

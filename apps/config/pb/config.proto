@@ -20,41 +20,97 @@ enum TYPE {
     FILE = 1;
 }
 
+enum FORMAT {
+    // 纯文本
+    TEXT = 0;
+    // toml
+    TOML = 1;
+    // json
+    JSON = 2;
+    // yaml
+    YAML = 3;
+    // xml
+    XML = 4;
+}
+
+enum STATUS {
+    // 草稿
+    DRAFT = 0;
+    // 已发布
+    PUBLISHED = 1;
+}
+
 message Config {
     // 所属域
     // @gotags: bson:"domain" json:"domain"
-    string domain = 10;
+    string domain = 1;
     // 范围
     // @gotags: bson:"namespace" json:"namespace"
-    string namespace = 11;
+    string namespace = 2;
     // 创建的时间
     // @gotags: bson:"create_at" json:"create_at"
-    int64 create_at = 1;
-    // 配置版本号
-    // @gotags: bson:"version" json:"version"
-    int64 version = 2;
+    int64 create_at = 3;
+    // 更新时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 4;
+    // 更新人
+    // @gotags: bson:"update_by" json:"update_by"
+    string update_by = 5;
+    // 微服务名称
+    // @gotags: bson:"srevice_name" json:"srevice_name"
+    string srevice_name = 6;
+    // 实例所属环境, 默认default
+    // @gotags: bson:"environment" json:"environment" validate:"required"
+    string environment = 7;
+    // 实例所属分组,默认default
+    // @gotags: bson:"group" json:"group" validate:"required"
+    string group = 8;
     // 配置名称
     // @gotags: bson:"name" json:"name"
-    string name = 3;
+    string name = 9;
+    // 配置描述
+    // @gotags: bson:"description" json:"description"
+    string description = 10;
     // 配置类型
     // @gotags: bson:"type" json:"type"
-    TYPE type = 4;
+    TYPE type = 11;
+    // 标签
+    // @gotags: bson:"tags" json:"tags"
+    map<string,string> tags = 12;
+    // 状态
+    // @gotags: bson:"status" json:"status"
+    STATUS status = 13;
+    // 发布时间
+    // @gotags: bson:"publish_at" json:"publish_at"
+    int64 publish_at = 14;
     // kv配置
     // @gotags: bson:"kv_config" json:"kv_config"
-    KVConfig kv_config = 5;
+    KVConfig kv_config = 15;
     // 文件配置
     // @gotags: bson:"file_config" json:"file_config"
-    FileConfig file_config = 6;
+    FileConfig file_config = 16;
 }
 
 // 文件格式配置
 message FileConfig {
+    // 文件内容的格式
+    // @gotags: bson:"format" json:"format"
+    FORMAT format = 1;
     // 文件内容
     // @gotags: bson:"content" json:"content"
-    string content = 1;
-    // 文件挂载时路径名称
+    string content = 2;
+    // 文件挂载时路径名称, 可以下载到程序本地保留
     // @gotags: bson:"path" json:"path"
-    string path = 2;
+    string path = 3;
+    // 文件挂载时的权限, 比如066
+    // @gotags: bson:"mode" json:"mode"
+    string mode = 4;
+    // 配置文件是否加密
+    // @gotags: bson:"is_encrypt" json:"is_encrypt"
+    bool is_encrypt = 5;
+    // 文件内容的hash值
+    // @gotags: bson:"md5_hash" json:"md5_hash"
+    string md5_hash = 6;
 }
 
 // kv格式配置
@@ -72,6 +128,9 @@ message KVItem {
     // 更新时间
     // @gotags: bson:"update_at" json:"update_at"
     int64 update_at = 2;
+    // 更新人
+    // @gotags: bson:"update_by" json:"update_by"
+    string update_by = 3;
     // 配置项名称
     // @gotags: bson:"name" json:"name"
     string name = 5;
