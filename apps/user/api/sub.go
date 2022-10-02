@@ -25,7 +25,7 @@ func (h *sub) Config() error {
 }
 
 func (h *sub) Name() string {
-	return "sub"
+	return "user/sub"
 }
 
 func (h *sub) Version() string {
@@ -33,13 +33,13 @@ func (h *sub) Version() string {
 }
 
 func (h *sub) Registry(ws *restful.WebService) {
-	tags := []string{"user"}
+	tags := []string{"账号管理"}
 
-	ws.Route(ws.PUT("/password").To(h.UpdatePassword).
-		Doc("create a user").
+	ws.Route(ws.POST("/password").To(h.UpdatePassword).
+		Doc("子账号修改自己密码").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Reads(user.CreateUserRequest{}).
-		Writes(response.NewData(user.User{})))
+		Reads(user.UpdatePasswordRequest{}).
+		Returns(0, "OK", &user.User{}))
 }
 
 func (h *sub) UpdatePassword(r *restful.Request, w *restful.Response) {
@@ -50,7 +50,6 @@ func (h *sub) UpdatePassword(r *restful.Request, w *restful.Response) {
 	}
 
 	req.UserId = r.PathParameter("id")
-
 	set, err := h.service.UpdatePassword(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w.ResponseWriter, err)

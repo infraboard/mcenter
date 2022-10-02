@@ -35,20 +35,15 @@ func (h *handler) Version() string {
 }
 
 func (h *handler) Registry(ws *restful.WebService) {
-	tags := []string{h.Name()}
-
-	// rr := router.ResourceRouter("resource")
-	// rr.BasePath("resources")
-	// rr.Handle("GET", "/", h.ListResource)
-
+	tags := []string{"服务功能"}
 	ws.Route(ws.POST("/").To(h.RegistryEndpoint).
-		Doc("registry a service endpoint").
+		Doc("注册服务功能列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(endpoint.RegistryRequest{}).
 		Writes(response.NewData(endpoint.EndpointSet{})))
 
 	ws.Route(ws.GET("/").To(h.QueryEndpoints).
-		Doc("get all endpoints").
+		Doc("查询服务功能列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata("action", "list").
 		Reads(endpoint.QueryEndpointRequest{}).
@@ -56,29 +51,12 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Returns(200, "OK", endpoint.NewEndpointSet()))
 
 	ws.Route(ws.GET("/{id}").To(h.DescribeEndpoint).
-		Doc("get a endpoint").
+		Doc("查询服务功能详情").
 		Param(ws.PathParameter("id", "identifier of the service").DataType("integer").DefaultValue("1")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Writes(response.NewData(endpoint.Endpoint{})).
 		Returns(200, "OK", response.NewData(endpoint.Endpoint{})).
 		Returns(404, "Not Found", nil))
-
-	// ws.Route(ws.PUT("/{id}").To(h.UpdateService).
-	// 	Doc("update a service").
-	// 	Param(ws.PathParameter("id", "identifier of the service").DataType("string")).
-	// 	Metadata(restfulspec.KeyOpenAPITags, tags).
-	// 	Reads(service.CreateServiceRequest{}))
-
-	// ws.Route(ws.PATCH("/{id}").To(h.PatchService).
-	// 	Doc("patch a service").
-	// 	Param(ws.PathParameter("id", "identifier of the service").DataType("string")).
-	// 	Metadata(restfulspec.KeyOpenAPITags, tags).
-	// 	Reads(service.CreateServiceRequest{}))
-
-	// ws.Route(ws.DELETE("/{id}").To(h.DeleteService).
-	// 	Doc("delete a service").
-	// 	Metadata(restfulspec.KeyOpenAPITags, tags).
-	// 	Param(ws.PathParameter("id", "identifier of the service").DataType("string")))
 }
 
 func init() {

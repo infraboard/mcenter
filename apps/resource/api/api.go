@@ -35,10 +35,10 @@ func (h *handler) Version() string {
 }
 
 func (h *handler) Registry(ws *restful.WebService) {
-	tags := []string{h.Name()}
+	tags := []string{"服务功能"}
 
 	ws.Route(ws.GET("/").To(h.QueryResources).
-		Doc("get all resource").
+		Doc("查询服务资源列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata("action", "list").
 		Reads(resource.QueryResourceRequest{}).

@@ -35,10 +35,10 @@ func (h *handler) Version() string {
 }
 
 func (h *handler) Registry(ws *restful.WebService) {
-	tags := []string{h.Name()}
+	tags := []string{"验证码管理"}
 
 	ws.Route(ws.POST("/").To(h.IssueCode).
-		Doc("issue verify code").
+		Doc("颁发验证码").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(code.IssueCodeRequest{}).
 		Writes(response.NewData(code.Code{})))

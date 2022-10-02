@@ -29,7 +29,8 @@ func NewHTTPService() *HTTPService {
 		AllowedHeaders: []string{"*"},
 		AllowedMethods: []string{"*"},
 		CookiesAllowed: false,
-		Container:      r}
+		Container:      r,
+	}
 	r.Filter(cors.Filter)
 
 	server := &http.Server{

@@ -39,7 +39,6 @@ var initCmd = &cobra.Command{
 		}
 
 		apps := NewInitApps()
-		apps.Add("keyauth", "用户中心")
 		apps.Add("maudit", "审计中心")
 		apps.Add("cmdb", "资源中心")
 		log := zap.L().Named("init")

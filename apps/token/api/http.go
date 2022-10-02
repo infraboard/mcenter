@@ -36,16 +36,16 @@ func (h *handler) Version() string {
 }
 
 func (h *handler) Registry(ws *restful.WebService) {
-	tags := []string{"token"}
+	tags := []string{"登录"}
 
 	ws.Route(ws.POST("/").To(h.IssueToken).
-		Doc("issue a token").
+		Doc("颁发令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(domain.CreateDomainRequest{}).
 		Writes(response.NewData(domain.Domain{})))
 
 	ws.Route(ws.DELETE("/").To(h.RevolkToken).
-		Doc("revolk a token").
+		Doc("撤销令牌").
 		Param(ws.PathParameter("id", "identifier of the domain").DataType("integer").DefaultValue("1")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Writes(response.NewData(domain.Domain{})).
@@ -53,7 +53,7 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Returns(404, "Not Found", nil))
 
 	ws.Route(ws.PATCH("/").To(h.ChangeNamespace).
-		Doc("update a domain").
+		Doc("切换空间").
 		Param(ws.PathParameter("id", "identifier of the domain").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(domain.CreateDomainRequest{}))

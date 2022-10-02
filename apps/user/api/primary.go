@@ -25,7 +25,7 @@ func (h *primary) Config() error {
 }
 
 func (h *primary) Name() string {
-	return user.AppName
+	return "user/primary"
 }
 
 func (h *primary) Version() string {
@@ -33,22 +33,22 @@ func (h *primary) Version() string {
 }
 
 func (h *primary) Registry(ws *restful.WebService) {
-	tags := []string{"user"}
+	tags := []string{"子账号管理"}
 
 	ws.Route(ws.POST("/").To(h.CreateUser).
-		Doc("create a user").
+		Doc("创建子账号").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(user.CreateUserRequest{}).
-		Writes(response.NewData(user.User{})))
+		Returns(0, "创建成功", &user.User{}))
 
 	ws.Route(ws.GET("/").To(h.QueryUser).
-		Doc("query a user").
+		Doc("查询子账号列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(user.CreateUserRequest{}).
 		Writes(response.NewData(user.User{})))
 
 	ws.Route(ws.GET("/{id}").To(h.DescribeUser).
-		Doc("get a user").
+		Doc("查询子账号详情").
 		Param(ws.PathParameter("id", "identifier of the user").DataType("integer").DefaultValue("1")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Writes(response.NewData(user.User{})).
@@ -56,19 +56,24 @@ func (h *primary) Registry(ws *restful.WebService) {
 		Returns(404, "Not Found", nil))
 
 	ws.Route(ws.PUT("/{id}").To(h.PutUser).
-		Doc("update a user").
+		Doc("修改子账号").
 		Param(ws.PathParameter("id", "identifier of the user").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(user.CreateUserRequest{}))
 
 	ws.Route(ws.PATCH("/{id}").To(h.PatchUser).
-		Doc("patch a user").
+		Doc("修改子账号").
 		Param(ws.PathParameter("id", "identifier of the user").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(user.CreateUserRequest{}))
 
 	ws.Route(ws.DELETE("/{id}").To(h.DeleteUser).
-		Doc("delete a user").
+		Doc("删除子账号").
+		Param(ws.PathParameter("id", "identifier of the user").DataType("string")).
+		Metadata(restfulspec.KeyOpenAPITags, tags))
+
+	ws.Route(ws.POST("/{id}/password").To(h.ResetPassword).
+		Doc("重置子账号密码").
 		Param(ws.PathParameter("id", "identifier of the user").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags))
 }

@@ -35,16 +35,16 @@ func (h *handler) Version() string {
 }
 
 func (h *handler) Registry(ws *restful.WebService) {
-	tags := []string{h.Name()}
+	tags := []string{"系统设置"}
 
 	ws.Route(ws.POST("/").To(h.UpdateSetting).
-		Doc("update a setting").
+		Doc("更新系统设置").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(setting.Setting{}).
 		Writes(response.NewData(setting.Setting{})))
 
 	ws.Route(ws.GET("/").To(h.GetSetting).
-		Doc("get all setting").
+		Doc("查询系统设置").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata("action", "get").
 		Reads(setting.Setting{}).
