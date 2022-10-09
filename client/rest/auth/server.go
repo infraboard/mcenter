@@ -152,7 +152,7 @@ func (a *HTTPAuther) ValidateIdentity(ctx context.Context, accessToken string) (
 		return nil, exception.NewBadRequest("token required")
 	}
 
-	req := token.NewValidateTokenRequestByAccessToken(accessToken)
+	req := token.NewValidateTokenRequest(accessToken)
 	tk, err := a.client.Token().ValidateToken(ctx, req)
 	if err != nil {
 		return nil, err

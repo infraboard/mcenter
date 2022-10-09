@@ -1,4 +1,4 @@
-package cmd
+package initial
 
 import (
 	"context"
@@ -13,31 +13,11 @@ import (
 )
 
 // initCmd represents the start command
-var initCmd = &cobra.Command{
+var Cmd = &cobra.Command{
 	Use:   "init",
 	Short: "mcenter 服务初始化",
 	Long:  "mcenter 服务初始化",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// 初始化全局变量
-		if err := loadGlobalConfig(confType); err != nil {
-			return err
-		}
-
-		// 初始化全局日志配置
-		if err := loadGlobalLogger(); err != nil {
-			return err
-		}
-
-		// 加载缓存
-		if err := loadCache(); err != nil {
-			return err
-		}
-
-		// 初始化全局app
-		if err := app.InitAllApp(); err != nil {
-			return err
-		}
-
 		apps := NewInitApps()
 		apps.Add("maudit", "审计中心")
 		apps.Add("cmdb", "资源中心")
@@ -78,8 +58,4 @@ func (i *InitApps) Add(name, descrption string) {
 	req.Description = descrption
 	req.Owner = "admin"
 	i.items = append(i.items, req)
-}
-
-func init() {
-	RootCmd.AddCommand(initCmd)
 }

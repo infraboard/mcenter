@@ -33,7 +33,7 @@ func (s *service) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (
 			return nil, err
 		}
 	case code.ISSUE_BY_ACCESS_TOKEN:
-		tk, err := s.token.ValidateToken(ctx, token.NewValidateTokenRequestByAccessToken(req.AccessToken))
+		tk, err := s.token.ValidateToken(ctx, token.NewValidateTokenRequest(req.AccessToken))
 		if err != nil {
 			return nil, err
 		}

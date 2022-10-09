@@ -8,7 +8,6 @@ import (
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
-	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 )
 
@@ -41,22 +40,21 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.IssueToken).
 		Doc("颁发令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Reads(domain.CreateDomainRequest{}).
-		Writes(response.NewData(domain.Domain{})))
+		Reads(token.IssueTokenRequest{}).
+		Writes(response.NewData(token.Token{})).
+		Returns(200, "OK", token.Token{}))
 
 	ws.Route(ws.DELETE("/").To(h.RevolkToken).
 		Doc("撤销令牌").
-		Param(ws.PathParameter("id", "identifier of the domain").DataType("integer").DefaultValue("1")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Writes(response.NewData(domain.Domain{})).
-		Returns(200, "OK", response.NewData(domain.Domain{})).
+		Writes(response.NewData(token.Token{})).
+		Returns(200, "OK", response.NewData(token.Token{})).
 		Returns(404, "Not Found", nil))
 
 	ws.Route(ws.PATCH("/").To(h.ChangeNamespace).
 		Doc("切换空间").
-		Param(ws.PathParameter("id", "identifier of the domain").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Reads(domain.CreateDomainRequest{}))
+		Reads(token.ChangeNamespaceRequest{}))
 }
 
 func init() {
