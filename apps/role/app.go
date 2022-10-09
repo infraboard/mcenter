@@ -76,24 +76,19 @@ func New(req *CreateRoleRequest) (*Role, error) {
 	}
 
 	r := &Role{
-		Id:          xid.New().String(),
-		CreateAt:    ftime.Now().Timestamp(),
-		UpdateAt:    ftime.Now().Timestamp(),
-		Domain:      req.Domain,
-		Creater:     req.CreateBy,
-		Type:        req.Type,
-		Name:        req.Name,
-		Meta:        req.Meta,
-		Description: req.Description,
+		Id:       xid.New().String(),
+		CreateAt: ftime.Now().Timestamp(),
+		UpdateAt: ftime.Now().Timestamp(),
+		Spec:     req,
 	}
 	return r, nil
 }
 
 // NewDefaultRole 默认实例
 func NewDefaultRole() *Role {
+	spec := NewCreateRoleRequest()
 	return &Role{
-		Type: RoleType_CUSTOM,
-		Meta: map[string]string{},
+		Spec: spec,
 	}
 }
 
@@ -101,6 +96,7 @@ func NewDefaultRole() *Role {
 func NewCreateRoleRequest() *CreateRoleRequest {
 	return &CreateRoleRequest{
 		Type: RoleType_CUSTOM,
+		Meta: map[string]string{},
 	}
 }
 
@@ -139,7 +135,7 @@ func (s *RoleSet) Len() int {
 func (s *RoleSet) RoleNames() []string {
 	set := []string{}
 	for i := range s.Items {
-		set = append(set, s.Items[i].Name)
+		set = append(set, s.Items[i].Spec.Name)
 
 	}
 

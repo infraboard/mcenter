@@ -21,7 +21,7 @@ func (s *impl) CreateRole(ctx context.Context, req *role.CreateRoleRequest) (*ro
 
 	if _, err := s.col.InsertOne(ctx, r); err != nil {
 		return nil, exception.NewInternalServerError("inserted role(%s) document error, %s",
-			r.Name, err)
+			r.Spec.Name, err)
 	}
 	return r, nil
 }
@@ -82,7 +82,7 @@ func (s *impl) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest) (*ro
 		return nil, err
 	}
 
-	if r.Type.Equal(role.RoleType_BUILDIN) {
+	if r.Spec.Type.Equal(role.RoleType_BUILDIN) {
 		return nil, fmt.Errorf("build_in role can't be delete")
 	}
 

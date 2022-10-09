@@ -34,27 +34,12 @@ message Role {
     // 更新时间
     // @gotags: bson:"update_at" json:"update_at"
     int64 update_at = 3;
-    // 角色所属域
-    // @gotags: bson:"domain" json:"domain"
-    string domain = 4;
-    // 创建人
-    // @gotags: bson:"creater" json:"creater"
-    string creater = 5;
-    // 角色类型
-    // @gotags: bson:"type" json:"type"
-    RoleType type = 6;
-    // 应用名称
-    // @gotags: bson:"name" json:"name"
-    string name = 7;
-    // 应用简单的描述
-    // @gotags: bson:"description" json:"description"
-    string description =8;
-    // 角色关联的一些额外的meta信息, 比如前端视图
-    // @gotags: bson:"meta" json:"meta"
-    map<string, string> meta =10;
     // 范围, 角色范围限制, 由策略引擎动态补充
     // @gotags: bson:"-" json:"scope"
-    string scope = 11;
+    string scope = 4;
+    // 角色描述信息
+    // @gotags: bson:"spec" json:"spec"
+    CreateRoleRequest spec = 5;
 }
 
 message RoleSet {
