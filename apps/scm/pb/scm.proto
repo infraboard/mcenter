@@ -3,7 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.scm;
 option go_package = "github.com/infraboard/mcenter/apps/scm";
 
-enum TYPE {
+enum PROVIDER {
     // gitlab 代码仓库
     GITLAB = 0;
     // github 代码仓库

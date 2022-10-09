@@ -15,8 +15,8 @@ service RPC {
 
 message QueryProjectRequest {
     // 仓库类型
-    // @gotags: json:"type" validate:"required"
-    TYPE type = 1;
+    // @gotags: json:"provider" validate:"required"
+    PROVIDER provider = 1;
     // 仓库地址
     // @gotags: json:"address" validate:"required"
     string address = 2;

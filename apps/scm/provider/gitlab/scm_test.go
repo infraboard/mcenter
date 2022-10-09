@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/infraboard/mcenter/apps/scm/provider"
 	"github.com/infraboard/mcenter/apps/scm/provider/gitlab"
 	"github.com/stretchr/testify/assert"
 )
@@ -30,14 +31,14 @@ func TestAddProjectHook(t *testing.T) {
 
 	repo := gitlab.NewSCM(GitLabAddr, PraviateToken)
 
-	hook := &gitlab.WebHook{
+	hook := &provider.WebHook{
 		PushEvents:          true,
 		TagPushEvents:       true,
 		MergeRequestsEvents: true,
 		Token:               "9999",
 		Url:                 "http://www.baidu.com",
 	}
-	req := gitlab.NewAddProjectHookRequest(ProjectID, hook)
+	req := provider.NewAddProjectHookRequest(ProjectID, hook)
 	ins, err := repo.AddProjectHook(req)
 	should.NoError(err)
 	fmt.Println(ins)
@@ -48,7 +49,7 @@ func TestDeleteProjectHook(t *testing.T) {
 
 	repo := gitlab.NewSCM(GitLabAddr, PraviateToken)
 
-	req := gitlab.NewDeleteProjectReqeust(ProjectID, 8439846)
+	req := provider.NewDeleteProjectReqeust(ProjectID, 8439846)
 	err := repo.DeleteProjectHook(req)
 	should.NoError(err)
 }

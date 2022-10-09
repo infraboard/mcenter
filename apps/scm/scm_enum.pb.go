@@ -9,24 +9,24 @@ import (
 	"strings"
 )
 
-// ParseTYPEFromString Parse TYPE from string
-func ParseTYPEFromString(str string) (TYPE, error) {
+// ParsePROVIDERFromString Parse PROVIDER from string
+func ParsePROVIDERFromString(str string) (PROVIDER, error) {
 	key := strings.Trim(string(str), `"`)
-	v, ok := TYPE_value[strings.ToUpper(key)]
+	v, ok := PROVIDER_value[strings.ToUpper(key)]
 	if !ok {
-		return 0, fmt.Errorf("unknown TYPE: %s", str)
+		return 0, fmt.Errorf("unknown PROVIDER: %s", str)
 	}
 
-	return TYPE(v), nil
+	return PROVIDER(v), nil
 }
 
 // Equal type compare
-func (t TYPE) Equal(target TYPE) bool {
+func (t PROVIDER) Equal(target PROVIDER) bool {
 	return t == target
 }
 
 // IsIn todo
-func (t TYPE) IsIn(targets ...TYPE) bool {
+func (t PROVIDER) IsIn(targets ...PROVIDER) bool {
 	for _, target := range targets {
 		if t.Equal(target) {
 			return true
@@ -37,7 +37,7 @@ func (t TYPE) IsIn(targets ...TYPE) bool {
 }
 
 // MarshalJSON todo
-func (t TYPE) MarshalJSON() ([]byte, error) {
+func (t PROVIDER) MarshalJSON() ([]byte, error) {
 	b := bytes.NewBufferString(`"`)
 	b.WriteString(strings.ToUpper(t.String()))
 	b.WriteString(`"`)
@@ -45,8 +45,8 @@ func (t TYPE) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON todo
-func (t *TYPE) UnmarshalJSON(b []byte) error {
-	ins, err := ParseTYPEFromString(string(b))
+func (t *PROVIDER) UnmarshalJSON(b []byte) error {
+	ins, err := ParsePROVIDERFromString(string(b))
 	if err != nil {
 		return err
 	}
