@@ -12,6 +12,29 @@ var (
 	m = make(map[token.GRANT_TYPE]Issuer)
 )
 
+// 令牌颁发器
+type Issuer interface {
+	Init() error
+	GrantType() token.GRANT_TYPE
+	TokenIssuer
+}
+
+type TokenIssuer interface {
+	IssueToken(context.Context, *token.IssueTokenRequest) (*token.Token, error)
+}
+
+// 注册令牌颁发器
+func Registe(i Issuer) {
+	m[i.GrantType()] = i
+}
+
+func Get(gt token.GRANT_TYPE) TokenIssuer {
+	if v, ok := m[gt]; ok {
+		return v
+	}
+	return nil
+}
+
 func Init() error {
 	for k, v := range m {
 		if err := v.Init(); err != nil {
@@ -20,23 +43,4 @@ func Init() error {
 	}
 
 	return nil
-}
-
-// 注册令牌颁发器
-func Registe(i Issuer) {
-	m[i.GrantType()] = i
-}
-
-func Get(gt token.GRANT_TYPE) Issuer {
-	if v, ok := m[gt]; ok {
-		return v
-	}
-	return nil
-}
-
-// 令牌颁发器
-type Issuer interface {
-	Init() error
-	GrantType() token.GRANT_TYPE
-	IssueToken(context.Context, *token.IssueTokenRequest) (*token.Token, error)
 }

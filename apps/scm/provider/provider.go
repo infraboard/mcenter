@@ -3,20 +3,7 @@ package provider
 import (
 	"fmt"
 	"net/url"
-
-	"github.com/infraboard/mcenter/apps/scm"
 )
-
-var (
-	// m is a map from scheme to issuer.
-	m = make(map[scm.PROVIDER]Operator)
-)
-
-type Operator interface {
-	ListProjects() (*scm.ProjectSet, error)
-	AddProjectHook(*AddProjectHookRequest) (*AddProjectHookResponse, error)
-	DeleteProjectHook(*DeleteProjectReqeust) error
-}
 
 type WebHook struct {
 	PushEventsBranchFilter   string `json:"push_events_branch_filter"`
