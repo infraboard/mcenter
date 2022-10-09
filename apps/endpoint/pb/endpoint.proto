@@ -4,7 +4,6 @@ package infraboard.mcenter.endpoint;
 option go_package = "github.com/infraboard/mcenter/apps/endpoint";
 
 import "github.com/infraboard/mcube/pb/page/page.proto";
-import "github.com/infraboard/mcube/pb/http/entry.proto";
 
 // RPC endpoint管理
 service RPC {
@@ -33,7 +32,44 @@ message Endpoint {
     string version = 5;
     // 路由条目信息
     // @gotags: bson:"entry" json:"entry" validate:"required"
-    mcube.http.Entry entry = 6;
+    Entry entry = 6;
+}
+
+// Entry 路由条目
+message Entry {
+    // 函数名称
+    // @gotags: bson:"function_name" json:"function_name"
+    string function_name = 2;
+    // HTTP path 用于自动生成http api
+    // @gotags: bson:"path" json:"path"
+    string path = 3;
+    // HTTP method 用于自动生成http api
+    // @gotags: bson:"method" json:"method"
+    string method = 4;
+    // 资源名称
+    // @gotags: bson:"resource" json:"resource"
+    string resource = 5;
+    // 是否校验用户身份 (acccess_token)
+    // @gotags: bson:"auth_enable" json:"auth_enable"
+    bool auth_enable = 6;
+    // 是否校验用户权限
+    // @gotags: bson:"permission_enable" json:"permission_enable"
+    bool permission_enable = 7;
+    // 允许的通过的身份标识符, 比如角色, 用户类型之类
+    // @gotags: bson:"allow" json:"allow"
+    repeated string allow = 12;
+    // 是否开启操作审计, 开启后这次操作将被记录
+    // @gotags: bson:"audit_log" json:"audit_log"
+    bool audit_log = 9;
+    // 名称空间不能为空
+    // @gotags: bson:"required_namespace" json:"required_namespace"
+    bool required_namespace = 10;
+    // 标签
+    // @gotags: bson:"labels" json:"labels"
+    map<string, string> labels = 8;
+    // 扩展属性
+    // @gotags: bson:"extension" json:"extension"
+    map<string, string> extension = 11;        
 }
 
 message EndpointSet {
@@ -51,9 +87,9 @@ message RegistryRequest {
     // @gotags: json:"client_secret" validate:"required"
     string client_secret = 2;
     // @gotags: json:"version" validate:"required,lte=32"
-string version = 3;
+    string version = 3;
      // @gotags: json:"entries"
-repeated infraboard.mcube.http.Entry entries = 4;
+    repeated Entry entries = 4;
 }
 
 // RegistryReponse todo

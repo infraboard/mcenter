@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/http/request"
-	httpb "github.com/infraboard/mcube/pb/http"
 	"github.com/infraboard/mcube/types/ftime"
 )
 
@@ -22,7 +21,7 @@ func NewDefaultEndpoint() *Endpoint {
 }
 
 // NewEndpoint todo
-func NewEndpoint(serviceID, version string, entry httpb.Entry) *Endpoint {
+func NewEndpoint(serviceID, version string, entry Entry) *Endpoint {
 	return &Endpoint{
 		Id:        GenHashID(serviceID, entry.Path),
 		CreateAt:  ftime.Now().Timestamp(),
@@ -81,7 +80,7 @@ var (
 )
 
 // NewRegistryRequest 注册请求
-func NewRegistryRequest(version string, entries []*httpb.Entry) *RegistryRequest {
+func NewRegistryRequest(version string, entries []*Entry) *RegistryRequest {
 	return &RegistryRequest{
 		Version: version,
 		Entries: entries,
@@ -91,7 +90,7 @@ func NewRegistryRequest(version string, entries []*httpb.Entry) *RegistryRequest
 // NewDefaultRegistryRequest todo
 func NewDefaultRegistryRequest() *RegistryRequest {
 	return &RegistryRequest{
-		Entries: []*httpb.Entry{},
+		Entries: []*Entry{},
 	}
 }
 
