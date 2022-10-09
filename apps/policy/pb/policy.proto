@@ -3,10 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.policy;
 option go_package = "github.com/infraboard/mcenter/apps/policy";
 
-import "apps/user/pb/user.proto";
 import "apps/role/pb/role.proto";
 import "github.com/infraboard/mcube/pb/page/page.proto";
-
 
 // RPC 策略服务
 service RPC {
@@ -34,33 +32,9 @@ message Policy {
     // 更新时间
     // @gotags: bson:"update_at" json:"update_at"
     int64 update_at = 3;
-    // 策略所属域
-    // @gotags: bson:"domain" json:"domain"
-    string domain = 4;
-    // 创建者ID
-    // @gotags: bson:"creater" json:"creater"
-    string creater = 5;
-    // 用户类型
-    // @gotags: bson:"user_type" json:"user_type"
-    user.TYPE user_type = 6;
-    // 范围
-    // @gotags: bson:"namespace" json:"namespace"
-    string namespace = 7;
-    // 用户
-    // @gotags: bson:"username" json:"username"
-    string username = 8;
-    // 角色名称
-    // @gotags: bson:"role_id" json:"role_id"
-    string role_id = 9;
-    // 范围控制
-    // @gotags: bson:"scope" json:"scope"
-    string scope = 10;
-    // 策略过期时间
-    // @gotags: bson:"expired_time" json:"expired_time"
-    int64 expired_time = 11;
-    // 策略的类型
-    // @gotags: bson:"type" json:"type"
-    PolicyType type = 12;  
+    // 策略定义
+    // @gotags: bson:"sepc" json:"spec"
+    CreatePolicyRequest spec = 4;
     // 关联的角色对象
     // @gotags: bson:"-" json:"role,omitempty"
     role.Role role = 13;
@@ -75,30 +49,33 @@ message PolicySet {
 
 // CreatePolicyRequest 创建策略的请求
 message CreatePolicyRequest {
-    // 范围
-    // @gotags: bson:"namespace" json:"namespace" validate:"lte=120"
-    string namespace = 1;
-    // 用户
-    // @gotags: bson:"username" json:"username" validate:"required,lte=120"
-    string username = 2;
-    // 角色名称
-    // @gotags: bson:"role_id" json:"role_id" validate:"required,lte=40"
-    string role_id = 3;
-    // 范围控制
-    // @gotags: bson:"scope" json:"scope"
-    string scope = 4;
-    // 策略过期时间
-    // @gotags: bson:"expired_time" json:"expired_time"
-    int64 expired_time = 5;
-    // 策略的类型
-    // @gotags: bson:"type" json:"type"
-    PolicyType type = 6;  
+    // 创建者
+    // @gotags: bson:"create_by" json:"create_by"
+    string create_by = 1;  
     // 策略所属域
     // @gotags: bson:"domain" json:"domain"
-    string domain = 7;
-    // 创建者ID
-    // @gotags: bson:"creater" json:"creater"
-    string creater = 8;                                 
+    string domain = 2;
+    // 范围
+    // @gotags: bson:"namespace" json:"namespace" validate:"lte=120"
+    string namespace = 3;
+    // 角色名称
+    // @gotags: bson:"group" json:"group"
+    string group = 4;
+    // 范围控制
+    // @gotags: bson:"scope" json:"scope"
+    string scope = 5;
+    // 用户
+    // @gotags: bson:"username" json:"username" validate:"required,lte=120"
+    string username = 6;
+    // 角色名称
+    // @gotags: bson:"role_id" json:"role_id" validate:"required,lte=40"
+    string role_id = 7;
+    // 策略过期时间
+    // @gotags: bson:"expired_time" json:"expired_time"
+    int64 expired_time = 8;
+    // 策略的类型
+    // @gotags: bson:"type" json:"type"
+    PolicyType type = 9;        
 }
 
 // QueryPolicyRequest 获取子账号列表

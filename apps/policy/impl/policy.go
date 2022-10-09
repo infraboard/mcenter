@@ -24,7 +24,7 @@ func (s *impl) CreatePolicy(ctx context.Context, req *policy.CreatePolicyRequest
 	if err != nil {
 		return nil, err
 	}
-	ins.UserType = u.Spec.Type
+	s.log.Debugf("user: %s", u.Spec.Username)
 
 	if _, err := s.col.InsertOne(context.TODO(), ins); err != nil {
 		return nil, exception.NewInternalServerError("inserted policy(%s) document error, %s",
@@ -36,18 +36,18 @@ func (s *impl) CreatePolicy(ctx context.Context, req *policy.CreatePolicyRequest
 
 // CheckDependence todo
 func (i *impl) CheckDependence(ctx context.Context, p *policy.Policy) (*user.User, error) {
-	account, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(p.Username))
+	account, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(p.Spec.Username))
 	if err != nil {
 		return nil, fmt.Errorf("check user error, %s", err)
 	}
 
-	_, err = i.role.DescribeRole(ctx, role.NewDescribeRoleRequestWithID(p.RoleId))
+	_, err = i.role.DescribeRole(ctx, role.NewDescribeRoleRequestWithID(p.Spec.RoleId))
 	if err != nil {
 		return nil, fmt.Errorf("check role error, %s", err)
 	}
 
 	if !p.IsAllNamespace() {
-		_, err = i.namespace.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(p.Domain, p.Namespace))
+		_, err = i.namespace.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(p.Spec.Domain, p.Spec.Namespace))
 		if err != nil {
 			return nil, fmt.Errorf("check namespace error, %s", err)
 		}
@@ -86,7 +86,7 @@ func (s *impl) QueryPolicy(ctx context.Context, req *policy.QueryPolicyRequest) 
 
 		// 补充关联的角色信息
 		if req.WithRole {
-			descRole := role.NewDescribeRoleRequestWithID(ins.RoleId)
+			descRole := role.NewDescribeRoleRequestWithID(ins.Spec.RoleId)
 			ins.Role, err = s.role.DescribeRole(ctx, descRole)
 			if err != nil {
 				return nil, err

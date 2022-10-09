@@ -21,14 +21,14 @@ func NewDefaultEndpoint() *Endpoint {
 }
 
 // NewEndpoint todo
-func NewEndpoint(serviceID, version string, entry Entry) *Endpoint {
+func NewEndpoint(serviceID, version string, entry *Entry) *Endpoint {
 	return &Endpoint{
 		Id:        GenHashID(serviceID, entry.Path),
 		CreateAt:  ftime.Now().Timestamp(),
 		UpdateAt:  ftime.Now().Timestamp(),
 		ServiceId: serviceID,
 		Version:   version,
-		Entry:     &entry,
+		Entry:     entry,
 	}
 }
 

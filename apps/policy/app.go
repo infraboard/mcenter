@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"hash/fnv"
 	"strings"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/types/ftime"
 
 	"github.com/infraboard/mcenter/apps/role"
 )
@@ -29,16 +29,9 @@ func New(req *CreatePolicyRequest) (*Policy, error) {
 	}
 
 	p := &Policy{
-		CreateAt:    ftime.Now().Timestamp(),
-		UpdateAt:    ftime.Now().Timestamp(),
-		Creater:     req.Creater,
-		Domain:      req.Domain,
-		Namespace:   req.Namespace,
-		Username:    req.Username,
-		RoleId:      req.RoleId,
-		Scope:       req.Scope,
-		ExpiredTime: req.ExpiredTime,
-		Type:        req.Type,
+		CreateAt: time.Now().UnixMilli(),
+		UpdateAt: time.Now().UnixMilli(),
+		Spec:     req,
 	}
 	p.genID()
 
@@ -53,7 +46,7 @@ func NewDefaultPolicy() *Policy {
 func (p *Policy) genID() {
 	h := fnv.New32a()
 	hashedStr := fmt.Sprintf("%s-%s-%s-%s",
-		p.Domain, p.Namespace, p.Username, p.RoleId)
+		p.Spec.Domain, p.Spec.Namespace, p.Spec.Username, p.Spec.RoleId)
 
 	h.Write([]byte(hashedStr))
 	p.Id = fmt.Sprintf("%x", h.Sum32())
@@ -61,7 +54,7 @@ func (p *Policy) genID() {
 
 // IsAllNamespace 是否是对账所有namespace的测试
 func (p *Policy) IsAllNamespace() bool {
-	return p.Namespace == "*"
+	return p.Spec.Namespace == "*"
 }
 
 // NewCreatePolicyRequest 请求实例
@@ -85,7 +78,7 @@ func NewPolicySet() *PolicySet {
 func (s *PolicySet) Users() []string {
 	users := map[string]struct{}{}
 	for i := range s.Items {
-		users[s.Items[i].Username] = struct{}{}
+		users[s.Items[i].Spec.Username] = struct{}{}
 	}
 
 	set := make([]string, 0, len(users))
@@ -110,14 +103,14 @@ func (s *PolicySet) Length() int {
 func (s *PolicySet) GetRoles(ctx context.Context, r role.Service, withPermission bool) (*role.RoleSet, error) {
 	set := role.NewRoleSet()
 	for i := range s.Items {
-		req := role.NewDescribeRoleRequestWithID(s.Items[i].RoleId)
+		req := role.NewDescribeRoleRequestWithID(s.Items[i].Spec.RoleId)
 
 		ins, err := r.DescribeRole(ctx, req)
 		if err != nil {
 			return nil, err
 		}
 		// 继承policy上的范围限制
-		ins.Scope = s.Items[i].Scope
+		ins.Scope = s.Items[i].Spec.Scope
 		set.Add(ins)
 	}
 	return set, nil
@@ -128,8 +121,8 @@ func (s *PolicySet) UserRoles(username string) []string {
 	rns := []string{}
 	for i := range s.Items {
 		item := s.Items[i]
-		if item.Username == username {
-			rns = append(rns, item.RoleId)
+		if item.Spec.Username == username {
+			rns = append(rns, item.Spec.RoleId)
 		}
 	}
 
@@ -145,8 +138,8 @@ func (s *PolicySet) GetScope(username string) string {
 	scopes := []string{}
 	for i := range s.Items {
 		item := s.Items[i]
-		if item.Username == username {
-			scopes = append(scopes, item.Scope)
+		if item.Spec.Username == username {
+			scopes = append(scopes, item.Spec.Scope)
 		}
 	}
 	return strings.Join(scopes, " ")
@@ -155,7 +148,7 @@ func (s *PolicySet) GetScope(username string) string {
 func (s *PolicySet) GetNamespace() (nss []string) {
 	nmap := map[string]struct{}{}
 	for i := range s.Items {
-		nmap[s.Items[i].Namespace] = struct{}{}
+		nmap[s.Items[i].Spec.Namespace] = struct{}{}
 	}
 
 	for k := range nmap {
@@ -169,11 +162,11 @@ func (s *PolicySet) GetNamespaceWithPage(page *request.PageRequest) (nss []strin
 	nmap := map[string]struct{}{}
 	for i := range s.Items {
 		// 如果policy的namespace为* , 表示所有namespace
-		if s.Items[i].Namespace == "*" {
+		if s.Items[i].Spec.Namespace == "*" {
 			return []string{}, 0
 		}
 
-		nmap[s.Items[i].Namespace] = struct{}{}
+		nmap[s.Items[i].Spec.Namespace] = struct{}{}
 	}
 
 	offset := page.PageSize*page.PageNumber - 1
