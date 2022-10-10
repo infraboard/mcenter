@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/permission"
 	"github.com/infraboard/mcenter/apps/service"
@@ -104,4 +105,9 @@ func (c *ClientSet) Permission() permission.RPCClient {
 // Service服务的SDK
 func (c *ClientSet) Serivce() service.RPCClient {
 	return service.NewRPCClient(c.conn)
+}
+
+// Service服务的SDK
+func (c *ClientSet) Endpoint() endpoint.RPCClient {
+	return endpoint.NewRPCClient(c.conn)
 }

@@ -25,7 +25,6 @@ type RPCClient interface {
 	DescribeEndpoint(ctx context.Context, in *DescribeEndpointRequest, opts ...grpc.CallOption) (*Endpoint, error)
 	QueryEndpoints(ctx context.Context, in *QueryEndpointRequest, opts ...grpc.CallOption) (*EndpointSet, error)
 	RegistryEndpoint(ctx context.Context, in *RegistryRequest, opts ...grpc.CallOption) (*RegistryResponse, error)
-	DeleteEndpoint(ctx context.Context, in *DeleteEndpointRequest, opts ...grpc.CallOption) (*Endpoint, error)
 }
 
 type rPCClient struct {
@@ -63,15 +62,6 @@ func (c *rPCClient) RegistryEndpoint(ctx context.Context, in *RegistryRequest, o
 	return out, nil
 }
 
-func (c *rPCClient) DeleteEndpoint(ctx context.Context, in *DeleteEndpointRequest, opts ...grpc.CallOption) (*Endpoint, error) {
-	out := new(Endpoint)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.endpoint.RPC/DeleteEndpoint", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // RPCServer is the server API for RPC service.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
@@ -79,7 +69,6 @@ type RPCServer interface {
 	DescribeEndpoint(context.Context, *DescribeEndpointRequest) (*Endpoint, error)
 	QueryEndpoints(context.Context, *QueryEndpointRequest) (*EndpointSet, error)
 	RegistryEndpoint(context.Context, *RegistryRequest) (*RegistryResponse, error)
-	DeleteEndpoint(context.Context, *DeleteEndpointRequest) (*Endpoint, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -95,9 +84,6 @@ func (UnimplementedRPCServer) QueryEndpoints(context.Context, *QueryEndpointRequ
 }
 func (UnimplementedRPCServer) RegistryEndpoint(context.Context, *RegistryRequest) (*RegistryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegistryEndpoint not implemented")
-}
-func (UnimplementedRPCServer) DeleteEndpoint(context.Context, *DeleteEndpointRequest) (*Endpoint, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteEndpoint not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -166,24 +152,6 @@ func _RPC_RegistryEndpoint_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RPC_DeleteEndpoint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteEndpointRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).DeleteEndpoint(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.endpoint.RPC/DeleteEndpoint",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).DeleteEndpoint(ctx, req.(*DeleteEndpointRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -202,10 +170,6 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegistryEndpoint",
 			Handler:    _RPC_RegistryEndpoint_Handler,
-		},
-		{
-			MethodName: "DeleteEndpoint",
-			Handler:    _RPC_DeleteEndpoint_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

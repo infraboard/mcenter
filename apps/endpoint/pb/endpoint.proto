@@ -10,7 +10,6 @@ service RPC {
 	rpc DescribeEndpoint(DescribeEndpointRequest) returns(Endpoint);
 	rpc QueryEndpoints(QueryEndpointRequest) returns(EndpointSet);
 	rpc RegistryEndpoint(RegistryRequest) returns(RegistryResponse);
-	rpc DeleteEndpoint(DeleteEndpointRequest) returns(Endpoint);
 }
 
 // Endpoint Service's features
