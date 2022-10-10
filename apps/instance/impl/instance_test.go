@@ -14,7 +14,7 @@ import (
 	"github.com/infraboard/mcenter/conf"
 
 	// 注册所有服务
-	_ "github.com/infraboard/mcenter/apps/all"
+	_ "github.com/infraboard/mcenter/apps"
 )
 
 var (

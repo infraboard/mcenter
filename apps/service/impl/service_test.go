@@ -9,7 +9,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 
 	// 注册所有服务
-	_ "github.com/infraboard/mcenter/apps/all"
+	_ "github.com/infraboard/mcenter/apps"
 	"github.com/infraboard/mcenter/apps/service"
 )
 

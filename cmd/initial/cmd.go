@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 
 	// 注册所有服务
-	_ "github.com/infraboard/mcenter/apps/all"
+	_ "github.com/infraboard/mcenter/apps"
 	meta "github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/logger/zap"
