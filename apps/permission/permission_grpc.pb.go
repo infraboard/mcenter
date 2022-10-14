@@ -24,9 +24,6 @@ const _ = grpc.SupportPackageIsVersion7
 type RPCClient interface {
 	QueryPermission(ctx context.Context, in *QueryPermissionRequest, opts ...grpc.CallOption) (*PermissionSet, error)
 	DescribePermission(ctx context.Context, in *DescribePermissionRequest, opts ...grpc.CallOption) (*Permission, error)
-	AddPermissionToRole(ctx context.Context, in *AddPermissionToRoleRequest, opts ...grpc.CallOption) (*PermissionSet, error)
-	RemovePermissionFromRole(ctx context.Context, in *RemovePermissionFromRoleRequest, opts ...grpc.CallOption) (*PermissionSet, error)
-	UpdatePermission(ctx context.Context, in *UpdatePermissionRequest, opts ...grpc.CallOption) (*Permission, error)
 	CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*Permission, error)
 }
 
@@ -56,33 +53,6 @@ func (c *rPCClient) DescribePermission(ctx context.Context, in *DescribePermissi
 	return out, nil
 }
 
-func (c *rPCClient) AddPermissionToRole(ctx context.Context, in *AddPermissionToRoleRequest, opts ...grpc.CallOption) (*PermissionSet, error) {
-	out := new(PermissionSet)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.permission.RPC/AddPermissionToRole", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPCClient) RemovePermissionFromRole(ctx context.Context, in *RemovePermissionFromRoleRequest, opts ...grpc.CallOption) (*PermissionSet, error) {
-	out := new(PermissionSet)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.permission.RPC/RemovePermissionFromRole", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPCClient) UpdatePermission(ctx context.Context, in *UpdatePermissionRequest, opts ...grpc.CallOption) (*Permission, error) {
-	out := new(Permission)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.permission.RPC/UpdatePermission", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *rPCClient) CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*Permission, error) {
 	out := new(Permission)
 	err := c.cc.Invoke(ctx, "/infraboard.mcenter.permission.RPC/CheckPermission", in, out, opts...)
@@ -98,9 +68,6 @@ func (c *rPCClient) CheckPermission(ctx context.Context, in *CheckPermissionRequ
 type RPCServer interface {
 	QueryPermission(context.Context, *QueryPermissionRequest) (*PermissionSet, error)
 	DescribePermission(context.Context, *DescribePermissionRequest) (*Permission, error)
-	AddPermissionToRole(context.Context, *AddPermissionToRoleRequest) (*PermissionSet, error)
-	RemovePermissionFromRole(context.Context, *RemovePermissionFromRoleRequest) (*PermissionSet, error)
-	UpdatePermission(context.Context, *UpdatePermissionRequest) (*Permission, error)
 	CheckPermission(context.Context, *CheckPermissionRequest) (*Permission, error)
 	mustEmbedUnimplementedRPCServer()
 }
@@ -114,15 +81,6 @@ func (UnimplementedRPCServer) QueryPermission(context.Context, *QueryPermissionR
 }
 func (UnimplementedRPCServer) DescribePermission(context.Context, *DescribePermissionRequest) (*Permission, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DescribePermission not implemented")
-}
-func (UnimplementedRPCServer) AddPermissionToRole(context.Context, *AddPermissionToRoleRequest) (*PermissionSet, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddPermissionToRole not implemented")
-}
-func (UnimplementedRPCServer) RemovePermissionFromRole(context.Context, *RemovePermissionFromRoleRequest) (*PermissionSet, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RemovePermissionFromRole not implemented")
-}
-func (UnimplementedRPCServer) UpdatePermission(context.Context, *UpdatePermissionRequest) (*Permission, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePermission not implemented")
 }
 func (UnimplementedRPCServer) CheckPermission(context.Context, *CheckPermissionRequest) (*Permission, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckPermission not implemented")
@@ -176,60 +134,6 @@ func _RPC_DescribePermission_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RPC_AddPermissionToRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddPermissionToRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).AddPermissionToRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.permission.RPC/AddPermissionToRole",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).AddPermissionToRole(ctx, req.(*AddPermissionToRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_RemovePermissionFromRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RemovePermissionFromRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).RemovePermissionFromRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.permission.RPC/RemovePermissionFromRole",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).RemovePermissionFromRole(ctx, req.(*RemovePermissionFromRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_UpdatePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePermissionRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).UpdatePermission(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.permission.RPC/UpdatePermission",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).UpdatePermission(ctx, req.(*UpdatePermissionRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _RPC_CheckPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CheckPermissionRequest)
 	if err := dec(in); err != nil {
@@ -262,18 +166,6 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DescribePermission",
 			Handler:    _RPC_DescribePermission_Handler,
-		},
-		{
-			MethodName: "AddPermissionToRole",
-			Handler:    _RPC_AddPermissionToRole_Handler,
-		},
-		{
-			MethodName: "RemovePermissionFromRole",
-			Handler:    _RPC_RemovePermissionFromRole_Handler,
-		},
-		{
-			MethodName: "UpdatePermission",
-			Handler:    _RPC_UpdatePermission_Handler,
 		},
 		{
 			MethodName: "CheckPermission",

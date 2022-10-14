@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.6
-// source: apps/role/pb/role.proto
+// source: apps/role/pb/rpc.proto
 
 package role
 
@@ -22,10 +22,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*Role, error)
 	QueryRole(ctx context.Context, in *QueryRoleRequest, opts ...grpc.CallOption) (*RoleSet, error)
 	DescribeRole(ctx context.Context, in *DescribeRoleRequest, opts ...grpc.CallOption) (*Role, error)
-	DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Role, error)
+	QueryPermission(ctx context.Context, in *QueryPermissionRequest, opts ...grpc.CallOption) (*PermissionSet, error)
+	DescribePermission(ctx context.Context, in *DescribePermissionRequest, opts ...grpc.CallOption) (*Permission, error)
 }
 
 type rPCClient struct {
@@ -34,15 +34,6 @@ type rPCClient struct {
 
 func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 	return &rPCClient{cc}
-}
-
-func (c *rPCClient) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*Role, error) {
-	out := new(Role)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.role.RPC/CreateRole", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *rPCClient) QueryRole(ctx context.Context, in *QueryRoleRequest, opts ...grpc.CallOption) (*RoleSet, error) {
@@ -63,9 +54,18 @@ func (c *rPCClient) DescribeRole(ctx context.Context, in *DescribeRoleRequest, o
 	return out, nil
 }
 
-func (c *rPCClient) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...grpc.CallOption) (*Role, error) {
-	out := new(Role)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.role.RPC/DeleteRole", in, out, opts...)
+func (c *rPCClient) QueryPermission(ctx context.Context, in *QueryPermissionRequest, opts ...grpc.CallOption) (*PermissionSet, error) {
+	out := new(PermissionSet)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.role.RPC/QueryPermission", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rPCClient) DescribePermission(ctx context.Context, in *DescribePermissionRequest, opts ...grpc.CallOption) (*Permission, error) {
+	out := new(Permission)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.role.RPC/DescribePermission", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,10 +76,10 @@ func (c *rPCClient) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts 
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	CreateRole(context.Context, *CreateRoleRequest) (*Role, error)
 	QueryRole(context.Context, *QueryRoleRequest) (*RoleSet, error)
 	DescribeRole(context.Context, *DescribeRoleRequest) (*Role, error)
-	DeleteRole(context.Context, *DeleteRoleRequest) (*Role, error)
+	QueryPermission(context.Context, *QueryPermissionRequest) (*PermissionSet, error)
+	DescribePermission(context.Context, *DescribePermissionRequest) (*Permission, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -87,17 +87,17 @@ type RPCServer interface {
 type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedRPCServer) CreateRole(context.Context, *CreateRoleRequest) (*Role, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
-}
 func (UnimplementedRPCServer) QueryRole(context.Context, *QueryRoleRequest) (*RoleSet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryRole not implemented")
 }
 func (UnimplementedRPCServer) DescribeRole(context.Context, *DescribeRoleRequest) (*Role, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DescribeRole not implemented")
 }
-func (UnimplementedRPCServer) DeleteRole(context.Context, *DeleteRoleRequest) (*Role, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
+func (UnimplementedRPCServer) QueryPermission(context.Context, *QueryPermissionRequest) (*PermissionSet, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryPermission not implemented")
+}
+func (UnimplementedRPCServer) DescribePermission(context.Context, *DescribePermissionRequest) (*Permission, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DescribePermission not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -110,24 +110,6 @@ type UnsafeRPCServer interface {
 
 func RegisterRPCServer(s grpc.ServiceRegistrar, srv RPCServer) {
 	s.RegisterService(&RPC_ServiceDesc, srv)
-}
-
-func _RPC_CreateRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).CreateRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/infraboard.mcenter.role.RPC/CreateRole",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).CreateRole(ctx, req.(*CreateRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _RPC_QueryRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -166,20 +148,38 @@ func _RPC_DescribeRole_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RPC_DeleteRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRoleRequest)
+func _RPC_QueryPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPermissionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RPCServer).DeleteRole(ctx, in)
+		return srv.(RPCServer).QueryPermission(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.role.RPC/DeleteRole",
+		FullMethod: "/infraboard.mcenter.role.RPC/QueryPermission",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).DeleteRole(ctx, req.(*DeleteRoleRequest))
+		return srv.(RPCServer).QueryPermission(ctx, req.(*QueryPermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RPC_DescribePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DescribePermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).DescribePermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infraboard.mcenter.role.RPC/DescribePermission",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).DescribePermission(ctx, req.(*DescribePermissionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -192,10 +192,6 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*RPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateRole",
-			Handler:    _RPC_CreateRole_Handler,
-		},
-		{
 			MethodName: "QueryRole",
 			Handler:    _RPC_QueryRole_Handler,
 		},
@@ -204,10 +200,14 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RPC_DescribeRole_Handler,
 		},
 		{
-			MethodName: "DeleteRole",
-			Handler:    _RPC_DeleteRole_Handler,
+			MethodName: "QueryPermission",
+			Handler:    _RPC_QueryPermission_Handler,
+		},
+		{
+			MethodName: "DescribePermission",
+			Handler:    _RPC_DescribePermission_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "apps/role/pb/role.proto",
+	Metadata: "apps/role/pb/rpc.proto",
 }

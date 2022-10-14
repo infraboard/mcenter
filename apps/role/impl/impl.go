@@ -19,8 +19,9 @@ var (
 )
 
 type impl struct {
-	col *mongo.Collection
-	log logger.Logger
+	role *mongo.Collection
+	perm *mongo.Collection
+	log  logger.Logger
 	role.UnimplementedRPCServer
 
 	policy policy.Service
@@ -31,7 +32,8 @@ func (i *impl) Config() error {
 	if err != nil {
 		return err
 	}
-	i.col = db.Collection(i.Name())
+	i.role = db.Collection("role")
+	i.perm = db.Collection("permission")
 
 	i.log = zap.L().Named(i.Name())
 	return nil

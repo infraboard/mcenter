@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package infraboard.mcenter.role;
+option go_package = "github.com/infraboard/mcenter/apps/role";
+
+import "apps/role/pb/role.proto";
+import "apps/role/pb/permission.proto";
+
+// RPC 角色RPC服务
+service RPC {
+	rpc QueryRole(QueryRoleRequest) returns(RoleSet);
+	rpc DescribeRole(DescribeRoleRequest) returns(Role);
+    rpc QueryPermission(QueryPermissionRequest) returns(PermissionSet);
+	rpc DescribePermission(DescribePermissionRequest) returns(Permission);
+}

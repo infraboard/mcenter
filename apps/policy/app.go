@@ -100,7 +100,7 @@ func (s *PolicySet) Length() int {
 }
 
 // GetRoles todo
-func (s *PolicySet) GetRoles(ctx context.Context, r role.Service, withPermission bool) (*role.RoleSet, error) {
+func (s *PolicySet) GetRoles(ctx context.Context, r role.Service) (*role.RoleSet, error) {
 	set := role.NewRoleSet()
 	for i := range s.Items {
 		req := role.NewDescribeRoleRequestWithID(s.Items[i].Spec.RoleId)

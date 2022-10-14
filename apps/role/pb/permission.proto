@@ -1,16 +1,9 @@
 syntax = "proto3";
 
-package infraboard.mcenter.permission;
-option go_package = "github.com/infraboard/mcenter/apps/permission";
+package infraboard.mcenter.role;
+option go_package = "github.com/infraboard/mcenter/apps/role";
 
 import "github.com/infraboard/mcube/pb/page/page.proto";
-
-// RPC 权限查询API
-service RPC {
-	rpc QueryPermission(QueryPermissionRequest) returns(PermissionSet);
-	rpc DescribePermission(DescribePermissionRequest) returns(Permission);
-	rpc CheckPermission(CheckPermissionRequest) returns(Permission);
-}
 
 // EffectType 授权效力包括两种：允许（Allow）和拒绝（Deny）
 enum EffectType {
@@ -27,25 +20,25 @@ message Permission {
     string id = 1;
     // 创建时间
     // @gotags: bson:"create_at" json:"create_at"
-    int64 create_at = 3;
+    int64 create_at = 2;
+    // 角色Id
+    // @gotags: bson:"role_id" json:"role_id"
+    string role_id = 3;
     // 权限具体定义
     // @gotags: bson:"spec" json:"spec"
-    CreatePermssionRequest spec = 4;
+    Spec spec = 4;
     // 范围, 角色范围限制, 由策略引擎动态补充
     // @gotags: bson:"-" json:"scope"
     string scope = 5;
 }
 
-message CreatePermssionRequest {
+message Spec {
     // 创建人
     // @gotags: bson:"create_by" json:"create_by"
     string create_by = 1;
     // 权限描述
     // @gotags: bson:"desc" json:"desc"
     string desc = 2;
-    // 关联角色ID
-    // @gotags: bson:"role_id" json:"role_id"
-    string role_id = 3;
     // 效力
     // @gotags: bson:"effect" json:"effect"
     EffectType effect = 4;
@@ -85,6 +78,9 @@ message QueryPermissionRequest {
     // 查询角色权限
     // @gotags: json:"role_id"
     string role_id = 4;
+    // 忽略数据
+    // @gotags: json:"skip_items"
+    bool skip_items = 5;
 }
 
 // DescribeRoleRequest role详情
@@ -116,7 +112,7 @@ message AddPermissionToRoleRequest {
      // @gotags: json:"role_id" validate:"required,lte=64"
      string role_id = 1;
      // @gotags: json:"permissions" validate:"required"
-     repeated CreatePermssionRequest permissions = 2;
+     repeated Spec permissions = 2;
  }
 
  message RemovePermissionFromRoleRequest {

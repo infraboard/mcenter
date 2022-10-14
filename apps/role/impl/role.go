@@ -19,7 +19,7 @@ func (s *impl) CreateRole(ctx context.Context, req *role.CreateRoleRequest) (*ro
 		return nil, err
 	}
 
-	if _, err := s.col.InsertOne(ctx, r); err != nil {
+	if _, err := s.role.InsertOne(ctx, r); err != nil {
 		return nil, exception.NewInternalServerError("inserted role(%s) document error, %s",
 			r.Spec.Name, err)
 	}
@@ -33,7 +33,7 @@ func (s *impl) QueryRole(ctx context.Context, req *role.QueryRoleRequest) (*role
 	}
 
 	s.log.Debugf("query role filter: %s", query.FindFilter())
-	resp, err := s.col.Find(context.TODO(), query.FindFilter(), query.FindOptions())
+	resp, err := s.role.Find(context.TODO(), query.FindFilter(), query.FindOptions())
 	if err != nil {
 		return nil, exception.NewInternalServerError("find role error, error is %s", err)
 	}
@@ -49,7 +49,7 @@ func (s *impl) QueryRole(ctx context.Context, req *role.QueryRoleRequest) (*role
 	}
 
 	// count
-	count, err := s.col.CountDocuments(context.TODO(), query.FindFilter())
+	count, err := s.role.CountDocuments(context.TODO(), query.FindFilter())
 	if err != nil {
 		return nil, exception.NewInternalServerError("get token count error, error is %s", err)
 	}
@@ -65,7 +65,7 @@ func (s *impl) DescribeRole(ctx context.Context, req *role.DescribeRoleRequest) 
 	}
 
 	ins := role.NewDefaultRole()
-	if err := s.col.FindOne(context.TODO(), query.FindFilter(), query.FindOptions()).Decode(ins); err != nil {
+	if err := s.role.FindOne(context.TODO(), query.FindFilter(), query.FindOptions()).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("role %s not found", req)
 		}
@@ -98,7 +98,7 @@ func (s *impl) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest) (*ro
 		}
 	}
 
-	resp, err := s.col.DeleteOne(context.TODO(), bson.M{"_id": req.Id})
+	resp, err := s.role.DeleteOne(context.TODO(), bson.M{"_id": req.Id})
 	if err != nil {
 		return nil, exception.NewInternalServerError("delete role(%s) error, %s", req.Id, err)
 	}
@@ -108,13 +108,13 @@ func (s *impl) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest) (*ro
 	}
 
 	// 清除角色关联的权限
-	// permReq := role.NewRemovePermissionFromRoleRequest()
-	// permReq.RoleId = req.Id
-	// permReq.RemoveAll = true
-	// _, err = s.RemovePermissionFromRole(ctx, permReq)
-	// if err != nil {
-	// 	s.log.Errorf("delete role permission error, %s", err)
-	// }
+	permReq := role.NewRemovePermissionFromRoleRequest()
+	permReq.RoleId = req.Id
+	permReq.RemoveAll = true
+	_, err = s.RemovePermissionFromRole(ctx, permReq)
+	if err != nil {
+		s.log.Errorf("delete role permission error, %s", err)
+	}
 
 	// 清除角色关联的策略
 	_, err = s.policy.DeletePolicy(ctx, policy.NewDeletePolicyRequestWithID(req.Id))

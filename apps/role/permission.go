@@ -1,39 +1,21 @@
-package permission
+package role
 
 import (
-	context "context"
 	"fmt"
 	"hash/fnv"
 	"net/http"
 	"time"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/logger/zap"
 )
 
-const (
-	AppName = "permission"
-)
-
-// use a single instance of Validate, it caches struct info
-var (
-	validate = validator.New()
-)
-
-type Service interface {
-	AddPermissionToRole(context.Context, *AddPermissionToRoleRequest) (*PermissionSet, error)
-	RemovePermissionFromRole(context.Context, *RemovePermissionFromRoleRequest) (*PermissionSet, error)
-	UpdatePermission(context.Context, *UpdatePermissionRequest) (*Permission, error)
-	RPCServer
-}
-
 // NewAddPermissionToRoleRequest todo
 func NewAddPermissionToRoleRequest() *AddPermissionToRoleRequest {
 	return &AddPermissionToRoleRequest{
-		Permissions: []*CreatePermssionRequest{},
+		Permissions: []*Spec{},
 	}
 }
 
@@ -100,41 +82,42 @@ func NewDeaultPermission() *Permission {
 
 func NewSkipPermission(message string) *Permission {
 	return &Permission{
-		Spec: &CreatePermssionRequest{
+		Spec: &Spec{
 			Effect: EffectType_ALLOW,
 			Desc:   message,
 		},
 	}
 }
 
-func NewPermission(perms []*CreatePermssionRequest) []*Permission {
+func NewPermission(roleId string, perms []*Spec) []*Permission {
 	set := []*Permission{}
 	for i := range perms {
 		set = append(set, &Permission{
-			Id:       perms[i].HashID(),
+			Id:       perms[i].HashID(roleId),
 			CreateAt: time.Now().Unix(),
+			RoleId:   roleId,
 			Spec:     perms[i],
 		})
 	}
 	return set
 }
 
-func (req *CreatePermssionRequest) HashID() string {
+func (req *Spec) HashID(roleId string) string {
 	h := fnv.New32a()
 
-	h.Write([]byte(req.RoleId + req.Effect.String() + req.ServiceId + req.ResourceName))
+	h.Write([]byte(roleId + req.Effect.String() + req.ServiceId + req.ResourceName))
 	return fmt.Sprintf("%x", h.Sum32())
 }
 
 // NewDefaultPermission todo
-func NewDefaultPermission() *CreatePermssionRequest {
-	return &CreatePermssionRequest{
+func NewDefaultPermission() *Spec {
+	return &Spec{
 		Effect: EffectType_ALLOW,
 	}
 }
 
 // Validate todo
-func (p *CreatePermssionRequest) Validate() error {
+func (p *Spec) Validate() error {
 	if p.ServiceId == "" || p.ResourceName == "" || p.LabelKey == "" {
 		return fmt.Errorf("permisson required service_id, resource_name and label_key")
 	}

@@ -5,14 +5,6 @@ option go_package = "github.com/infraboard/mcenter/apps/role";
 
 import "github.com/infraboard/mcube/pb/page/page.proto";
 
-// RPC 角色RPC服务
-service RPC {
-	rpc CreateRole(CreateRoleRequest) returns(Role);
-	rpc QueryRole(QueryRoleRequest) returns(RoleSet);
-	rpc DescribeRole(DescribeRoleRequest) returns(Role);
-	rpc DeleteRole(DeleteRoleRequest) returns(Role);
-}
-
 // RoleType 角色
 enum RoleType {
     // 内建角色, 系统初始时创建
@@ -51,24 +43,24 @@ message RoleSet {
 
 // CreateRoleRequest 创建角色请求
 message CreateRoleRequest {
-    // 角色类型
-    // @gotags: bson:"type" json:"type"
-    RoleType type = 1;
-    // 角色名称
-    // @gotags: bson:"name" json:"name" validate:"required,lte=30"
-    string name = 2;
-    // 角色描述
-    // @gotags: bson:"description" json:"description" validate:"lte=400"
-    string description =3;
-    // 角色关联的其他信息，比如展示的视图
-    // @gotags: bson:"meta" json:"meta" validate:"lte=400"
-    map<string,string> meta =4;
     // 所属域
     // @gotags: bson:"domain" json:"domain"
-    string domain = 5;
+    string domain = 1;
     // 创建者ID
     // @gotags: bson:"create_by" json:"create_by"
-    string create_by = 6;                  
+    string create_by = 2; 
+    // 角色类型
+    // @gotags: bson:"type" json:"type"
+    RoleType type = 3;
+    // 角色名称
+    // @gotags: bson:"name" json:"name" validate:"required,lte=30"
+    string name = 4;
+    // 角色描述
+    // @gotags: bson:"description" json:"description" validate:"lte=400"
+    string description =5;
+    // 角色关联的其他信息，比如展示的视图
+    // @gotags: bson:"meta" json:"meta" validate:"lte=400"
+    map<string,string> meta =6;                 
 }
 
 // QueryRoleRequest 列表查询
