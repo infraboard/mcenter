@@ -5,7 +5,9 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/infraboard/mcenter/apps/endpoint"
 	request "github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/logger/zap"
 	"github.com/infraboard/mcube/types/ftime"
 	"github.com/rs/xid"
 )
@@ -115,6 +117,28 @@ func (r *Role) CheckPermission() error {
 	return nil
 }
 
+// HasPermission 权限判断
+func (r *Role) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error) {
+	var (
+		rok, lok bool
+	)
+	for i := range r.Spec.Permissions {
+		perm := r.Spec.Permissions[i]
+
+		rok = perm.MatchResource(ep.ServiceId, ep.Entry.Resource)
+		lok = perm.MatchLabel(ep.Entry.Labels)
+		zap.L().Debugf("resource match: service_id: %s[target: %s] resource: %s[target: %s], result: %v",
+			ep.ServiceId, perm.Spec.ServiceId, ep.Entry.Resource, perm.Spec.ResourceName, rok)
+		zap.L().Debugf("label match: %v from [key: %v, value: %v, result: %v",
+			ep.Entry.Labels, perm.Spec.LabelKey, perm.Spec.LabelValues, lok)
+		if rok && lok {
+
+			return perm, true, nil
+		}
+	}
+	return nil, false, nil
+}
+
 // NewRoleSet 实例化make
 func NewRoleSet() *RoleSet {
 	return &RoleSet{
@@ -126,6 +150,34 @@ func NewRoleSet() *RoleSet {
 func (s *RoleSet) Add(item *Role) {
 	s.Total++
 	s.Items = append(s.Items, item)
+}
+
+// HasPermission todo
+func (s *RoleSet) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error) {
+	for i := range s.Items {
+		p, ok, err := s.Items[i].HasPermission(ep)
+		if err != nil {
+			return nil, false, err
+		}
+
+		if ok {
+			// 补充权限访问范围
+			p.Scope = s.Items[i].Scope
+			return p, ok, nil
+		}
+	}
+
+	return nil, false, nil
+}
+
+func (s *RoleSet) Permissions() *PermissionSet {
+	ps := NewPermissionSet()
+
+	for i := range s.Items {
+		ps.Add(s.Items[i].Spec.Permissions...)
+	}
+
+	return ps
 }
 
 func (s *RoleSet) Len() int {

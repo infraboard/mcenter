@@ -4,6 +4,7 @@ package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
 import "github.com/infraboard/mcube/pb/page/page.proto";
+import "apps/role/pb/permission.proto";
 
 // RoleType 角色
 enum RoleType {
@@ -58,9 +59,12 @@ message CreateRoleRequest {
     // 角色描述
     // @gotags: bson:"description" json:"description" validate:"lte=400"
     string description =5;
+    // 读权限
+    // @gotags: bson:"-" json:"permissions,omitempty"
+    repeated Permission permissions = 6;
     // 角色关联的其他信息，比如展示的视图
     // @gotags: bson:"meta" json:"meta" validate:"lte=400"
-    map<string,string> meta =6;                 
+    map<string,string> meta =7;                 
 }
 
 // QueryRoleRequest 列表查询
@@ -79,6 +83,8 @@ message DescribeRoleRequest {
     string id = 1;
     // @gotags: json:"name,omitempty" validate:"required,lte=64"
     string name = 2;
+    // @gotags: bson:"with_permissions" json:"with_permissions"
+    bool with_permissions = 3;
     // @gotags: bson:"type" json:"type"
     RoleType type = 4;
 }

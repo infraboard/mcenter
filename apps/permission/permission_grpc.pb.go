@@ -8,6 +8,7 @@ package permission
 
 import (
 	context "context"
+	role "github.com/infraboard/mcenter/apps/role"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,9 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	QueryPermission(ctx context.Context, in *QueryPermissionRequest, opts ...grpc.CallOption) (*PermissionSet, error)
-	DescribePermission(ctx context.Context, in *DescribePermissionRequest, opts ...grpc.CallOption) (*Permission, error)
-	CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*Permission, error)
+	QueryPermission(ctx context.Context, in *QueryPermissionRequest, opts ...grpc.CallOption) (*role.PermissionSet, error)
+	QueryRole(ctx context.Context, in *QueryRoleRequest, opts ...grpc.CallOption) (*role.RoleSet, error)
+	CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*role.Permission, error)
 }
 
 type rPCClient struct {
@@ -35,8 +36,8 @@ func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 	return &rPCClient{cc}
 }
 
-func (c *rPCClient) QueryPermission(ctx context.Context, in *QueryPermissionRequest, opts ...grpc.CallOption) (*PermissionSet, error) {
-	out := new(PermissionSet)
+func (c *rPCClient) QueryPermission(ctx context.Context, in *QueryPermissionRequest, opts ...grpc.CallOption) (*role.PermissionSet, error) {
+	out := new(role.PermissionSet)
 	err := c.cc.Invoke(ctx, "/infraboard.mcenter.permission.RPC/QueryPermission", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -44,17 +45,17 @@ func (c *rPCClient) QueryPermission(ctx context.Context, in *QueryPermissionRequ
 	return out, nil
 }
 
-func (c *rPCClient) DescribePermission(ctx context.Context, in *DescribePermissionRequest, opts ...grpc.CallOption) (*Permission, error) {
-	out := new(Permission)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.permission.RPC/DescribePermission", in, out, opts...)
+func (c *rPCClient) QueryRole(ctx context.Context, in *QueryRoleRequest, opts ...grpc.CallOption) (*role.RoleSet, error) {
+	out := new(role.RoleSet)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.permission.RPC/QueryRole", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *rPCClient) CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*Permission, error) {
-	out := new(Permission)
+func (c *rPCClient) CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*role.Permission, error) {
+	out := new(role.Permission)
 	err := c.cc.Invoke(ctx, "/infraboard.mcenter.permission.RPC/CheckPermission", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -66,9 +67,9 @@ func (c *rPCClient) CheckPermission(ctx context.Context, in *CheckPermissionRequ
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	QueryPermission(context.Context, *QueryPermissionRequest) (*PermissionSet, error)
-	DescribePermission(context.Context, *DescribePermissionRequest) (*Permission, error)
-	CheckPermission(context.Context, *CheckPermissionRequest) (*Permission, error)
+	QueryPermission(context.Context, *QueryPermissionRequest) (*role.PermissionSet, error)
+	QueryRole(context.Context, *QueryRoleRequest) (*role.RoleSet, error)
+	CheckPermission(context.Context, *CheckPermissionRequest) (*role.Permission, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -76,13 +77,13 @@ type RPCServer interface {
 type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedRPCServer) QueryPermission(context.Context, *QueryPermissionRequest) (*PermissionSet, error) {
+func (UnimplementedRPCServer) QueryPermission(context.Context, *QueryPermissionRequest) (*role.PermissionSet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryPermission not implemented")
 }
-func (UnimplementedRPCServer) DescribePermission(context.Context, *DescribePermissionRequest) (*Permission, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DescribePermission not implemented")
+func (UnimplementedRPCServer) QueryRole(context.Context, *QueryRoleRequest) (*role.RoleSet, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryRole not implemented")
 }
-func (UnimplementedRPCServer) CheckPermission(context.Context, *CheckPermissionRequest) (*Permission, error) {
+func (UnimplementedRPCServer) CheckPermission(context.Context, *CheckPermissionRequest) (*role.Permission, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckPermission not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
@@ -116,20 +117,20 @@ func _RPC_QueryPermission_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RPC_DescribePermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DescribePermissionRequest)
+func _RPC_QueryRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RPCServer).DescribePermission(ctx, in)
+		return srv.(RPCServer).QueryRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.permission.RPC/DescribePermission",
+		FullMethod: "/infraboard.mcenter.permission.RPC/QueryRole",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).DescribePermission(ctx, req.(*DescribePermissionRequest))
+		return srv.(RPCServer).QueryRole(ctx, req.(*QueryRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -164,8 +165,8 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RPC_QueryPermission_Handler,
 		},
 		{
-			MethodName: "DescribePermission",
-			Handler:    _RPC_DescribePermission_Handler,
+			MethodName: "QueryRole",
+			Handler:    _RPC_QueryRole_Handler,
 		},
 		{
 			MethodName: "CheckPermission",
