@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package infraboard.mcenter.policy;
+option go_package = "github.com/infraboard/mcenter/apps/policy";
+
+import "apps/policy/pb/policy.proto";
+import "github.com/infraboard/mcube/pb/page/page.proto";
+
+// RPC 策略服务
+service RPC {
+	rpc CreatePolicy(CreatePolicyRequest) returns(Policy);
+	rpc QueryPolicy(QueryPolicyRequest) returns(PolicySet);
+	rpc DescribePolicy(DescribePolicyRequest) returns(Policy);
+	rpc DeletePolicy(DeletePolicyRequest) returns(Policy);
+}
+
+// QueryPolicyRequest 获取子账号列表
+message QueryPolicyRequest {
+    // @gotags: bson:"page" json:"page"
+   infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"username,omitempty"
+    string username = 2;
+    // @gotags: json:"role_id,omitempty"
+    string role_id = 3;
+    // @gotags: json:"namespace,omitempty"
+    string namespace = 4;
+    // @gotags: json:"type,omitempty"
+    optional PolicyType type = 5;
+    // @gotags: json:"with_role,omitempty"
+    bool with_role = 6;
+    // @gotags: json:"with_namespace,omitempty"
+    bool with_namespace = 7;
+    // @gotags: json:"domain"
+    string domain = 8;    
+}
+
+// DescribePolicyRequest todo
+message DescribePolicyRequest {
+    // @gotags: json:"id"
+	string id = 1;
+}
+
+// DeletePolicyRequest todo
+message DeletePolicyRequest {
+    // @gotags: json:"id"
+	string id = 1;
+    // @gotags: json:"username,omitempty"
+    string username = 2;
+    // @gotags: json:"role_id,omitempty"
+    string role_id = 3;
+    // @gotags: json:"namespace,omitempty"
+    string namespace = 4;
+    // @gotags: json:"type,omitempty"
+    optional PolicyType type = 5;
+    // @gotags: json:"domain"
+    string domain = 6;  
+}

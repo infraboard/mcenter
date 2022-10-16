@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.6
-// source: apps/domain/pb/domain.proto
+// source: apps/resource/pb/rpc.proto
 
-package domain
+package resource
 
 import (
 	context "context"
@@ -22,8 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	// 查询域
-	DescribeDomain(ctx context.Context, in *DescribeDomainRequest, opts ...grpc.CallOption) (*Domain, error)
+	QueryResources(ctx context.Context, in *QueryResourceRequest, opts ...grpc.CallOption) (*ResourceSet, error)
 }
 
 type rPCClient struct {
@@ -34,9 +33,9 @@ func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 	return &rPCClient{cc}
 }
 
-func (c *rPCClient) DescribeDomain(ctx context.Context, in *DescribeDomainRequest, opts ...grpc.CallOption) (*Domain, error) {
-	out := new(Domain)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.domain.RPC/DescribeDomain", in, out, opts...)
+func (c *rPCClient) QueryResources(ctx context.Context, in *QueryResourceRequest, opts ...grpc.CallOption) (*ResourceSet, error) {
+	out := new(ResourceSet)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.resource.RPC/QueryResources", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,8 +46,7 @@ func (c *rPCClient) DescribeDomain(ctx context.Context, in *DescribeDomainReques
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	// 查询域
-	DescribeDomain(context.Context, *DescribeDomainRequest) (*Domain, error)
+	QueryResources(context.Context, *QueryResourceRequest) (*ResourceSet, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -56,8 +54,8 @@ type RPCServer interface {
 type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedRPCServer) DescribeDomain(context.Context, *DescribeDomainRequest) (*Domain, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DescribeDomain not implemented")
+func (UnimplementedRPCServer) QueryResources(context.Context, *QueryResourceRequest) (*ResourceSet, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryResources not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -72,20 +70,20 @@ func RegisterRPCServer(s grpc.ServiceRegistrar, srv RPCServer) {
 	s.RegisterService(&RPC_ServiceDesc, srv)
 }
 
-func _RPC_DescribeDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DescribeDomainRequest)
+func _RPC_QueryResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryResourceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RPCServer).DescribeDomain(ctx, in)
+		return srv.(RPCServer).QueryResources(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.domain.RPC/DescribeDomain",
+		FullMethod: "/infraboard.mcenter.resource.RPC/QueryResources",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).DescribeDomain(ctx, req.(*DescribeDomainRequest))
+		return srv.(RPCServer).QueryResources(ctx, req.(*QueryResourceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -94,14 +92,14 @@ func _RPC_DescribeDomain_Handler(srv interface{}, ctx context.Context, dec func(
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var RPC_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "infraboard.mcenter.domain.RPC",
+	ServiceName: "infraboard.mcenter.resource.RPC",
 	HandlerType: (*RPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "DescribeDomain",
-			Handler:    _RPC_DescribeDomain_Handler,
+			MethodName: "QueryResources",
+			Handler:    _RPC_QueryResources_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "apps/domain/pb/domain.proto",
+	Metadata: "apps/resource/pb/rpc.proto",
 }

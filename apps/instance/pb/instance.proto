@@ -3,19 +3,6 @@ syntax = "proto3";
 package infraboard.mcenter.instance;
 option go_package = "github.com/infraboard/mcenter/apps/instance";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-
-service RPC {
-    // 实例注册
-    rpc RegistryInstance(RegistryRequest) returns(Instance);
-    // 实例注销
-    rpc UnRegistryInstance(UnregistryRequest) returns(Instance);
-    // 查询实例详情
-    rpc DescribeInstance(DescribeInstanceRequest) returns(Instance);
-    // 实例搜索, 用于客户端做服务发现
-    rpc Search(SearchRequest) returns(InstanceSet);
-}
-
 // 实例注册的协议类型
 enum Protocal {
     // GRPC服务
@@ -164,43 +151,4 @@ message HeartbeatResponse {
     // 客户端需要执行命令
     // @gotags: bson:"remote_command" json:"remote_command"
     RemoteCommand remote_command = 2;
-}
-
-message UnregistryRequest {
-    // 需要注销的实例Id
-    // @gotags: json:"instance_id"
-    string instance_id = 1;
-}
-
-message SearchRequest {
-    // 分页参数
-    // @gotags: json:"page" 
-    infraboard.mcube.page.PageRequest page = 1;
-    // 服务所属域
-    // @gotags: bson:"domain" json:"domain" validate:"required"
-    string domain = 2;
-    // 服务所属空间
-    // @gotags: bson:"namespace" json:"namespace"
-    string namespace = 3;
-    // 实例所属应用Id
-    // @gotags: bson:"service_name" json:"service_name"
-    string service_name = 4;
-    // 实例所属环境, 默认default
-    // @gotags: bson:"region" json:"region"
-    string region = 5;
-    // 实例所属环境, 默认default
-    // @gotags: bson:"environment" json:"environment"
-    string environment = 6;
-    // 实例所属分组,默认default
-    // @gotags: bson:"group" json:"group"
-    string group = 7;
-    // 实例标签, 可以根据标签快速过滤实例
-    // @gotags: bson:"tags" json:"tags" 
-    map<string,string> tags = 8;
-}
-
-message DescribeInstanceRequest {
-    // 实例的Id
-    // @gotags: json:"id"
-    string id = 1;
 }

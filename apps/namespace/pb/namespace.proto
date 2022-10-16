@@ -3,14 +3,6 @@ syntax = "proto3";
 package infraboard.mcenter.namespace;
 option go_package = "github.com/infraboard/mcenter/apps/namespace";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-
-// Service todo
-service RPC {
-	rpc QueryNamespace(QueryNamespaceRequest) returns(NamespaceSet);
-	rpc DescribeNamespace(DescriptNamespaceRequest) returns(Namespace);
-}
-
 enum Visible {
     // 默认空间是私有的
     PRIVATE = 0;
@@ -71,46 +63,4 @@ message NamespaceSet {
     // 列表
     // @gotags: json:"items"
     repeated Namespace items = 2;
-}
-
-// QueryNamespaceRequest 查询应用列表
-message QueryNamespaceRequest {
-    // 分页请求
-    // @gotags: json:"page"
-    infraboard.mcube.page.PageRequest page = 1;
-    // 域
-    // @gotags: json:"domain"
-    string domain = 2;
-    // 空间的名称
-    // @gotags: json:"name"
-    repeated string name = 3;
-    // 命名空间的id列表
-    // @gotags: json:"ids"
-    repeated string ids  = 4;
-    // 是否查询子空间
-    // @gotags: json:"with_sub"
-    bool with_sub  = 5;
-    // 用户加入的空间
-    // @gotags: json:"username"
-    string username  = 6;
-}
-
-// DescriptNamespaceRequest 查询应用详情
-message DescriptNamespaceRequest {
-    // 域
-    // @gotags: json:"domain"
-    string domain = 2;
-    // 名称
-    // @gotags: json:"name"
-    string name = 1;
-}
-
-// DeleteNamespaceRequest todo
-message DeleteNamespaceRequest {
-    // 域
-    // @gotags: json:"domain"
-    string domain = 2;
-    // 名称
-    // @gotags: json:"name"
-    string name = 1;
 }

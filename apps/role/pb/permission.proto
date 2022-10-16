@@ -3,8 +3,6 @@ syntax = "proto3";
 package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-
 // EffectType 授权效力包括两种：允许（Allow）和拒绝（Deny）
 enum EffectType {
     // 允许访问
@@ -65,44 +63,6 @@ message PermissionSet {
     int64 total = 1;
     // @gotags: bson:"items" json:"items"
     repeated Permission items = 2;
-}
-
-// QueryPermissionRequest 查询用户权限
-message QueryPermissionRequest {
-    // @gotags: json:"page"
-    infraboard.mcube.page.PageRequest page = 1;
-    // @gotags: json:"namespace"
-    string namespace = 2;
-    // @gotags: json:"username"
-    string username = 3;
-    // 查询角色权限
-    // @gotags: json:"role_id"
-    string role_id = 4;
-    // 忽略数据
-    // @gotags: json:"skip_items"
-    bool skip_items = 5;
-}
-
-// DescribeRoleRequest role详情
-message DescribePermissionRequest {
-    // @gotags: json:"id"
-    string id = 1;
-}
-
-// CheckPermissionRequest todo
-message CheckPermissionRequest {
-    // @gotags: json:"page"
-   infraboard.mcube.page.PageRequest page = 1;
-    // @gotags: json:"namespace"
-    string namespace = 2;
-    // @gotags: json:"endpoint_id"
-    string endpoint_id = 3;
-    // @gotags: json:"service_id"
-    string service_id = 4;
-    // @gotags: json:"path"
-    string path = 5;
-    // @gotags: json:"username"
-    string username = 6;
 }
 
 message AddPermissionToRoleRequest {

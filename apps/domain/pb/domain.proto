@@ -5,12 +5,6 @@ option go_package = "github.com/infraboard/mcenter/apps/domain";
 
 import "github.com/infraboard/mcube/pb/request/request.proto";
 
-// Service 用户服务
-service RPC {
-    // 查询域
-	rpc DescribeDomain(DescribeDomainRequest) returns(Domain);
-}
-
 message Domain  {
     // 公司或者组织名称
     // @gotags: bson:"_id" json:"id"
@@ -195,19 +189,6 @@ message UpdateDomainRequest  {
 enum DESCRIBE_BY {
     ID = 0;
     NAME = 1;
-}
-
-// DescribeDomainRequest 查询domain详情请求
-message DescribeDomainRequest {
-    // 查询方式
-    // @gotags: json:"describe_by"
-    DESCRIBE_BY describe_by = 1;
-    // 通过Id查询
-    // @gotags: json:"id"
-   string id = 2;
-    // 通过名称查询
-    // @gotags: json:"name"
-    string name = 3;
 }
 
 message LDAP {

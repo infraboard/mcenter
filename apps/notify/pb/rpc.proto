@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package infraboard.mcenter.notify;
+option go_package = "github.com/infraboard/mcenter/apps/notify";
+
+
+// 通知服务
+service RPC {
+    // 发送短信
+	rpc SendSMS(SendSMSRequest) returns(SendResponse);
+    // 邮件通知
+    rpc SendMail(SendMailRequest) returns(SendResponse);
+}
+
+message SendSMSRequest {
+    // 短信模版的Id
+    // @gotags: bson:"template_id" json:"template_id"
+    string template_id = 1;
+    // 模版参数
+    // @gotags: bson:"template_params" json:"template_params"
+    repeated string template_params = 2;
+    // 手机号码
+    // @gotags: bson:"phone_numbers" json:"phone_numbers"
+    repeated string phone_numbers = 3;
+}
+
+message SendMailRequest {
+    // 邮件地址列表
+    // @gotags: json:"to" bson:"to" validate:"required"
+    repeated string to = 1;
+    // 告警时标题
+    // @gotags: json:"title" bson:"title" validate:"required"
+    string title = 2;
+    // 告警内容
+    // @gotags: json:"content" bson:"content"
+    string content = 3;
+}
+
+message SendResponse {
+
+}

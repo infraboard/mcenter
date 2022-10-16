@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.6
-// source: apps/namespace/pb/namespace.proto
+// source: apps/namespace/pb/rpc.proto
 
 package namespace
 
@@ -137,5 +137,5 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "apps/namespace/pb/namespace.proto",
+	Metadata: "apps/namespace/pb/rpc.proto",
 }

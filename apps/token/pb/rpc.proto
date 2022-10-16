@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package infraboard.mcenter.token;
+option go_package = "github.com/infraboard/mcenter/apps/token";
+
+import "github.com/infraboard/mcube/pb/page/page.proto";
+import "apps/user/pb/user.proto";
+import "apps/token/pb/token.proto";
+
+// Token服务
+service RPC {
+    // 校验Token
+    rpc ValidateToken(ValidateTokenRequest) returns (Token) {};
+}
+
+message ValidateTokenRequest {
+    // 令牌
+    // @gotags: json:"access_token"
+    string access_token = 1;
+}
+
+message RevolkTokenRequest {
+    // 令牌
+    // @gotags: json:"access_token"
+    string access_token = 1;
+    // 刷新令牌
+    // @gotags: json:"refresh_token"
+    string refresh_token = 5;
+}
+
+message ChangeNamespaceRequest {
+    // 需要切换空间令牌
+    // @gotags: json:"token" validate:"required"
+    string token = 1;
+    // 空间名称
+    // @gotags: json:"namespace" validate:"required"
+    string namespace = 2;
+}
+
+message QueryTokenRequest {
+    // 分页参数
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+   // 颁发平台, 根据授权方式判断
+    // @gotags: bson:"platform" json:"platform"
+    optional PLATFORM platform = 2;
+    // 访问令牌
+    // @gotags: json:"access_token"
+    string access_token = 3;
+    // 刷新令牌, 当访问令牌过期时, 可以刷新令牌进行刷新
+    // @gotags: json:"refresh_token"
+    string refresh_token = 4;
+    // 用户类型
+    // @gotags: json:"user_type"
+    optional user.TYPE user_type = 5;
+    // 用户当前所处域
+    // @gotags: json:"domain"
+    string domain = 6;
+    // 用户名
+    // @gotags: json:"username"
+    string username = 7;
+    // 用户Id
+    // @gotags: json:"user_id"
+    string user_id = 8;
+    // 授权类型
+    // @gotags: json:"grant_type"
+    optional GRANT_TYPE grant_type = 9;
+    // 令牌类型
+    // @gotags: json:"type"
+    optional TOKEN_TYPE type = 10;
+    // 当前空间
+    // @gotags: json:"namespace"
+    string namespace = 11;
+    // 令牌描述信息, 当授权类型为Private Token时, 做描述使用
+    // @gotags: json:"description"
+    string description = 12;
+    // 是否冻结
+    // @gotags: json:"is_block"
+    optional bool is_block = 13;
+    // 冻结类型
+    // @gotags: json:"block_type"
+    optional BLOCK_TYPE block_type = 14;
+}

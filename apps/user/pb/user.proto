@@ -3,17 +3,6 @@ syntax = "proto3";
 package infraboard.mcenter.user;
 option go_package = "github.com/infraboard/mcenter/apps/user";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-import "github.com/infraboard/mcube/pb/request/request.proto";
-
-// Service 用户服务
-service RPC {
-	// 查询用户列表
-	rpc QueryUser(QueryUserRequest) returns(UserSet);
-    // 查询用户详情
-    rpc DescribeUser(DescribeUserRequest) returns(User);
-}
-
 message Password {
     // hash过后的密码
     // @gotags: bson:"password" json:"password,omitempty"
@@ -178,31 +167,6 @@ message CreateUserRequest {
     string description = 7;
 }
 
-// QueryUserRequest 获取子账号列表
-message QueryUserRequest {
-    // 分页参数
-    // @gotags: json:"page"
-    infraboard.mcube.page.PageRequest page = 1;
-    // 用户所属Domain
-    // @gotags: json:"domain" validate:"required"
-    string domain = 2;
-    // 账号提供方
-    // @gotags: json:"provider"
-    optional PROVIDER provider = 3;
-    // 用户类型
-    // @gotags: json:"type"
-    optional TYPE type = 4;
-    // 通过Id
-    // @gotags: json:"user_ids"
-    repeated string user_ids = 5;
-    // 是否获取数据
-    // @gotags: json:"skip_items"
-    bool skip_items = 8;
-    // 关键字查询
-    // @gotags: json:"keywords"
-    string keywords = 9;
-}
-
 message UserSet {
     // 总数量
     // @gotags: bson:"total" json:"total"
@@ -218,71 +182,3 @@ enum DESCRIBE_BY {
     // 通过Username查询用户
     USER_NAME = 1;
 }
-
-// DescribeUserRequest 查询用户详情
-message DescribeUserRequest {
-    // 查询方式
-    // @gotags: json:"describe_by"
-    DESCRIBE_BY describe_by = 1;
-    // 用户账号id
-    // @gotags: json:"id"
-    string id = 2;
-    // 用户账号
-    // @gotags: json:"username"
-    string username = 3;
-}
-
-// UpdatePasswordRequest todo
-message UpdatePasswordRequest {
-    // 用户Id
-    // @gotags: json:"user_id"
-    string user_id = 1;
-    // 旧密码
-    // @gotags: json:"old_pass"
-    string old_pass = 2;
-    // 新密码
-    // @gotags: json:"new_pass"
-    string new_pass = 3;
-    // 是否重置
-    // @gotags: json:"is_reset"
-    bool is_reset = 4;
-    // 重置原因
-    // @gotags: json:"reset_reason"
-    string reset_reason = 5;
-}
-
-// 重置密码
-message ResetPasswordRequest {
-    // 用户名
-    // @gotags: json:"user_id"
-    string user_id = 1;
-    // 新密码
-    // @gotags: json:"new_pass"
-    string new_pass = 3;
-    // 是否重置
-    // @gotags: json:"is_reset"
-    bool is_reset = 4;
-    // 重置原因
-    // @gotags: json:"reset_reason"
-    string reset_reason = 5;
-}
-
-message DeleteUserRequest {
-    // 用户账号id
-    // @gotags: json:"user_ids" validate:"required,lte=60"
-    repeated string user_ids = 2;
-}
-
-// UpdateUserRequest todo
-message UpdateUserRequest {
-    // 更新模式
-    // @gotags: json:"update_mode"
-    infraboard.mcube.request.UpdateMode update_mode = 1;
-    // 用户Id
-    // @gotags: json:"user_id" validate:"required,lte=120"
-    string user_id = 2;
-    // profile 账号profile
-    // @gotags: json:"profile"
-	Profile profile = 3;
-}
-

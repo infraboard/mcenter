@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package infraboard.mcenter.domain;
+option go_package = "github.com/infraboard/mcenter/apps/domain";
+
+import "apps/domain/pb/domain.proto";
+
+// Service 用户服务
+service RPC {
+    // 查询域
+	rpc DescribeDomain(DescribeDomainRequest) returns(Domain);
+}
+
+// DescribeDomainRequest 查询domain详情请求
+message DescribeDomainRequest {
+    // 查询方式
+    // @gotags: json:"describe_by"
+    DESCRIBE_BY describe_by = 1;
+    // 通过Id查询
+    // @gotags: json:"id"
+   string id = 2;
+    // 通过名称查询
+    // @gotags: json:"name"
+    string name = 3;
+}

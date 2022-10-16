@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package infraboard.mcenter.endpoint;
+option go_package = "github.com/infraboard/mcenter/apps/endpoint";
+
+import "github.com/infraboard/mcube/pb/page/page.proto";
+import "apps/endpoint/pb/endpoint.proto";
+
+// RPC endpoint管理
+service RPC {
+	rpc DescribeEndpoint(DescribeEndpointRequest) returns(Endpoint);
+	rpc QueryEndpoints(QueryEndpointRequest) returns(EndpointSet);
+	rpc RegistryEndpoint(RegistryRequest) returns(RegistryResponse);
+}
+
+// DescribeEndpointRequest todo
+message DescribeEndpointRequest {
+    // @gotags: json:"id"
+    string id = 1;
+}
+
+// QueryEndpointRequest 查询应用列表
+message QueryEndpointRequest {
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"service_ids"
+    repeated string service_ids = 2;
+        // @gotags: json:"path"
+    string path = 3;
+        // @gotags: json:"method"
+    string method = 4;
+        // @gotags: json:"function_name"
+    string function_name = 5;
+    // @gotags: json:"resources"
+    repeated string resources = 6;
+    // @gotags: json:"labels"
+    map<string, string> labels = 7;
+    // @gotags: json:"permission_enable"
+    optional bool permission_enable = 8;
+}
+
+// DeleteEndpointRequest todo
+message DeleteEndpointRequest {
+    // @gotags: json:"service_id"
+string service_id = 1;
+}

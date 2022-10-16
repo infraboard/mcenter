@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package infraboard.mcenter.code;
+option go_package = "github.com/infraboard/mcenter/apps/code";
+
+import "apps/code/pb/code.proto";
+
+// RPC 验证码服务
+service RPC {
+	rpc IssueCode(IssueCodeRequest) returns(IssueCodeResponse);
+	rpc VerifyCode(VerifyCodeRequest) returns(Code);
+}
+
+// IssueCodeRequest 验证码申请请求
+message IssueCodeRequest {
+    // 颁发方式
+    // @gotags: json:"issue_by"
+    ISSUE_BY issue_by = 1;
+    // 用户名
+    // @gotags: json:"username"
+    string username = 2;
+    // 密码
+    // @gotags: json:"password" 
+    string password = 3;
+    // 令牌
+    // @gotags: json:"access_token"
+    string access_token = 6;
+}
+
+// IssueCodeResponse todo
+message IssueCodeResponse {
+    // 颁发后返回的消息, 比如以发送到xxx手机
+    // @gotags: json:"message"
+    string message = 1;
+}
+
+// VerifyCodeRequest 验证码校验请求
+message VerifyCodeRequest {
+    // 用户名
+    // @gotags: json:"username" validate:"required"
+    string username = 1;
+    // 验证码
+    // @gotags: json:"code" validate:"required"
+    string code = 2;
+}

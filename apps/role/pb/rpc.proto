@@ -3,6 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
+import "github.com/infraboard/mcube/pb/page/page.proto";
 import "apps/role/pb/role.proto";
 import "apps/role/pb/permission.proto";
 
@@ -12,4 +13,65 @@ service RPC {
 	rpc DescribeRole(DescribeRoleRequest) returns(Role);
     rpc QueryPermission(QueryPermissionRequest) returns(PermissionSet);
 	rpc DescribePermission(DescribePermissionRequest) returns(Permission);
+}
+
+// QueryPermissionRequest 查询用户权限
+message QueryPermissionRequest {
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"namespace"
+    string namespace = 2;
+    // @gotags: json:"username"
+    string username = 3;
+    // 查询角色权限
+    // @gotags: json:"role_id"
+    string role_id = 4;
+    // 忽略数据
+    // @gotags: json:"skip_items"
+    bool skip_items = 5;
+}
+
+// QueryRoleRequest 列表查询
+message QueryRoleRequest {
+    // @gotags: json:"page"
+   infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"type"
+    optional RoleType type = 2;
+    // @gotags: json:"domain"
+    string domain = 3;  
+}
+
+
+// DescribeRoleRequest role详情
+message DescribeRoleRequest {
+    // @gotags: json:"id"
+    string id = 1;
+    // @gotags: json:"name,omitempty" validate:"required,lte=64"
+    string name = 2;
+    // @gotags: bson:"with_permissions" json:"with_permissions"
+    bool with_permissions = 3;
+    // @gotags: bson:"type" json:"type"
+    RoleType type = 4;
+}
+
+// DescribeRoleRequest role详情
+message DescribePermissionRequest {
+    // @gotags: json:"id"
+    string id = 1;
+}
+
+// CheckPermissionRequest todo
+message CheckPermissionRequest {
+    // @gotags: json:"page"
+   infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"namespace"
+    string namespace = 2;
+    // @gotags: json:"endpoint_id"
+    string endpoint_id = 3;
+    // @gotags: json:"service_id"
+    string service_id = 4;
+    // @gotags: json:"path"
+    string path = 5;
+    // @gotags: json:"username"
+    string username = 6;
 }

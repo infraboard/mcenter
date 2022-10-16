@@ -3,7 +3,6 @@ syntax = "proto3";
 package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
 import "apps/role/pb/permission.proto";
 
 // RoleType 角色
@@ -65,28 +64,6 @@ message CreateRoleRequest {
     // 角色关联的其他信息，比如展示的视图
     // @gotags: bson:"meta" json:"meta" validate:"lte=400"
     map<string,string> meta =7;                 
-}
-
-// QueryRoleRequest 列表查询
-message QueryRoleRequest {
-    // @gotags: json:"page"
-   infraboard.mcube.page.PageRequest page = 1;
-    // @gotags: json:"type"
-    optional RoleType type = 2;
-    // @gotags: json:"domain"
-    string domain = 3;  
-}
-
-// DescribeRoleRequest role详情
-message DescribeRoleRequest {
-    // @gotags: json:"id"
-    string id = 1;
-    // @gotags: json:"name,omitempty" validate:"required,lte=64"
-    string name = 2;
-    // @gotags: bson:"with_permissions" json:"with_permissions"
-    bool with_permissions = 3;
-    // @gotags: bson:"type" json:"type"
-    RoleType type = 4;
 }
 
 // DeleteRoleRequest role删除
