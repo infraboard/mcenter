@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/common/tools"
+	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcube/http/request"
 )
 
@@ -59,7 +59,7 @@ func NewInstance(req *RegistryRequest, app *service.Service) (*Instance, error) 
 	}
 
 	if req.Name == "" {
-		req.Name = "ins-" + tools.MakeBearer(8)
+		req.Name = "ins-" + token.MakeBearer(8)
 	}
 
 	ins := &Instance{

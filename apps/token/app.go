@@ -1,11 +1,11 @@
 package token
 
 import (
+	"math/rand"
 	"net/http"
 	"strings"
 	"time"
 
-	"github.com/infraboard/mcenter/common/tools"
 	"github.com/infraboard/mcube/http/request"
 )
 
@@ -45,8 +45,8 @@ func NewChangeNamespaceRequest() *ChangeNamespaceRequest {
 
 func NewToken(req *IssueTokenRequest) *Token {
 	tk := &Token{
-		AccessToken:      tools.MakeBearer(24),
-		RefreshToken:     tools.MakeBearer(32),
+		AccessToken:      MakeBearer(24),
+		RefreshToken:     MakeBearer(32),
 		IssueAt:          time.Now().UnixMilli(),
 		AccessExpiredAt:  req.ExpiredAt,
 		RefreshExpiredAt: req.ExpiredAt * 4,
@@ -114,4 +114,20 @@ func NewValidateTokenRequest(accessToken string) *ValidateTokenRequest {
 	return &ValidateTokenRequest{
 		AccessToken: accessToken,
 	}
+}
+
+// MakeBearer https://tools.ietf.org/html/rfc6750#section-2.1
+// b64token    = 1*( ALPHA / DIGIT /"-" / "." / "_" / "~" / "+" / "/" ) *"="
+func MakeBearer(lenth int) string {
+	charlist := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	t := make([]string, lenth)
+	rand.Seed(time.Now().UnixNano() + int64(lenth) + rand.Int63n(10000))
+	for i := 0; i < lenth; i++ {
+		rn := rand.Intn(len(charlist))
+		w := charlist[rn : rn+1]
+		t = append(t, w)
+	}
+
+	token := strings.Join(t, "")
+	return token
 }

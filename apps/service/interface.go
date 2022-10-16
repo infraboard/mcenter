@@ -15,7 +15,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
-	"github.com/infraboard/mcenter/common/tools"
+	"github.com/infraboard/mcenter/apps/token"
 )
 
 const (
@@ -62,14 +62,14 @@ func NewService(req *CreateServiceRequest) (*Service, error) {
 
 func NewRandomCredential() *Credential {
 	return &Credential{
-		ClientId:     tools.MakeBearer(24),
-		ClientSecret: tools.MakeBearer(32),
+		ClientId:     token.MakeBearer(24),
+		ClientSecret: token.MakeBearer(32),
 	}
 }
 
 func NewRandomSecurity() *Security {
 	return &Security{
-		EncryptKey: tools.MakeBearer(64),
+		EncryptKey: token.MakeBearer(64),
 	}
 }
 

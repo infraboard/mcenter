@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/types/ftime"
 )
@@ -173,4 +175,40 @@ func (req *DescribeEndpointRequest) Validate() error {
 // NewDeleteEndpointRequestWithServiceID todo
 func NewDeleteEndpointRequestWithServiceID(id string) *DeleteEndpointRequest {
 	return &DeleteEndpointRequest{ServiceId: id}
+}
+
+// 用于Route转换成Entry
+func TransferRoutesToEntry(routes []restful.Route) (entries []*Entry) {
+	for _, r := range routes {
+		var resource, action string
+		var authEnabled, permEnabled, isAudit bool
+		if r.Metadata != nil {
+			if v, ok := r.Metadata[label.Resource]; ok {
+				resource, _ = v.(string)
+			}
+			if v, ok := r.Metadata[label.Action]; ok {
+				action, _ = v.(string)
+			}
+			if v, ok := r.Metadata[label.Auth]; ok {
+				authEnabled, _ = v.(bool)
+			}
+			if v, ok := r.Metadata[label.Permission]; ok {
+				permEnabled, _ = v.(bool)
+			}
+			if v, ok := r.Metadata[label.Audit]; ok {
+				isAudit, _ = v.(bool)
+			}
+		}
+		entries = append(entries, &Entry{
+			FunctionName:     r.Operation,
+			Resource:         resource,
+			Path:             fmt.Sprintf("%s.%s", r.Method, r.Path),
+			Method:           r.Method,
+			AuthEnable:       authEnabled,
+			PermissionEnable: permEnabled,
+			AuditLog:         isAudit,
+			Labels:           map[string]string{"action": action},
+		})
+	}
+	return
 }
