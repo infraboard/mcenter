@@ -3,12 +3,13 @@ package auth
 import (
 	"context"
 
+	"github.com/infraboard/mcenter/apps/service"
 	"google.golang.org/grpc/metadata"
 )
 
 // 从上下文中获取认证信息
 func GetClientId(ctx context.Context) string {
-	return getMetaData(ctx, ClientHeaderKey)
+	return getMetaData(ctx, service.ClientHeaderKey)
 }
 
 // 从上下文中获取认证信息

@@ -22,6 +22,11 @@ const (
 	AppName = "service"
 )
 
+const (
+	ClientHeaderKey = "client-id"
+	ClientSecretKey = "client-secret"
+)
+
 var (
 	validate = validator.New()
 )

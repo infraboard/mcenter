@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client/rpc/auth"
+	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/conf"
 
 	// 注册所有服务
@@ -34,7 +34,7 @@ func TestRegistry(t *testing.T) {
 	req := instance.NewRegistryRequest()
 	req.Name = "keyauth-001"
 	req.Address = "127.0.0.1:18050"
-	md := metadata.Pairs(auth.ClientHeaderKey, os.Getenv("MCENTER_CLINET_ID"))
+	md := metadata.Pairs(service.ClientHeaderKey, os.Getenv("MCENTER_CLINET_ID"))
 	ctx := metadata.NewIncomingContext(context.Background(), md)
 	ins, err := impl.RegistryInstance(ctx, req)
 	if err != nil {

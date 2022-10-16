@@ -12,7 +12,6 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/client/rpc/auth"
 )
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
@@ -57,8 +56,8 @@ func (a *grpcAuther) Auth(
 
 func (a *grpcAuther) GetClientCredentialsFromMeta(md metadata.MD) (
 	clientId, clientSecret string) {
-	cids := md.Get(auth.ClientHeaderKey)
-	sids := md.Get(auth.ClientSecretKey)
+	cids := md.Get(service.ClientHeaderKey)
+	sids := md.Get(service.ClientSecretKey)
 	if len(cids) > 0 {
 		clientId = cids[0]
 	}

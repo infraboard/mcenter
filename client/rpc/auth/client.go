@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 
+	"github.com/infraboard/mcenter/apps/service"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -31,8 +32,8 @@ func (a *Authentication) GetRequestMetadata(context.Context, ...string) (
 	map[string]string, error,
 ) {
 	return map[string]string{
-		ClientHeaderKey: a.clientID,
-		ClientSecretKey: a.clientSecret,
+		service.ClientHeaderKey: a.clientID,
+		service.ClientSecretKey: a.clientSecret,
 	}, nil
 }
 
@@ -48,8 +49,8 @@ func GetClientCredential(ctx context.Context) (clientId, clientSecret string) {
 		return
 	}
 
-	cids := md.Get(ClientHeaderKey)
-	sids := md.Get(ClientSecretKey)
+	cids := md.Get(service.ClientHeaderKey)
+	sids := md.Get(service.ClientSecretKey)
 	if len(cids) > 0 {
 		clientId = cids[0]
 	}
