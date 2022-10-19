@@ -9,7 +9,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/client/rpc/auth"
 )
 
 func (s *impl) DescribeEndpoint(ctx context.Context, req *endpoint.DescribeEndpointRequest) (
@@ -63,7 +62,7 @@ func (s *impl) QueryEndpoints(ctx context.Context, req *endpoint.QueryEndpointRe
 
 func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryRequest) (*endpoint.RegistryResponse, error) {
 	if req.ClientId == "" && req.ClientSecret == "" {
-		req.ClientId, req.ClientSecret = auth.GetClientCredential(ctx)
+		req.ClientId, req.ClientSecret = service.GetClientCredential(ctx)
 	}
 
 	if err := req.Validate(); err != nil {

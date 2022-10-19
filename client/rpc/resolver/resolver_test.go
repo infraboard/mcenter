@@ -11,7 +11,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/infraboard/mcenter/client/rpc/auth"
 	"github.com/infraboard/mcenter/client/rpc/resolver"
 )
 
@@ -23,7 +22,7 @@ func TestResolver(t *testing.T) {
 	conn, err := grpc.DialContext(
 		ctx,
 		fmt.Sprintf("%s://%s", resolver.Scheme, "maudit"), // Dial to "mcenter://keyauth"
-		grpc.WithPerRPCCredentials(auth.NewAuthentication(os.Getenv("MCENTER_CLINET_ID"), os.Getenv("MCENTER_CLIENT_SECRET"))),
+		grpc.WithPerRPCCredentials(rpc.NewAuthentication(os.Getenv("MCENTER_CLINET_ID"), os.Getenv("MCENTER_CLIENT_SECRET"))),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock(),
 	)

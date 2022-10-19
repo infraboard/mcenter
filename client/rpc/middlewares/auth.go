@@ -1,4 +1,4 @@
-package auth
+package middlewares
 
 import (
 	"context"
@@ -12,16 +12,17 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcenter/client/rpc"
 )
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
-func GrpcAuthUnaryServerInterceptor(svr service.RPCClient) grpc.UnaryServerInterceptor {
-	return newGrpcAuther(svr).Auth
+func GrpcAuthUnaryServerInterceptor() grpc.UnaryServerInterceptor {
+	return newGrpcAuther(rpc.C().Serivce()).Auth
 }
 
 func newGrpcAuther(svr service.RPCClient) *grpcAuther {
 	return &grpcAuther{
-		log:     zap.L().Named("Grpc Auther"),
+		log:     zap.L().Named("auther.grpc"),
 		service: svr,
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"net/url"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcenter/client/rpc/auth"
 )
 
 // NewDefaultConfig todo
@@ -23,8 +22,8 @@ type Config struct {
 	Resolver     *Resolver `json:"resolver" toml:"resolver" yaml:"resolver"`
 }
 
-func (c *Config) Credentials() *auth.Authentication {
-	return auth.NewAuthentication(c.ClientID, c.ClientSecret)
+func (c *Config) Credentials() *Authentication {
+	return NewAuthentication(c.ClientID, c.ClientSecret)
 }
 
 func NewDefaultResolver() *Resolver {

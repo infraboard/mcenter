@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/infraboard/mcenter/client/rpc"
-	"github.com/infraboard/mcenter/client/rpc/auth"
 	"github.com/infraboard/mcenter/client/rpc/resolver"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -32,7 +31,7 @@ func main() {
 	conn, err := grpc.DialContext(
 		ctx,
 		fmt.Sprintf("%s://%s", resolver.Scheme, "keyauth"), // Dial to "mcenter://keyauth"
-		grpc.WithPerRPCCredentials(auth.NewAuthentication("abc", "1123")),
+		grpc.WithPerRPCCredentials(rpc.NewAuthentication("abc", "1123")),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`),
 		grpc.WithBlock(),

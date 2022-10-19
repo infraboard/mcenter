@@ -1,10 +1,9 @@
-package auth
+package rpc
 
 import (
 	"context"
 
 	"github.com/infraboard/mcenter/apps/service"
-	"google.golang.org/grpc/metadata"
 )
 
 // 客户端携带的凭证
@@ -40,23 +39,4 @@ func (a *Authentication) GetRequestMetadata(context.Context, ...string) (
 // RequireTransportSecurity todo
 func (a *Authentication) RequireTransportSecurity() bool {
 	return false
-}
-
-func GetClientCredential(ctx context.Context) (clientId, clientSecret string) {
-	// 重上下文中获取认证信息
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return
-	}
-
-	cids := md.Get(service.ClientHeaderKey)
-	sids := md.Get(service.ClientSecretKey)
-	if len(cids) > 0 {
-		clientId = cids[0]
-	}
-	if len(sids) > 0 {
-		clientSecret = sids[0]
-	}
-
-	return
 }
