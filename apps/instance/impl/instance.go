@@ -5,14 +5,14 @@ import (
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/client/rpc/auth"
+	"github.com/infraboard/mcenter/client/rpc"
 	"github.com/infraboard/mcube/exception"
 )
 
 func (i *impl) RegistryInstance(ctx context.Context, req *instance.RegistryRequest) (
 	*instance.Instance, error) {
 	// 补充实例应用相关信息
-	clientId := auth.GetClientId(ctx)
+	clientId := rpc.GetClientId(ctx)
 	app, err := i.app.DescribeService(ctx, service.NewDescribeServiceRequestByClientId(clientId))
 	if err != nil {
 		return nil, err

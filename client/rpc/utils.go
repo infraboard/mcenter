@@ -1,4 +1,4 @@
-package middlewares
+package rpc
 
 import (
 	"context"
