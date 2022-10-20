@@ -2,11 +2,16 @@ package impl
 
 import (
 	"context"
+	"time"
 
 	"github.com/infraboard/mcenter/apps/code"
+	"github.com/infraboard/mcenter/apps/namespace"
+	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
+	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/http/request"
 )
 
 func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
@@ -112,16 +117,134 @@ func (s *service) RevolkToken(ctx context.Context, req *token.RevolkTokenRequest
 // 切换Token空间
 func (s *service) ChangeNamespace(ctx context.Context, req *token.ChangeNamespaceRequest) (
 	*token.Token, error) {
-	return nil, nil
+	if err := req.Validate(); err != nil {
+		return nil, exception.NewBadRequest("validate change namespace error, %s", err)
+	}
+
+	tk, err := s.DescribeToken(ctx, token.NewDescribeTokenRequest(req.Token))
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.ns.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(tk.Domain, req.Namespace))
+	if err != nil {
+		return nil, err
+	}
+
+	if !tk.UserType.IsIn(user.TYPE_PRIMARY, user.TYPE_SUPPER) && !tk.HasNamespace(req.Namespace) {
+		return nil, exception.NewPermissionDeny("your has no permission to access namespace %s", req.Namespace)
+	}
+
+	tk.Namespace = req.Namespace
+	if err := s.update(tk); err != nil {
+		return nil, err
+	}
+
+	return tk, nil
 }
 
 // 校验Token
 func (s *service) ValidateToken(ctx context.Context, req *token.ValidateTokenRequest) (
 	*token.Token, error) {
-	return nil, nil
+	if err := req.Validate(); err != nil {
+		return nil, exception.NewBadRequest(err.Error())
+	}
+
+	tk, err := s.get(ctx, req.AccessToken)
+	if err != nil {
+		return nil, exception.NewUnauthorized(err.Error())
+	}
+
+	if tk.Status.IsBlock {
+		return nil, s.makeBlockExcption(*tk.Status.BlockType, tk.Status.BlockMessage())
+	}
+
+	// 校验Access Token是否过期
+	if tk.CheckAccessIsExpired() {
+		// 如果Refresh还没有过期, 自动再续一个周期, 避免用户连续使用过程中导致访问中断
+		if err := s.reuseToken(ctx, tk); err != nil {
+			return nil, err
+		}
+	}
+
+	return tk, nil
+}
+
+func (s *service) makeBlockExcption(bt token.BLOCK_TYPE, message string) exception.APIException {
+	switch bt {
+	case token.BLOCK_TYPE_REFRESH_TOKEN_EXPIRED:
+		return exception.NewSessionTerminated(message)
+	case token.BLOCK_TYPE_OTHER_PLACE_LOGGED_IN:
+		return exception.NewOtherPlaceLoggedIn(message)
+	case token.BLOCK_TYPE_OTHER_IP_LOGGED_IN:
+		return exception.NewOtherIPLoggedIn(message)
+	default:
+		return exception.NewInternalServerError("unknow block type: %s, message: %s", bt, message)
+	}
+}
+
+func (s *service) reuseToken(ctx context.Context, tk *token.Token) error {
+	// 刷新token过期的，不允许复用
+	if tk.CheckRefreshIsExpired() {
+		return exception.NewRefreshTokenExpired("refresh_token: %s expoired", tk.RefreshToken)
+	}
+
+	// access token延长一个过期周期
+	tk.AccessExpiredAt = time.Now().Add(time.Duration(token.DEFAULT_ACCESS_TOKEN_EXPIRE_SECOND)*time.Second).Unix() * 1000
+	// refresh token延长一个过期周期
+	tk.RefreshExpiredAt = time.Unix(tk.RefreshExpiredAt/1000, 0).Add(time.Duration(token.DEFAULT_REFRESH_TOKEN_EXPIRE_SECOND)*time.Second).Unix() * 1000
+	return s.save(ctx, tk)
 }
 
 // 查询Token, 用于查询Token颁发记录, 也就是登陆日志
 func (s *service) QueryToken(ctx context.Context, req *token.QueryTokenRequest) (*token.TokenSet, error) {
-	return nil, nil
+	query := newQueryRequest(req)
+	resp, err := s.col.Find(context.TODO(), query.FindFilter(), query.FindOptions())
+
+	if err != nil {
+		return nil, exception.NewInternalServerError("find token error, error is %s", err)
+	}
+
+	tokenSet := token.NewTokenSet()
+	// 循环
+	for resp.Next(context.TODO()) {
+		tk := new(token.Token)
+		if err := resp.Decode(tk); err != nil {
+			return nil, exception.NewInternalServerError("decode token error, error is %s", err)
+		}
+		tokenSet.Add(tk)
+	}
+
+	// count
+	count, err := s.col.CountDocuments(context.TODO(), query.FindFilter())
+	if err != nil {
+		return nil, exception.NewInternalServerError("get token count error, error is %s", err)
+	}
+	tokenSet.Total = count
+
+	return tokenSet, nil
+}
+
+func (s *service) DescribeToken(ctx context.Context, req *token.DescribeTokenRequest) (*token.Token, error) {
+	if err := req.Validate(); err != nil {
+		return nil, exception.NewBadRequest(err.Error())
+	}
+
+	tk, err := s.get(ctx, req.DescribeValue)
+	if err != nil {
+		return nil, exception.NewUnauthorized(err.Error())
+	}
+
+	// 查询用户可以访问的空间
+	query := policy.NewQueryPolicyRequest(request.NewPageRequest(policy.MAX_USER_POLICY, 1))
+	query.Username = tk.Username
+	ps, err := s.policy.QueryPolicy(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	if ps.Total > policy.MAX_USER_POLICY {
+		s.log.Warnf("user policy large than max policy count %d, total: %d", policy.MAX_USER_POLICY, ps.Total)
+	}
+	tk.AvailableNamespace = ps.GetNamespace()
+	return tk, nil
 }

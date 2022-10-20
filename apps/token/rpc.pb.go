@@ -22,6 +22,54 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type DESCRIBY_BY int32
+
+const (
+	// 通过access token查看
+	DESCRIBY_BY_ACCESS_TOKEN DESCRIBY_BY = 0
+	// 通过刷新token查询
+	DESCRIBY_BY_REFRESH_TOKEN DESCRIBY_BY = 1
+)
+
+// Enum value maps for DESCRIBY_BY.
+var (
+	DESCRIBY_BY_name = map[int32]string{
+		0: "ACCESS_TOKEN",
+		1: "REFRESH_TOKEN",
+	}
+	DESCRIBY_BY_value = map[string]int32{
+		"ACCESS_TOKEN":  0,
+		"REFRESH_TOKEN": 1,
+	}
+)
+
+func (x DESCRIBY_BY) Enum() *DESCRIBY_BY {
+	p := new(DESCRIBY_BY)
+	*p = x
+	return p
+}
+
+func (x DESCRIBY_BY) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DESCRIBY_BY) Descriptor() protoreflect.EnumDescriptor {
+	return file_apps_token_pb_rpc_proto_enumTypes[0].Descriptor()
+}
+
+func (DESCRIBY_BY) Type() protoreflect.EnumType {
+	return &file_apps_token_pb_rpc_proto_enumTypes[0]
+}
+
+func (x DESCRIBY_BY) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DESCRIBY_BY.Descriptor instead.
+func (DESCRIBY_BY) EnumDescriptor() ([]byte, []int) {
+	return file_apps_token_pb_rpc_proto_rawDescGZIP(), []int{0}
+}
+
 type ValidateTokenRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -368,6 +416,65 @@ func (x *QueryTokenRequest) GetBlockType() BLOCK_TYPE {
 	return BLOCK_TYPE_REFRESH_TOKEN_EXPIRED
 }
 
+type DescribeTokenRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 参数类型
+	// @gotags: json:"describe_by"
+	DescribeBy DESCRIBY_BY `protobuf:"varint,1,opt,name=describe_by,json=describeBy,proto3,enum=infraboard.mcenter.token.DESCRIBY_BY" json:"describe_by"`
+	// 参数值
+	// @gotags: json:"describe_value" validate:"required"
+	DescribeValue string `protobuf:"bytes,2,opt,name=describe_value,json=describeValue,proto3" json:"describe_value" validate:"required"`
+}
+
+func (x *DescribeTokenRequest) Reset() {
+	*x = DescribeTokenRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_apps_token_pb_rpc_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DescribeTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DescribeTokenRequest) ProtoMessage() {}
+
+func (x *DescribeTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_apps_token_pb_rpc_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DescribeTokenRequest.ProtoReflect.Descriptor instead.
+func (*DescribeTokenRequest) Descriptor() ([]byte, []int) {
+	return file_apps_token_pb_rpc_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *DescribeTokenRequest) GetDescribeBy() DESCRIBY_BY {
+	if x != nil {
+		return x.DescribeBy
+	}
+	return DESCRIBY_BY_ACCESS_TOKEN
+}
+
+func (x *DescribeTokenRequest) GetDescribeValue() string {
+	if x != nil {
+		return x.DescribeValue
+	}
+	return ""
+}
+
 var File_apps_token_pb_rpc_proto protoreflect.FileDescriptor
 
 var file_apps_token_pb_rpc_proto_rawDesc = []byte{
@@ -441,17 +548,29 @@ var file_apps_token_pb_rpc_proto_rawDesc = []byte{
 	0x5f, 0x74, 0x79, 0x70, 0x65, 0x42, 0x0d, 0x0a, 0x0b, 0x5f, 0x67, 0x72, 0x61, 0x6e, 0x74, 0x5f,
 	0x74, 0x79, 0x70, 0x65, 0x42, 0x07, 0x0a, 0x05, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x42, 0x0b, 0x0a,
 	0x09, 0x5f, 0x69, 0x73, 0x5f, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x42, 0x0d, 0x0a, 0x0b, 0x5f, 0x62,
-	0x6c, 0x6f, 0x63, 0x6b, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x32, 0x69, 0x0a, 0x03, 0x52, 0x50, 0x43,
-	0x12, 0x62, 0x0a, 0x0d, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x54, 0x6f, 0x6b, 0x65,
-	0x6e, 0x12, 0x2e, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d,
-	0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2e, 0x56, 0x61, 0x6c,
-	0x69, 0x64, 0x61, 0x74, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x1a, 0x1f, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d,
-	0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2e, 0x54, 0x6f, 0x6b,
-	0x65, 0x6e, 0x22, 0x00, 0x42, 0x2a, 0x5a, 0x28, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
-	0x6f, 0x6d, 0x2f, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2f, 0x6d, 0x63,
-	0x65, 0x6e, 0x74, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x74, 0x6f, 0x6b, 0x65, 0x6e,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6c, 0x6f, 0x63, 0x6b, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x22, 0x85, 0x01, 0x0a, 0x14, 0x44, 0x65,
+	0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x46, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x5f, 0x62,
+	0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x25, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62,
+	0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x74, 0x6f, 0x6b,
+	0x65, 0x6e, 0x2e, 0x44, 0x45, 0x53, 0x43, 0x52, 0x49, 0x42, 0x59, 0x5f, 0x42, 0x59, 0x52, 0x0a,
+	0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x42, 0x79, 0x12, 0x25, 0x0a, 0x0e, 0x64, 0x65,
+	0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0d, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x56, 0x61, 0x6c, 0x75,
+	0x65, 0x2a, 0x32, 0x0a, 0x0b, 0x44, 0x45, 0x53, 0x43, 0x52, 0x49, 0x42, 0x59, 0x5f, 0x42, 0x59,
+	0x12, 0x10, 0x0a, 0x0c, 0x41, 0x43, 0x43, 0x45, 0x53, 0x53, 0x5f, 0x54, 0x4f, 0x4b, 0x45, 0x4e,
+	0x10, 0x00, 0x12, 0x11, 0x0a, 0x0d, 0x52, 0x45, 0x46, 0x52, 0x45, 0x53, 0x48, 0x5f, 0x54, 0x4f,
+	0x4b, 0x45, 0x4e, 0x10, 0x01, 0x32, 0x69, 0x0a, 0x03, 0x52, 0x50, 0x43, 0x12, 0x62, 0x0a, 0x0d,
+	0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x2e, 0x2e,
+	0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74,
+	0x65, 0x72, 0x2e, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2e, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74,
+	0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e,
+	0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74,
+	0x65, 0x72, 0x2e, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x00,
+	0x42, 0x2a, 0x5a, 0x28, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x69,
+	0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2f, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65,
+	0x72, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -466,34 +585,38 @@ func file_apps_token_pb_rpc_proto_rawDescGZIP() []byte {
 	return file_apps_token_pb_rpc_proto_rawDescData
 }
 
-var file_apps_token_pb_rpc_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_apps_token_pb_rpc_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_apps_token_pb_rpc_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_apps_token_pb_rpc_proto_goTypes = []interface{}{
-	(*ValidateTokenRequest)(nil),   // 0: infraboard.mcenter.token.ValidateTokenRequest
-	(*RevolkTokenRequest)(nil),     // 1: infraboard.mcenter.token.RevolkTokenRequest
-	(*ChangeNamespaceRequest)(nil), // 2: infraboard.mcenter.token.ChangeNamespaceRequest
-	(*QueryTokenRequest)(nil),      // 3: infraboard.mcenter.token.QueryTokenRequest
-	(*request.PageRequest)(nil),    // 4: infraboard.mcube.page.PageRequest
-	(PLATFORM)(0),                  // 5: infraboard.mcenter.token.PLATFORM
-	(user.TYPE)(0),                 // 6: infraboard.mcenter.user.TYPE
-	(GRANT_TYPE)(0),                // 7: infraboard.mcenter.token.GRANT_TYPE
-	(TOKEN_TYPE)(0),                // 8: infraboard.mcenter.token.TOKEN_TYPE
-	(BLOCK_TYPE)(0),                // 9: infraboard.mcenter.token.BLOCK_TYPE
-	(*Token)(nil),                  // 10: infraboard.mcenter.token.Token
+	(DESCRIBY_BY)(0),               // 0: infraboard.mcenter.token.DESCRIBY_BY
+	(*ValidateTokenRequest)(nil),   // 1: infraboard.mcenter.token.ValidateTokenRequest
+	(*RevolkTokenRequest)(nil),     // 2: infraboard.mcenter.token.RevolkTokenRequest
+	(*ChangeNamespaceRequest)(nil), // 3: infraboard.mcenter.token.ChangeNamespaceRequest
+	(*QueryTokenRequest)(nil),      // 4: infraboard.mcenter.token.QueryTokenRequest
+	(*DescribeTokenRequest)(nil),   // 5: infraboard.mcenter.token.DescribeTokenRequest
+	(*request.PageRequest)(nil),    // 6: infraboard.mcube.page.PageRequest
+	(PLATFORM)(0),                  // 7: infraboard.mcenter.token.PLATFORM
+	(user.TYPE)(0),                 // 8: infraboard.mcenter.user.TYPE
+	(GRANT_TYPE)(0),                // 9: infraboard.mcenter.token.GRANT_TYPE
+	(TOKEN_TYPE)(0),                // 10: infraboard.mcenter.token.TOKEN_TYPE
+	(BLOCK_TYPE)(0),                // 11: infraboard.mcenter.token.BLOCK_TYPE
+	(*Token)(nil),                  // 12: infraboard.mcenter.token.Token
 }
 var file_apps_token_pb_rpc_proto_depIdxs = []int32{
-	4,  // 0: infraboard.mcenter.token.QueryTokenRequest.page:type_name -> infraboard.mcube.page.PageRequest
-	5,  // 1: infraboard.mcenter.token.QueryTokenRequest.platform:type_name -> infraboard.mcenter.token.PLATFORM
-	6,  // 2: infraboard.mcenter.token.QueryTokenRequest.user_type:type_name -> infraboard.mcenter.user.TYPE
-	7,  // 3: infraboard.mcenter.token.QueryTokenRequest.grant_type:type_name -> infraboard.mcenter.token.GRANT_TYPE
-	8,  // 4: infraboard.mcenter.token.QueryTokenRequest.type:type_name -> infraboard.mcenter.token.TOKEN_TYPE
-	9,  // 5: infraboard.mcenter.token.QueryTokenRequest.block_type:type_name -> infraboard.mcenter.token.BLOCK_TYPE
-	0,  // 6: infraboard.mcenter.token.RPC.ValidateToken:input_type -> infraboard.mcenter.token.ValidateTokenRequest
-	10, // 7: infraboard.mcenter.token.RPC.ValidateToken:output_type -> infraboard.mcenter.token.Token
-	7,  // [7:8] is the sub-list for method output_type
-	6,  // [6:7] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	6,  // 0: infraboard.mcenter.token.QueryTokenRequest.page:type_name -> infraboard.mcube.page.PageRequest
+	7,  // 1: infraboard.mcenter.token.QueryTokenRequest.platform:type_name -> infraboard.mcenter.token.PLATFORM
+	8,  // 2: infraboard.mcenter.token.QueryTokenRequest.user_type:type_name -> infraboard.mcenter.user.TYPE
+	9,  // 3: infraboard.mcenter.token.QueryTokenRequest.grant_type:type_name -> infraboard.mcenter.token.GRANT_TYPE
+	10, // 4: infraboard.mcenter.token.QueryTokenRequest.type:type_name -> infraboard.mcenter.token.TOKEN_TYPE
+	11, // 5: infraboard.mcenter.token.QueryTokenRequest.block_type:type_name -> infraboard.mcenter.token.BLOCK_TYPE
+	0,  // 6: infraboard.mcenter.token.DescribeTokenRequest.describe_by:type_name -> infraboard.mcenter.token.DESCRIBY_BY
+	1,  // 7: infraboard.mcenter.token.RPC.ValidateToken:input_type -> infraboard.mcenter.token.ValidateTokenRequest
+	12, // 8: infraboard.mcenter.token.RPC.ValidateToken:output_type -> infraboard.mcenter.token.Token
+	8,  // [8:9] is the sub-list for method output_type
+	7,  // [7:8] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_apps_token_pb_rpc_proto_init() }
@@ -551,6 +674,18 @@ func file_apps_token_pb_rpc_proto_init() {
 				return nil
 			}
 		}
+		file_apps_token_pb_rpc_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DescribeTokenRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_apps_token_pb_rpc_proto_msgTypes[3].OneofWrappers = []interface{}{}
 	type x struct{}
@@ -558,13 +693,14 @@ func file_apps_token_pb_rpc_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_apps_token_pb_rpc_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   4,
+			NumEnums:      1,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_apps_token_pb_rpc_proto_goTypes,
 		DependencyIndexes: file_apps_token_pb_rpc_proto_depIdxs,
+		EnumInfos:         file_apps_token_pb_rpc_proto_enumTypes,
 		MessageInfos:      file_apps_token_pb_rpc_proto_msgTypes,
 	}.Build()
 	File_apps_token_pb_rpc_proto = out.File

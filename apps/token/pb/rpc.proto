@@ -81,3 +81,19 @@ message QueryTokenRequest {
     // @gotags: json:"block_type"
     optional BLOCK_TYPE block_type = 14;
 }
+
+enum DESCRIBY_BY {
+    // 通过access token查看
+    ACCESS_TOKEN = 0;
+    // 通过刷新token查询
+    REFRESH_TOKEN = 1;
+}
+
+message DescribeTokenRequest {
+    // 参数类型
+    // @gotags: json:"describe_by"
+    DESCRIBY_BY describe_by = 1;
+    // 参数值
+    // @gotags: json:"describe_value" validate:"required"
+    string describe_value = 2;
+}

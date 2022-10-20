@@ -1,16 +1,24 @@
 package token
 
 import (
+	"errors"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/http/request"
 )
 
 const (
 	AppName = "token"
+)
+
+// use a single instance of Validate, it caches struct info
+var (
+	validate = validator.New()
 )
 
 // NewIssueTokenRequest 默认请求
@@ -130,4 +138,87 @@ func MakeBearer(lenth int) string {
 
 	token := strings.Join(t, "")
 	return token
+}
+
+// Validate 校验参数
+func (m *ValidateTokenRequest) Validate() error {
+	if err := validate.Struct(m); err != nil {
+		return err
+	}
+
+	if m.AccessToken == "" {
+		return errors.New("access_token required one")
+	}
+
+	return nil
+}
+
+// BlockMessage todo
+func (t *Status) BlockMessage() string {
+	if !t.IsBlock {
+		return ""
+	}
+
+	return fmt.Sprintf("token blocked at %d, reason: %s", t.BlockAt, t.BlockReason)
+}
+
+// CheckAccessIsExpired 检测token是否过期
+func (t *Token) CheckAccessIsExpired() bool {
+	if t.AccessExpiredAt == 0 {
+		return false
+	}
+
+	return time.Unix(t.AccessExpiredAt/1000, 0).Before(time.Now())
+}
+
+// CheckRefreshIsExpired 检测刷新token是否过期
+func (t *Token) CheckRefreshIsExpired() bool {
+	// 过期时间为0时, 标识不过期
+	if t.RefreshExpiredAt == 0 {
+		return false
+	}
+
+	return time.Unix(t.RefreshExpiredAt/1000, 0).Before(time.Now())
+}
+
+func (t *Token) HasNamespace(ns string) bool {
+	for _, v := range t.AvailableNamespace {
+		if v == ns {
+			return true
+		}
+	}
+
+	return false
+}
+
+func NewDescribeTokenRequest(token string) *DescribeTokenRequest {
+	return &DescribeTokenRequest{
+		DescribeBy:    DESCRIBY_BY_ACCESS_TOKEN,
+		DescribeValue: token,
+	}
+}
+
+func (req *ChangeNamespaceRequest) Validate() error {
+	return validate.Struct(req)
+}
+
+// Validate 校验
+func (m *DescribeTokenRequest) Validate() error {
+	if err := validate.Struct(m); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// NewTokenSet 实例化
+func NewTokenSet() *TokenSet {
+	return &TokenSet{
+		Items: []*Token{},
+	}
+}
+
+// Add todo
+func (m *TokenSet) Add(item *Token) {
+	m.Items = append(m.Items, item)
 }

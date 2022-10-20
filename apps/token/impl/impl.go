@@ -13,6 +13,8 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/code"
+	"github.com/infraboard/mcenter/apps/namespace"
+	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/token/security"
@@ -31,6 +33,8 @@ type service struct {
 	token.UnimplementedRPCServer
 	log logger.Logger
 
+	policy  policy.Service
+	ns      namespace.Service
 	checker security.Checker
 	code    code.Service
 }
@@ -61,6 +65,8 @@ func (s *service) Config() error {
 
 	s.log = zap.L().Named(s.Name())
 	s.code = app.GetInternalApp(code.AppName).(code.Service)
+	s.ns = app.GetInternalApp(namespace.AppName).(namespace.Service)
+	s.policy = app.GetInternalApp(policy.AppName).(policy.Service)
 
 	s.checker, err = security.NewChecker()
 	if err != nil {

@@ -8,6 +8,7 @@ import (
 	"github.com/infraboard/mcube/exception"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (s *service) save(ctx context.Context, tk *token.Token) error {
@@ -34,6 +35,15 @@ func (s *service) get(ctx context.Context, id string) (*token.Token, error) {
 	return ins, nil
 }
 
+func (s *service) update(tk *token.Token) error {
+	_, err := s.col.UpdateOne(context.TODO(), bson.M{"_id": tk.AccessToken}, bson.M{"$set": tk})
+	if err != nil {
+		return exception.NewInternalServerError("update token(%s) error, %s", tk.AccessToken, err)
+	}
+
+	return nil
+}
+
 func (s *service) delete(ctx context.Context, ins *token.Token) error {
 	if ins == nil || ins.AccessToken == "" {
 		return fmt.Errorf("access tpken is nil")
@@ -49,4 +59,36 @@ func (s *service) delete(ctx context.Context, ins *token.Token) error {
 	}
 
 	return nil
+}
+
+func newQueryRequest(req *token.QueryTokenRequest) *queryRequest {
+	return &queryRequest{req}
+}
+
+type queryRequest struct {
+	*token.QueryTokenRequest
+}
+
+func (r *queryRequest) FindOptions() *options.FindOptions {
+	pageSize := int64(r.Page.PageSize)
+	skip := int64(r.Page.PageSize) * int64(r.Page.PageNumber-1)
+
+	opt := &options.FindOptions{
+		Sort:  bson.D{{Key: "create_at", Value: -1}},
+		Limit: &pageSize,
+		Skip:  &skip,
+	}
+
+	return opt
+}
+
+func (r *queryRequest) FindFilter() bson.M {
+	filter := bson.M{}
+	if r.GrantType != nil {
+		filter["grant_type"] = r.GrantType
+	}
+	if r.Username != "" {
+		filter["username"] = r.Username
+	}
+	return filter
 }

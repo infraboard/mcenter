@@ -24,7 +24,7 @@ require (
 	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	google.golang.org/grpc v1.46.2
+	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.27.1
 )
 
