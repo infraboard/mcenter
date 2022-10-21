@@ -180,35 +180,80 @@ func NewDeleteEndpointRequestWithServiceID(id string) *DeleteEndpointRequest {
 // 用于Route转换成Entry
 func TransferRoutesToEntry(routes []restful.Route) (entries []*Entry) {
 	for _, r := range routes {
-		var resource, action string
-		var authEnabled, permEnabled, isAudit bool
-		if r.Metadata != nil {
-			if v, ok := r.Metadata[label.Resource]; ok {
-				resource, _ = v.(string)
-			}
-			if v, ok := r.Metadata[label.Action]; ok {
-				action, _ = v.(string)
-			}
-			if v, ok := r.Metadata[label.Auth]; ok {
-				authEnabled, _ = v.(bool)
-			}
-			if v, ok := r.Metadata[label.Permission]; ok {
-				permEnabled, _ = v.(bool)
-			}
-			if v, ok := r.Metadata[label.Audit]; ok {
-				isAudit, _ = v.(bool)
-			}
-		}
-		entries = append(entries, &Entry{
-			FunctionName:     r.Operation,
-			Resource:         resource,
-			Path:             fmt.Sprintf("%s.%s", r.Method, r.Path),
-			Method:           r.Method,
-			AuthEnable:       authEnabled,
-			PermissionEnable: permEnabled,
-			AuditLog:         isAudit,
-			Labels:           map[string]string{"action": action},
-		})
+		entries = append(entries, NewEntryFromRestRoute(r))
 	}
 	return
+}
+
+func NewDefaultEntry() *Entry {
+	return &Entry{
+		Allow:     []string{},
+		Labels:    map[string]string{},
+		Extension: map[string]string{},
+	}
+}
+
+func (e *Entry) LoadMeta(meta map[string]interface{}) {
+	if meta != nil {
+		if v, ok := meta[label.Resource]; ok {
+			e.Resource, _ = v.(string)
+		}
+		if v, ok := meta[label.Auth]; ok {
+			e.AuthEnable, _ = v.(bool)
+		}
+		if v, ok := meta[label.Audit]; ok {
+			e.AuditLog, _ = v.(bool)
+		}
+		if v, ok := meta[label.Permission]; ok {
+			e.PermissionEnable, _ = v.(bool)
+		}
+
+		if v, ok := meta[label.Action]; ok {
+			e.Labels["action"], _ = v.(string)
+		}
+	}
+}
+
+// UniquePath todo
+func (e *Entry) UniquePath() string {
+	return fmt.Sprintf("%s.%s", e.Method, e.Path)
+}
+
+func (e *Entry) IsAllow(target fmt.Stringer) bool {
+	for i := range e.Allow {
+		if e.Allow[i] == "*" {
+			return true
+		}
+
+		if e.Allow[i] == target.String() {
+			return true
+		}
+	}
+
+	return false
+}
+
+func NewEntryFromRestRequest(req *restful.Request) *Entry {
+	entry := NewDefaultEntry()
+
+	// 请求拦截
+	route := req.SelectedRoute()
+	if route != nil {
+		return nil
+	}
+
+	entry.FunctionName = route.Operation()
+	entry.Method = route.Method()
+	entry.LoadMeta(route.Metadata())
+	entry.Path = entry.UniquePath()
+	return entry
+}
+
+func NewEntryFromRestRoute(route restful.Route) *Entry {
+	entry := NewDefaultEntry()
+	entry.FunctionName = route.Operation
+	entry.Method = route.Method
+	entry.LoadMeta(route.Metadata)
+	entry.Path = entry.UniquePath()
+	return entry
 }
