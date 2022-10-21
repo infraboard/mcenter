@@ -6,24 +6,21 @@ import (
 	"testing"
 
 	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/conf"
-
-	// 注册所有服务
-	_ "github.com/infraboard/mcenter/apps"
+	"github.com/infraboard/mcenter/test/tools"
 )
 
 var (
 	impl instance.Service
+	ctx  = context.Background()
 )
 
 func TestSearch(t *testing.T) {
 	req := instance.NewSearchRequest()
-	set, err := impl.Search(context.Background(), req)
+	set, err := impl.Search(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,7 +32,7 @@ func TestRegistry(t *testing.T) {
 	req.Name = "keyauth-001"
 	req.Address = "127.0.0.1:18050"
 	md := metadata.Pairs(service.ClientHeaderKey, os.Getenv("MCENTER_CLINET_ID"))
-	ctx := metadata.NewIncomingContext(context.Background(), md)
+	ctx := metadata.NewIncomingContext(ctx, md)
 	ins, err := impl.RegistryInstance(ctx, req)
 	if err != nil {
 		t.Fatal(err)
@@ -44,15 +41,6 @@ func TestRegistry(t *testing.T) {
 }
 
 func init() {
-	zap.DevelopmentSetup()
-
-	if err := conf.LoadConfigFromEnv(); err != nil {
-		panic(err)
-	}
-
-	if err := app.InitAllApp(); err != nil {
-		panic(err)
-	}
-
+	tools.DevelopmentSetup()
 	impl = app.GetInternalApp(instance.AppName).(instance.Service)
 }

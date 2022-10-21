@@ -16,7 +16,18 @@ var (
 
 func TestIssueToken(t *testing.T) {
 	req := token.NewIssueTokenRequest()
+	req.Username = "admin"
+	req.Password = "123456"
 	tk, err := impl.IssueToken(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(tk)
+}
+
+func TestValidateToken(t *testing.T) {
+	req := token.NewValidateTokenRequest("y4PizPfSB1TL02BCQMJEY9Aq")
+	tk, err := impl.ValidateToken(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}

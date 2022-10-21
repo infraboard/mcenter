@@ -4,17 +4,16 @@ import (
 	"context"
 	"testing"
 
-	"github.com/infraboard/mcenter/conf"
 	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/logger/zap"
 
 	// 注册所有服务
-	_ "github.com/infraboard/mcenter/apps"
 	"github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcenter/test/tools"
 )
 
 var (
 	impl service.MetaService
+	ctx  = context.Background()
 )
 
 func TestCreateService(t *testing.T) {
@@ -22,7 +21,7 @@ func TestCreateService(t *testing.T) {
 	req.Name = "cmdb"
 	req.Description = "资源中心"
 	req.Owner = "admin"
-	app, err := impl.CreateService(context.Background(), req)
+	app, err := impl.CreateService(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,7 +30,7 @@ func TestCreateService(t *testing.T) {
 
 func TestQueryService(t *testing.T) {
 	req := service.NewQueryServiceRequest()
-	set, err := impl.QueryService(context.Background(), req)
+	set, err := impl.QueryService(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -39,15 +38,6 @@ func TestQueryService(t *testing.T) {
 }
 
 func init() {
-	zap.DevelopmentSetup()
-
-	if err := conf.LoadConfigFromEnv(); err != nil {
-		panic(err)
-	}
-
-	if err := app.InitAllApp(); err != nil {
-		panic(err)
-	}
-
+	tools.DevelopmentSetup()
 	impl = app.GetInternalApp(service.AppName).(service.MetaService)
 }

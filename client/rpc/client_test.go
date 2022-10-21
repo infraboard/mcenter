@@ -17,7 +17,7 @@ var (
 )
 
 func TestValidateToken(t *testing.T) {
-	req := token.NewValidateTokenRequest("A2OGh9ORR8BSjY9juj898W9Z")
+	req := token.NewValidateTokenRequest("y4PizPfSB1TL02BCQMJEY9Aq")
 	tk, err := c.Token().ValidateToken(ctx, req)
 	if err != nil {
 		t.Fatal(err)
