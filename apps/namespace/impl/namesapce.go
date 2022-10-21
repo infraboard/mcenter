@@ -66,7 +66,8 @@ func (s *impl) QueryNamespace(ctx context.Context, req *namespace.QueryNamespace
 	set := namespace.NewNamespaceSet()
 
 	if req.Username != "" {
-		qp := policy.NewQueryPolicyRequest(request.NewPageRequest(policy.MAX_USER_POLICY, 1))
+		qp := policy.NewQueryPolicyRequest()
+		qp.Page = request.NewPageRequest(policy.MAX_USER_POLICY, 1)
 		qp.Domain = req.Domain
 		qp.Username = req.Username
 		ps, err := s.policy.QueryPolicy(ctx, qp)

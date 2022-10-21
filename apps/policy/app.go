@@ -210,9 +210,9 @@ func NewDeletePolicyRequestWithID(id string) *DeletePolicyRequest {
 }
 
 // NewQueryPolicyRequest 列表查询请求
-func NewQueryPolicyRequest(pageReq *request.PageRequest) *QueryPolicyRequest {
+func NewQueryPolicyRequest() *QueryPolicyRequest {
 	return &QueryPolicyRequest{
-		Page:          pageReq,
+		Page:          request.NewDefaultPageRequest(),
 		WithRole:      false,
 		WithNamespace: false,
 	}

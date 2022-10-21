@@ -73,7 +73,8 @@ func (s *impl) AddPermissionToRole(ctx context.Context, req *role.AddPermissionT
 	}
 
 	// 查询角色条目数是否超标
-	queryPerm := role.NewQueryPermissionRequest(request.NewPageRequest(role.RoleMaxPermission, 1))
+	queryPerm := role.NewQueryPermissionRequest()
+	queryPerm.Page = request.NewPageRequest(role.RoleMaxPermission, 1)
 	queryPerm.SkipItems = true
 	queryPerm.RoleId = ins.Id
 	ps, err := s.QueryPermission(ctx, queryPerm)

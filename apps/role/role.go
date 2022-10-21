@@ -25,14 +25,15 @@ var (
 func NewQueryRoleRequestFromHTTP(r *http.Request) *QueryRoleRequest {
 	page := request.NewPageRequestFromHTTP(r)
 
-	req := NewQueryRoleRequest(page)
+	req := NewQueryRoleRequest()
+	req.Page = page
 	return req
 }
 
 // NewQueryRoleRequest 列表查询请求
-func NewQueryRoleRequest(pageReq *request.PageRequest) *QueryRoleRequest {
+func NewQueryRoleRequest() *QueryRoleRequest {
 	return &QueryRoleRequest{
-		Page: pageReq,
+		Page: request.NewDefaultPageRequest(),
 	}
 }
 
@@ -78,10 +79,11 @@ func New(req *CreateRoleRequest) (*Role, error) {
 	}
 
 	r := &Role{
-		Id:       xid.New().String(),
-		CreateAt: ftime.Now().Timestamp(),
-		UpdateAt: ftime.Now().Timestamp(),
-		Spec:     req,
+		Id:          xid.New().String(),
+		CreateAt:    ftime.Now().Timestamp(),
+		UpdateAt:    ftime.Now().Timestamp(),
+		Spec:        req,
+		Permissions: []*Permission{},
 	}
 	return r, nil
 }
@@ -97,8 +99,9 @@ func NewDefaultRole() *Role {
 // NewCreateRoleRequest 实例化请求
 func NewCreateRoleRequest() *CreateRoleRequest {
 	return &CreateRoleRequest{
-		Type: RoleType_CUSTOM,
-		Meta: map[string]string{},
+		Type:  RoleType_CUSTOM,
+		Meta:  map[string]string{},
+		Specs: []*Spec{},
 	}
 }
 
@@ -122,8 +125,8 @@ func (r *Role) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error) {
 	var (
 		rok, lok bool
 	)
-	for i := range r.Spec.Permissions {
-		perm := r.Spec.Permissions[i]
+	for i := range r.Permissions {
+		perm := r.Permissions[i]
 
 		rok = perm.MatchResource(ep.ServiceId, ep.Entry.Resource)
 		lok = perm.MatchLabel(ep.Entry.Labels)
@@ -174,7 +177,7 @@ func (s *RoleSet) Permissions() *PermissionSet {
 	ps := NewPermissionSet()
 
 	for i := range s.Items {
-		ps.Add(s.Items[i].Spec.Permissions...)
+		ps.Add(s.Items[i].Permissions...)
 	}
 
 	return ps

@@ -39,16 +39,16 @@ func (req *RemovePermissionFromRoleRequest) Validate() error {
 }
 
 // NewQueryPermissionRequest todo
-func NewQueryPermissionRequest(pageReq *request.PageRequest) *QueryPermissionRequest {
+func NewQueryPermissionRequest() *QueryPermissionRequest {
 	return &QueryPermissionRequest{
-		Page: pageReq,
+		Page: request.NewDefaultPageRequest(),
 	}
 }
 
 // NewQueryPermissionRequestFromHTTP 列表查询请求
 func NewQueryPermissionRequestFromHTTP(r *http.Request) *QueryPermissionRequest {
-	page := request.NewPageRequestFromHTTP(r)
-	req := NewQueryPermissionRequest(page)
+	req := NewQueryPermissionRequest()
+	req.Page = request.NewPageRequestFromHTTP(r)
 
 	return req
 }

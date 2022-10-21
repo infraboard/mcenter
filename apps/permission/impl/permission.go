@@ -20,7 +20,8 @@ func (s *service) QueryPermission(ctx context.Context, req *permission.QueryPerm
 	}
 
 	// 获取用户的策略列表
-	preq := policy.NewQueryPolicyRequest(request.NewPageRequest(100, 1))
+	preq := policy.NewQueryPolicyRequest()
+	preq.Page = request.NewPageRequest(100, 1)
 	preq.Username = req.Username
 	preq.Namespace = req.Namespace
 
@@ -45,7 +46,8 @@ func (s *service) QueryRole(ctx context.Context, req *permission.QueryRoleReques
 	}
 
 	// 获取用户的策略列表
-	preq := policy.NewQueryPolicyRequest(request.NewPageRequest(100, 1))
+	preq := policy.NewQueryPolicyRequest()
+	preq.Page = request.NewPageRequest(100, 1)
 	preq.Username = req.Username
 	preq.Namespace = req.Namespace
 

@@ -32,6 +32,9 @@ message Role {
     // 角色描述信息
     // @gotags: bson:"spec" json:"spec"
     CreateRoleRequest spec = 5;
+    // 角色的权限
+    // @gotags: bson:"-" json:"permissions,omitempty"
+    repeated Permission permissions = 7;
 }
 
 message RoleSet {
@@ -58,9 +61,9 @@ message CreateRoleRequest {
     // 角色描述
     // @gotags: bson:"description" json:"description" validate:"lte=400"
     string description =5;
-    // 读权限
-    // @gotags: bson:"-" json:"permissions,omitempty"
-    repeated Permission permissions = 6;
+    // 权限定义
+    // @gotags: bson:"-" json:"specs,omitempty"
+    repeated Spec specs = 6;
     // 角色关联的其他信息，比如展示的视图
     // @gotags: bson:"meta" json:"meta" validate:"lte=400"
     map<string,string> meta =7;                 

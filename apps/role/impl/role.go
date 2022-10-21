@@ -19,10 +19,22 @@ func (s *impl) CreateRole(ctx context.Context, req *role.CreateRoleRequest) (*ro
 		return nil, err
 	}
 
+	// 保存角色
 	if _, err := s.role.InsertOne(ctx, r); err != nil {
 		return nil, exception.NewInternalServerError("inserted role(%s) document error, %s",
 			r.Spec.Name, err)
 	}
+
+	// 保存角色的权限
+	addReq := role.NewAddPermissionToRoleRequest()
+	addReq.CreateBy = req.CreateBy
+	addReq.Permissions = req.Specs
+	addReq.RoleId = r.Id
+	perms, err := s.AddPermissionToRole(ctx, addReq)
+	if err != nil {
+		return nil, err
+	}
+	r.Permissions = perms.Items
 	return r, nil
 }
 
@@ -33,23 +45,34 @@ func (s *impl) QueryRole(ctx context.Context, req *role.QueryRoleRequest) (*role
 	}
 
 	s.log.Debugf("query role filter: %s", query.FindFilter())
-	resp, err := s.role.Find(context.TODO(), query.FindFilter(), query.FindOptions())
+	resp, err := s.role.Find(ctx, query.FindFilter(), query.FindOptions())
 	if err != nil {
 		return nil, exception.NewInternalServerError("find role error, error is %s", err)
 	}
 
 	set := role.NewRoleSet()
 	// 循环
-	for resp.Next(context.TODO()) {
+	for resp.Next(ctx) {
 		ins := role.NewDefaultRole()
 		if err := resp.Decode(ins); err != nil {
 			return nil, exception.NewInternalServerError("decode role error, error is %s", err)
+		}
+		// 补充权限
+		if req.WithPermission {
+			pReq := role.NewQueryPermissionRequest()
+			pReq.RoleId = ins.Id
+			pReq.Page = request.NewPageRequest(role.RoleMaxPermission, 1)
+			ps, err := s.QueryPermission(ctx, pReq)
+			if err != nil {
+				return nil, err
+			}
+			ins.Permissions = ps.Items
 		}
 		set.Add(ins)
 	}
 
 	// count
-	count, err := s.role.CountDocuments(context.TODO(), query.FindFilter())
+	count, err := s.role.CountDocuments(ctx, query.FindFilter())
 	if err != nil {
 		return nil, exception.NewInternalServerError("get token count error, error is %s", err)
 	}
@@ -87,7 +110,8 @@ func (s *impl) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest) (*ro
 	}
 
 	if !req.DeletePolicy {
-		queryReq := policy.NewQueryPolicyRequest(request.NewPageRequest(20, 1))
+		queryReq := policy.NewQueryPolicyRequest()
+		queryReq.Page = request.NewPageRequest(20, 1)
 		queryReq.RoleId = req.Id
 		ps, err := s.policy.QueryPolicy(ctx, queryReq)
 		if err != nil {

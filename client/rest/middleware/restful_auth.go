@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
+	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/client/rest"
 )
@@ -33,12 +33,10 @@ type httpAuther struct {
 // 是否开启权限的控制, 交给中间件使用方去觉得
 func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Response, next *restful.FilterChain) {
 	// 请求拦截
-	meta := req.SelectedRoute().Metadata()
-	a.log.Debugf("route meta: %s", meta)
+	entry := endpoint.NewEntryFromRestRequest(req)
 
-	isAuth, ok := meta[label.Auth]
 	// 有认证标签,并且开启了认证
-	if ok && isAuth.(bool) {
+	if entry.AuthEnable {
 		// 获取用户Token, Token放在Heander Authorization
 		ak := token.GetTokenFromHTTPHeader(req.Request)
 
@@ -53,8 +51,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		req.SetAttribute("token", tk)
 
 		// 判断用户权限
-		isPerm, ok := meta[label.Permission]
-		if ok && isPerm.(bool) {
+		if entry.PermissionEnable {
 			a.log.Debugf("perm not impl ...")
 		}
 	}

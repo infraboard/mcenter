@@ -236,7 +236,8 @@ func (s *service) DescribeToken(ctx context.Context, req *token.DescribeTokenReq
 	}
 
 	// 查询用户可以访问的空间
-	query := policy.NewQueryPolicyRequest(request.NewPageRequest(policy.MAX_USER_POLICY, 1))
+	query := policy.NewQueryPolicyRequest()
+	query.Page = request.NewPageRequest(policy.MAX_USER_POLICY, 1)
 	query.Username = tk.Username
 	ps, err := s.policy.QueryPolicy(ctx, query)
 	if err != nil {
