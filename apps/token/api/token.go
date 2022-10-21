@@ -53,3 +53,15 @@ func (u *handler) ChangeNamespace(r *restful.Request, w *restful.Response) {
 	}
 	response.Success(w.ResponseWriter, set)
 }
+
+func (u *handler) ValidateToken(r *restful.Request, w *restful.Response) {
+	tk := r.Request.Header.Get(token.VALIDATE_TOKEN_HEADER_KEY)
+	req := token.NewValidateTokenRequest(tk)
+
+	resp, err := h.service.ValidateToken(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w.ResponseWriter, err)
+		return
+	}
+	response.Success(w.ResponseWriter, resp)
+}

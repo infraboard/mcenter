@@ -13,10 +13,6 @@ const (
 	AppName = "domain"
 )
 
-const (
-	DEFAULT_DOMAIN = "default"
-)
-
 // use a single instance of Validate, it caches struct info
 var (
 	validate = validator.New()

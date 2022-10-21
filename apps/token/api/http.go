@@ -55,6 +55,13 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Doc("切换空间").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(token.ChangeNamespaceRequest{}))
+
+	ws.Route(ws.GET("/").To(h.ValidateToken).
+		Doc("验证令牌").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Reads(token.ValidateTokenRequest{}).
+		Writes(response.NewData(token.Token{})).
+		Returns(200, "OK", token.Token{}))
 }
 
 func init() {

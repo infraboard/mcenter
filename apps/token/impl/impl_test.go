@@ -26,7 +26,7 @@ func TestIssueToken(t *testing.T) {
 }
 
 func TestValidateToken(t *testing.T) {
-	req := token.NewValidateTokenRequest("y4PizPfSB1TL02BCQMJEY9Aq")
+	req := token.NewValidateTokenRequest(tools.AccessToken())
 	tk, err := impl.ValidateToken(ctx, req)
 	if err != nil {
 		t.Fatal(err)

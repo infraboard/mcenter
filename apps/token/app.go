@@ -51,6 +51,13 @@ func NewChangeNamespaceRequest() *ChangeNamespaceRequest {
 	return &ChangeNamespaceRequest{}
 }
 
+func NewDefaultToken() *Token {
+	return &Token{
+		Status:   NewStatus(),
+		Location: NewLocation(),
+	}
+}
+
 func NewToken(req *IssueTokenRequest) *Token {
 	tk := &Token{
 		AccessToken:      MakeBearer(24),
@@ -79,6 +86,10 @@ func NewStatus() *Status {
 	}
 }
 
+func NewLocation() *Location {
+	return &Location{}
+}
+
 func NewPlatform(p PLATFORM) *PLATFORM {
 	return &p
 }
@@ -101,7 +112,7 @@ const (
 )
 
 func GetTokenFromHTTPHeader(r *http.Request) string {
-	auth := r.Header.Get("Authorization")
+	auth := r.Header.Get(ACCESS_TOKEN_HEADER_KEY)
 	info := strings.Split(auth, " ")
 	if len(info) > 1 {
 		return info[1]
