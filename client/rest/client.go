@@ -1,6 +1,8 @@
 package rest
 
 import (
+	"fmt"
+
 	"github.com/caarlos0/env/v6"
 	"github.com/infraboard/mcube/client/rest"
 )
@@ -11,7 +13,7 @@ var (
 
 func C() *ClientSet {
 	if client == nil {
-		panic("mcenter client config not load")
+		panic("mcenter rest client config not load")
 	}
 	return client
 }
@@ -22,18 +24,27 @@ func LoadClientFromEnv() error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(conf.Address, conf.PathPrefix)
 
-	client = NewClient(conf)
+	c, err := NewClient(conf)
+	if err != nil {
+		return err
+	}
+	client = c
 	return nil
 }
 
-func NewClient(conf *Config) *ClientSet {
+func NewClient(conf *Config) (*ClientSet, error) {
+	if err := conf.Validate(); err != nil {
+		return nil, err
+	}
+
 	c := rest.NewRESTClient()
 	c.SetBearerTokenAuth(conf.Token)
 	c.SetBaseURL(conf.Address + conf.PathPrefix)
 	return &ClientSet{
 		c: c,
-	}
+	}, nil
 }
 
 type ClientSet struct {
@@ -41,7 +52,7 @@ type ClientSet struct {
 }
 
 func (c *ClientSet) Service() MetaService {
-	return &appImpl{client: c.c}
+	return &svcImpl{client: c.c}
 }
 
 func (c *ClientSet) Instance() InstanceService {

@@ -21,7 +21,7 @@ var (
 
 func C() *ClientSet {
 	if client == nil {
-		panic("mcenter client config not load")
+		panic("mcenter rpc client config not load")
 	}
 	return client
 }

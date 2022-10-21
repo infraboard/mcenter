@@ -19,11 +19,11 @@ type MetaService interface {
 	RefreshCredential(context.Context, *service.DescribeServiceRequest) (*service.Service, error)
 }
 
-type appImpl struct {
+type svcImpl struct {
 	client *rest.RESTClient
 }
 
-func (i *appImpl) ValidateCredential(ctx context.Context, req *service.ValidateCredentialRequest) (
+func (i *svcImpl) ValidateCredential(ctx context.Context, req *service.ValidateCredentialRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
@@ -40,7 +40,7 @@ func (i *appImpl) ValidateCredential(ctx context.Context, req *service.ValidateC
 	return ins, nil
 }
 
-func (i *appImpl) CreateService(ctx context.Context, req *service.CreateServiceRequest) (
+func (i *svcImpl) CreateService(ctx context.Context, req *service.CreateServiceRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
@@ -60,7 +60,7 @@ func (i *appImpl) CreateService(ctx context.Context, req *service.CreateServiceR
 	return ins, nil
 }
 
-func (i *appImpl) UpdateService(ctx context.Context, req *service.UpdateServiceRequest) (
+func (i *svcImpl) UpdateService(ctx context.Context, req *service.UpdateServiceRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
@@ -92,7 +92,7 @@ func (i *appImpl) UpdateService(ctx context.Context, req *service.UpdateServiceR
 	return ins, nil
 }
 
-func (i *appImpl) QueryService(ctx context.Context, req *service.QueryServiceRequest) (
+func (i *svcImpl) QueryService(ctx context.Context, req *service.QueryServiceRequest) (
 	*service.ServiceSet, error) {
 	set := service.NewServiceSet()
 	resp := response.NewData(set)
@@ -112,7 +112,7 @@ func (i *appImpl) QueryService(ctx context.Context, req *service.QueryServiceReq
 	return set, nil
 }
 
-func (i *appImpl) DescribeService(ctx context.Context, req *service.DescribeServiceRequest) (
+func (i *svcImpl) DescribeService(ctx context.Context, req *service.DescribeServiceRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
@@ -131,7 +131,7 @@ func (i *appImpl) DescribeService(ctx context.Context, req *service.DescribeServ
 	return ins, nil
 }
 
-func (i *appImpl) DeleteService(ctx context.Context, req *service.DeleteServiceRequest) (
+func (i *svcImpl) DeleteService(ctx context.Context, req *service.DeleteServiceRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
 	resp := response.NewData(ins)
@@ -150,7 +150,7 @@ func (i *appImpl) DeleteService(ctx context.Context, req *service.DeleteServiceR
 	return ins, nil
 }
 
-func (i *appImpl) RefreshCredential(ctx context.Context, req *service.DescribeServiceRequest) (
+func (i *svcImpl) RefreshCredential(ctx context.Context, req *service.DescribeServiceRequest) (
 	*service.Service, error) {
 	return nil, nil
 }

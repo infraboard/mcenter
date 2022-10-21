@@ -15,7 +15,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
-	github.com/infraboard/mcube v1.9.0
+	github.com/infraboard/mcube v1.9.1-0.20221021070803-1524565e521a
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.7.1

@@ -16,7 +16,8 @@ var (
 )
 
 func TestQueryService(t *testing.T) {
-	set, err := c.Service().QueryService(ctx, service.NewQueryServiceRequest())
+	req := service.NewQueryServiceRequest()
+	set, err := c.Service().QueryService(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,5 +36,9 @@ func TestValidateToken(t *testing.T) {
 }
 
 func init() {
-	c = rest.NewClient(rest.NewDefaultConfig())
+	err := rest.LoadClientFromEnv()
+	if err != nil {
+		panic(err)
+	}
+	c = rest.C()
 }
