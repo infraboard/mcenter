@@ -69,7 +69,8 @@ func (r *describeNamespaceRequest) FindFilter() bson.M {
 	filter := bson.M{}
 
 	if r.Name != "" {
-		filter["_id"] = r.Name
+		filter["spec.domain"] = r.Domain
+		filter["spec.name"] = r.Name
 	}
 
 	return filter

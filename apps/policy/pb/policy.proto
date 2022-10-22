@@ -24,7 +24,7 @@ message Policy {
     // @gotags: bson:"update_at" json:"update_at"
     int64 update_at = 3;
     // 策略定义
-    // @gotags: bson:"sepc" json:"spec"
+    // @gotags: bson:"spec" json:"spec"
     CreatePolicyRequest spec = 4;
     // 关联的角色对象
     // @gotags: bson:"-" json:"role,omitempty"

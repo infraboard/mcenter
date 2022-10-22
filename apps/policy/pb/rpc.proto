@@ -31,7 +31,9 @@ message QueryPolicyRequest {
     // @gotags: json:"with_namespace,omitempty"
     bool with_namespace = 7;
     // @gotags: json:"domain"
-    string domain = 8;    
+    string domain = 8;
+    // @gotags: json:"group"
+    string group = 9;     
 }
 
 // DescribePolicyRequest todo

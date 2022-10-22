@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/test/tools"
 	"github.com/infraboard/mcube/app"
@@ -14,8 +15,11 @@ var (
 	ctx  = context.Background()
 )
 
-func TestCreateRole(t *testing.T) {
+func TestCreateNamespace(t *testing.T) {
 	req := namespace.NewCreateNamespaceRequest()
+	req.Domain = domain.DEFAULT_DOMAIN
+	req.Name = namespace.DEFAULT_NAMESPACE
+	req.Owner = "admin"
 	r, err := impl.CreateNamespace(ctx, req)
 	if err != nil {
 		t.Fatal(err)

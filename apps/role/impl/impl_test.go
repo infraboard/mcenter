@@ -39,11 +39,44 @@ func TestCreateRole(t *testing.T) {
 	t.Log(r)
 }
 
+func TestCreateAdminRole(t *testing.T) {
+	req := role.NewCreateRoleRequest()
+	req.CreateBy = "admin"
+	req.Domain = domain.DEFAULT_DOMAIN
+	req.Type = role.RoleType_GLOBAL
+	req.Name = role.ADMIN_ROLE_NAME
+	req.Description = "管理员角色"
+	req.Specs = []*role.Spec{
+		{
+			Desc:         "管理员具备所有权限",
+			Effect:       role.EffectType_ALLOW,
+			ServiceId:    "*",
+			ResourceName: "*",
+			MatchAll:     true,
+		},
+	}
+	r, err := impl.CreateRole(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r)
+}
+
 func TestQueryRole(t *testing.T) {
 	req := role.NewQueryRoleRequest()
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.WithPermission = true
 	r, err := impl.QueryRole(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r)
+}
+
+func TestDescribeRole(t *testing.T) {
+	req := role.NewDescribeRoleRequestWithName(role.ADMIN_ROLE_NAME)
+	req.WithPermission = true
+	r, err := impl.DescribeRole(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}

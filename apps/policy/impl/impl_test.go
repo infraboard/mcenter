@@ -18,11 +18,11 @@ var (
 
 func TestCreatePolicy(t *testing.T) {
 	req := policy.NewCreatePolicyRequest()
-	req.Username = "test"
-	req.RoleId = "xxx"
+	req.Username = "admin"
+	req.RoleId = "cd9a6kuv9mc9fd7956cg"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
-	req.CreateBy = "test"
+	req.CreateBy = "admin"
 	r, err := impl.CreatePolicy(ctx, req)
 	if err != nil {
 		t.Fatal(err)
@@ -32,6 +32,7 @@ func TestCreatePolicy(t *testing.T) {
 
 func TestQueryPolicy(t *testing.T) {
 	req := policy.NewQueryPolicyRequest()
+	req.WithRole = true
 	r, err := impl.QueryPolicy(ctx, req)
 	if err != nil {
 		t.Fatal(err)

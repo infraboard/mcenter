@@ -63,20 +63,20 @@ func (r *queryPolicyRequest) FindOptions() *options.FindOptions {
 func (r *queryPolicyRequest) FindFilter() bson.M {
 	filter := bson.M{}
 	if r.Domain != "" {
-		filter["domain"] = r.Domain
+		filter["spec.domain"] = r.Domain
 	}
 
 	if r.Namespace != "" {
-		filter["namespace"] = r.Namespace
+		filter["spec.namespace"] = r.Namespace
 	}
 	if r.RoleId != "" {
-		filter["role_id"] = r.RoleId
+		filter["spec.role_id"] = r.RoleId
 	}
 	if r.Username != "" {
-		filter["username"] = r.Username
+		filter["spec.username"] = r.Username
 	}
 	if r.Type != nil {
-		filter["type"] = r.Type
+		filter["spec.type"] = r.Type
 	}
 
 	return filter

@@ -32,7 +32,7 @@ func (req *describeRoleRequest) FindFilter() bson.M {
 	}
 
 	if req.Name != "" {
-		filter["name"] = req.Name
+		filter["spec.name"] = req.Name
 	}
 
 	return filter

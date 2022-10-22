@@ -50,8 +50,8 @@ message DescribeRoleRequest {
     string id = 1;
     // @gotags: json:"name,omitempty" validate:"required,lte=64"
     string name = 2;
-    // @gotags: bson:"with_permissions" json:"with_permissions"
-    bool with_permissions = 3;
+    // @gotags: bson:"with_permission" json:"with_permission"
+    bool with_permission = 3;
     // @gotags: bson:"type" json:"type"
     RoleType type = 4;
 }

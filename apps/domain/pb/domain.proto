@@ -23,49 +23,43 @@ message Domain  {
 message CreateDomainRequest {
     // 域状态, 是否需要冻结该域, 冻结时, 该域下面所有用户禁止登录
     // @gotags: bson:"enabled" json:"enabled"
-    bool enabled = 2;
+    bool enabled = 1;
     // 归属人
     // @gotags: bson:"owner" json:"owner"
-    string owner = 3;
-    // Profile 需要修改内容
-    // @gotags: bson:"profile" json:"profile"
-    Profile profile = 4;
-    // SecuritySetting 域安全设置
-    // @gotags: bson:"security_setting" json:"security_setting"
-    SecuritySetting security_setting = 5;
-}
-
-message Profile {
+    string owner = 2;
     // 全称
     // @gotags: bson:"name" json:"name"  validate:"required"
-    string name = 5;
+    string name = 3;
     // 公司LOGO图片的URL
     // @gotags: bson:"logo_path" json:"logo_path"
-    string logo_path = 6;
+    string logo_path = 4;
     // 描述
     // @gotags: bson:"description" json:"description"
-    string description = 7;
+    string description = 5;
     // 电话
     // @gotags: bson:"phone" json:"phone"
-    string phone = 9;
+    string phone = 6;
     // 规模: 50人以下, 50~100, ...
     // @gotags: bson:"size" json:"size"
-    string size = 10;
+    string size = 7;
     // 位置: 指城市, 比如 中国,四川,成都
     // @gotags: bson:"location" json:"location"
-    string location = 11;
+    string location = 8;
     // 地址: 比如环球中心 10F 1034
     // @gotags: bson:"address" json:"address"
-    string address = 12;
+    string address = 9;
     // 所属行业: 比如, 互联网
     // @gotags: bson:"industry" json:"industry"
-    string industry = 13;
+    string industry = 10;
     // 传真
     // @gotags: bson:"fax" json:"fax"
-    string fax = 14;
+    string fax = 11;
     // 联系人
     // @gotags: bson:"contack" json:"contack"
-    Contact contack = 15;    
+    Contact contack = 12; 
+    // SecuritySetting 域安全设置
+    // @gotags: bson:"security_setting" json:"security_setting"
+    SecuritySetting security_setting = 13;
 }
 
 // 联系人

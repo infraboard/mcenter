@@ -28,7 +28,6 @@ func NewDefault() *Domain {
 // NewCreateDomainRequest todo
 func NewCreateDomainRequest() *CreateDomainRequest {
 	return &CreateDomainRequest{
-		Profile:         &Profile{},
 		SecuritySetting: NewDefaultSecuritySetting(),
 	}
 }

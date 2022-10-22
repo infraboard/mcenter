@@ -85,8 +85,8 @@ type Policy struct {
 	// @gotags: bson:"update_at" json:"update_at"
 	UpdateAt int64 `protobuf:"varint,3,opt,name=update_at,json=updateAt,proto3" json:"update_at" bson:"update_at"`
 	// 策略定义
-	// @gotags: bson:"sepc" json:"spec"
-	Spec *CreatePolicyRequest `protobuf:"bytes,4,opt,name=spec,proto3" json:"spec" bson:"sepc"`
+	// @gotags: bson:"spec" json:"spec"
+	Spec *CreatePolicyRequest `protobuf:"bytes,4,opt,name=spec,proto3" json:"spec" bson:"spec"`
 	// 关联的角色对象
 	// @gotags: bson:"-" json:"role,omitempty"
 	Role *role.Role `protobuf:"bytes,13,opt,name=role,proto3" json:"role,omitempty" bson:"-"`

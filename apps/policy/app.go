@@ -45,8 +45,8 @@ func NewDefaultPolicy() *Policy {
 
 func (p *Policy) genID() {
 	h := fnv.New32a()
-	hashedStr := fmt.Sprintf("%s-%s-%s-%s",
-		p.Spec.Domain, p.Spec.Namespace, p.Spec.Username, p.Spec.RoleId)
+	hashedStr := fmt.Sprintf("%s-%s-%s-%s-%s",
+		p.Spec.Domain, p.Spec.Namespace, p.Spec.Group, p.Spec.Username, p.Spec.RoleId)
 
 	h.Write([]byte(hashedStr))
 	p.Id = fmt.Sprintf("%x", h.Sum32())
@@ -104,7 +104,7 @@ func (s *PolicySet) GetRoles(ctx context.Context, r role.Service, withPermission
 	set := role.NewRoleSet()
 	for i := range s.Items {
 		req := role.NewDescribeRoleRequestWithID(s.Items[i].Spec.RoleId)
-		req.WithPermissions = withPermission
+		req.WithPermission = withPermission
 
 		ins, err := r.DescribeRole(ctx, req)
 		if err != nil {

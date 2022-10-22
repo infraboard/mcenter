@@ -14,13 +14,14 @@ var (
 	ctx  = context.Background()
 )
 
-func TestCreateRole(t *testing.T) {
+func TestCreateDomain(t *testing.T) {
 	req := domain.NewCreateDomainRequest()
-	r, err := impl.CreateDomain(ctx, req)
+	req.Name = domain.DEFAULT_DOMAIN
+	ins, err := impl.CreateDomain(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(ins)
 }
 
 func init() {
