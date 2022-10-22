@@ -14,8 +14,9 @@ var (
 	ctx  = context.Background()
 )
 
-func TestCreateRole(t *testing.T) {
+func TestCheckPermission(t *testing.T) {
 	req := permission.NewCheckPermissionRequest()
+	req.Username = "test"
 	r, err := impl.CheckPermission(ctx, req)
 	if err != nil {
 		t.Fatal(err)

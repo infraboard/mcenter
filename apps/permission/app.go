@@ -49,8 +49,8 @@ func (req *CheckPermissionRequest) Validate() error {
 		return fmt.Errorf("namespace required")
 	}
 
-	if req.EndpointId == "" && (req.ServiceId == "" || req.Path == "") {
-		return fmt.Errorf("endpoint_id or (service_id and path) required when check")
+	if req.ServiceId == "" || req.Path == "" {
+		return fmt.Errorf("service_id and path required when check")
 	}
 
 	return nil
