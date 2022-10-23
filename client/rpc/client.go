@@ -1,8 +1,6 @@
 package rpc
 
 import (
-	"github.com/caarlos0/env/v6"
-
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -14,41 +12,6 @@ import (
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
 )
-
-var (
-	client *ClientSet
-)
-
-func C() *ClientSet {
-	if client == nil {
-		panic("mcenter rpc client config not load")
-	}
-	return client
-}
-
-func LoadClientFromEnv() error {
-	conf := NewDefaultConfig()
-	err := env.Parse(conf)
-	if err != nil {
-		return err
-	}
-
-	client, err = NewClient(conf)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func LoadClientFromConfig(conf *Config) error {
-	c, err := NewClient(conf)
-	if err != nil {
-		return err
-	}
-	client = c
-	return nil
-}
 
 // NewClient todo
 func NewClient(conf *Config) (*ClientSet, error) {

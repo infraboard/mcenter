@@ -12,7 +12,7 @@ import (
 )
 
 func (s *service) save(ctx context.Context, u *user.User) error {
-	if _, err := s.col.InsertOne(context.TODO(), u); err != nil {
+	if _, err := s.col.InsertOne(ctx, u); err != nil {
 		return exception.NewInternalServerError("inserted user(%s) document error, %s",
 			u.Id, err)
 	}

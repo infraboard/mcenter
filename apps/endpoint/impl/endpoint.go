@@ -19,7 +19,7 @@ func (s *impl) DescribeEndpoint(ctx context.Context, req *endpoint.DescribeEndpo
 	}
 
 	ins := endpoint.NewDefaultEndpoint()
-	if err := s.col.FindOne(context.TODO(), r.FindFilter()).Decode(ins); err != nil {
+	if err := s.col.FindOne(ctx, r.FindFilter()).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("endpoint %s not found", req)
 		}
@@ -33,7 +33,7 @@ func (s *impl) DescribeEndpoint(ctx context.Context, req *endpoint.DescribeEndpo
 func (s *impl) QueryEndpoints(ctx context.Context, req *endpoint.QueryEndpointRequest) (
 	*endpoint.EndpointSet, error) {
 	r := newQueryEndpointRequest(req)
-	resp, err := s.col.Find(context.TODO(), r.FindFilter(), r.FindOptions())
+	resp, err := s.col.Find(ctx, r.FindFilter(), r.FindOptions())
 
 	if err != nil {
 		return nil, exception.NewInternalServerError("find endpoint error, error is %s", err)
@@ -41,7 +41,7 @@ func (s *impl) QueryEndpoints(ctx context.Context, req *endpoint.QueryEndpointRe
 
 	set := endpoint.NewEndpointSet()
 	// 循环
-	for resp.Next(context.TODO()) {
+	for resp.Next(ctx) {
 		app := endpoint.NewDefaultEndpoint()
 		if err := resp.Decode(app); err != nil {
 			return nil, exception.NewInternalServerError("decode domain error, error is %s", err)
@@ -51,7 +51,7 @@ func (s *impl) QueryEndpoints(ctx context.Context, req *endpoint.QueryEndpointRe
 	}
 
 	// count
-	count, err := s.col.CountDocuments(context.TODO(), r.FindFilter())
+	count, err := s.col.CountDocuments(ctx, r.FindFilter())
 	if err != nil {
 		return nil, exception.NewInternalServerError("get device count error, error is %s", err)
 	}
@@ -86,7 +86,7 @@ func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryReque
 	// 更新已有的记录
 	news := make([]interface{}, 0, len(endpoints))
 	for i := range endpoints {
-		if err := s.col.FindOneAndReplace(context.TODO(), bson.M{"_id": endpoints[i].Id}, endpoints[i]).Err(); err != nil {
+		if err := s.col.FindOneAndReplace(ctx, bson.M{"_id": endpoints[i].Id}, endpoints[i]).Err(); err != nil {
 			if err == mongo.ErrNoDocuments {
 				news = append(news, endpoints[i])
 			} else {
@@ -97,7 +97,7 @@ func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryReque
 
 	// 插入新增记录
 	if len(news) > 0 {
-		if _, err := s.col.InsertMany(context.TODO(), news); err != nil {
+		if _, err := s.col.InsertMany(ctx, news); err != nil {
 			return nil, exception.NewInternalServerError("inserted a service document error, %s", err)
 		}
 	}
@@ -106,7 +106,7 @@ func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryReque
 }
 
 func (s *impl) DeleteEndpoint(ctx context.Context, req *endpoint.DeleteEndpointRequest) (*endpoint.Endpoint, error) {
-	result, err := s.col.DeleteOne(context.TODO(), bson.M{"service_id": req.ServiceId})
+	result, err := s.col.DeleteOne(ctx, bson.M{"service_id": req.ServiceId})
 	if err != nil {
 		return nil, exception.NewInternalServerError("delete service(%s) endpoint error, %s", req.ServiceId, err)
 	}

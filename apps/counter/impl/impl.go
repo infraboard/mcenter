@@ -35,7 +35,7 @@ func (s *service) Config() error {
 
 func (s *service) GetNextSequenceValue(sequenceName string) (*counter.Count, error) {
 	result := s.col.FindOneAndUpdate(
-		context.TODO(),
+		context.Background(),
 		bson.M{"_id": sequenceName},
 		bson.M{"$inc": bson.M{"value": 1}},
 		options.FindOneAndUpdate().SetUpsert(true),

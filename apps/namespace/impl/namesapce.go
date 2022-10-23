@@ -30,7 +30,7 @@ func (s *impl) CreateNamespace(ctx context.Context, req *namespace.CreateNamespa
 		ins.Id = fmt.Sprintf("%s-%d", req.ParentId, c.Value)
 	}
 
-	if _, err := s.col.InsertOne(context.TODO(), ins); err != nil {
+	if _, err := s.col.InsertOne(ctx, ins); err != nil {
 		return nil, exception.NewInternalServerError("inserted namespace(%s) document error, %s",
 			ins.Spec.Name, err)
 	}
@@ -80,13 +80,13 @@ func (s *impl) QueryNamespace(ctx context.Context, req *namespace.QueryNamespace
 		return set, nil
 	}
 
-	resp, err := s.col.Find(context.TODO(), r.FindFilter(), r.FindOptions())
+	resp, err := s.col.Find(ctx, r.FindFilter(), r.FindOptions())
 	if err != nil {
 		return nil, exception.NewInternalServerError("find namespace error, error is %s", err)
 	}
 
 	// 循环
-	for resp.Next(context.TODO()) {
+	for resp.Next(ctx) {
 		ins := namespace.NewDefaultNamespace()
 		if err := resp.Decode(ins); err != nil {
 			return nil, exception.NewInternalServerError("decode namespace error, error is %s", err)
@@ -97,7 +97,7 @@ func (s *impl) QueryNamespace(ctx context.Context, req *namespace.QueryNamespace
 
 	// count
 	if len(r.namespaces) == 0 {
-		count, err := s.col.CountDocuments(context.TODO(), r.FindFilter())
+		count, err := s.col.CountDocuments(ctx, r.FindFilter())
 		if err != nil {
 			return nil, exception.NewInternalServerError("get namespace count error, error is %s", err)
 		}
@@ -115,7 +115,7 @@ func (s *impl) DescribeNamespace(ctx context.Context, req *namespace.DescriptNam
 	}
 
 	ins := namespace.NewDefaultNamespace()
-	if err := s.col.FindOne(context.TODO(), r.FindFilter()).Decode(ins); err != nil {
+	if err := s.col.FindOne(ctx, r.FindFilter()).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("namespace %s not found", req)
 		}
@@ -137,7 +137,7 @@ func (s *impl) DeleteNamespace(ctx context.Context, req *namespace.DeleteNamespa
 		return nil, err
 	}
 
-	_, err = s.col.DeleteOne(context.TODO(), r.FindFilter())
+	_, err = s.col.DeleteOne(ctx, r.FindFilter())
 	if err != nil {
 		return nil, exception.NewInternalServerError("delete namespace(%s) error, %s", req.Name, err)
 	}

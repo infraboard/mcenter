@@ -26,7 +26,7 @@ func (s *impl) CreatePolicy(ctx context.Context, req *policy.CreatePolicyRequest
 	}
 	s.log.Debugf("user: %s", u.Spec.Username)
 
-	if _, err := s.col.InsertOne(context.TODO(), ins); err != nil {
+	if _, err := s.col.InsertOne(ctx, ins); err != nil {
 		return nil, exception.NewInternalServerError("inserted policy(%s) document error, %s",
 			ins.Id, err)
 	}
@@ -71,14 +71,14 @@ func (s *impl) QueryPolicy(ctx context.Context, req *policy.QueryPolicyRequest) 
 	}
 
 	s.log.Debugf("query policy filter: %s", r.FindFilter())
-	resp, err := s.col.Find(context.TODO(), r.FindFilter(), r.FindOptions())
+	resp, err := s.col.Find(ctx, r.FindFilter(), r.FindOptions())
 	if err != nil {
 		return nil, exception.NewInternalServerError("find policy error, error is %s", err)
 	}
 
 	set := policy.NewPolicySet()
 	// 循环
-	for resp.Next(context.TODO()) {
+	for resp.Next(ctx) {
 		ins := policy.NewDefaultPolicy()
 		if err := resp.Decode(ins); err != nil {
 			return nil, exception.NewInternalServerError("decode policy error, error is %s", err)
@@ -98,7 +98,7 @@ func (s *impl) QueryPolicy(ctx context.Context, req *policy.QueryPolicyRequest) 
 	}
 
 	// count
-	count, err := s.col.CountDocuments(context.TODO(), r.FindFilter())
+	count, err := s.col.CountDocuments(ctx, r.FindFilter())
 	if err != nil {
 		return nil, exception.NewInternalServerError("get policy count error, error is %s", err)
 	}
@@ -116,7 +116,7 @@ func (s *impl) DescribePolicy(ctx context.Context, req *policy.DescribePolicyReq
 
 	ins := policy.NewDefaultPolicy()
 	s.log.Debugf("describe policy filter: %s", r.FindFilter())
-	if err := s.col.FindOne(context.TODO(), r.FindFilter()).Decode(ins); err != nil {
+	if err := s.col.FindOne(ctx, r.FindFilter()).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("policy %s not found", req)
 		}
@@ -140,7 +140,7 @@ func (s *impl) DeletePolicy(ctx context.Context, req *policy.DeletePolicyRequest
 		return nil, err
 	}
 
-	_, err = s.col.DeleteOne(context.TODO(), r.FindFilter())
+	_, err = s.col.DeleteOne(ctx, r.FindFilter())
 	if err != nil {
 		return nil, exception.NewInternalServerError("delete policy(%s) error, %s", req.Id, err)
 	}

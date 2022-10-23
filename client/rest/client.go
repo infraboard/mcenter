@@ -1,38 +1,8 @@
 package rest
 
 import (
-	"fmt"
-
-	"github.com/caarlos0/env/v6"
 	"github.com/infraboard/mcube/client/rest"
 )
-
-var (
-	client *ClientSet
-)
-
-func C() *ClientSet {
-	if client == nil {
-		panic("mcenter rest client config not load")
-	}
-	return client
-}
-
-func LoadClientFromEnv() error {
-	conf := NewDefaultConfig()
-	err := env.Parse(conf)
-	if err != nil {
-		return err
-	}
-	fmt.Println(conf.Address, conf.PathPrefix)
-
-	c, err := NewClient(conf)
-	if err != nil {
-		return err
-	}
-	client = c
-	return nil
-}
 
 func NewClient(conf *Config) (*ClientSet, error) {
 	if err := conf.Validate(); err != nil {

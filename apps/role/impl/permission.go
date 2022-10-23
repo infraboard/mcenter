@@ -17,7 +17,7 @@ func (s *impl) QueryPermission(ctx context.Context, req *role.QueryPermissionReq
 	}
 
 	s.log.Debugf("query permission filter: %s", query.FindFilter())
-	resp, err := s.perm.Find(context.TODO(), query.FindFilter(), query.FindOptions())
+	resp, err := s.perm.Find(ctx, query.FindFilter(), query.FindOptions())
 	if err != nil {
 		return nil, exception.NewInternalServerError("find permissionn error, error is %s", err)
 	}
@@ -25,7 +25,7 @@ func (s *impl) QueryPermission(ctx context.Context, req *role.QueryPermissionReq
 	// 循环
 	set := role.NewPermissionSet()
 	if !req.SkipItems {
-		for resp.Next(context.TODO()) {
+		for resp.Next(ctx) {
 			ins := role.NewDeaultPermission()
 			if err := resp.Decode(ins); err != nil {
 				return nil, exception.NewInternalServerError("decode permission error, error is %s", err)
@@ -35,7 +35,7 @@ func (s *impl) QueryPermission(ctx context.Context, req *role.QueryPermissionReq
 	}
 
 	// count
-	count, err := s.perm.CountDocuments(context.TODO(), query.FindFilter())
+	count, err := s.perm.CountDocuments(ctx, query.FindFilter())
 	if err != nil {
 		return nil, exception.NewInternalServerError("get permission count error, error is %s", err)
 	}
@@ -51,7 +51,7 @@ func (s *impl) DescribePermission(ctx context.Context, req *role.DescribePermiss
 	}
 
 	ins := role.NewDeaultPermission()
-	if err := s.perm.FindOne(context.TODO(), query.FindFilter(), query.FindOptions()).Decode(ins); err != nil {
+	if err := s.perm.FindOne(ctx, query.FindFilter(), query.FindOptions()).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("permission %s not found", req)
 		}
@@ -107,7 +107,7 @@ func (s *impl) RemovePermissionFromRole(ctx context.Context, req *role.RemovePer
 		return nil, err
 	}
 
-	resp, err := s.perm.DeleteMany(context.TODO(), delReq.FindFilter())
+	resp, err := s.perm.DeleteMany(ctx, delReq.FindFilter())
 	if err != nil {
 		return nil, exception.NewInternalServerError("delete permission(%s) error, %s", req.PermissionId, err)
 	}
@@ -134,7 +134,7 @@ func (s *impl) UpdatePermission(ctx context.Context, req *role.UpdatePermissionR
 	ins.Spec.MatchAll = req.MatchAll
 	ins.Spec.LabelValues = req.LabelValues
 
-	_, err = s.perm.UpdateOne(context.TODO(), bson.M{"_id": ins.Id}, bson.M{"$set": ins})
+	_, err = s.perm.UpdateOne(ctx, bson.M{"_id": ins.Id}, bson.M{"$set": ins})
 	if err != nil {
 		return nil, exception.NewInternalServerError("update permission(%s) error, %s", ins.Id, err)
 	}

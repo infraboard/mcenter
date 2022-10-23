@@ -109,7 +109,7 @@ func (s *service) VerifyCode(ctx context.Context, req *code.VerifyCodeRequest) (
 	}
 
 	code := code.NewDefaultCode()
-	if err := s.col.FindOne(context.TODO(), bson.M{"_id": req.HashID()}).Decode(code); err != nil {
+	if err := s.col.FindOne(ctx, bson.M{"_id": req.HashID()}).Decode(code); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("verify code: %s  not found", req.Code)
 		}
@@ -123,7 +123,7 @@ func (s *service) VerifyCode(ctx context.Context, req *code.VerifyCodeRequest) (
 	}
 
 	// 没过去验证成功, 删除
-	if err := s.delete(code); err != nil {
+	if err := s.delete(ctx, code); err != nil {
 		s.log.Errorf("delete check ok verify code error, %s", err)
 	}
 

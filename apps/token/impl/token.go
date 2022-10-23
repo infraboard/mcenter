@@ -136,7 +136,7 @@ func (s *service) ChangeNamespace(ctx context.Context, req *token.ChangeNamespac
 	}
 
 	tk.Namespace = req.Namespace
-	if err := s.update(tk); err != nil {
+	if err := s.update(ctx, tk); err != nil {
 		return nil, err
 	}
 
@@ -199,7 +199,7 @@ func (s *service) reuseToken(ctx context.Context, tk *token.Token) error {
 // 查询Token, 用于查询Token颁发记录, 也就是登陆日志
 func (s *service) QueryToken(ctx context.Context, req *token.QueryTokenRequest) (*token.TokenSet, error) {
 	query := newQueryRequest(req)
-	resp, err := s.col.Find(context.TODO(), query.FindFilter(), query.FindOptions())
+	resp, err := s.col.Find(ctx, query.FindFilter(), query.FindOptions())
 
 	if err != nil {
 		return nil, exception.NewInternalServerError("find token error, error is %s", err)
@@ -207,7 +207,7 @@ func (s *service) QueryToken(ctx context.Context, req *token.QueryTokenRequest) 
 
 	tokenSet := token.NewTokenSet()
 	// 循环
-	for resp.Next(context.TODO()) {
+	for resp.Next(ctx) {
 		tk := new(token.Token)
 		if err := resp.Decode(tk); err != nil {
 			return nil, exception.NewInternalServerError("decode token error, error is %s", err)
@@ -216,7 +216,7 @@ func (s *service) QueryToken(ctx context.Context, req *token.QueryTokenRequest) 
 	}
 
 	// count
-	count, err := s.col.CountDocuments(context.TODO(), query.FindFilter())
+	count, err := s.col.CountDocuments(ctx, query.FindFilter())
 	if err != nil {
 		return nil, exception.NewInternalServerError("get token count error, error is %s", err)
 	}

@@ -158,13 +158,16 @@ func (m *mongodb) getClient() (*mongo.Client, error) {
 	opts.SetHosts(m.Endpoints)
 	opts.SetConnectTimeout(5 * time.Second)
 
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second*5))
+	defer cancel()
+
 	// Connect to MongoDB
-	client, err := mongo.Connect(context.TODO(), opts)
+	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
 		return nil, fmt.Errorf("new mongodb client error, %s", err)
 	}
 
-	if err = client.Ping(context.TODO(), nil); err != nil {
+	if err = client.Ping(ctx, nil); err != nil {
 		return nil, fmt.Errorf("ping mongodb server(%s) error, %s", m.Endpoints, err)
 	}
 

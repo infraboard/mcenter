@@ -9,8 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (s *service) delete(ins *code.Code) error {
-	result, err := s.col.DeleteOne(context.TODO(), bson.M{"_id": ins.Id})
+func (s *service) delete(ctx context.Context, ins *code.Code) error {
+	result, err := s.col.DeleteOne(ctx, bson.M{"_id": ins.Id})
 	if err != nil {
 		return exception.NewInternalServerError("delete verify code(%s) error, %s", ins.Code, err)
 	}

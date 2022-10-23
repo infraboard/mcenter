@@ -88,7 +88,7 @@ func (s *impl) DescribeRole(ctx context.Context, req *role.DescribeRoleRequest) 
 	}
 
 	ins := role.NewDefaultRole()
-	if err := s.role.FindOne(context.TODO(), query.FindFilter(), query.FindOptions()).Decode(ins); err != nil {
+	if err := s.role.FindOne(ctx, query.FindFilter(), query.FindOptions()).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("role %s not found", req)
 		}
@@ -134,7 +134,7 @@ func (s *impl) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest) (*ro
 		}
 	}
 
-	resp, err := s.role.DeleteOne(context.TODO(), bson.M{"_id": req.Id})
+	resp, err := s.role.DeleteOne(ctx, bson.M{"_id": req.Id})
 	if err != nil {
 		return nil, exception.NewInternalServerError("delete role(%s) error, %s", req.Id, err)
 	}

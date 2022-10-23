@@ -35,8 +35,8 @@ func (s *service) get(ctx context.Context, id string) (*token.Token, error) {
 	return ins, nil
 }
 
-func (s *service) update(tk *token.Token) error {
-	_, err := s.col.UpdateOne(context.TODO(), bson.M{"_id": tk.AccessToken}, bson.M{"$set": tk})
+func (s *service) update(ctx context.Context, tk *token.Token) error {
+	_, err := s.col.UpdateOne(ctx, bson.M{"_id": tk.AccessToken}, bson.M{"$set": tk})
 	if err != nil {
 		return exception.NewInternalServerError("update token(%s) error, %s", tk.AccessToken, err)
 	}

@@ -17,7 +17,7 @@ func (s *service) CreateDomain(ctx context.Context, req *domain.CreateDomainRequ
 	if err != nil {
 		return nil, exception.NewBadRequest(err.Error())
 	}
-	if _, err := s.col.InsertOne(context.TODO(), d); err != nil {
+	if _, err := s.col.InsertOne(ctx, d); err != nil {
 		return nil, exception.NewInternalServerError("inserted a domain document error, %s", err)
 	}
 
@@ -38,7 +38,7 @@ func (s *service) DescribeDomain(ctx context.Context, req *domain.DescribeDomain
 	}
 
 	d := domain.NewDefault()
-	if err := s.col.FindOne(context.TODO(), filter).Decode(d); err != nil {
+	if err := s.col.FindOne(ctx, filter).Decode(d); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("domain %s not found", req)
 		}
@@ -71,7 +71,7 @@ func (s *service) UpdateDomain(ctx context.Context, req *domain.UpdateDomainRequ
 	}
 
 	d.UpdateAt = time.Now().UnixMilli()
-	_, err = s.col.UpdateOne(context.TODO(), bson.M{"_id": d.Id}, bson.M{"$set": d})
+	_, err = s.col.UpdateOne(ctx, bson.M{"_id": d.Id}, bson.M{"$set": d})
 	if err != nil {
 		return nil, exception.NewInternalServerError("update domain(%s) error, %s", d.Id, err)
 	}
