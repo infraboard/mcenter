@@ -17,23 +17,27 @@ service RPC {
 // QueryPermissionRequest 查询用户权限
 message QueryPermissionRequest {
     // @gotags: json:"page"
-   infraboard.mcube.page.PageRequest page = 1;
+    infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"domain"
+    string domain = 2;
     // @gotags: json:"namespace"
-    string namespace = 2;
+    string namespace = 3;
     // @gotags: json:"username"
-    string username = 3;
+    string username = 4;
 }
 
 // QueryRoleRequest 查询用户权限
 message QueryRoleRequest {
     // @gotags: json:"page"
-   infraboard.mcube.page.PageRequest page = 1;
+    infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"domain"
+    string domain = 2;
     // @gotags: json:"namespace"
-    string namespace = 2;
+    string namespace = 3;
     // @gotags: json:"with_permission"
-    bool with_permission = 3;
+    bool with_permission = 4;
     // @gotags: json:"username"
-    string username = 4;
+    string username = 5;
 }
 
 // CheckPermissionRequest todo

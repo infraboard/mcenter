@@ -22,6 +22,7 @@ func (s *service) QueryPermission(ctx context.Context, req *permission.QueryPerm
 	// 获取用户的策略列表
 	preq := policy.NewQueryPolicyRequest()
 	preq.Page = request.NewPageRequest(100, 1)
+	preq.Domain = req.Domain
 	preq.Username = req.Username
 	preq.Namespace = req.Namespace
 
@@ -49,6 +50,7 @@ func (s *service) QueryRole(ctx context.Context, req *permission.QueryRoleReques
 	preq := policy.NewQueryPolicyRequest()
 	preq.Page = request.NewPageRequest(100, 1)
 	preq.Username = req.Username
+	preq.Domain = req.Domain
 	preq.Namespace = req.Namespace
 
 	policySet, err := s.policy.QueryPolicy(ctx, preq)
@@ -68,6 +70,7 @@ func (s *service) CheckPermission(ctx context.Context, req *permission.CheckPerm
 	roleReq := permission.NewQueryRoleRequest(req.Namespace)
 	roleReq.WithPermission = true
 	roleReq.Username = req.Username
+	roleReq.Domain = req.Domain
 	roleSet, err := s.QueryRole(ctx, roleReq)
 	if err != nil {
 		return nil, err

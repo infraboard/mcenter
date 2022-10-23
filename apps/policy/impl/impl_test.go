@@ -18,8 +18,8 @@ var (
 
 func TestCreatePolicy(t *testing.T) {
 	req := policy.NewCreatePolicyRequest()
-	req.Username = "admin"
-	req.RoleId = "cd9a6kuv9mc9fd7956cg"
+	req.Username = "test"
+	req.RoleId = "cdahojmv9mc70r5h74gg"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
 	req.CreateBy = "admin"

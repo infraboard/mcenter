@@ -77,9 +77,9 @@ func NewQueryNamespaceRequestFromHTTP(r *http.Request) *QueryNamespaceRequest {
 }
 
 // NewQueryNamespaceRequest 列表查询请求
-func NewQueryNamespaceRequest(pageReq *request.PageRequest) *QueryNamespaceRequest {
+func NewQueryNamespaceRequest() *QueryNamespaceRequest {
 	return &QueryNamespaceRequest{
-		Page: pageReq,
+		Page: request.NewDefaultPageRequest(),
 	}
 }
 

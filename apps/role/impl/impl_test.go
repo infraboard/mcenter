@@ -17,19 +17,19 @@ var (
 
 func TestCreateRole(t *testing.T) {
 	req := role.NewCreateRoleRequest()
-	req.CreateBy = "test"
+	req.CreateBy = "admin"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Type = role.RoleType_GLOBAL
-	req.Name = "test_role"
-	req.Description = "测试"
+	req.Name = "maudit_admin"
+	req.Description = "审计中心管理员"
 	req.Specs = []*role.Spec{
 		{
 			Desc:         "测试",
 			Effect:       role.EffectType_ALLOW,
-			ServiceId:    "xxx",
-			ResourceName: "ECS",
+			ServiceId:    "2a4e174e",
+			ResourceName: "book",
 			LabelKey:     "action",
-			LabelValues:  []string{"create", "list"},
+			LabelValues:  []string{"list", "get"},
 		},
 	}
 	r, err := impl.CreateRole(ctx, req)
@@ -40,21 +40,7 @@ func TestCreateRole(t *testing.T) {
 }
 
 func TestCreateAdminRole(t *testing.T) {
-	req := role.NewCreateRoleRequest()
-	req.CreateBy = "admin"
-	req.Domain = domain.DEFAULT_DOMAIN
-	req.Type = role.RoleType_GLOBAL
-	req.Name = role.ADMIN_ROLE_NAME
-	req.Description = "管理员角色"
-	req.Specs = []*role.Spec{
-		{
-			Desc:         "管理员具备所有权限",
-			Effect:       role.EffectType_ALLOW,
-			ServiceId:    "*",
-			ResourceName: "*",
-			MatchAll:     true,
-		},
-	}
+	req := role.CreateAdminRoleRequest()
 	r, err := impl.CreateRole(ctx, req)
 	if err != nil {
 		t.Fatal(err)
