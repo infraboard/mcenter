@@ -1,7 +1,11 @@
 package impl
 
 import (
+	"context"
+
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/x/bsonx"
 
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/logger"
@@ -29,6 +33,25 @@ func (i *impl) Config() error {
 		return err
 	}
 	i.col = db.Collection(i.Name())
+
+	// 创建索引
+	indexs := []mongo.IndexModel{
+		{
+			Keys: bsonx.Doc{{Key: "create_at", Value: bsonx.Int32(-1)}},
+		},
+		{
+			Keys: bsonx.Doc{
+				{Key: "spec.domain", Value: bsonx.Int32(-1)},
+				{Key: "spec.namespace", Value: bsonx.Int32(-1)},
+				{Key: "spec.name", Value: bsonx.Int32(-1)},
+			},
+			Options: options.Index().SetUnique(true),
+		},
+	}
+	_, err = i.col.Indexes().CreateMany(context.Background(), indexs)
+	if err != nil {
+		return err
+	}
 
 	i.log = zap.L().Named(i.Name())
 	return nil
