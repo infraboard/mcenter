@@ -73,9 +73,17 @@ func TestQueryRole(t *testing.T) {
 	t.Log(r)
 }
 
-func TestDescribeRole(t *testing.T) {
+func TestDescribeRoleWithName(t *testing.T) {
 	req := role.NewDescribeRoleRequestWithName(role.ADMIN_ROLE_NAME)
-	req.WithPermission = true
+	r, err := impl.DescribeRole(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r)
+}
+
+func TestDescribeRoleWithId(t *testing.T) {
+	req := role.NewDescribeRoleRequestWithID("cd9ncsmv9mc17sg8rr90")
 	r, err := impl.DescribeRole(ctx, req)
 	if err != nil {
 		t.Fatal(err)

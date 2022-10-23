@@ -15,7 +15,7 @@ import (
 
 var (
 	// Service 服务实例
-	svr = &impl{}
+	svr = WrapImpl(&impl{})
 )
 
 type impl struct {

@@ -104,8 +104,6 @@ func (s *PolicySet) GetRoles(ctx context.Context, r role.Service, withPermission
 	set := role.NewRoleSet()
 	for i := range s.Items {
 		req := role.NewDescribeRoleRequestWithID(s.Items[i].Spec.RoleId)
-		req.WithPermission = withPermission
-
 		ins, err := r.DescribeRole(ctx, req)
 		if err != nil {
 			return nil, err

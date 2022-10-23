@@ -97,16 +97,14 @@ func (s *impl) DescribeRole(ctx context.Context, req *role.DescribeRoleRequest) 
 	}
 
 	// 补充权限
-	if req.WithPermission {
-		pReq := role.NewQueryPermissionRequest()
-		pReq.RoleId = ins.Id
-		pReq.Page = request.NewPageRequest(role.RoleMaxPermission, 1)
-		ps, err := s.QueryPermission(ctx, pReq)
-		if err != nil {
-			return nil, err
-		}
-		ins.Permissions = ps.Items
+	pReq := role.NewQueryPermissionRequest()
+	pReq.RoleId = ins.Id
+	pReq.Page = request.NewPageRequest(role.RoleMaxPermission, 1)
+	ps, err := s.QueryPermission(ctx, pReq)
+	if err != nil {
+		return nil, err
 	}
+	ins.Permissions = ps.Items
 
 	return ins, nil
 }

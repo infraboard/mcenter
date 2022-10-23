@@ -87,7 +87,6 @@ func (s *impl) QueryPolicy(ctx context.Context, req *policy.QueryPolicyRequest) 
 		// 补充关联的角色信息
 		if req.WithRole {
 			descRole := role.NewDescribeRoleRequestWithID(ins.Spec.RoleId)
-			descRole.WithPermission = true
 			ins.Role, err = s.role.DescribeRole(ctx, descRole)
 			if err != nil {
 				return nil, err
