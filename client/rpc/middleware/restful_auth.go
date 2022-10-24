@@ -12,7 +12,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/permission"
-	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/client/rpc"
@@ -46,8 +45,6 @@ type httpAuther struct {
 	client *rpc.ClientSet
 	// 鉴权模式
 	mode PermissionMode
-	// 客户端相关信息
-	svr *service.Service
 }
 
 // 是否开启权限的控制, 交给中间件使用方去觉得
@@ -118,7 +115,7 @@ func (a *httpAuther) ValidatePermissionByACL(ctx context.Context, tk *token.Toke
 }
 
 func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
-	svr, err := a.GetClientService(ctx)
+	ci, err := a.client.ClientInfo(ctx)
 	if err != nil {
 		return err
 	}
@@ -126,7 +123,7 @@ func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.To
 	req := permission.NewCheckPermissionRequest()
 	req.Username = tk.Username
 	req.Namespace = tk.Namespace
-	req.ServiceId = svr.Id
+	req.ServiceId = ci.Id
 	req.Path = e.UniquePath()
 	_, err = a.client.Permission().CheckPermission(ctx, req)
 	if err != nil {
@@ -134,18 +131,4 @@ func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.To
 	}
 	a.log.Debugf("[%s] permission check passed", tk.Username)
 	return nil
-}
-
-func (a *httpAuther) GetClientService(ctx context.Context) (*service.Service, error) {
-	if a.svr != nil {
-		return a.svr, nil
-	}
-
-	req := service.NewDescribeServiceRequestByClientId(a.client.GetClientID())
-	ins, err := a.client.Service().DescribeService(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	a.svr = ins
-	return ins, nil
 }

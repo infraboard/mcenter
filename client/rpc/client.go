@@ -1,6 +1,9 @@
 package rpc
 
 import (
+	"context"
+	"sync"
+
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -39,10 +42,31 @@ type ClientSet struct {
 	conf *Config
 	conn *grpc.ClientConn
 	log  logger.Logger
+	svr  *service.Service
+	lock sync.Mutex
 }
 
-func (c *ClientSet) GetClientID() string {
-	return c.conf.ClientID
+// 返回客户端服务信息
+func (c *ClientSet) ClientInfo(ctx context.Context) (*service.Service, error) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
+	if c.svr != nil {
+		return c.svr, nil
+	}
+
+	req := service.NewValidateCredentialRequest(c.conf.ClientID, c.conf.ClientSecret)
+	svc, err := c.Service().ValidateCredential(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	c.svr = svc
+	return c.svr, nil
+}
+
+// 这个地方有安全风险
+func (c *ClientSet) ClientConfig() Config {
+	return *c.conf
 }
 
 // Instance服务的SDK
@@ -70,7 +94,7 @@ func (c *ClientSet) Serivce() service.RPCClient {
 	return service.NewRPCClient(c.conn)
 }
 
-// Service服务的SDK
+// Endpoint服务的SDK
 func (c *ClientSet) Endpoint() endpoint.RPCClient {
 	return endpoint.NewRPCClient(c.conn)
 }
