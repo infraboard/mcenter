@@ -12,21 +12,23 @@ import (
 
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/permission"
+	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/client/rest"
 )
 
 // RestfulServerInterceptor go-restful认证中间件
-func RestfulServerInterceptor() restful.FilterFunction {
-	return newhttpAuther().GoRestfulAuthFunc
+func RestfulServerInterceptor(clientId, clientSercret string) restful.FilterFunction {
+	return newhttpAuther(service.NewValidateCredentialRequest(clientId, clientSercret)).GoRestfulAuthFunc
 }
 
 // 给服务端提供的RESTful接口的 认证与鉴权中间件
-func newhttpAuther() *httpAuther {
+func newhttpAuther(credential *service.ValidateCredentialRequest) *httpAuther {
 	return &httpAuther{
-		log:    zap.L().Named("auther.http"),
-		client: rest.C(),
+		log:        zap.L().Named("auther.http"),
+		client:     rest.C(),
+		credential: credential,
 	}
 }
 
@@ -45,6 +47,10 @@ type httpAuther struct {
 	client *rest.ClientSet
 	// 鉴权模式
 	mode PermissionMode
+	// 服务屏障
+	credential *service.ValidateCredentialRequest
+	// 服务Id
+	service *service.Service
 }
 
 // 是否开启权限的控制, 交给中间件使用方去觉得
@@ -115,15 +121,33 @@ func (a *httpAuther) ValidatePermissionByACL(ctx context.Context, tk *token.Toke
 }
 
 func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
+	svr, err := a.getService(ctx)
+	if err != nil {
+		return err
+	}
+
 	req := permission.NewCheckPermissionRequest()
 	req.Username = tk.Username
 	req.Namespace = tk.Namespace
-	req.ServiceId = "xxxxxx"
+	req.ServiceId = svr.Id
 	req.Path = e.UniquePath()
-	_, err := a.client.Permission().CheckPermission(ctx, req)
+	_, err = a.client.Permission().CheckPermission(ctx, req)
 	if err != nil {
 		return exception.NewPermissionDeny(err.Error())
 	}
 	a.log.Debugf("[%s] permission check passed", tk.Username)
 	return nil
+}
+
+func (a *httpAuther) getService(ctx context.Context) (*service.Service, error) {
+	if a.service != nil {
+		return a.service, nil
+	}
+
+	svr, err := a.client.Service().ValidateCredential(ctx, a.credential)
+	if err != nil {
+		return nil, err
+	}
+	a.service = svr
+	return a.service, nil
 }
