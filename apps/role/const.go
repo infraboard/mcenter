@@ -1,6 +1,10 @@
 package role
 
-import "github.com/infraboard/mcenter/apps/domain"
+import (
+	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/apps/user"
+	"github.com/infraboard/mcube/http/label"
+)
 
 const (
 	// AdminRoleName 管理员角色名称, 系统初始化时创建
@@ -16,18 +20,37 @@ const (
 
 func CreateAdminRoleRequest() *CreateRoleRequest {
 	req := NewCreateRoleRequest()
-	req.CreateBy = "admin"
+	req.CreateBy = user.SYSTEM_INITAL_USERNAME
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Type = RoleType_GLOBAL
 	req.Name = ADMIN_ROLE_NAME
-	req.Description = "管理员角色"
+	req.Description = "管理员"
 	req.Specs = []*Spec{
 		{
-			Desc:         "管理员具备所有权限",
+			Desc:         "管理员具备读写权限",
 			Effect:       EffectType_ALLOW,
 			ServiceId:    "*",
 			ResourceName: "*",
 			MatchAll:     true,
+		},
+	}
+	return req
+}
+
+func CreateVisitorRoleRequest() *CreateRoleRequest {
+	req := NewCreateRoleRequest()
+	req.CreateBy = user.SYSTEM_INITAL_USERNAME
+	req.Domain = domain.DEFAULT_DOMAIN
+	req.Type = RoleType_GLOBAL
+	req.Name = VISITOR_ROLE_NAME
+	req.Description = "访客"
+	req.Specs = []*Spec{
+		{
+			Desc:         "访客具备可读权限",
+			Effect:       EffectType_ALLOW,
+			ServiceId:    "*",
+			ResourceName: "*",
+			LabelValues:  []string{label.List.Value(), label.Get.Value()},
 		},
 	}
 	return req

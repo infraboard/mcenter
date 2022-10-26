@@ -1,15 +1,11 @@
 package initial
 
 import (
-	"context"
-
 	"github.com/spf13/cobra"
 
 	// 注册所有服务
 	_ "github.com/infraboard/mcenter/apps"
 	meta "github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/logger/zap"
 )
 
 // initCmd represents the start command
@@ -18,25 +14,29 @@ var Cmd = &cobra.Command{
 	Short: "mcenter 服务初始化",
 	Long:  "mcenter 服务初始化",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		apps := NewInitApps()
-		apps.Add("maudit", "审计中心")
-		apps.Add("cmdb", "资源中心")
-		log := zap.L().Named("init")
 
-		impl := app.GetInternalApp(meta.AppName).(meta.MetaService)
-
-		for _, req := range apps.items {
-			app, err := impl.CreateService(context.Background(), req)
-			if err != nil {
-				log.Errorf("init app %s error, %s", req.Name, err)
-				continue
-			}
-			log.Infof("init app %s success, client_id: %s, client_secret: %s",
-				req.Name,
-				app.Credential.ClientId,
-				app.Credential.ClientSecret,
-			)
+		exec := newExcutor()
+		// 初始化默认域
+		if err := exec.InitDomain(cmd.Context()); err != nil {
+			return err
 		}
+
+		// 初始化内置角色
+		if err := exec.InitRole(cmd.Context()); err != nil {
+			return err
+		}
+
+		// 初始化默认空间
+		if err := exec.InitNamespace(cmd.Context()); err != nil {
+			return err
+		}
+
+		// 初始化内置服务
+		if err := exec.InitService(cmd.Context()); err != nil {
+			return err
+		}
+
+		// 初始化管理员用户
 
 		return nil
 	},

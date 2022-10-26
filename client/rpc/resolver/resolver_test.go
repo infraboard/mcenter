@@ -21,9 +21,15 @@ func TestResolver(t *testing.T) {
 	// 连接到服务
 	conn, err := grpc.DialContext(
 		ctx,
-		fmt.Sprintf("%s://%s", resolver.Scheme, "maudit"), // Dial to "mcenter://keyauth"
+		// Dial to "mcenter://maudit"
+		fmt.Sprintf("%s://%s", resolver.Scheme, "maudit"),
+		// 认证
 		grpc.WithPerRPCCredentials(rpc.NewAuthentication(os.Getenv("MCENTER_CLINET_ID"), os.Getenv("MCENTER_CLIENT_SECRET"))),
+		// 不开启TLS
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		// gprc 支持的负载均衡策略: https://github.com/grpc/grpc/blob/master/doc/load-balancing.md
+		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
+		// 直到建立连接
 		grpc.WithBlock(),
 	)
 	if err != nil {
