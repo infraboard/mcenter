@@ -64,11 +64,6 @@ func (c *ClientSet) ClientInfo(ctx context.Context) (*service.Service, error) {
 	return c.svr, nil
 }
 
-// 这个地方有安全风险
-func (c *ClientSet) ClientConfig() Config {
-	return *c.conf
-}
-
 // Instance服务的SDK
 func (c *ClientSet) Instance() instance.RPCClient {
 	return instance.NewRPCClient(c.conn)
