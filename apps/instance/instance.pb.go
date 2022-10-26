@@ -21,99 +21,99 @@ const (
 )
 
 // 实例注册的协议类型
-type Protocal int32
+type PROTOCAL int32
 
 const (
 	// GRPC服务
-	Protocal_GRPC Protocal = 0
+	PROTOCAL_GRPC PROTOCAL = 0
 	// HTTP服务
-	Protocal_HTTP Protocal = 1
+	PROTOCAL_HTTP PROTOCAL = 1
 )
 
-// Enum value maps for Protocal.
+// Enum value maps for PROTOCAL.
 var (
-	Protocal_name = map[int32]string{
+	PROTOCAL_name = map[int32]string{
 		0: "GRPC",
 		1: "HTTP",
 	}
-	Protocal_value = map[string]int32{
+	PROTOCAL_value = map[string]int32{
 		"GRPC": 0,
 		"HTTP": 1,
 	}
 )
 
-func (x Protocal) Enum() *Protocal {
-	p := new(Protocal)
+func (x PROTOCAL) Enum() *PROTOCAL {
+	p := new(PROTOCAL)
 	*p = x
 	return p
 }
 
-func (x Protocal) String() string {
+func (x PROTOCAL) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (Protocal) Descriptor() protoreflect.EnumDescriptor {
+func (PROTOCAL) Descriptor() protoreflect.EnumDescriptor {
 	return file_apps_instance_pb_instance_proto_enumTypes[0].Descriptor()
 }
 
-func (Protocal) Type() protoreflect.EnumType {
+func (PROTOCAL) Type() protoreflect.EnumType {
 	return &file_apps_instance_pb_instance_proto_enumTypes[0]
 }
 
-func (x Protocal) Number() protoreflect.EnumNumber {
+func (x PROTOCAL) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Protocal.Descriptor instead.
-func (Protocal) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use PROTOCAL.Descriptor instead.
+func (PROTOCAL) EnumDescriptor() ([]byte, []int) {
 	return file_apps_instance_pb_instance_proto_rawDescGZIP(), []int{0}
 }
 
-type Provider int32
+type PROVIDER int32
 
 const (
 	// SDK直接注册
-	Provider_SDK Provider = 0
+	PROVIDER_SDK PROVIDER = 0
 	// 服务来源于kubernetes, 有operator提供注册
-	Provider_KUBERNETES Provider = 1
+	PROVIDER_KUBERNETES PROVIDER = 1
 )
 
-// Enum value maps for Provider.
+// Enum value maps for PROVIDER.
 var (
-	Provider_name = map[int32]string{
+	PROVIDER_name = map[int32]string{
 		0: "SDK",
 		1: "KUBERNETES",
 	}
-	Provider_value = map[string]int32{
+	PROVIDER_value = map[string]int32{
 		"SDK":        0,
 		"KUBERNETES": 1,
 	}
 )
 
-func (x Provider) Enum() *Provider {
-	p := new(Provider)
+func (x PROVIDER) Enum() *PROVIDER {
+	p := new(PROVIDER)
 	*p = x
 	return p
 }
 
-func (x Provider) String() string {
+func (x PROVIDER) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (Provider) Descriptor() protoreflect.EnumDescriptor {
+func (PROVIDER) Descriptor() protoreflect.EnumDescriptor {
 	return file_apps_instance_pb_instance_proto_enumTypes[1].Descriptor()
 }
 
-func (Provider) Type() protoreflect.EnumType {
+func (PROVIDER) Type() protoreflect.EnumType {
 	return &file_apps_instance_pb_instance_proto_enumTypes[1]
 }
 
-func (x Provider) Number() protoreflect.EnumNumber {
+func (x PROVIDER) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Provider.Descriptor instead.
-func (Provider) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use PROVIDER.Descriptor instead.
+func (PROVIDER) EnumDescriptor() ([]byte, []int) {
 	return file_apps_instance_pb_instance_proto_rawDescGZIP(), []int{1}
 }
 
@@ -444,7 +444,7 @@ type RegistryRequest struct {
 
 	// 提供注册提供方
 	// @gotags: bson:"provider" json:"provider" toml:"provider" yaml:"provider" env:"MCENTER_PROVIDER"
-	Provider Provider `protobuf:"varint,1,opt,name=provider,proto3,enum=infraboard.mcenter.instance.Provider" json:"provider" bson:"provider" toml:"provider" yaml:"provider" env:"MCENTER_PROVIDER"`
+	Provider PROVIDER `protobuf:"varint,1,opt,name=provider,proto3,enum=infraboard.mcenter.instance.PROVIDER" json:"provider" bson:"provider" toml:"provider" yaml:"provider" env:"MCENTER_PROVIDER"`
 	// 实例所属地域, 默认default
 	// @gotags: bson:"region" json:"region" toml:"region" yaml:"region" env:"MCENTER_REGION" validate:"required"
 	Region string `protobuf:"bytes,2,opt,name=region,proto3" json:"region" bson:"region" toml:"region" yaml:"region" env:"MCENTER_REGION" validate:"required"`
@@ -459,7 +459,7 @@ type RegistryRequest struct {
 	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name" bson:"name" toml:"name" yaml:"name" env:"MCENTER_NAME"`
 	// 注册的对外的访问的协议
 	// @gotags: bson:"protocal" json:"protocal" toml:"protocal" yaml:"protocal" env:"MCENTER_PROTOCAL"
-	Protocal Protocal `protobuf:"varint,6,opt,name=protocal,proto3,enum=infraboard.mcenter.instance.Protocal" json:"protocal" bson:"protocal" toml:"protocal" yaml:"protocal" env:"MCENTER_PROTOCAL"`
+	Protocal PROTOCAL `protobuf:"varint,6,opt,name=protocal,proto3,enum=infraboard.mcenter.instance.PROTOCAL" json:"protocal" bson:"protocal" toml:"protocal" yaml:"protocal" env:"MCENTER_PROTOCAL"`
 	// 实例地址
 	// @gotags: bson:"address" json:"address" toml:"address" yaml:"address" env:"MCENTER_ADDRESS" validate:"required"
 	Address string `protobuf:"bytes,7,opt,name=address,proto3" json:"address" bson:"address" toml:"address" yaml:"address" env:"MCENTER_ADDRESS" validate:"required"`
@@ -506,11 +506,11 @@ func (*RegistryRequest) Descriptor() ([]byte, []int) {
 	return file_apps_instance_pb_instance_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *RegistryRequest) GetProvider() Provider {
+func (x *RegistryRequest) GetProvider() PROVIDER {
 	if x != nil {
 		return x.Provider
 	}
-	return Provider_SDK
+	return PROVIDER_SDK
 }
 
 func (x *RegistryRequest) GetRegion() string {
@@ -541,11 +541,11 @@ func (x *RegistryRequest) GetName() string {
 	return ""
 }
 
-func (x *RegistryRequest) GetProtocal() Protocal {
+func (x *RegistryRequest) GetProtocal() PROTOCAL {
 	if x != nil {
 		return x.Protocal
 	}
-	return Protocal_GRPC
+	return PROTOCAL_GRPC
 }
 
 func (x *RegistryRequest) GetAddress() string {
@@ -929,7 +929,7 @@ var file_apps_instance_pb_instance_proto_rawDesc = []byte{
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x41, 0x0a, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64,
 	0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x25, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61,
 	0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x69, 0x6e,
-	0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x2e, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x52,
+	0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x2e, 0x50, 0x52, 0x4f, 0x56, 0x49, 0x44, 0x45, 0x52, 0x52,
 	0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x67,
 	0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x72, 0x65, 0x67, 0x69, 0x6f,
 	0x6e, 0x12, 0x20, 0x0a, 0x0b, 0x65, 0x6e, 0x76, 0x69, 0x72, 0x6f, 0x6e, 0x6d, 0x65, 0x6e, 0x74,
@@ -939,8 +939,8 @@ var file_apps_instance_pb_instance_proto_rawDesc = []byte{
 	0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x41, 0x0a,
 	0x08, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x61, 0x6c, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0e, 0x32,
 	0x25, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65,
-	0x6e, 0x74, 0x65, 0x72, 0x2e, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x2e, 0x50, 0x72,
-	0x6f, 0x74, 0x6f, 0x63, 0x61, 0x6c, 0x52, 0x08, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x61, 0x6c,
+	0x6e, 0x74, 0x65, 0x72, 0x2e, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x2e, 0x50, 0x52,
+	0x4f, 0x54, 0x4f, 0x43, 0x41, 0x4c, 0x52, 0x08, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x61, 0x6c,
 	0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x65, 0x78,
 	0x70, 0x6f, 0x72, 0x74, 0x18, 0x08, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x65, 0x78, 0x70, 0x6f,
@@ -992,10 +992,10 @@ var file_apps_instance_pb_instance_proto_rawDesc = []byte{
 	0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e,
 	0x69, 0x6e, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x2e, 0x52, 0x65, 0x6d, 0x6f, 0x74, 0x65, 0x43,
 	0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x52, 0x0d, 0x72, 0x65, 0x6d, 0x6f, 0x74, 0x65, 0x43, 0x6f,
-	0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x2a, 0x1e, 0x0a, 0x08, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x61,
-	0x6c, 0x12, 0x08, 0x0a, 0x04, 0x47, 0x52, 0x50, 0x43, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x48,
-	0x54, 0x54, 0x50, 0x10, 0x01, 0x2a, 0x23, 0x0a, 0x08, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65,
-	0x72, 0x12, 0x07, 0x0a, 0x03, 0x53, 0x44, 0x4b, 0x10, 0x00, 0x12, 0x0e, 0x0a, 0x0a, 0x4b, 0x55,
+	0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x2a, 0x1e, 0x0a, 0x08, 0x50, 0x52, 0x4f, 0x54, 0x4f, 0x43, 0x41,
+	0x4c, 0x12, 0x08, 0x0a, 0x04, 0x47, 0x52, 0x50, 0x43, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x48,
+	0x54, 0x54, 0x50, 0x10, 0x01, 0x2a, 0x23, 0x0a, 0x08, 0x50, 0x52, 0x4f, 0x56, 0x49, 0x44, 0x45,
+	0x52, 0x12, 0x07, 0x0a, 0x03, 0x53, 0x44, 0x4b, 0x10, 0x00, 0x12, 0x0e, 0x0a, 0x0a, 0x4b, 0x55,
 	0x42, 0x45, 0x52, 0x4e, 0x45, 0x54, 0x45, 0x53, 0x10, 0x01, 0x2a, 0x22, 0x0a, 0x0b, 0x43, 0x6f,
 	0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x54, 0x79, 0x70, 0x65, 0x12, 0x13, 0x0a, 0x0f, 0x55, 0x50, 0x44,
 	0x41, 0x54, 0x45, 0x5f, 0x49, 0x4e, 0x53, 0x54, 0x41, 0x4e, 0x43, 0x45, 0x10, 0x00, 0x42, 0x2d,
@@ -1020,8 +1020,8 @@ func file_apps_instance_pb_instance_proto_rawDescGZIP() []byte {
 var file_apps_instance_pb_instance_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_apps_instance_pb_instance_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_apps_instance_pb_instance_proto_goTypes = []interface{}{
-	(Protocal)(0),             // 0: infraboard.mcenter.instance.Protocal
-	(Provider)(0),             // 1: infraboard.mcenter.instance.Provider
+	(PROTOCAL)(0),             // 0: infraboard.mcenter.instance.PROTOCAL
+	(PROVIDER)(0),             // 1: infraboard.mcenter.instance.PROVIDER
 	(CommandType)(0),          // 2: infraboard.mcenter.instance.CommandType
 	(*Instance)(nil),          // 3: infraboard.mcenter.instance.Instance
 	(*Config)(nil),            // 4: infraboard.mcenter.instance.Config
@@ -1042,8 +1042,8 @@ var file_apps_instance_pb_instance_proto_depIdxs = []int32{
 	4,  // 2: infraboard.mcenter.instance.Instance.config:type_name -> infraboard.mcenter.instance.Config
 	5,  // 3: infraboard.mcenter.instance.Config.heartbeat:type_name -> infraboard.mcenter.instance.HeartbeatConfig
 	3,  // 4: infraboard.mcenter.instance.InstanceSet.items:type_name -> infraboard.mcenter.instance.Instance
-	1,  // 5: infraboard.mcenter.instance.RegistryRequest.provider:type_name -> infraboard.mcenter.instance.Provider
-	0,  // 6: infraboard.mcenter.instance.RegistryRequest.protocal:type_name -> infraboard.mcenter.instance.Protocal
+	1,  // 5: infraboard.mcenter.instance.RegistryRequest.provider:type_name -> infraboard.mcenter.instance.PROVIDER
+	0,  // 6: infraboard.mcenter.instance.RegistryRequest.protocal:type_name -> infraboard.mcenter.instance.PROTOCAL
 	13, // 7: infraboard.mcenter.instance.RegistryRequest.tags:type_name -> infraboard.mcenter.instance.RegistryRequest.TagsEntry
 	8,  // 8: infraboard.mcenter.instance.RegistryRequest.build:type_name -> infraboard.mcenter.instance.Build
 	2,  // 9: infraboard.mcenter.instance.RemoteCommand.type:type_name -> infraboard.mcenter.instance.CommandType

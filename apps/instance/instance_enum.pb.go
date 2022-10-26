@@ -9,24 +9,24 @@ import (
 	"strings"
 )
 
-// ParseProtocalFromString Parse Protocal from string
-func ParseProtocalFromString(str string) (Protocal, error) {
+// ParsePROTOCALFromString Parse PROTOCAL from string
+func ParsePROTOCALFromString(str string) (PROTOCAL, error) {
 	key := strings.Trim(string(str), `"`)
-	v, ok := Protocal_value[strings.ToUpper(key)]
+	v, ok := PROTOCAL_value[strings.ToUpper(key)]
 	if !ok {
-		return 0, fmt.Errorf("unknown Protocal: %s", str)
+		return 0, fmt.Errorf("unknown PROTOCAL: %s", str)
 	}
 
-	return Protocal(v), nil
+	return PROTOCAL(v), nil
 }
 
 // Equal type compare
-func (t Protocal) Equal(target Protocal) bool {
+func (t PROTOCAL) Equal(target PROTOCAL) bool {
 	return t == target
 }
 
 // IsIn todo
-func (t Protocal) IsIn(targets ...Protocal) bool {
+func (t PROTOCAL) IsIn(targets ...PROTOCAL) bool {
 	for _, target := range targets {
 		if t.Equal(target) {
 			return true
@@ -37,7 +37,7 @@ func (t Protocal) IsIn(targets ...Protocal) bool {
 }
 
 // MarshalJSON todo
-func (t Protocal) MarshalJSON() ([]byte, error) {
+func (t PROTOCAL) MarshalJSON() ([]byte, error) {
 	b := bytes.NewBufferString(`"`)
 	b.WriteString(strings.ToUpper(t.String()))
 	b.WriteString(`"`)
@@ -45,8 +45,8 @@ func (t Protocal) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON todo
-func (t *Protocal) UnmarshalJSON(b []byte) error {
-	ins, err := ParseProtocalFromString(string(b))
+func (t *PROTOCAL) UnmarshalJSON(b []byte) error {
+	ins, err := ParsePROTOCALFromString(string(b))
 	if err != nil {
 		return err
 	}
@@ -54,24 +54,24 @@ func (t *Protocal) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// ParseProviderFromString Parse Provider from string
-func ParseProviderFromString(str string) (Provider, error) {
+// ParsePROVIDERFromString Parse PROVIDER from string
+func ParsePROVIDERFromString(str string) (PROVIDER, error) {
 	key := strings.Trim(string(str), `"`)
-	v, ok := Provider_value[strings.ToUpper(key)]
+	v, ok := PROVIDER_value[strings.ToUpper(key)]
 	if !ok {
-		return 0, fmt.Errorf("unknown Provider: %s", str)
+		return 0, fmt.Errorf("unknown PROVIDER: %s", str)
 	}
 
-	return Provider(v), nil
+	return PROVIDER(v), nil
 }
 
 // Equal type compare
-func (t Provider) Equal(target Provider) bool {
+func (t PROVIDER) Equal(target PROVIDER) bool {
 	return t == target
 }
 
 // IsIn todo
-func (t Provider) IsIn(targets ...Provider) bool {
+func (t PROVIDER) IsIn(targets ...PROVIDER) bool {
 	for _, target := range targets {
 		if t.Equal(target) {
 			return true
@@ -82,7 +82,7 @@ func (t Provider) IsIn(targets ...Provider) bool {
 }
 
 // MarshalJSON todo
-func (t Provider) MarshalJSON() ([]byte, error) {
+func (t PROVIDER) MarshalJSON() ([]byte, error) {
 	b := bytes.NewBufferString(`"`)
 	b.WriteString(strings.ToUpper(t.String()))
 	b.WriteString(`"`)
@@ -90,8 +90,8 @@ func (t Provider) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON todo
-func (t *Provider) UnmarshalJSON(b []byte) error {
-	ins, err := ParseProviderFromString(string(b))
+func (t *PROVIDER) UnmarshalJSON(b []byte) error {
+	ins, err := ParsePROVIDERFromString(string(b))
 	if err != nil {
 		return err
 	}

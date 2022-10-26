@@ -3,6 +3,7 @@ package instance
 import (
 	"fmt"
 
+	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/client/rest"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +14,8 @@ var registry = &cobra.Command{
 	Short: "服务实例注册",
 	Long:  "服务实例注册",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ins, err := rest.C().Instance().RegistryInstance(cmd.Context(), nil)
+		req := instance.NewRegistryRequest()
+		ins, err := rest.C().Instance().RegistryInstance(cmd.Context(), req)
 		if err != nil {
 			return err
 		}
