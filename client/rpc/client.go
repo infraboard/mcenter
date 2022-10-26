@@ -22,9 +22,14 @@ func NewClient(conf *Config) (*ClientSet, error) {
 	log := zap.L()
 
 	conn, err := grpc.Dial(
+		// mcenter服务地址
 		conf.Address,
+		// 不使用TLS
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		// 开启认证
 		grpc.WithPerRPCCredentials(conf.Credentials()),
+		// gprc 支持的负载均衡策略: https://github.com/grpc/grpc/blob/master/doc/load-balancing.md
+		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
 	)
 	if err != nil {
 		return nil, err
