@@ -8,6 +8,7 @@ import (
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/role"
 	meta "github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcenter/apps/setting"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/app"
 )
@@ -24,6 +25,7 @@ type excutor struct {
 	domain    domain.Service
 	namespace namespace.Service
 	role      role.Service
+	system    setting.Service
 }
 
 func (e *excutor) InitDomain(ctx context.Context) error {
@@ -86,5 +88,19 @@ func (e *excutor) InitService(ctx context.Context) error {
 		)
 	}
 
+	return nil
+}
+
+func (e *excutor) InitSystemSetting(ctx context.Context) error {
+	sysConf := setting.NewDefaultSetting()
+	st, err := e.system.UpdateSetting(ctx, sysConf)
+	if err != nil {
+		return err
+	}
+	fmt.Println(st)
+	return nil
+}
+
+func (e *excutor) InitAdminUser(ctx context.Context) error {
 	return nil
 }

@@ -114,9 +114,11 @@ func NewRegistryRequest() *RegistryRequest {
 		Environment: DefaultEnvironment,
 		Group:       DefaultGroup,
 		Tags:        map[string]string{},
+		Meta:        map[string]string{},
 		Build:       &Build{},
 		Provider:    PROVIDER_SDK,
 		Protocal:    PROTOCAL_GRPC,
+		Weight:      1,
 	}
 }
 

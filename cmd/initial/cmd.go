@@ -14,29 +14,38 @@ var Cmd = &cobra.Command{
 	Short: "mcenter 服务初始化",
 	Long:  "mcenter 服务初始化",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		ctx := cmd.Context()
 
 		exec := newExcutor()
 		// 初始化默认域
-		if err := exec.InitDomain(cmd.Context()); err != nil {
+		if err := exec.InitDomain(ctx); err != nil {
 			return err
 		}
 
 		// 初始化内置角色
-		if err := exec.InitRole(cmd.Context()); err != nil {
+		if err := exec.InitRole(ctx); err != nil {
 			return err
 		}
 
 		// 初始化默认空间
-		if err := exec.InitNamespace(cmd.Context()); err != nil {
+		if err := exec.InitNamespace(ctx); err != nil {
 			return err
 		}
 
 		// 初始化内置服务
-		if err := exec.InitService(cmd.Context()); err != nil {
+		if err := exec.InitService(ctx); err != nil {
+			return err
+		}
+
+		// 初始化系统设置
+		if err := exec.InitSystemSetting(ctx); err != nil {
 			return err
 		}
 
 		// 初始化管理员用户
+		if err := exec.InitAdminUser(ctx); err != nil {
+			return err
+		}
 
 		return nil
 	},
