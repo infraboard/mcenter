@@ -11,6 +11,9 @@ import (
 	"github.com/infraboard/mcenter/apps/setting"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/app"
+
+	// 注册所有服务
+	_ "github.com/infraboard/mcenter/apps"
 )
 
 func newExcutor() *excutor {

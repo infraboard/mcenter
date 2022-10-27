@@ -3,9 +3,7 @@ package initial
 import (
 	"github.com/spf13/cobra"
 
-	// 注册所有服务
-	_ "github.com/infraboard/mcenter/apps"
-	meta "github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcenter/apps/service"
 )
 
 // initCmd represents the start command
@@ -53,16 +51,16 @@ var Cmd = &cobra.Command{
 
 func NewInitApps() *InitApps {
 	return &InitApps{
-		items: []*meta.CreateServiceRequest{},
+		items: []*service.CreateServiceRequest{},
 	}
 }
 
 type InitApps struct {
-	items []*meta.CreateServiceRequest
+	items []*service.CreateServiceRequest
 }
 
 func (i *InitApps) Add(name, descrption string) {
-	req := meta.NewCreateServiceRequest()
+	req := service.NewCreateServiceRequest()
 	req.Name = name
 	req.Description = descrption
 	req.Owner = "admin"
