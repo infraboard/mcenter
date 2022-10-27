@@ -8,8 +8,10 @@ import (
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/client/rpc"
+	"github.com/infraboard/mcenter/client/rpc/balancer/wrr"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	"google.golang.org/grpc/attributes"
 	"google.golang.org/grpc/resolver"
 )
 
@@ -117,7 +119,16 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 	addrString := []string{}
 	addrs := make([]resolver.Address, len(items))
 	for i, s := range items {
-		addrs[i] = resolver.Address{Addr: s.RegistryInfo.Address}
+		attr := attributes.New("region", s.RegistryInfo.Region)
+		attr.WithValue("environment", s.RegistryInfo.Environment)
+		attr.WithValue("group", s.RegistryInfo.Group)
+		addr := resolver.Address{
+			Addr:       s.RegistryInfo.Address,
+			Attributes: attr,
+		}
+		wrr.SetWeight(&addr, s.RegistryInfo.Weight)
+		addrs[i] = addr
+
 		addrString = append(addrString, s.RegistryInfo.Address)
 	}
 	m.log.Infof("search service [%s] address: %s", req.ServiceName, strings.Join(addrString, ","))

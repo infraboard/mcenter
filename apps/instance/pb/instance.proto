@@ -88,7 +88,7 @@ message RegistryRequest {
     PROTOCAL protocal = 6;
     // 实例权重
     // @gotags: bson:"weight" json:"weight" toml:"weight" yaml:"weight" env:"MCENTER_WEIGHT" validate:"required"
-    int64 weight = 12;
+    uint32 weight = 12;
     // 实例地址
     // @gotags: bson:"address" json:"address" toml:"address" yaml:"address" env:"MCENTER_ADDRESS" validate:"required"
     string address = 7;
