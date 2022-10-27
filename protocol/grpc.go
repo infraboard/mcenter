@@ -13,13 +13,13 @@ import (
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/conf"
 	"github.com/infraboard/mcenter/protocol/auth"
+	"github.com/infraboard/mcenter/protocol/health"
 )
 
 // NewGRPCService todo
 func NewGRPCService() *GRPCService {
 	log := zap.L().Named("GRPC Service")
 	appImpl := app.GetGrpcApp(service.AppName).(service.MetaService)
-
 	rc := recovery.NewInterceptor(recovery.NewZapRecoveryHandler())
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
 		rc.UnaryServerInterceptor(),
@@ -44,6 +44,9 @@ type GRPCService struct {
 func (s *GRPCService) Start() {
 	// 装载所有GRPC服务
 	app.LoadGrpcApp(s.svr)
+
+	// 加载健康状态接口
+	health.RegisterGrpcHealthServer(s.svr)
 
 	// 启动HTTP服务
 	lis, err := net.Listen("tcp", s.c.App.GRPC.Addr())

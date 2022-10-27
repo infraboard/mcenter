@@ -8,12 +8,14 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/health"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/permission"
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
+	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 )
 
 // NewClient todo
@@ -34,6 +36,7 @@ func NewClient(conf *Config) (*ClientSet, error) {
 	if err != nil {
 		return nil, err
 	}
+	health.NewServer()
 
 	return &ClientSet{
 		conf: conf,
@@ -67,6 +70,11 @@ func (c *ClientSet) ClientInfo(ctx context.Context) (*service.Service, error) {
 	}
 	c.svr = svc
 	return c.svr, nil
+}
+
+// Instance服务的SDK
+func (c *ClientSet) Health() healthgrpc.HealthClient {
+	return healthgrpc.NewHealthClient(c.conn)
 }
 
 // Instance服务的SDK

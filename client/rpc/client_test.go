@@ -9,6 +9,7 @@ import (
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/client/rpc"
+	"github.com/infraboard/mcenter/protocol/health"
 )
 
 var (
@@ -73,6 +74,15 @@ func TestInstanceSearch(t *testing.T) {
 	for i := range resp.Items {
 		t.Log(resp.Items[i])
 	}
+}
+
+func TestHealthCheck(t *testing.T) {
+	req := health.NewHealthCheckRequest()
+	resp, err := c.Health().Check(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(resp)
 }
 
 func init() {
