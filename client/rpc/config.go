@@ -22,6 +22,11 @@ type Config struct {
 	Resolver     *Resolver `json:"resolver" toml:"resolver" yaml:"resolver"`
 }
 
+func (c *Config) WithCredentials(clientId, clientSecret string) {
+	c.ClientID = clientId
+	c.ClientSecret = clientSecret
+}
+
 func (c *Config) Credentials() *Authentication {
 	return NewAuthentication(c.ClientID, c.ClientSecret)
 }

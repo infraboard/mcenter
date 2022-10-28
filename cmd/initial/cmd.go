@@ -13,8 +13,11 @@ var Cmd = &cobra.Command{
 	Long:  "mcenter 服务初始化",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := cmd.Context()
+		exec, err := NewExecutorFromCLI()
+		if err != nil {
+			return err
+		}
 
-		exec := newExcutor()
 		// 初始化默认域
 		if err := exec.InitDomain(ctx); err != nil {
 			return err
