@@ -36,10 +36,10 @@ func (h *handler) Version() string {
 }
 
 func (h *handler) Registry(ws *restful.WebService) {
-	tags := []string{"服务功能"}
+	tags := []string{"健康检查"}
 	fmt.Println(tags)
 	ws.Route(ws.GET("/").To(h.Check).
-		Doc("查询服务功能列表"))
+		Doc("查询服务当前状态"))
 }
 
 func init() {

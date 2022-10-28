@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package infraboard.mcenter.gateway;
+option go_package = "github.com/infraboard/mcenter/apps/gateway";
+
+
+enum TYPE {
+    // 基于Etcd对接的Traefik网关
+    TRAEFIK_ETCD = 0;
+}
+
+// CreateGatewayRequest 创建网关
+message CreateGatewayRequest {
+    // 所属域
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 1;
+    // 所属空间
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 2;
+    // 创建者
+    // @gotags: bson:"create_by" json:"create_by"
+    string create_by = 3;
+    // 是否公开
+    // @gotags: bson:"is_public" json:"is_public"
+    bool is_public = 4;
+    // 是否是该空间下的默认网关, 一个空间内只允许有1个默认网关
+    // @gotags: bson:"is_default" json:"is_default"
+    bool is_default = 5;
+    // 网关的名称
+    // @gotags: bson:"name" json:"name" validate:"required,lte=30"
+    string name = 6;
+    // 网关的描述
+    // @gotags: bson:"description" json:"description" validate:"lte=400"
+    string description =7;
+    // 网关类型
+    // @gotags: bson:"type" json:"type"
+    TYPE type = 8;
+    // Traefik网关配置
+    // @gotags: bson:"config" json:"config"
+    Config config = 9;
+    // 网关标签
+    // @gotags: bson:"tags" json:"tags"
+    map<string,string> tags =15;                 
+}
+
+// 网关配置
+// providers:
+//   etcd:
+//     endpoints:
+//       - "<your host ip>:2379"
+//     rootKey: "traefik"
+message Config {
+    
+}

@@ -126,9 +126,12 @@ message Status {
     // 上线时间
     // @gotags: bson:"online" json:"online"
     int64 online = 1;
-    // 是否健康
-    // @gotags: bson:"healthy" json:"healthy"
-    bool healthy = 2;
+    // 服务状态
+    // @gotags: bson:"stage" json:"stage"
+    string stage = 2;
+    // 状态更新时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 3;
 }
 
 message HeartbeatRequest {

@@ -1,0 +1,4 @@
+syntax = "proto3";
+
+package infraboard.mcenter.gateway;
+option go_package = "github.com/infraboard/mcenter/apps/gateway";
