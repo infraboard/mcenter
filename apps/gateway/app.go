@@ -1,10 +1,13 @@
 package gateway
 
+import context "context"
+
 const (
 	AppName = "gateway"
 )
 
 type Service interface {
+	CreateGateway(context.Context, *CreateGatewayRequest) (*Gateway, error)
 	RPCServer
 }
 

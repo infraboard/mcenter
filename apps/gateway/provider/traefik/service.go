@@ -8,7 +8,7 @@ import (
 )
 
 func (o *EtcdOperator) ServiceKeyValue(ins *instance.Instance) (key, value string) {
-	fmt.Sprintf("%s", o.rootKey)
+	fmt.Printf("%s", o.rootKey)
 	return "", ""
 }
 
