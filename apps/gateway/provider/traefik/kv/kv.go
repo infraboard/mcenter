@@ -1,8 +1,10 @@
 package kv
 
 import (
+	"fmt"
 	"path"
 	"reflect"
+	"strings"
 
 	"github.com/kvtools/valkeyrie/store"
 	"github.com/traefik/paerser/parser"
@@ -18,8 +20,9 @@ func Decode(pairs []*store.KVPair, element interface{}, rootName string) error {
 		return nil
 	}
 
-	filters := GetElementKvs(rootName, element)
-	node, err := DecodeToNode(pairs, rootName, filters.Keys()...)
+	filters := getRootFieldNames(rootName, element)
+
+	node, err := DecodeToNode(pairs, rootName, filters...)
 	if err != nil {
 		return err
 	}
@@ -55,18 +58,18 @@ func (s *KVSet) Keys() []string {
 	return keys
 }
 
-func GetElementKvs(rootName string, element any) *KVSet {
+func getRootFieldNames(rootName string, element interface{}) []string {
 	if element == nil {
 		return nil
 	}
 
 	rootType := reflect.TypeOf(element)
-	kvs := GetFieldKvs(rootName, rootType)
-	return kvs
+
+	return getFieldNames(rootName, rootType)
 }
 
-func GetFieldKvs(rootName string, rootType reflect.Type) *KVSet {
-	set := NewKVSet()
+func getFieldNames(rootName string, rootType reflect.Type) []string {
+	var names []string
 
 	if rootType.Kind() == reflect.Ptr {
 		rootType = rootType.Elem()
@@ -85,7 +88,56 @@ func GetFieldKvs(rootName string, rootType reflect.Type) *KVSet {
 
 		if field.Anonymous &&
 			(field.Type.Kind() == reflect.Ptr && field.Type.Elem().Kind() == reflect.Struct || field.Type.Kind() == reflect.Struct) {
-			kvs := GetFieldKvs(rootName, field.Type)
+			names = append(names, getFieldNames(rootName, field.Type)...)
+			continue
+		}
+
+		names = append(names, path.Join(rootName, field.Name))
+	}
+
+	return names
+}
+
+func GetElementKvs(rootName string, element any) *KVSet {
+	if element == nil {
+		return nil
+	}
+	rootType := reflect.TypeOf(element)
+	return getElementKvs(rootName, rootType)
+}
+
+func getElementKvs(rootName string, rootType reflect.Type) *KVSet {
+	set := NewKVSet()
+
+	if rootType.Kind() == reflect.Ptr {
+		rootType = rootType.Elem()
+	}
+
+	if rootType.Kind() != reflect.Struct {
+		return nil
+	}
+
+	for i := 0; i < rootType.NumField(); i++ {
+		field := rootType.Field(i)
+
+		if !parser.IsExported(field) {
+			continue
+		}
+
+		yv := field.Tag.Get("yaml")
+		if yv == "" && yv != "-" {
+			continue
+		}
+
+		if field.Type.Kind() == reflect.Ptr && field.Type.Elem().Kind() == reflect.Struct || field.Type.Kind() == reflect.Struct {
+			kvs := getElementKvs(rootName+"/"+strings.Split(yv, ",")[0], field.Type)
+			set.Add(kvs.Items...)
+			continue
+		}
+
+		if field.Type.Kind() == reflect.Ptr && field.Type.Elem().Kind() == reflect.Slice || field.Type.Kind() == reflect.Slice {
+			fmt.Println(field.Name, "xx", field.PkgPath, "xx", field.Type)
+			kvs := getElementKvs(rootName+"/"+strings.Split(yv, ",")[0], field.Type)
 			set.Add(kvs.Items...)
 			continue
 		}
