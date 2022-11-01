@@ -16,11 +16,13 @@ require (
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
 	github.com/infraboard/mcube v1.9.1-0.20221021070803-1524565e521a
+	github.com/kvtools/valkeyrie v1.0.0
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.8.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.422
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.422
+	github.com/traefik/paerser v0.1.9
 	go.etcd.io/etcd/client/v3 v3.5.5
 	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29
