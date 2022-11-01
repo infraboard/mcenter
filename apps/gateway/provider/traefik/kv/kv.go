@@ -1,7 +1,6 @@
-package traefik
+package kv
 
 import (
-	"fmt"
 	"path"
 	"reflect"
 
@@ -19,9 +18,8 @@ func Decode(pairs []*store.KVPair, element interface{}, rootName string) error {
 		return nil
 	}
 
-	filters := getRootFieldNames(rootName, element)
-	fmt.Println(filters)
-	node, err := DecodeToNode(pairs, rootName, filters...)
+	filters := GetElementKvs(rootName, element)
+	node, err := DecodeToNode(pairs, rootName, filters.Keys()...)
 	if err != nil {
 		return err
 	}
@@ -35,18 +33,40 @@ func Decode(pairs []*store.KVPair, element interface{}, rootName string) error {
 	return parser.Fill(element, node, parser.FillerOpts{AllowSliceAsStruct: false})
 }
 
-func getRootFieldNames(rootName string, element interface{}) []string {
+func NewKVSet() *KVSet {
+	return &KVSet{
+		Items: []*store.KVPair{},
+	}
+}
+
+type KVSet struct {
+	Items []*store.KVPair
+}
+
+func (s *KVSet) Add(items ...*store.KVPair) {
+	s.Items = append(s.Items, items...)
+}
+
+func (s *KVSet) Keys() []string {
+	keys := []string{}
+	for i := range s.Items {
+		keys = append(keys, s.Items[i].Key)
+	}
+	return keys
+}
+
+func GetElementKvs(rootName string, element any) *KVSet {
 	if element == nil {
 		return nil
 	}
 
 	rootType := reflect.TypeOf(element)
-
-	return getFieldNames(rootName, rootType)
+	kvs := GetFieldKvs(rootName, rootType)
+	return kvs
 }
 
-func getFieldNames(rootName string, rootType reflect.Type) []string {
-	var names []string
+func GetFieldKvs(rootName string, rootType reflect.Type) *KVSet {
+	set := NewKVSet()
 
 	if rootType.Kind() == reflect.Ptr {
 		rootType = rootType.Elem()
@@ -65,12 +85,13 @@ func getFieldNames(rootName string, rootType reflect.Type) []string {
 
 		if field.Anonymous &&
 			(field.Type.Kind() == reflect.Ptr && field.Type.Elem().Kind() == reflect.Struct || field.Type.Kind() == reflect.Struct) {
-			names = append(names, getFieldNames(rootName, field.Type)...)
+			kvs := GetFieldKvs(rootName, field.Type)
+			set.Add(kvs.Items...)
 			continue
 		}
 
-		names = append(names, path.Join(rootName, field.Name))
+		set.Add(&store.KVPair{Key: path.Join(rootName, field.Name)})
 	}
 
-	return names
+	return set
 }

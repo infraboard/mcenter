@@ -1,11 +1,11 @@
-package traefik_test
+package kv_test
 
 import (
 	"encoding/json"
 	"fmt"
 	"testing"
 
-	"github.com/infraboard/mcenter/apps/gateway/provider/traefik"
+	"github.com/infraboard/mcenter/apps/gateway/provider/traefik/kv"
 	"github.com/kvtools/valkeyrie/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -249,7 +249,7 @@ func TestDecodeToNode(t *testing.T) {
 		t.Run(test.desc, func(t *testing.T) {
 			t.Parallel()
 
-			out, err := traefik.DecodeToNode(mapToPairs(test.in), "traefik", test.filters...)
+			out, err := kv.DecodeToNode(mapToPairs(test.in), "traefik", test.filters...)
 
 			if test.expected.error {
 				require.Error(t, err)

@@ -1,9 +1,9 @@
-package traefik_test
+package kv_test
 
 import (
 	"testing"
 
-	"github.com/infraboard/mcenter/apps/gateway/provider/traefik"
+	"github.com/infraboard/mcenter/apps/gateway/provider/traefik/kv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -94,7 +94,7 @@ func TestDecode(t *testing.T) {
 
 			element := &sample{}
 
-			err := traefik.Decode(mapToPairs(test.pairs), element, test.rootName)
+			err := kv.Decode(mapToPairs(test.pairs), element, test.rootName)
 			require.NoError(t, err)
 
 			assert.Equal(t, test.expected, element)

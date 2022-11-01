@@ -1,4 +1,4 @@
-package traefik
+package kv
 
 import (
 	"fmt"
