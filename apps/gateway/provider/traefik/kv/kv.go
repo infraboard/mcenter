@@ -98,12 +98,27 @@ func getFieldNames(rootName string, rootType reflect.Type) []string {
 	return names
 }
 
-func GetElementKvs(rootName string, element any) *KVSet {
+func GetElementKvs(rootName string, element any) {
 	if element == nil {
-		return nil
+		return
 	}
-	rootType := reflect.TypeOf(element)
-	return getElementKvs(rootName, rootType)
+	sVal := reflect.ValueOf(element)
+	sType := reflect.TypeOf(element)
+	if sType.Kind() == reflect.Ptr {
+		sVal = sVal.Elem()
+		sType = sType.Elem()
+	}
+	num := sVal.NumField()
+	for i := 0; i < num; i++ {
+		//判断字段是否为结构体类型，或者是否为指向结构体的指针类型
+		if sVal.Field(i).Kind() == reflect.Struct || (sVal.Field(i).Kind() == reflect.Ptr && sVal.Field(i).Elem().Kind() == reflect.Struct) {
+			GetElementKvs(rootName, sVal.Field(i).Interface())
+		} else {
+			f := sType.Field(i)
+			val := sVal.Field(i).Interface()
+			fmt.Printf("%5s %v = %v\n", f.Name, f.Type, val)
+		}
+	}
 }
 
 func getElementKvs(rootName string, rootType reflect.Type) *KVSet {
@@ -136,7 +151,7 @@ func getElementKvs(rootName string, rootType reflect.Type) *KVSet {
 		}
 
 		if field.Type.Kind() == reflect.Ptr && field.Type.Elem().Kind() == reflect.Slice || field.Type.Kind() == reflect.Slice {
-			fmt.Println(field.Name, "xx", field.PkgPath, "xx", field.Type)
+			fmt.Println(field.Name, "xx", field.PkgPath, "xx", field.Type.Elem())
 			kvs := getElementKvs(rootName+"/"+strings.Split(yv, ",")[0], field.Type)
 			set.Add(kvs.Items...)
 			continue

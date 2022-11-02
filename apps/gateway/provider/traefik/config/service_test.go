@@ -16,9 +16,9 @@ func TestXxx(t *testing.T) {
 			},
 		},
 	}
-	kvs := kv.GetElementKvs("traefik", svr)
-	for i := range kvs.Items {
-		item := kvs.Items[i]
-		t.Log(item.Key, string(item.Value))
-	}
+	kv.GetElementKvs("traefik", svr)
+	// for i := range kvs.Items {
+	// 	item := kvs.Items[i]
+	// 	t.Log(item.Key, string(item.Value))
+	// }
 }
