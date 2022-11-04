@@ -53,3 +53,48 @@ func (t *TYPE) UnmarshalJSON(b []byte) error {
 	*t = ins
 	return nil
 }
+
+// ParseWORKLOAD_KINDFromString Parse WORKLOAD_KIND from string
+func ParseWORKLOAD_KINDFromString(str string) (WORKLOAD_KIND, error) {
+	key := strings.Trim(string(str), `"`)
+	v, ok := WORKLOAD_KIND_value[strings.ToUpper(key)]
+	if !ok {
+		return 0, fmt.Errorf("unknown WORKLOAD_KIND: %s", str)
+	}
+
+	return WORKLOAD_KIND(v), nil
+}
+
+// Equal type compare
+func (t WORKLOAD_KIND) Equal(target WORKLOAD_KIND) bool {
+	return t == target
+}
+
+// IsIn todo
+func (t WORKLOAD_KIND) IsIn(targets ...WORKLOAD_KIND) bool {
+	for _, target := range targets {
+		if t.Equal(target) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// MarshalJSON todo
+func (t WORKLOAD_KIND) MarshalJSON() ([]byte, error) {
+	b := bytes.NewBufferString(`"`)
+	b.WriteString(strings.ToUpper(t.String()))
+	b.WriteString(`"`)
+	return b.Bytes(), nil
+}
+
+// UnmarshalJSON todo
+func (t *WORKLOAD_KIND) UnmarshalJSON(b []byte) error {
+	ins, err := ParseWORKLOAD_KINDFromString(string(b))
+	if err != nil {
+		return err
+	}
+	*t = ins
+	return nil
+}
