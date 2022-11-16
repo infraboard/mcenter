@@ -20,8 +20,7 @@ import (
 
 // NewClient todo
 func NewClient(conf *Config) (*ClientSet, error) {
-	zap.DevelopmentSetup()
-	log := zap.L()
+	log := zap.L().Named("mcenter.rpc")
 
 	conn, err := grpc.Dial(
 		// mcenter服务地址
