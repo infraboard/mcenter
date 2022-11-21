@@ -20,9 +20,11 @@ import (
 
 // NewClient todo
 func NewClient(conf *Config) (*ClientSet, error) {
-	log := zap.L().Named("mcenter.rpc")
+	ctx, cancel := context.WithTimeout(context.Background(), conf.Timeout())
+	defer cancel()
 
-	conn, err := grpc.Dial(
+	conn, err := grpc.DialContext(
+		ctx,
 		// mcenter服务地址
 		conf.Address,
 		// 不使用TLS
@@ -40,7 +42,7 @@ func NewClient(conf *Config) (*ClientSet, error) {
 	return &ClientSet{
 		conf: conf,
 		conn: conn,
-		log:  log,
+		log:  zap.L().Named("mcenter.rpc"),
 	}, nil
 }
 

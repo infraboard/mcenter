@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"net/url"
+	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
 )
@@ -9,17 +10,24 @@ import (
 // NewDefaultConfig todo
 func NewDefaultConfig() *Config {
 	return &Config{
-		Address:  "localhost:18010",
-		Resolver: NewDefaultResolver(),
+		Address:       "localhost:18010",
+		TimeoutSecond: 10,
+		Resolver:      NewDefaultResolver(),
 	}
 }
 
 // Config 客户端配置
 type Config struct {
-	Address      string    `json:"adress" toml:"adress" yaml:"adress" env:"MCENTER_GRPC_ADDRESS"`
-	ClientID     string    `json:"client_id" toml:"client_id" yaml:"client_id" env:"MCENTER_CLINET_ID"`
-	ClientSecret string    `json:"client_secret" toml:"client_secret" yaml:"client_secret" env:"MCENTER_CLIENT_SECRET"`
-	Resolver     *Resolver `json:"resolver" toml:"resolver" yaml:"resolver"`
+	Address      string `json:"adress" toml:"adress" yaml:"adress" env:"MCENTER_GRPC_ADDRESS"`
+	ClientID     string `json:"client_id" toml:"client_id" yaml:"client_id" env:"MCENTER_CLINET_ID"`
+	ClientSecret string `json:"client_secret" toml:"client_secret" yaml:"client_secret" env:"MCENTER_CLIENT_SECRET"`
+	// 默认值10秒
+	TimeoutSecond uint      `json:"timeout_second" toml:"timeout_second" yaml:"timeout_second" env:"MCENTER_GRPC_TIMEOUT_SECOND"`
+	Resolver      *Resolver `json:"resolver" toml:"resolver" yaml:"resolver"`
+}
+
+func (c *Config) Timeout() time.Duration {
+	return time.Second * time.Duration(c.TimeoutSecond)
 }
 
 func (c *Config) WithCredentials(clientId, clientSecret string) {
