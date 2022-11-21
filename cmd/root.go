@@ -56,7 +56,6 @@ func initail() {
 	// 初始化全局app
 	err = app.InitAllApp()
 	cobra.CheckErr(err)
-	return
 }
 
 // config 为全局变量, 只需要load 即可全局可用户
