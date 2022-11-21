@@ -3,7 +3,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 
@@ -41,27 +40,23 @@ var RootCmd = &cobra.Command{
 	},
 }
 
-func initail() error {
+func initail() {
 	// 初始化全局变量
-	if err := loadGlobalConfig(confType); err != nil {
-		return err
-	}
+	err := loadGlobalConfig(confType)
+	cobra.CheckErr(err)
 
 	// 初始化全局日志配置
-	if err := loadGlobalLogger(); err != nil {
-		return err
-	}
+	err = loadGlobalLogger()
+	cobra.CheckErr(err)
 
 	// 加载缓存
-	if err := loadCache(); err != nil {
-		return err
-	}
+	err = loadCache()
+	cobra.CheckErr(err)
 
 	// 初始化全局app
-	if err := app.InitAllApp(); err != nil {
-		return err
-	}
-	return nil
+	err = app.InitAllApp()
+	cobra.CheckErr(err)
+	return
 }
 
 // config 为全局变量, 只需要load 即可全局可用户
@@ -144,17 +139,12 @@ func loadCache() error {
 // Execute adds all child commands to the root command sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	if err := initail(); err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-
+	// 初始化设置
+	cobra.OnInitialize(initail)
 	RootCmd.AddCommand(start.Cmd)
 	RootCmd.AddCommand(initial.Cmd)
-	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
+	err := RootCmd.Execute()
+	cobra.CheckErr(err)
 }
 
 func init() {

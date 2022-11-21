@@ -8,7 +8,6 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/health"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/instance"
@@ -37,7 +36,6 @@ func NewClient(conf *Config) (*ClientSet, error) {
 	if err != nil {
 		return nil, err
 	}
-	health.NewServer()
 
 	return &ClientSet{
 		conf: conf,

@@ -43,7 +43,7 @@ func (*McenterResolverBuilder) Build(
 		target:             target,
 		cc:                 cc,
 		queryTimeoutSecond: 3 * time.Second,
-		log:                zap.L().Named("mcenter resolver"),
+		log:                zap.L().Named("mcenter.resolver"),
 	}
 
 	// 强制触发一次更新
