@@ -23,9 +23,16 @@ func (s *service) GetSetting(ctx context.Context) (*setting.Setting, error) {
 }
 
 func (s *service) UpdateSetting(ctx context.Context, ins *setting.Setting) (*setting.Setting, error) {
-	_, err := s.col.UpdateOne(ctx, bson.M{"_id": setting.DEFAULT_CONFIG_VERSION}, bson.M{"$set": ins})
-	if err != nil {
-		return nil, exception.NewInternalServerError("update config document error, %s", err)
+	if _, err := s.col.InsertOne(ctx, ins); err != nil {
+		if mongo.IsDuplicateKeyError(err) {
+			_, err := s.col.UpdateOne(ctx, bson.M{"_id": ins.Version}, bson.M{"$set": ins})
+			if err != nil {
+				return nil, exception.NewInternalServerError("update config document error, %s", err)
+			}
+		} else {
+			return nil, err
+		}
 	}
+
 	return ins, nil
 }

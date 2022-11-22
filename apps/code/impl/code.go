@@ -84,6 +84,9 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 	case notify.NOTIFY_TYPE_SMS:
 		// 短信通知
 		s.log.Debugf("sms to user %s", u.Profile.Phone)
+		if u.Profile.Phone == "" {
+			return "", fmt.Errorf("user %s phone not found", code.Username)
+		}
 		req := notify.NewSendSMSRequest()
 		req.AddPhone(u.Profile.Phone)
 		req.TemplateId = system.Notify.Code.SmsTemplateID

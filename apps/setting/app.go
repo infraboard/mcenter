@@ -1,6 +1,7 @@
 package setting
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -26,6 +27,7 @@ func NewDefaultSetting() *Setting {
 			Type:  notify.NOTIFY_TYPE_MAIL,
 			Email: mail.NewDefaultConfig(),
 			SMS:   sms.NewDefaultSMS(),
+			Code:  NewDefaultCode(),
 		},
 	}
 }
@@ -36,6 +38,14 @@ type Setting struct {
 	Version string `bson:"_id" json:"version"`
 	// 系统通知
 	Notify *Notify `bson:"verify" json:"verify"`
+}
+
+func (s *Setting) JsonFormat() string {
+	d, err := json.Marshal(s)
+	if err != nil {
+		panic(err)
+	}
+	return string(d)
 }
 
 type Notify struct {

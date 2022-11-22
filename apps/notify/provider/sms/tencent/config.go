@@ -28,7 +28,9 @@ func LoadConfigFromEnv() (*Config, error) {
 
 // NewDefaultConfig todo
 func NewDefaultConfig() *Config {
-	return &Config{}
+	return &Config{
+		Endpoint: DEFAULT_TENCENT_SMS_ENDPOINT,
+	}
 }
 
 // 接口和相关文档请参考https://console.cloud.tencent.com/api/explorer?Product=sms&Version=2019-07-11&Action=SendSms&SignVersion=
