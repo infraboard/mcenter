@@ -15,13 +15,13 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
-	github.com/infraboard/mcube v1.9.1-0.20221021070803-1524565e521a
+	github.com/infraboard/mcube v1.9.1
 	github.com/kvtools/valkeyrie v1.0.0
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.8.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.422
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.422
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.542
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.542
 	github.com/traefik/paerser v0.1.9
 	go.etcd.io/etcd/client/v3 v3.5.5
 	go.mongodb.org/mongo-driver v1.9.1
