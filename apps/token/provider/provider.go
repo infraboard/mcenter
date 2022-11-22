@@ -32,6 +32,7 @@ func Get(gt token.GRANT_TYPE) TokenIssuer {
 	if v, ok := m[gt]; ok {
 		return v
 	}
+
 	return nil
 }
 

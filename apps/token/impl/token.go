@@ -38,6 +38,13 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 func (s *service) IssueTokenNow(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
 	// 获取令牌颁发器
 	issuer := provider.Get(token.GRANT_TYPE_PASSWORD)
+
+	// 确保有provider
+	if issuer == nil {
+		return nil, exception.NewBadRequest("grant type %s not support", req.GrantType)
+	}
+
+	// 颁发token
 	tk, err := issuer.IssueToken(ctx, req)
 	if err != nil {
 		return nil, err

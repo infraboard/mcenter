@@ -1,6 +1,7 @@
 package token
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -20,6 +21,22 @@ const (
 var (
 	validate = validator.New()
 )
+
+func NewPasswordIssueTokenRequest(username, password string) *IssueTokenRequest {
+	req := NewIssueTokenRequest()
+	req.GrantType = GRANT_TYPE_PASSWORD
+	req.Username = username
+	req.Password = password
+	return req
+}
+
+func NewPrivateTokenIssueTokenRequest(accessToken, description string) *IssueTokenRequest {
+	req := NewIssueTokenRequest()
+	req.GrantType = GRANT_TYPE_PRIVATE_TOKEN
+	req.AccessToken = accessToken
+	req.Description = description
+	return req
+}
 
 // NewIssueTokenRequest 默认请求
 func NewIssueTokenRequest() *IssueTokenRequest {
@@ -190,6 +207,14 @@ func (t *Token) CheckRefreshIsExpired() bool {
 	}
 
 	return time.Unix(t.RefreshExpiredAt/1000, 0).Before(time.Now())
+}
+
+func (t *Token) JsonFormat() string {
+	dj, err := json.Marshal(t)
+	if err != nil {
+		panic(err)
+	}
+	return string(dj)
 }
 
 func (t *Token) HasNamespace(ns string) bool {

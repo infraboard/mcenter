@@ -22,7 +22,7 @@ func TestIssueToken(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(tk)
+	t.Log(tk.JsonFormat())
 }
 
 func TestValidateToken(t *testing.T) {
