@@ -15,6 +15,9 @@ func (h *handler) IssueToken(r *restful.Request, w *restful.Response) {
 		return
 	}
 
+	// 补充用户的登录时的位置信息
+	req.Location = token.NewNewLocationFromHttp(r.Request)
+
 	tk, err := h.service.IssueToken(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w.ResponseWriter, err)

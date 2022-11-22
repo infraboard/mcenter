@@ -17,6 +17,7 @@ require (
 	github.com/imdario/mergo v0.3.13
 	github.com/infraboard/mcube v1.9.1
 	github.com/kvtools/valkeyrie v1.0.0
+	github.com/mssola/user_agent v0.5.3
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.8.0

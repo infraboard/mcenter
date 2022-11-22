@@ -3,6 +3,7 @@ package impl
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcube/exception"
@@ -41,6 +42,35 @@ func (s *service) update(ctx context.Context, tk *token.Token) error {
 		return exception.NewInternalServerError("update token(%s) error, %s", tk.AccessToken, err)
 	}
 
+	return nil
+}
+
+func (s *service) blockOtherWebToken(ctx context.Context, tk *token.Token) error {
+	// 如果不是web登陆, 不需要关闭之前的登录令牌
+	if !tk.Platform.Equal(token.PLATFORM_WEB) {
+		return nil
+	}
+
+	status := token.NewStatus()
+	status.IsBlock = true
+	status.BlockAt = time.Now().UnixMilli()
+	status.BlockReason = ""
+	status.BlockType = token.BLOCK_TYPE_OTHER_PLACE_LOGGED_IN
+
+	rs, err := s.col.UpdateMany(
+		ctx,
+		bson.M{
+			"platform":        token.PLATFORM_WEB,
+			"user_id":         tk.UserId,
+			"issue_at":        bson.M{"$lt": tk.IssueAt},
+			"status.is_block": false,
+		},
+		bson.M{"$set": bson.M{"status": status}},
+	)
+	if err != nil {
+		return err
+	}
+	s.log.Debugf("block %d tokens", rs.ModifiedCount)
 	return nil
 }
 

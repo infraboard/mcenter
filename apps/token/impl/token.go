@@ -50,9 +50,14 @@ func (s *service) IssueTokenNow(ctx context.Context, req *token.IssueTokenReques
 		return nil, err
 	}
 
-	// 入库保存
 	if !req.DryRun {
+		// 入库保存
 		if err := s.save(ctx, tk); err != nil {
+			return nil, err
+		}
+
+		// 关闭之前的web登录
+		if err := s.blockOtherWebToken(ctx, tk); err != nil {
 			return nil, err
 		}
 	}
@@ -163,7 +168,7 @@ func (s *service) ValidateToken(ctx context.Context, req *token.ValidateTokenReq
 	}
 
 	if tk.Status.IsBlock {
-		return nil, s.makeBlockExcption(*tk.Status.BlockType, tk.Status.BlockMessage())
+		return nil, s.makeBlockExcption(tk.Status.BlockType, tk.Status.BlockMessage())
 	}
 
 	// 校验Access Token是否过期

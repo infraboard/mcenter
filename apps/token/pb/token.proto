@@ -115,7 +115,7 @@ message Status {
     bool is_block = 1;
     // 冻结类型
     // @gotags: bson:"block_type" json:"block_type"
-    optional BLOCK_TYPE block_type = 2;
+    BLOCK_TYPE block_type = 2;
     // 冻结时间
     // @gotags: bson:"block_at" json:"block_at"
     int64 block_at = 3;

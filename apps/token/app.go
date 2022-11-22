@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/http/request"
+	"github.com/mssola/user_agent"
 )
 
 const (
@@ -114,8 +115,33 @@ func NewStatus() *Status {
 	}
 }
 
+func NewNewLocationFromHttp(r *http.Request) *Location {
+	l := NewLocation()
+
+	// 解析UserAgent
+	ua := r.UserAgent()
+	if ua != "" {
+		ua := user_agent.New(ua)
+		l.UserAgent = &UserAgent{
+			Os:       ua.OS(),
+			Platform: ua.Platform(),
+		}
+		l.UserAgent.EngineName, l.UserAgent.EngineVersion = ua.Engine()
+		l.UserAgent.BrowserName, l.UserAgent.BrowserVersion = ua.Browser()
+	}
+
+	// 解析地理位置
+	rip := request.GetRemoteIP(r)
+	l.IpLocation.RemoteIp = rip
+
+	return l
+}
+
 func NewLocation() *Location {
-	return &Location{}
+	return &Location{
+		IpLocation: &IPLocation{},
+		UserAgent:  &UserAgent{},
+	}
 }
 
 func NewPlatform(p PLATFORM) *PLATFORM {
