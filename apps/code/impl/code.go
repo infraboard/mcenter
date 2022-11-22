@@ -6,7 +6,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/notify"
-	"github.com/infraboard/mcenter/apps/setting"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
@@ -72,7 +71,7 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 
 	var message string
 	switch system.Notify.Type {
-	case setting.NOTIFY_TYPE_MAIL:
+	case notify.NOTIFY_TYPE_MAIL:
 		content := system.Notify.Code.RenderMailCentent(code.Code, code.ExpiredMinite)
 		// 邮件通知
 		s.log.Debugf("mail to user %s", u.Profile.Email)
@@ -82,7 +81,7 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 		}
 		message = fmt.Sprintf("验证码已通过邮件发送到你的邮箱: %s, 请及时查收", u.Profile.Email)
 		s.log.Debugf("send verify code to user: %s by mail ok", code.Username)
-	case setting.NOTIFY_TYPE_SMS:
+	case notify.NOTIFY_TYPE_SMS:
 		// 短信通知
 		s.log.Debugf("sms to user %s", u.Profile.Phone)
 		req := notify.NewSendSMSRequest()

@@ -7,7 +7,6 @@ import (
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/notify/provider/mail"
 	"github.com/infraboard/mcenter/apps/notify/provider/sms/tencent"
-	"github.com/infraboard/mcenter/apps/setting"
 )
 
 // 发送短信
@@ -33,7 +32,7 @@ func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*not
 	sms := conf.Notify.SMS
 
 	switch sms.Provider {
-	case setting.SMS_PROVIDER_TENCENT:
+	case notify.SMS_PROVIDER_TENCENT:
 		sender, err := tencent.NewSender(sms.TencentConfig)
 		if err != nil {
 			return nil, err
@@ -41,7 +40,7 @@ func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*not
 		if err := sender.Send(ctx, req); err != nil {
 			return nil, err
 		}
-	case setting.SMS_PROVIDER_ALI:
+	case notify.SMS_PROVIDER_ALI:
 		return nil, fmt.Errorf("not impl")
 	default:
 		return nil, fmt.Errorf("unknow provier: %s", sms.Provider)

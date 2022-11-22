@@ -14,7 +14,7 @@ var (
 	ctx  = context.Background()
 )
 
-func TestCreateRole(t *testing.T) {
+func TestIssueCode(t *testing.T) {
 	req := code.NewIssueCodeRequest()
 	r, err := impl.IssueCode(ctx, req)
 	if err != nil {

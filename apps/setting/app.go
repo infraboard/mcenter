@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/notify/provider/mail"
-	"github.com/infraboard/mcenter/apps/notify/provider/sms/ali"
-	"github.com/infraboard/mcenter/apps/notify/provider/sms/tencent"
+	"github.com/infraboard/mcenter/apps/notify/provider/sms"
 )
 
 const (
@@ -23,9 +23,9 @@ func NewDefaultSetting() *Setting {
 	return &Setting{
 		Version: DEFAULT_CONFIG_VERSION,
 		Notify: &Notify{
-			Type:  NOTIFY_TYPE_MAIL,
+			Type:  notify.NOTIFY_TYPE_MAIL,
 			Email: mail.NewDefaultConfig(),
-			SMS:   NewDefaultSMS(),
+			SMS:   sms.NewDefaultSMS(),
 		},
 	}
 }
@@ -40,30 +40,13 @@ type Setting struct {
 
 type Notify struct {
 	// 通知方式
-	Type NOTIFY_TYPE `bson:"type" json:"type"`
+	Type notify.NOTIFY_TYPE `bson:"type" json:"type"`
 	// 邮件通知配置
 	Email *mail.Config `bson:"email" json:"email"`
 	// 短信通知配置
-	SMS *SMS `bson:"sms" json:"sms"`
+	SMS *sms.SMS `bson:"sms" json:"sms"`
 	// 验证码配置
 	Code *Code `bson:"code" json:"code"`
-}
-
-func NewDefaultSMS() *SMS {
-	return &SMS{
-		Provider:      SMS_PROVIDER_TENCENT,
-		TencentConfig: tencent.NewDefaultConfig(),
-		AliConfig:     ali.NewDefaultConfig(),
-	}
-}
-
-type SMS struct {
-	// 短信服务商
-	Provider SMS_PROVIDER `bson:"Provider" json:"Provider"`
-	// 腾讯短信服务配置
-	TencentConfig *tencent.Config `bson:"tencent_config" json:"tencent_config"`
-	// 阿里云短信服务配置
-	AliConfig *ali.Config `bson:"ali_config" json:"ali_config"`
 }
 
 // NewDefaultConfig todo
