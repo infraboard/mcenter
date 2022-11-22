@@ -38,17 +38,11 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	}
 
 	// 判断颁发凭证合法性
-	queryTokenReq := token.NewQueryTokenRequest()
-	queryTokenReq.AccessToken = req.AccessToken
-	tkSet, err := i.token.QueryToken(ctx, queryTokenReq)
+	tk, err := i.token.DescribeToken(ctx, token.NewDescribeTokenRequest(req.AccessToken))
 	if err != nil {
 		return nil, err
 	}
-	if tkSet.Length() == 0 {
-		return nil, fmt.Errorf("access token %s not found", req.AccessToken)
-	}
 
-	tk := tkSet.Items[0]
 	if tk.RefreshToken != req.RefreshToken {
 		return nil, fmt.Errorf("refresh token not correct")
 	}
@@ -57,8 +51,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	}
 
 	// 撤销之前的Token
-	revolkReq := token.NewRevolkTokenRequest()
-	revolkReq.AccessToken = req.AccessToken
+	revolkReq := token.NewRevolkTokenRequest(req.AccessToken, req.RefreshToken)
 	_, err = i.token.RevolkToken(ctx, revolkReq)
 	if err != nil {
 		return nil, err
@@ -66,6 +59,8 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 
 	// 3. 颁发Token
 	newTk := token.NewToken(req)
+	// 继承之前的授权类型
+	newTk.GrantType = tk.GrantType
 	newTk.Domain = tk.Domain
 	newTk.Username = tk.Username
 	newTk.UserType = tk.UserType

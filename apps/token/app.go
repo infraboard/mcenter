@@ -68,8 +68,11 @@ func (req *IssueTokenRequest) AbnormalUserCheckKey() string {
 }
 
 // NewRevolkTokenRequest 撤销Token请求
-func NewRevolkTokenRequest() *RevolkTokenRequest {
-	return &RevolkTokenRequest{}
+func NewRevolkTokenRequest(accessToken, refreshToken string) *RevolkTokenRequest {
+	return &RevolkTokenRequest{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
 }
 
 func NewChangeNamespaceRequest() *ChangeNamespaceRequest {

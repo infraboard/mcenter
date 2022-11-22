@@ -15,7 +15,7 @@ var (
 )
 
 func TestIssueToken(t *testing.T) {
-	req := token.NewRefreshIssueTokenRequest("TrXmcSBvVssEgdVPGW948oiR", "测试")
+	req := token.NewRefreshIssueTokenRequest("TrXmcSBvVssEgdVPGW948oiR", "jigPnNLcU1XCRxjTFwrv3Tqqg5VxvUAs")
 	tk, err := impl.IssueToken(ctx, req)
 	if err != nil {
 		t.Fatal(err)

@@ -11,6 +11,8 @@ type Service interface {
 	ChangeNamespace(context.Context, *ChangeNamespaceRequest) (*Token, error)
 	// 查询Token, 用于查询Token颁发记录, 也就是登陆日志
 	QueryToken(context.Context, *QueryTokenRequest) (*TokenSet, error)
+	// 查询Token详情
+	DescribeToken(context.Context, *DescribeTokenRequest) (*Token, error)
 	// RPC
 	RPCServer
 }
