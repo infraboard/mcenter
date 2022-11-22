@@ -29,7 +29,7 @@ func (i *issuer) GrantType() token.GRANT_TYPE {
 
 func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
 	if !req.GrantType.Equal(token.GRANT_TYPE_PRIVATE_TOKEN) {
-		return nil, exception.NewBadRequest("password issuer is only for %s", token.GRANT_TYPE_PRIVATE_TOKEN)
+		return nil, exception.NewBadRequest("private token issuer is only for %s", token.GRANT_TYPE_PRIVATE_TOKEN)
 	}
 
 	if req.AccessToken == "" {

@@ -34,6 +34,15 @@ func TestValidateToken(t *testing.T) {
 	t.Log(tk)
 }
 
+func TestQueryToken(t *testing.T) {
+	req := token.NewQueryTokenRequest()
+	set, err := impl.QueryToken(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(set.JsonFormat())
+}
+
 func init() {
 	tools.DevelopmentSetup()
 	impl = app.GetInternalApp(token.AppName).(token.Service)

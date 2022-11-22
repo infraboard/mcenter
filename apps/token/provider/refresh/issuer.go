@@ -2,10 +2,12 @@ package refresh
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -27,7 +29,49 @@ func (i *issuer) GrantType() token.GRANT_TYPE {
 }
 
 func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
-	return nil, nil
+	if !req.GrantType.Equal(token.GRANT_TYPE_REFRESH) {
+		return nil, exception.NewBadRequest("refresh issuer is only for %s", token.GRANT_TYPE_REFRESH)
+	}
+
+	if req.AccessToken == "" || req.RefreshToken == "" {
+		return nil, exception.NewUnauthorized("access token and refresh token required")
+	}
+
+	// 判断颁发凭证合法性
+	queryTokenReq := token.NewQueryTokenRequest()
+	queryTokenReq.AccessToken = req.AccessToken
+	tkSet, err := i.token.QueryToken(ctx, queryTokenReq)
+	if err != nil {
+		return nil, err
+	}
+	if tkSet.Length() == 0 {
+		return nil, fmt.Errorf("access token %s not found", req.AccessToken)
+	}
+
+	tk := tkSet.Items[0]
+	if tk.RefreshToken != req.RefreshToken {
+		return nil, fmt.Errorf("refresh token not correct")
+	}
+	if tk.CheckRefreshIsExpired() {
+		return nil, fmt.Errorf("refresh token is expired")
+	}
+
+	// 撤销之前的Token
+	revolkReq := token.NewRevolkTokenRequest()
+	revolkReq.AccessToken = req.AccessToken
+	_, err = i.token.RevolkToken(ctx, revolkReq)
+	if err != nil {
+		return nil, err
+	}
+
+	// 3. 颁发Token
+	newTk := token.NewToken(req)
+	newTk.Domain = tk.Domain
+	newTk.Username = tk.Username
+	newTk.UserType = tk.UserType
+	newTk.UserId = tk.UserId
+
+	return newTk, nil
 }
 
 func init() {

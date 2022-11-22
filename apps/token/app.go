@@ -38,6 +38,14 @@ func NewPrivateTokenIssueTokenRequest(accessToken, description string) *IssueTok
 	return req
 }
 
+func NewRefreshIssueTokenRequest(accessToken, refreshToken string) *IssueTokenRequest {
+	req := NewIssueTokenRequest()
+	req.GrantType = GRANT_TYPE_REFRESH
+	req.AccessToken = accessToken
+	req.RefreshToken = refreshToken
+	return req
+}
+
 // NewIssueTokenRequest 默认请求
 func NewIssueTokenRequest() *IssueTokenRequest {
 	return &IssueTokenRequest{}
@@ -257,4 +265,18 @@ func NewTokenSet() *TokenSet {
 // Add todo
 func (m *TokenSet) Add(item *Token) {
 	m.Items = append(m.Items, item)
+}
+
+func (m *TokenSet) JsonFormat() string {
+	dj, err := json.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+	return string(dj)
+}
+
+func NewQueryTokenRequest() *QueryTokenRequest {
+	return &QueryTokenRequest{
+		Page: request.NewDefaultPageRequest(),
+	}
 }
