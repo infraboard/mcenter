@@ -19,7 +19,8 @@ var QRLoginObj = QRLogin({
     style: "width:500px;height:600px"//可选的，二维码html标签的style属性
 });
 
-var handleMessage = function (event) {        
+var handleMessage = function (event) {    
+    console.log(event);
     var origin = event.origin;    
     // 使用 matchOrigin 方法来判断 message 来自页面的url是否合法
     if( QRLoginObj.matchOrigin(origin) ) {           
