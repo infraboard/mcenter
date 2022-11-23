@@ -47,6 +47,14 @@ func NewRefreshIssueTokenRequest(accessToken, refreshToken string) *IssueTokenRe
 	return req
 }
 
+func NewLDAPIssueTokenRequest(username, password string) *IssueTokenRequest {
+	req := NewIssueTokenRequest()
+	req.GrantType = GRANT_TYPE_LDAP
+	req.Username = username
+	req.Password = password
+	return req
+}
+
 // NewIssueTokenRequest 默认请求
 func NewIssueTokenRequest() *IssueTokenRequest {
 	return &IssueTokenRequest{}

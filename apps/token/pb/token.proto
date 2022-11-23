@@ -23,6 +23,8 @@ enum GRANT_TYPE {
     IMPLICIT = 6;
     // 微信授权
     WECHAT_WORK = 7;
+    // 飞书授权
+    FEISHU = 8;
 }
 
 // 令牌类型
