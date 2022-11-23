@@ -1,0 +1,37 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://sf3-cn.feishucdn.com/obj/feishu-static/lark/passport/qrcode/LarkSSOSDKWebQRCode-1.0.2.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="login_container"></div>
+</body>
+
+<script>
+var QRLoginObj = QRLogin({
+    id:"login_container",
+    goto: "https://passport.feishu.cn/suite/passport/oauth/authorize?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE",
+    width: "500",
+    height: "500",
+    style: "width:500px;height:600px"//可选的，二维码html标签的style属性
+});
+
+var handleMessage = function (event) {        
+    var origin = event.origin;    
+    // 使用 matchOrigin 方法来判断 message 来自页面的url是否合法
+    if( QRLoginObj.matchOrigin(origin) ) {           
+        var loginTmpCode = event.data; 
+      	// 在授权页面地址上拼接上参数 tmp_code，并跳转
+        window.location.href = `${goto}&tmp_code=${loginTmpCode}`;
+    }
+};
+if (typeof window.addEventListener != 'undefined') {   
+    window.addEventListener('message', handleMessage, false);} 
+else if (typeof window.attachEvent != 'undefined') { 
+    window.attachEvent('onmessage', handleMessage);
+}
+</script>
+</html>
