@@ -51,10 +51,11 @@ func (s *service) blockOtherWebToken(ctx context.Context, tk *token.Token) error
 		return nil
 	}
 
+	now := time.Now()
 	status := token.NewStatus()
 	status.IsBlock = true
-	status.BlockAt = time.Now().UnixMilli()
-	status.BlockReason = ""
+	status.BlockAt = now.UnixMilli()
+	status.BlockReason = fmt.Sprintf("你于 %s 从其他地方通过 %s 登录", now.Format(time.RFC3339), tk.GrantType)
 	status.BlockType = token.BLOCK_TYPE_OTHER_PLACE_LOGGED_IN
 
 	rs, err := s.col.UpdateMany(
