@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 type RPCClient interface {
 	// 查询域
 	DescribeDomain(ctx context.Context, in *DescribeDomainRequest, opts ...grpc.CallOption) (*Domain, error)
+	// 查询域列表
+	QueryDoamin(ctx context.Context, in *QueryDomainRequest, opts ...grpc.CallOption) (*DomainSet, error)
 }
 
 type rPCClient struct {
@@ -43,12 +45,23 @@ func (c *rPCClient) DescribeDomain(ctx context.Context, in *DescribeDomainReques
 	return out, nil
 }
 
+func (c *rPCClient) QueryDoamin(ctx context.Context, in *QueryDomainRequest, opts ...grpc.CallOption) (*DomainSet, error) {
+	out := new(DomainSet)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.domain.RPC/QueryDoamin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RPCServer is the server API for RPC service.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
 	// 查询域
 	DescribeDomain(context.Context, *DescribeDomainRequest) (*Domain, error)
+	// 查询域列表
+	QueryDoamin(context.Context, *QueryDomainRequest) (*DomainSet, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -58,6 +71,9 @@ type UnimplementedRPCServer struct {
 
 func (UnimplementedRPCServer) DescribeDomain(context.Context, *DescribeDomainRequest) (*Domain, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DescribeDomain not implemented")
+}
+func (UnimplementedRPCServer) QueryDoamin(context.Context, *QueryDomainRequest) (*DomainSet, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryDoamin not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -90,6 +106,24 @@ func _RPC_DescribeDomain_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RPC_QueryDoamin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryDomainRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).QueryDoamin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infraboard.mcenter.domain.RPC/QueryDoamin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).QueryDoamin(ctx, req.(*QueryDomainRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +134,10 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DescribeDomain",
 			Handler:    _RPC_DescribeDomain_Handler,
+		},
+		{
+			MethodName: "QueryDoamin",
+			Handler:    _RPC_QueryDoamin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -40,7 +40,7 @@ func (s *service) Config() error {
 		return err
 	}
 
-	dc := db.Collection("domain")
+	dc := db.Collection(s.Name())
 	indexs := []mongo.IndexModel{
 		{
 			Keys: bsonx.Doc{{Key: "issue_at", Value: bsonx.Int32(-1)}},

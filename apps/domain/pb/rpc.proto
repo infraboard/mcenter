@@ -3,12 +3,16 @@ syntax = "proto3";
 package infraboard.mcenter.domain;
 option go_package = "github.com/infraboard/mcenter/apps/domain";
 
+import "github.com/infraboard/mcube/pb/page/page.proto";
+import "github.com/infraboard/mcube/pb/request/request.proto";
 import "apps/domain/pb/domain.proto";
 
 // Service 用户服务
 service RPC {
     // 查询域
 	rpc DescribeDomain(DescribeDomainRequest) returns(Domain);
+	// 查询域列表
+	rpc QueryDoamin(QueryDomainRequest) returns(DomainSet);
 }
 
 // DescribeDomainRequest 查询domain详情请求
@@ -22,4 +26,36 @@ message DescribeDomainRequest {
     // 通过名称查询
     // @gotags: json:"name"
     string name = 3;
+}
+
+message UpdateDomainRequest  {
+    // 更新模式
+    // @gotags: json:"update_mode"
+    infraboard.mcube.request.UpdateMode update_mode = 1;
+    // 公司或者组织Id
+    // @gotags: json:"id"
+    string id = 2;
+    // 公司或者组织名称
+    // @gotags: json:"name"
+    string name = 3;
+    // 修改的内容
+    // @gotags: json:"spec" validate:"required"
+    CreateDomainRequest spec = 4;
+}
+
+enum DESCRIBE_BY {
+    ID = 0;
+    NAME = 1;
+}
+
+message QueryDomainRequest {
+    // 分页参数
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+    // Domain 相关Id
+    // @gotags: json:"ids" 
+    repeated string ids = 2;
+    // Domain 相关Name
+    // @gotags: json:"names" 
+    repeated string names = 3;
 }

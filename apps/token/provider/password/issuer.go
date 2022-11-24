@@ -58,7 +58,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	switch u.Spec.Type {
 	case user.TYPE_SUB:
 		// 子账号过期策略
-		d, err := i.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequest(u.Spec.Domain))
+		d, err := i.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(u.Spec.Domain))
 		if err != nil {
 			return nil, err
 		}

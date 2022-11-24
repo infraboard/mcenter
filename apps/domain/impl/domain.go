@@ -12,6 +12,35 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// 查询域列表
+func (s *service) QueryDoamin(ctx context.Context, in *domain.QueryDomainRequest) (*domain.DomainSet, error) {
+	r := newQueryRequest(in)
+	resp, err := s.col.Find(ctx, r.FindFilter(), r.FindOptions())
+
+	if err != nil {
+		return nil, exception.NewInternalServerError("find user error, error is %s", err)
+	}
+
+	set := domain.NewDomainSet()
+	// 循环
+	for resp.Next(ctx) {
+		ins := domain.NewDefaultDomain()
+		if err := resp.Decode(ins); err != nil {
+			return nil, exception.NewInternalServerError("decode user error, error is %s", err)
+		}
+		ins.Desensitize()
+		set.Add(ins)
+	}
+
+	// count
+	count, err := s.col.CountDocuments(ctx, r.FindFilter())
+	if err != nil {
+		return nil, exception.NewInternalServerError("get user count error, error is %s", err)
+	}
+	set.Total = count
+	return set, nil
+}
+
 func (s *service) CreateDomain(ctx context.Context, req *domain.CreateDomainRequest) (*domain.Domain, error) {
 	d, err := domain.New(req)
 	if err != nil {
@@ -37,7 +66,7 @@ func (s *service) DescribeDomain(ctx context.Context, req *domain.DescribeDomain
 		filter["name"] = req.Name
 	}
 
-	d := domain.NewDefault()
+	d := domain.NewDefaultDomain()
 	if err := s.col.FindOne(ctx, filter).Decode(d); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("domain %s not found", req)
@@ -54,7 +83,15 @@ func (s *service) UpdateDomain(ctx context.Context, req *domain.UpdateDomainRequ
 		return nil, exception.NewBadRequest(err.Error())
 	}
 
-	d, err := s.DescribeDomain(ctx, domain.NewDescribeDomainRequest(req.Id))
+	var descReq *domain.DescribeDomainRequest
+	if req.Name != "" {
+		descReq = domain.NewDescribeDomainRequestByName(req.Name)
+	}
+	if req.Id != "" {
+		descReq = domain.NewDescribeDomainRequestById(req.Id)
+	}
+
+	d, err := s.DescribeDomain(ctx, descReq)
 	if err != nil {
 		return nil, err
 	}

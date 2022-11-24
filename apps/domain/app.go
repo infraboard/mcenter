@@ -2,11 +2,15 @@ package domain
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/infraboard/mcube/pb/request"
 	"github.com/rs/xid"
+
+	request "github.com/infraboard/mcube/http/request"
+	pb_request "github.com/infraboard/mcube/pb/request"
 )
 
 const (
@@ -18,11 +22,14 @@ var (
 	validate = validator.New()
 )
 
-// NewDefault todo
-func NewDefault() *Domain {
+func NewDefaultDomain() *Domain {
 	return &Domain{
 		Spec: NewCreateDomainRequest(),
 	}
+}
+
+func (d *Domain) Desensitize() {
+
 }
 
 // NewCreateDomainRequest todo
@@ -119,14 +126,25 @@ func (req *DescribeDomainRequest) Validate() error {
 
 // Validate 校验请求是否合法
 func (req *UpdateDomainRequest) Validate() error {
+	if req.Id == "" || req.Name == "" {
+		return fmt.Errorf("id or name required")
+	}
 	return validate.Struct(req)
 }
 
 // NewDescribeDomainRequest 查询详情请求
-func NewDescribeDomainRequest(id string) *DescribeDomainRequest {
+func NewDescribeDomainRequestById(id string) *DescribeDomainRequest {
 	return &DescribeDomainRequest{
 		DescribeBy: DESCRIBE_BY_ID,
 		Id:         id,
+	}
+}
+
+// NewDescribeDomainRequest 查询详情请求
+func NewDescribeDomainRequestByName(name string) *DescribeDomainRequest {
+	return &DescribeDomainRequest{
+		DescribeBy: DESCRIBE_BY_NAME,
+		Name:       name,
 	}
 }
 
@@ -134,21 +152,65 @@ func NewDescribeDomainRequest(id string) *DescribeDomainRequest {
 func NewPutDomainRequest(id string) *UpdateDomainRequest {
 	return &UpdateDomainRequest{
 		Id:         id,
-		UpdateMode: request.UpdateMode_PUT,
+		UpdateMode: pb_request.UpdateMode_PUT,
 		Spec:       &CreateDomainRequest{},
 	}
 }
 
 // NewPatchDomainRequest todo
-func NewPatchDomainRequest(id string) *UpdateDomainRequest {
+func NewPatchDomainRequestById(id string) *UpdateDomainRequest {
 	return &UpdateDomainRequest{
 		Id:         id,
-		UpdateMode: request.UpdateMode_PUT,
+		UpdateMode: pb_request.UpdateMode_PUT,
 		Spec:       &CreateDomainRequest{},
 	}
+}
+
+// NewPatchDomainRequest todo
+func NewPatchDomainRequestByName(name string) *UpdateDomainRequest {
+	req := NewPatchDomainRequestById("")
+	req.Name = name
+	return req
 }
 
 // LockedMiniteDuration todo
 func (c *RetryLockConfig) LockedMiniteDuration() time.Duration {
 	return time.Duration(c.LockedMinite) * time.Minute
+}
+
+func NewDomainSet() *DomainSet {
+	return &DomainSet{
+		Items: []*Domain{},
+	}
+}
+
+func (s *DomainSet) Add(item *Domain) {
+	s.Items = append(s.Items, item)
+}
+
+func NewQueryDomainRequest() *QueryDomainRequest {
+	return &QueryDomainRequest{
+		Page:  request.NewPageRequest(20, 1),
+		Ids:   []string{},
+		Names: []string{},
+	}
+}
+
+// NewQueryDomainRequestFromHTTP todo
+func NewQueryDomainRequestFromHTTP(r *http.Request) *QueryDomainRequest {
+	query := NewQueryDomainRequest()
+
+	qs := r.URL.Query()
+	query.Page = request.NewPageRequestFromHTTP(r)
+
+	uids := qs.Get("domain_ids")
+	if uids != "" {
+		query.Ids = strings.Split(uids, ",")
+	}
+
+	dn := qs.Get("domain_names")
+	if uids != "" {
+		query.Names = strings.Split(dn, ",")
+	}
+	return query
 }
