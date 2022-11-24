@@ -27,7 +27,7 @@ func TestIssueCode(t *testing.T) {
 }
 
 func TestVerifyCode(t *testing.T) {
-	req := code.NewVerifyCodeRequest("admin", "172552")
+	req := code.NewVerifyCodeRequest("admin", "612114")
 	r, err := impl.VerifyCode(ctx, req)
 	if err != nil {
 		t.Fatal(err)

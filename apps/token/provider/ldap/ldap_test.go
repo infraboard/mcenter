@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token/provider/ldap"
 )
 
@@ -35,17 +36,27 @@ func TestUserDetail(t *testing.T) {
 func TestGetBaseDNFromUser(t *testing.T) {
 	should := assert.New(t)
 
-	conf := ldap.NewDefaultConfig()
+	conf := domain.NewDefaultConfig()
 	conf.AdminUsername = "cn=admin,dc=example,dc=org"
 	baseDN := conf.GetBaseDNFromUser()
 
 	should.Equal("dc=example,dc=org", baseDN)
 }
 
+func TestBaseDnToSuffix(t *testing.T) {
+	should := assert.New(t)
+
+	conf := domain.NewDefaultConfig()
+	conf.BaseDn = "dc=example,dc=org"
+	baseDN := conf.BaseDnToSuffix()
+
+	should.Equal("example.org", baseDN)
+}
+
 func init() {
 	zap.DevelopmentSetup()
 
-	conf := ldap.NewDefaultConfig()
+	conf := domain.NewDefaultConfig()
 	conf.Url = "ldap://127.0.0.1:389"
 	conf.AdminUsername = "cn=admin,dc=example,dc=org"
 	conf.AdminPassword = "admin"

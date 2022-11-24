@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package infraboard.mcenter.token;
-option go_package = "github.com/infraboard/mcenter/apps/token/provider/ldap";
+package infraboard.mcenter.domain;
+option go_package = "github.com/infraboard/mcenter/apps/domain";
 
 message LdapConfig {
     // LDAP Server URL
@@ -40,7 +40,7 @@ message LdapConfig {
     // 管理账号的用户名称
     // @gotags: bson:"admin_username" json:"admin_username"
     string admin_username = 12; 
-    // 管理账号的用户密码
+    // 管理账号的用户密码 
     // @gotags: bson:"admin_password" json:"admin_password"
     string admin_password = 13; 
 }

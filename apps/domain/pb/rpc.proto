@@ -22,10 +22,13 @@ message DescribeDomainRequest {
     DESCRIBE_BY describe_by = 1;
     // 通过Id查询
     // @gotags: json:"id"
-   string id = 2;
+    string id = 2;
     // 通过名称查询
     // @gotags: json:"name"
     string name = 3;
+    // 通过ldap suffix查询
+    // @gotags: json:"ldap_suffix"
+    string ldap_suffix = 4;
 }
 
 message UpdateDomainRequest  {
@@ -44,8 +47,12 @@ message UpdateDomainRequest  {
 }
 
 enum DESCRIBE_BY {
+    // 用户的ID
     ID = 0;
+    // 用户的名称 oldfish
     NAME = 1;
+    // 用户后缀, 比如 LDAP登录时 oldfish@devcloud.io 中的devcloud.io
+    LDAP_SUFFIX = 2;
 }
 
 message QueryDomainRequest {

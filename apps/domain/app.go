@@ -145,6 +145,14 @@ func NewDescribeDomainRequestById(id string) *DescribeDomainRequest {
 }
 
 // NewDescribeDomainRequest 查询详情请求
+func NewDescribeDomainRequestByLdapSuffix(ldapSuffix string) *DescribeDomainRequest {
+	return &DescribeDomainRequest{
+		DescribeBy: DESCRIBE_BY_LDAP_SUFFIX,
+		LdapSuffix: ldapSuffix,
+	}
+}
+
+// NewDescribeDomainRequest 查询详情请求
 func NewDescribeDomainRequestByName(name string) *DescribeDomainRequest {
 	return &DescribeDomainRequest{
 		DescribeBy: DESCRIBE_BY_NAME,

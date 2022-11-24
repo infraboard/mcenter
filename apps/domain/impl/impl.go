@@ -40,6 +40,12 @@ func (s *service) Config() error {
 			},
 			Options: options.Index().SetUnique(true),
 		},
+		{
+			Keys: bsonx.Doc{
+				{Key: "spec.ldap_suffix", Value: bsonx.Int32(-1)},
+			},
+			Options: options.Index().SetUnique(true),
+		},
 	}
 
 	_, err = dc.Indexes().CreateMany(context.Background(), indexs)

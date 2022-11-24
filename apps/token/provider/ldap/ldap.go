@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-ldap/ldap/v3"
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -25,7 +26,7 @@ type UserProvider interface {
 }
 
 // NewProvider todo
-func NewProvider(conf *LdapConfig) *Provider {
+func NewProvider(conf *domain.LdapConfig) *Provider {
 	return &Provider{
 		conf: conf,
 		log:  zap.L().Named("ldap"),
@@ -34,7 +35,7 @@ func NewProvider(conf *LdapConfig) *Provider {
 
 // Provider todo
 type Provider struct {
-	conf *LdapConfig
+	conf *domain.LdapConfig
 	log  logger.Logger
 }
 

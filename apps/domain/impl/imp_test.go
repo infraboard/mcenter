@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcenter/apps/token/provider/ldap"
 	"github.com/infraboard/mcenter/test/tools"
 	"github.com/infraboard/mcube/app"
 )
@@ -35,8 +34,15 @@ func TestCreateDomain(t *testing.T) {
 }
 
 func TestPatchUpdateDomain(t *testing.T) {
+	conf := domain.NewDefaultConfig()
+	conf.Url = "ldap://127.0.0.1:389"
+	conf.AdminUsername = "cn=admin,dc=example,dc=org"
+	conf.AdminPassword = "admin"
+	conf.BaseDn = "dc=example,dc=org"
+	conf.UsersFilter = "(uid={input})"
+
 	req := domain.NewPatchDomainRequestByName(domain.DEFAULT_DOMAIN)
-	req.Spec.LdapSetting = ldap.NewDefaultConfig()
+	req.Spec.LdapSetting = conf
 	ins, err := impl.UpdateDomain(ctx, req)
 	if err != nil {
 		t.Fatal(err)

@@ -1,4 +1,4 @@
-package ldap
+package domain
 
 import (
 	"fmt"
@@ -19,14 +19,30 @@ func NewDefaultConfig() *LdapConfig {
 
 // GetBaseDNFromUser 从用户中获取BaseDN
 func (c *LdapConfig) GetBaseDNFromUser() string {
+	return strings.Join(c.getBaseDN(c.AdminUsername), ",")
+}
+
+func (c *LdapConfig) BaseDnToSuffix() string {
+	values := []string{}
+	dn := c.getBaseDN(c.BaseDn)
+	for _, v := range dn {
+		kvs := strings.Split(v, "=")
+		if len(kvs) > 1 {
+			values = append(values, kvs[1])
+		}
+	}
+
+	return strings.Join(values, ".")
+}
+
+func (c *LdapConfig) getBaseDN(entry string) []string {
 	baseDN := []string{}
-	for _, item := range strings.Split(c.AdminUsername, ",") {
+	for _, item := range strings.Split(entry, ",") {
 		if !strings.HasPrefix(item, "cn=") {
 			baseDN = append(baseDN, item)
 		}
 	}
-
-	return strings.Join(baseDN, ",")
+	return baseDN
 }
 
 // Validate todo
