@@ -25,7 +25,7 @@ type UserProvider interface {
 }
 
 // NewProvider todo
-func NewProvider(conf *Config) *Provider {
+func NewProvider(conf *LdapConfig) *Provider {
 	return &Provider{
 		conf: conf,
 		log:  zap.L().Named("ldap"),
@@ -34,7 +34,7 @@ func NewProvider(conf *Config) *Provider {
 
 // Provider todo
 type Provider struct {
-	conf *Config
+	conf *LdapConfig
 	log  logger.Logger
 }
 
@@ -68,7 +68,7 @@ func (p *Provider) dial(network, addr string) (Connection, error) {
 func (p *Provider) connect(userDN string, password string) (Connection, error) {
 	var conn Connection
 
-	url, err := url.Parse(p.conf.URL)
+	url, err := url.Parse(p.conf.Url)
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse URL to LDAP: %s", url)
 	}
@@ -101,7 +101,7 @@ func (p *Provider) connect(userDN string, password string) (Connection, error) {
 
 // CheckConnect todo
 func (p *Provider) CheckConnect() error {
-	adminClient, err := p.connect(p.conf.User, p.conf.Password)
+	adminClient, err := p.connect(p.conf.AdminUsername, p.conf.AdminPassword)
 	if err != nil {
 		return err
 	}
@@ -112,7 +112,7 @@ func (p *Provider) CheckConnect() error {
 
 // CheckUserPassword checks if provided password matches for the given user.
 func (p *Provider) CheckUserPassword(inputUsername string, password string) (bool, error) {
-	adminClient, err := p.connect(p.conf.User, p.conf.Password)
+	adminClient, err := p.connect(p.conf.AdminUsername, p.conf.AdminUsername)
 	if err != nil {
 		return false, err
 	}
@@ -161,9 +161,9 @@ func (p *Provider) getUserProfile(conn Connection, inputUsername string) (*UserP
 	userFilter := p.resolveUsersFilter(p.conf.UsersFilter, inputUsername)
 	p.log.Debugf("Computed user filter is %s", userFilter)
 
-	baseDN := p.conf.BaseDN
-	if p.conf.AdditionalUsersDN != "" {
-		baseDN = p.conf.AdditionalUsersDN + "," + baseDN
+	baseDN := p.conf.BaseDn
+	if p.conf.AdditionalUsersDn != "" {
+		baseDN = p.conf.AdditionalUsersDn + "," + baseDN
 	}
 
 	attributes := []string{"dn",
@@ -239,7 +239,7 @@ func (p *Provider) resolveGroupsFilter(inputUsername string, profile *UserProfil
 
 // GetDetails retrieve the groups a user belongs to.
 func (p *Provider) GetDetails(inputUsername string) (*UserProfile, error) {
-	conn, err := p.connect(p.conf.User, p.conf.Password)
+	conn, err := p.connect(p.conf.AdminUsername, p.conf.AdminPassword)
 	if err != nil {
 		return nil, err
 	}
@@ -257,15 +257,15 @@ func (p *Provider) GetDetails(inputUsername string) (*UserProfile, error) {
 
 	p.log.Debugf("Computed groups filter is %s", groupsFilter)
 
-	groupBaseDN := p.conf.BaseDN
-	if p.conf.AdditionalGroupsDN != "" {
-		groupBaseDN = p.conf.AdditionalGroupsDN + "," + groupBaseDN
+	groupBaseDN := p.conf.BaseDn
+	if p.conf.AdditionalGroupsDn != "" {
+		groupBaseDN = p.conf.AdditionalGroupsDn + "," + groupBaseDN
 	}
 
 	// Search for the given username.
 	searchGroupRequest := ldap.NewSearchRequest(
 		groupBaseDN, ldap.ScopeWholeSubtree, ldap.NeverDerefAliases,
-		0, 0, false, groupsFilter, []string{p.conf.GroupNameAttribute}, nil,
+		0, 0, false, groupsFilter, []string{p.conf.GroupnameAttribute}, nil,
 	)
 
 	sr, err := conn.Search(searchGroupRequest)
@@ -288,7 +288,7 @@ func (p *Provider) GetDetails(inputUsername string) (*UserProfile, error) {
 
 // UpdatePassword update the password of the given user.
 func (p *Provider) UpdatePassword(inputUsername string, newPassword string) error {
-	client, err := p.connect(p.conf.User, p.conf.Password)
+	client, err := p.connect(p.conf.AdminUsername, p.conf.AdminPassword)
 
 	if err != nil {
 		return fmt.Errorf("unable to update password. Cause: %s", err)

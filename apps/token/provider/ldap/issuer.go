@@ -27,10 +27,18 @@ func (i *issuer) GrantType() token.GRANT_TYPE {
 }
 
 func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
+	// 从用户名中 获取到DN, 比如oldfish@devcloud.io
+	// username: oldfish dn: devcloud.io
 	userName, dn, err := i.genBaseDN(req.Username)
 	if err != nil {
 		return nil, err
 	}
+
+	// descReq := provider.NewDescribeLDAPConfigWithBaseDN(dn)
+	// ldapConf, err := i.ldap.DescribeConfig(descReq)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	fmt.Println(userName, dn)
 
