@@ -126,10 +126,14 @@ func (req *DescribeDomainRequest) Validate() error {
 
 // Validate 校验请求是否合法
 func (req *UpdateDomainRequest) Validate() error {
-	if req.Id == "" || req.Name == "" {
+	if req.Id == "" && req.Name == "" {
 		return fmt.Errorf("id or name required")
 	}
-	return validate.Struct(req)
+	if req.UpdateMode.Equal(pb_request.UpdateMode_PUT) {
+		return validate.Struct(req)
+	}
+
+	return nil
 }
 
 // NewDescribeDomainRequest 查询详情请求
@@ -161,7 +165,7 @@ func NewPutDomainRequest(id string) *UpdateDomainRequest {
 func NewPatchDomainRequestById(id string) *UpdateDomainRequest {
 	return &UpdateDomainRequest{
 		Id:         id,
-		UpdateMode: pb_request.UpdateMode_PUT,
+		UpdateMode: pb_request.UpdateMode_PATCH,
 		Spec:       &CreateDomainRequest{},
 	}
 }

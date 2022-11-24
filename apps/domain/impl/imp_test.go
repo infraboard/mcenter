@@ -34,7 +34,7 @@ func TestCreateDomain(t *testing.T) {
 	t.Log(ins)
 }
 
-func TestUpdateDomain(t *testing.T) {
+func TestPatchUpdateDomain(t *testing.T) {
 	req := domain.NewPatchDomainRequestByName(domain.DEFAULT_DOMAIN)
 	req.Spec.LdapSetting = ldap.NewDefaultConfig()
 	ins, err := impl.UpdateDomain(ctx, req)

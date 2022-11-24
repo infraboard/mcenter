@@ -63,7 +63,7 @@ func (s *service) DescribeDomain(ctx context.Context, req *domain.DescribeDomain
 	case domain.DESCRIBE_BY_ID:
 		filter["_id"] = req.Id
 	case domain.DESCRIBE_BY_NAME:
-		filter["name"] = req.Name
+		filter["spec.name"] = req.Name
 	}
 
 	d := domain.NewDefaultDomain()
@@ -102,6 +102,9 @@ func (s *service) UpdateDomain(ctx context.Context, req *domain.UpdateDomainRequ
 	case request.UpdateMode_PATCH:
 		if err := mergo.MergeWithOverwrite(d.Spec, req.Spec); err != nil {
 			return nil, err
+		}
+		if err := d.Spec.Validate(); err != nil {
+			return nil, nil
 		}
 	default:
 		return nil, exception.NewBadRequest("unknown update mode: %s", req.UpdateMode)
