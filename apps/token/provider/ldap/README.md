@@ -20,3 +20,27 @@ docker exec ldap-service ldapsearch -x -H ldap://localhost -b dc=example,dc=org 
 ```
 
 更详细安装请参考: [docker-openldap](https://github.com/osixia/docker-openldap)
+
+
+## 创建用户
+
+1. 首先创建一个Grou: cn=dev,dc=example,dc=org
+
+|  Attribute   | New Value  |
+|  ----  | ----  |
+| Group  | test |
+| GID Number  | 500 |
+| objectClass  | posixGroup |
+
+2. 在dev组创建一个用户: cn=old fish,cn=dev,dc=example,dc=org
+
+|  Attribute   | New Value  |
+|  ----  | ----  |
+| Given Name  | old |
+| Last name  | fish |
+| Common Name  | old fish |
+| User ID  | oldfish |
+| Email  | oldfish@devcloud.io |
+| Password | Password |
+| objectClass | inetOrgPerson|
+		

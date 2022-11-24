@@ -28,7 +28,7 @@ type UserProvider interface {
 func NewProvider(conf *Config) *Provider {
 	return &Provider{
 		conf: conf,
-		log:  zap.L().Named("LDAP"),
+		log:  zap.L().Named("ldap"),
 	}
 }
 
