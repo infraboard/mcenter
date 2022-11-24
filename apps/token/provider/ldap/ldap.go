@@ -113,7 +113,7 @@ func (p *Provider) CheckConnect() error {
 
 // CheckUserPassword checks if provided password matches for the given user.
 func (p *Provider) CheckUserPassword(inputUsername string, password string) (bool, error) {
-	adminClient, err := p.connect(p.conf.AdminUsername, p.conf.AdminUsername)
+	adminClient, err := p.connect(p.conf.AdminUsername, p.conf.AdminPassword)
 	if err != nil {
 		return false, err
 	}

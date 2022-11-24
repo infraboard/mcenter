@@ -59,7 +59,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 func (i *issuer) SpliteUserAndSuffix(username string) (string, string) {
 	kvs := strings.Split(username, "@")
 	if len(kvs) > 1 {
-		return kvs[0], kvs[1]
+		return kvs[0], strings.Join(kvs[1:], "")
 	}
 
 	return username, ""

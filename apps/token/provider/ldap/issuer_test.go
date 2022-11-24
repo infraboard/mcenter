@@ -15,7 +15,7 @@ var (
 )
 
 func TestIssueToken(t *testing.T) {
-	req := token.NewLDAPIssueTokenRequest("oldfish@devcloud.io", "123456")
+	req := token.NewLDAPIssueTokenRequest("oldfish@example.org", "123456")
 	tk, err := impl.IssueToken(ctx, req)
 	if err != nil {
 		t.Fatal(err)
