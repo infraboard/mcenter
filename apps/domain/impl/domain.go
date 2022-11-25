@@ -64,8 +64,6 @@ func (s *service) DescribeDomain(ctx context.Context, req *domain.DescribeDomain
 		filter["_id"] = req.Id
 	case domain.DESCRIBE_BY_NAME:
 		filter["spec.name"] = req.Name
-	case domain.DESCRIBE_BY_LDAP_SUFFIX:
-		filter["spec.ldap_suffix"] = req.LdapSuffix
 	}
 
 	d := domain.NewDefaultDomain()
@@ -112,14 +110,6 @@ func (s *service) UpdateDomain(ctx context.Context, req *domain.UpdateDomainRequ
 		return nil, exception.NewBadRequest("unknown update mode: %s", req.UpdateMode)
 	}
 
-	// 提供默认值
-	if d.Spec.LdapSuffix == "" {
-		if d.Spec.LdapSetting == nil {
-			d.Spec.LdapSuffix = d.Spec.Name
-		} else {
-			d.Spec.LdapSuffix = d.Spec.LdapSetting.BaseDnToSuffix()
-		}
-	}
 	d.UpdateAt = time.Now().UnixMilli()
 	_, err = s.col.UpdateOne(ctx, bson.M{"_id": d.Id}, bson.M{"$set": d})
 	if err != nil {

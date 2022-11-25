@@ -69,9 +69,6 @@ message CreateDomainRequest {
     // SecuritySetting 域安全设置
     // @gotags: bson:"security_setting" json:"security_setting"
     SecuritySetting security_setting = 13;
-    // ldap匹配的后缀, 比如oldfish@devcloud.io 则devcloud.io 则为dc=devcloud,dc=io
-    // @gotags: bson:"ldap_suffix" json:"ldap_suffix"
-    string ldap_suffix = 14;
     // LdapConfig 域关联的LDAP设置
     // @gotags: bson:"ldap_setting" json:"ldap_setting"
     LdapConfig ldap_setting  = 15;

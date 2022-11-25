@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/imdario/mergo"
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
@@ -239,4 +240,13 @@ func (i *User) Update(req *UpdateUserRequest) {
 func (i *User) Patch(req *UpdateUserRequest) error {
 	i.UpdateAt = time.Now().UnixMicro()
 	return mergo.MergeWithOverwrite(i.Profile, req.Profile)
+}
+
+func SpliteUserAndDomain(username string) (string, string) {
+	kvs := strings.Split(username, "@")
+	if len(kvs) > 1 {
+		return kvs[0], strings.Join(kvs[1:], "")
+	}
+
+	return username, domain.DEFAULT_DOMAIN
 }

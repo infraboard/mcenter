@@ -3,11 +3,11 @@ package ldap
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
+	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/app"
 )
 
@@ -25,11 +25,11 @@ func (i *issuer) GrantType() token.GRANT_TYPE {
 }
 
 func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
-	// 从用户名中 获取到DN, 比如oldfish@devcloud.io, 比如username: oldfish dn: devcloud.io
-	username, ldapSuffix := i.SpliteUserAndSuffix(req.Username)
+	// 从用户名中 获取到DN, 比如oldfish@devcloud.io, 比如username: oldfish domain: devcloud.io
+	username, ldapSuffix := user.SpliteUserAndDomain(req.Username)
 
 	// 查询域下 对应的ldap设置
-	dom, err := i.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByLdapSuffix(ldapSuffix))
+	dom, err := i.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(ldapSuffix))
 	if err != nil {
 		return nil, err
 	}
@@ -54,15 +54,6 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	}
 
 	return nil, nil
-}
-
-func (i *issuer) SpliteUserAndSuffix(username string) (string, string) {
-	kvs := strings.Split(username, "@")
-	if len(kvs) > 1 {
-		return kvs[0], strings.Join(kvs[1:], "")
-	}
-
-	return username, ""
 }
 
 func init() {
