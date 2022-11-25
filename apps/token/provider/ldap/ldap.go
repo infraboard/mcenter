@@ -102,7 +102,7 @@ func (p *Provider) connect(userDN string, password string) (Connection, error) {
 
 // CheckConnect todo
 func (p *Provider) CheckConnect() error {
-	adminClient, err := p.connect(p.conf.AdminUsername, p.conf.AdminPassword)
+	adminClient, err := p.connect(p.conf.BindDn, p.conf.BindPassword)
 	if err != nil {
 		return err
 	}
@@ -113,7 +113,7 @@ func (p *Provider) CheckConnect() error {
 
 // CheckUserPassword checks if provided password matches for the given user.
 func (p *Provider) CheckUserPassword(inputUsername string, password string) (*UserProfile, error) {
-	adminClient, err := p.connect(p.conf.AdminUsername, p.conf.AdminPassword)
+	adminClient, err := p.connect(p.conf.BindDn, p.conf.BindPassword)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +142,7 @@ func (p *Provider) ldapEscape(inputUsername string) string {
 	return inputUsername
 }
 
-func (p *Provider) resolveUsersFilter(userFilter string, inputUsername string) string {
+func (p *Provider) resolveUserFilter(userFilter string, inputUsername string) string {
 	inputUsername = p.ldapEscape(inputUsername)
 
 	// We temporarily keep placeholder {0} for backward compatibility.
@@ -159,13 +159,10 @@ func (p *Provider) resolveUsersFilter(userFilter string, inputUsername string) s
 }
 
 func (p *Provider) getUserProfile(conn Connection, inputUsername string) (*UserProfile, error) {
-	userFilter := p.resolveUsersFilter(p.conf.UsersFilter, inputUsername)
+	userFilter := p.resolveUserFilter(p.conf.UserFilter, inputUsername)
 	p.log.Debugf("Computed user filter is %s", userFilter)
 
 	baseDN := p.conf.BaseDn
-	if p.conf.AdditionalUsersDn != "" {
-		baseDN = p.conf.AdditionalUsersDn + "," + baseDN
-	}
 
 	attributes := []string{"dn",
 		p.conf.MailAttribute,
@@ -221,11 +218,11 @@ func (p *Provider) getUserProfile(conn Connection, inputUsername string) (*UserP
 	return &userProfile, nil
 }
 
-func (p *Provider) resolveGroupsFilter(inputUsername string, profile *UserProfile) (string, error) { //nolint:unparam
+func (p *Provider) resolveGroupFilter(inputUsername string, profile *UserProfile) (string, error) { //nolint:unparam
 	inputUsername = p.ldapEscape(inputUsername)
 
 	// We temporarily keep placeholder {0} for backward compatibility.
-	groupFilter := strings.ReplaceAll(p.conf.GroupsFilter, "{0}", inputUsername)
+	groupFilter := strings.ReplaceAll(p.conf.GroupFilter, "{0}", inputUsername)
 	groupFilter = strings.ReplaceAll(groupFilter, "{input}", inputUsername)
 
 	if profile != nil {
@@ -240,7 +237,7 @@ func (p *Provider) resolveGroupsFilter(inputUsername string, profile *UserProfil
 
 // GetDetails retrieve the groups a user belongs to.
 func (p *Provider) GetDetails(inputUsername string) (*UserProfile, error) {
-	conn, err := p.connect(p.conf.AdminUsername, p.conf.AdminPassword)
+	conn, err := p.connect(p.conf.BindDn, p.conf.BindPassword)
 	if err != nil {
 		return nil, err
 	}
@@ -251,22 +248,19 @@ func (p *Provider) GetDetails(inputUsername string) (*UserProfile, error) {
 		return nil, err
 	}
 
-	groupsFilter, err := p.resolveGroupsFilter(inputUsername, profile)
+	GroupFilter, err := p.resolveGroupFilter(inputUsername, profile)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create group filter for user %s. Cause: %s", inputUsername, err)
 	}
 
-	p.log.Debugf("Computed groups filter is %s", groupsFilter)
+	p.log.Debugf("Computed groups filter is %s", GroupFilter)
 
 	groupBaseDN := p.conf.BaseDn
-	if p.conf.AdditionalGroupsDn != "" {
-		groupBaseDN = p.conf.AdditionalGroupsDn + "," + groupBaseDN
-	}
 
 	// Search for the given username.
 	searchGroupRequest := ldap.NewSearchRequest(
 		groupBaseDN, ldap.ScopeWholeSubtree, ldap.NeverDerefAliases,
-		0, 0, false, groupsFilter, []string{p.conf.GroupnameAttribute}, nil,
+		0, 0, false, GroupFilter, []string{p.conf.GroupnameAttribute}, nil,
 	)
 
 	sr, err := conn.Search(searchGroupRequest)
@@ -289,7 +283,7 @@ func (p *Provider) GetDetails(inputUsername string) (*UserProfile, error) {
 
 // UpdatePassword update the password of the given user.
 func (p *Provider) UpdatePassword(inputUsername string, newPassword string) error {
-	client, err := p.connect(p.conf.AdminUsername, p.conf.AdminPassword)
+	client, err := p.connect(p.conf.BindDn, p.conf.BindPassword)
 
 	if err != nil {
 		return fmt.Errorf("unable to update password. Cause: %s", err)

@@ -12,14 +12,14 @@ func NewDefaultConfig() *LdapConfig {
 		DisplayNameAttribute: "displayName",
 		GroupnameAttribute:   "cn",
 		UsernameAttribute:    "uid",
-		UsersFilter:          "(uid={input})",
-		GroupsFilter:         "(|(member={dn})(uid={username})(uid={input}))",
+		UserFilter:           "(uid={input})",
+		GroupFilter:          "(|(member={dn})(uid={username})(uid={input}))",
 	}
 }
 
 // GetBaseDNFromUser 从用户中获取BaseDN
 func (c *LdapConfig) GetBaseDNFromUser() string {
-	return strings.Join(c.getBaseDN(c.AdminUsername), ",")
+	return strings.Join(c.getBaseDN(c.BindDn), ",")
 }
 
 func (c *LdapConfig) BaseDnToSuffix() string {
@@ -51,7 +51,7 @@ func (c *LdapConfig) Validate() error {
 		return fmt.Errorf("url required")
 	}
 
-	if c.AdminUsername == "" || c.AdminPassword == "" {
+	if c.BindDn == "" || c.BindPassword == "" {
 		return fmt.Errorf("username and password required")
 	}
 
@@ -60,5 +60,5 @@ func (c *LdapConfig) Validate() error {
 
 // Desensitize todo
 func (c *LdapConfig) Desensitize() {
-	c.AdminPassword = ""
+	c.BindPassword = ""
 }

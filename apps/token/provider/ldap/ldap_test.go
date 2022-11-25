@@ -37,7 +37,7 @@ func TestGetBaseDNFromUser(t *testing.T) {
 	should := assert.New(t)
 
 	conf := domain.NewDefaultConfig()
-	conf.AdminUsername = "cn=admin,dc=example,dc=org"
+	conf.BindDn = "cn=admin,dc=example,dc=org"
 	baseDN := conf.GetBaseDNFromUser()
 
 	should.Equal("dc=example,dc=org", baseDN)
@@ -58,10 +58,10 @@ func init() {
 
 	conf := domain.NewDefaultConfig()
 	conf.Url = "ldap://127.0.0.1:389"
-	conf.AdminUsername = "cn=admin,dc=example,dc=org"
-	conf.AdminPassword = "admin"
+	conf.BindDn = "cn=admin,dc=example,dc=org"
+	conf.BindPassword = "admin"
 	conf.BaseDn = "dc=example,dc=org"
-	conf.UsersFilter = "(uid={input})"
+	conf.UserFilter = "(uid={input})"
 
 	p = ldap.NewProvider(conf)
 	err := p.CheckConnect()

@@ -36,10 +36,10 @@ func TestCreateDomain(t *testing.T) {
 func TestPatchUpdateDomain(t *testing.T) {
 	conf := domain.NewDefaultConfig()
 	conf.Url = "ldap://127.0.0.1:389"
-	conf.AdminUsername = "cn=admin,dc=example,dc=org"
-	conf.AdminPassword = "admin"
+	conf.BindDn = "cn=admin,dc=example,dc=org"
+	conf.BindPassword = "admin"
 	conf.BaseDn = "dc=example,dc=org"
-	conf.UsersFilter = "(uid={input})"
+	conf.UserFilter = "(uid={input})"
 
 	req := domain.NewPatchDomainRequestByName(domain.DEFAULT_DOMAIN)
 	req.Spec.LdapSetting = conf
