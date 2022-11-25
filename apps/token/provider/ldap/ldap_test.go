@@ -17,9 +17,9 @@ var (
 func TestCheckUserPassword(t *testing.T) {
 	should := assert.New(t)
 
-	ok, err := p.CheckUserPassword("oldfish", "123456")
+	u, err := p.CheckUserPassword("oldfish", "123456")
 	if should.NoError(err) {
-		should.True(ok)
+		t.Log(u)
 	}
 }
 

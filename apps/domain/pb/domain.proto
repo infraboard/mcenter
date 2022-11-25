@@ -105,27 +105,36 @@ message PasswordSecurity {
     // 密码长度
     // @gotags: bson:"length" json:"length" validate:"required,min=8,max=64"
     int32 length = 1;
-    // 包含数字
+    // 包含数字 比如 1234
     // @gotags: bson:"include_number" json:"include_number"
     bool include_number = 2;
-    // 包含小写字母
+    // 包含小写字母 比如 abcd
     // @gotags: bson:"include_lower_letter" json:"include_lower_letter"
     bool include_lower_letter = 3;
-    // 包含大写字母
+    // 包含大写字母 比如 ABCD
     // @gotags: bson:"include_upper_letter" json:"include_upper_letter"
     bool include_upper_letter = 4;
-    // 包含特殊字符
+    // 包含特殊字符 比如 !"£*
     // @gotags: bson:"include_symbols" json:"include_symbols"
     bool include_symbols = 5;
+    // 排除相似字符, 比如 i1jIo0
+    // @gotags: bson:"include_similar" json:"include_similar"
+    bool exclude_similar = 6;
+    // 排除不容易记忆的特殊字符, 比如 <>{}[]()/|\`
+    // @gotags: bson:"exclude_ambiguous" json:"exclude_ambiguous"
+    bool exclude_ambiguous = 7;
+    // 手动指定密码允许的字符集合
+    // @gotags: bson:"character_set" json:"character_set"
+    string character_set = 8;
     // 重复限制
     // @gotags: bson:"repeate_limite" json:"repeate_limite" validate:"required,min=1,max=24"
-    uint32 repeate_limite = 6;
+    uint32 repeate_limite = 9;
     // 密码过期时间, 密码过期后要求用户重置密码
     // @gotags: bson:"password_expired_days" json:"password_expired_days" validate:"required,min=0,max=365"
-    uint32 password_expired_days = 7;
+    uint32 password_expired_days = 10;
     // 密码过期前多少天开始提醒
     // @gotags: bson:"before_expired_remind_days" json:"before_expired_remind_days" validate:"required,min=0,max=365"
-    uint32 before_expired_remind_days = 8;
+    uint32 before_expired_remind_days = 11;
 }
 
 // ExceptionLockConfig todo

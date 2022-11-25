@@ -112,25 +112,25 @@ func (p *Provider) CheckConnect() error {
 }
 
 // CheckUserPassword checks if provided password matches for the given user.
-func (p *Provider) CheckUserPassword(inputUsername string, password string) (bool, error) {
+func (p *Provider) CheckUserPassword(inputUsername string, password string) (*UserProfile, error) {
 	adminClient, err := p.connect(p.conf.AdminUsername, p.conf.AdminPassword)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 	defer adminClient.Close()
 
 	profile, err := p.getUserProfile(adminClient, inputUsername)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	conn, err := p.connect(profile.DN, password)
 	if err != nil {
-		return false, fmt.Errorf("authentication of user %s failed. Cause: %s", inputUsername, err)
+		return nil, fmt.Errorf("authentication of user %s failed. Cause: %s", inputUsername, err)
 	}
 	defer conn.Close()
 
-	return true, nil
+	return profile, nil
 }
 
 func (p *Provider) ldapEscape(inputUsername string) string {

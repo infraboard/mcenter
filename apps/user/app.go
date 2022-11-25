@@ -83,6 +83,18 @@ func NewCreateUserRequest() *CreateUserRequest {
 	return &CreateUserRequest{}
 }
 
+func NewLDAPCreateUserRequest(domain, username, password, descriptoin string) *CreateUserRequest {
+	return &CreateUserRequest{
+		Provider:    PROVIDER_LDAP,
+		Type:        TYPE_SUB,
+		CreateBy:    CREATE_BY_ADMIN,
+		Domain:      domain,
+		Username:    username,
+		Password:    password,
+		Description: descriptoin,
+	}
+}
+
 // NewQueryUserRequestFromHTTP todo
 func NewQueryUserRequestFromHTTP(r *http.Request) *QueryUserRequest {
 	query := NewQueryUserRequest()
