@@ -32,6 +32,12 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 		return nil, exception.NewBadRequest(err.Error())
 	}
 
+	// 还原用户上次登陆状态(上次登陆的空间)
+	err = s.RestoreUserState(ctx, tk)
+	if err != nil {
+		return nil, err
+	}
+
 	return tk, nil
 }
 
@@ -104,6 +110,25 @@ func (s *service) AfterLoginSecurityCheck(ctx context.Context, verifyCode string
 	if err != nil {
 		return exception.NewVerifyCodeRequiredError("长时间未登录检测失败: %s", err)
 	}
+
+	return nil
+}
+
+func (s *service) RestoreUserState(ctx context.Context, tk *token.Token) error {
+	qt := token.NewQueryTokenRequest()
+	qt.Page.PageSize = 1
+	qt.Platform = token.NewPlatform(token.PLATFORM_WEB)
+	qt.UserId = tk.UserId
+	set, err := s.QueryToken(ctx, qt)
+	if err != nil {
+		return err
+	}
+	if set.Length() == 0 {
+		return nil
+	}
+
+	latestTK := set.Items[0]
+	tk.Namespace = latestTK.Namespace
 
 	return nil
 }
