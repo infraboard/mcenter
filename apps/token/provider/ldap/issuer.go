@@ -11,16 +11,21 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/logger"
+	"github.com/infraboard/mcube/logger/zap"
 )
 
 type issuer struct {
 	domain domain.Service
 	user   user.Service
+
+	log logger.Logger
 }
 
 func (i *issuer) Init() error {
 	i.domain = app.GetInternalApp(domain.AppName).(domain.Service)
 	i.user = app.GetInternalApp(user.AppName).(user.Service)
+	i.log = zap.L().Named("issuer.ldap")
 	return nil
 }
 
@@ -59,6 +64,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	lu, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(u.Username))
 	if err != nil {
 		if exception.IsNotFoundError(err) {
+			i.log.Debugf("sync user: %s(%s) to db", u.Username, dom.Spec.Name)
 			gen := password.New(dom.Spec.SecuritySetting.PasswordSecurity)
 			randomPass, err := gen.Generate()
 			if err != nil {
