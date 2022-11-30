@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/mcube/http/response"
+	"github.com/infraboard/mcube/http/restful/response"
 
 	"github.com/infraboard/mcenter/apps/scm"
 )
@@ -15,9 +15,9 @@ func (h *handler) QueryProject(r *restful.Request, w *restful.Response) {
 
 	set, err := h.scm.QueryProject(r.Request.Context(), req)
 	if err != nil {
-		response.Failed(w.ResponseWriter, err)
+		response.Failed(w, err)
 		return
 	}
 
-	response.Success(w.ResponseWriter, set)
+	response.Success(w, set)
 }

@@ -4,7 +4,7 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/http/response"
+	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -45,18 +45,18 @@ func (h *sub) Registry(ws *restful.WebService) {
 func (h *sub) UpdatePassword(r *restful.Request, w *restful.Response) {
 	req := user.NewUpdatePasswordRequest()
 	if err := r.ReadEntity(req); err != nil {
-		response.Failed(w.ResponseWriter, err)
+		response.Failed(w, err)
 		return
 	}
 
 	req.UserId = r.PathParameter("id")
 	set, err := h.service.UpdatePassword(r.Request.Context(), req)
 	if err != nil {
-		response.Failed(w.ResponseWriter, err)
+		response.Failed(w, err)
 		return
 	}
 
-	response.Success(w.ResponseWriter, set)
+	response.Success(w, set)
 }
 
 func init() {

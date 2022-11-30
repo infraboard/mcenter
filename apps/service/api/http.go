@@ -4,7 +4,6 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/http/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -41,22 +40,22 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Doc("创建服务").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(service.CreateServiceRequest{}).
-		Writes(response.NewData(service.Service{})))
+		Writes(service.Service{}))
 
 	ws.Route(ws.GET("/").To(h.QueryService).
 		Doc("查询服务列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata("action", "list").
 		Reads(service.QueryServiceRequest{}).
-		Writes(response.NewData(service.ServiceSet{})).
+		Writes(service.ServiceSet{}).
 		Returns(200, "OK", service.ServiceSet{}))
 
 	ws.Route(ws.GET("/{id}").To(h.DescribeService).
 		Doc("查询服务详情").
 		Param(ws.PathParameter("id", "identifier of the service").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Writes(response.NewData(service.Service{})).
-		Returns(200, "OK", response.NewData(service.Service{})).
+		Writes(service.Service{}).
+		Returns(200, "OK", service.Service{}).
 		Returns(404, "Not Found", nil))
 
 	ws.Route(ws.PUT("/{id}").To(h.UpdateService).

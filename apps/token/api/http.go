@@ -4,7 +4,6 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/http/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -41,14 +40,14 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Doc("颁发令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(token.IssueTokenRequest{}).
-		Writes(response.NewData(token.Token{})).
+		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))
 
 	ws.Route(ws.DELETE("/").To(h.RevolkToken).
 		Doc("撤销令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Writes(response.NewData(token.Token{})).
-		Returns(200, "OK", response.NewData(token.Token{})).
+		Writes(token.Token{}).
+		Returns(200, "OK", token.Token{}).
 		Returns(404, "Not Found", nil))
 
 	ws.Route(ws.PATCH("/").To(h.ChangeNamespace).
@@ -60,7 +59,7 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Doc("验证令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(token.ValidateTokenRequest{}).
-		Writes(response.NewData(token.Token{})).
+		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))
 }
 

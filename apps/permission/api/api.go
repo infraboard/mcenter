@@ -4,7 +4,6 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/http/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -42,8 +41,8 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.CheckPermission).
 		Doc("权限校验").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Writes(response.NewData(role.Permission{})).
-		Returns(200, "OK", response.NewData(role.Permission{})).
+		Writes(role.Permission{}).
+		Returns(200, "OK", role.Permission{}).
 		Returns(404, "Not Found", nil))
 }
 

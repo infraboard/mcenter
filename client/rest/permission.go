@@ -19,7 +19,7 @@ type permissionImpl struct {
 
 func (i *permissionImpl) CheckPermission(ctx context.Context, req *permission.CheckPermissionRequest) (*role.Permission, error) {
 	// ins := token.NewDefaultToken()
-	// resp := response.NewData(ins)
+	// resp := (ins)
 
 	// fmt.Println("bearer " + req.AccessToken)
 	// err := i.client.

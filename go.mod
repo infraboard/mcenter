@@ -15,7 +15,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
-	github.com/infraboard/mcube v1.9.1
+	github.com/infraboard/mcube v1.9.3-0.20221130091016-310fcb7bb618
 	github.com/kvtools/valkeyrie v1.0.0
 	github.com/mssola/user_agent v0.5.3
 	github.com/rs/xid v1.4.0
@@ -91,4 +91,5 @@ require (
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	sigs.k8s.io/yaml v1.3.0 // indirect
 )

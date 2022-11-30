@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/resource"
-	"github.com/infraboard/mcube/http/response"
+	"github.com/infraboard/mcube/http/restful/response"
 )
 
 func (h *handler) QueryResources(r *restful.Request, w *restful.Response) {

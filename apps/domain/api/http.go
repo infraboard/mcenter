@@ -4,7 +4,6 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/http/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -41,14 +40,14 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Doc("创建域").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(domain.CreateDomainRequest{}).
-		Writes(response.NewData(domain.Domain{})))
+		Writes(domain.Domain{}))
 
 	ws.Route(ws.GET("/{id}").To(h.DescribeDomain).
 		Doc("查询域").
 		Param(ws.PathParameter("id", "identifier of the domain").DataType("integer").DefaultValue("1")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Writes(response.NewData(domain.Domain{})).
-		Returns(200, "OK", response.NewData(domain.Domain{})).
+		Writes(domain.Domain{}).
+		Returns(200, "OK", domain.Domain{}).
 		Returns(404, "Not Found", nil))
 
 	ws.Route(ws.PUT("/{id}").To(h.PutDomain).

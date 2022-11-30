@@ -5,7 +5,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcube/client/rest"
-	"github.com/infraboard/mcube/http/response"
 	"github.com/infraboard/mcube/pb/request"
 )
 
@@ -26,13 +25,12 @@ type svcImpl struct {
 func (i *svcImpl) ValidateCredential(ctx context.Context, req *service.ValidateCredentialRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
-	resp := response.NewData(ins)
 
 	err := i.client.
 		Post("service").
 		Body(req).
 		Do(ctx).
-		Into(resp)
+		Into(ins)
 	if err != nil {
 		return nil, err
 	}
@@ -43,27 +41,22 @@ func (i *svcImpl) ValidateCredential(ctx context.Context, req *service.ValidateC
 func (i *svcImpl) CreateService(ctx context.Context, req *service.CreateServiceRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
-	resp := response.NewData(ins)
 
 	err := i.client.
 		Post("service").
 		Body(req).
 		Do(ctx).
-		Into(resp)
+		Into(ins)
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.Error() != nil {
-		return nil, err
-	}
 	return ins, nil
 }
 
 func (i *svcImpl) UpdateService(ctx context.Context, req *service.UpdateServiceRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
-	resp := response.NewData(ins)
 
 	var err error
 	switch req.UpdateMode {
@@ -72,20 +65,16 @@ func (i *svcImpl) UpdateService(ctx context.Context, req *service.UpdateServiceR
 			Put("service/" + req.Id).
 			Body(req.Spec).
 			Do(ctx).
-			Into(resp)
+			Into(ins)
 	case request.UpdateMode_PATCH:
 		err = i.client.
 			Patch("service/" + req.Id).
 			Body(req.Spec).
 			Do(ctx).
-			Into(resp)
+			Into(ins)
 	}
 
 	if err != nil {
-		return nil, err
-	}
-
-	if resp.Error() != nil {
 		return nil, err
 	}
 
@@ -95,17 +84,12 @@ func (i *svcImpl) UpdateService(ctx context.Context, req *service.UpdateServiceR
 func (i *svcImpl) QueryService(ctx context.Context, req *service.QueryServiceRequest) (
 	*service.ServiceSet, error) {
 	set := service.NewServiceSet()
-	resp := response.NewData(set)
 
 	err := i.client.
 		Get("service").
 		Do(ctx).
-		Into(resp)
+		Into(set)
 	if err != nil {
-		return nil, err
-	}
-
-	if resp.Error() != nil {
 		return nil, err
 	}
 
@@ -115,38 +99,30 @@ func (i *svcImpl) QueryService(ctx context.Context, req *service.QueryServiceReq
 func (i *svcImpl) DescribeService(ctx context.Context, req *service.DescribeServiceRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
-	resp := response.NewData(ins)
 
 	err := i.client.
 		Get("service/" + req.Id).
 		Do(ctx).
-		Into(resp)
+		Into(ins)
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.Error() != nil {
-		return nil, err
-	}
 	return ins, nil
 }
 
 func (i *svcImpl) DeleteService(ctx context.Context, req *service.DeleteServiceRequest) (
 	*service.Service, error) {
 	ins := service.NewDefaultService()
-	resp := response.NewData(ins)
 
 	err := i.client.
 		Delete("service/" + req.Id).
 		Do(ctx).
-		Into(resp)
+		Into(ins)
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.Error() != nil {
-		return nil, err
-	}
 	return ins, nil
 }
 

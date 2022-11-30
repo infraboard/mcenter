@@ -4,7 +4,6 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/app"
-	"github.com/infraboard/mcube/http/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -42,8 +41,8 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata("action", "list").
 		Reads(resource.QueryResourceRequest{}).
-		Writes(response.NewData(resource.ResourceSet{})).
-		Returns(200, "OK", response.NewData(resource.ResourceSet{})))
+		Writes(resource.ResourceSet{}).
+		Returns(200, "OK", resource.ResourceSet{}))
 }
 
 func init() {

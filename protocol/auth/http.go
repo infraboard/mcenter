@@ -8,7 +8,7 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/http/label"
-	"github.com/infraboard/mcube/http/response"
+	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -38,7 +38,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 
 		tk, err := a.tk.ValidateToken(req.Request.Context(), token.NewValidateTokenRequest(ak))
 		if err != nil {
-			response.Failed(resp.ResponseWriter, err)
+			response.Failed(resp, err)
 			return
 		}
 
@@ -48,7 +48,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 			ut := v.(user.TYPE)
 			// 权限的编号来判断
 			if tk.UserType < ut {
-				response.Failed(resp.ResponseWriter, fmt.Errorf("permission deny: %s, required: %s", tk.UserType, ut))
+				response.Failed(resp, fmt.Errorf("permission deny: %s, required: %s", tk.UserType, ut))
 				return
 			}
 		}
