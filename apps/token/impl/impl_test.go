@@ -43,6 +43,17 @@ func TestQueryToken(t *testing.T) {
 	t.Log(set.JsonFormat())
 }
 
+func TestChangeNamespace(t *testing.T) {
+	req := token.NewChangeNamespaceRequest()
+	req.Namespace = ""
+	req.Token = tools.AccessToken()
+	tk, err := impl.ChangeNamespace(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(tk)
+}
+
 func init() {
 	tools.DevelopmentSetup()
 	impl = app.GetInternalApp(token.AppName).(token.Service)
