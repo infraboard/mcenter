@@ -1,13 +1,12 @@
 package api
 
 import (
-	"fmt"
-
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
+	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/infraboard/mcenter/apps/health"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 )
@@ -37,9 +36,10 @@ func (h *handler) Version() string {
 
 func (h *handler) Registry(ws *restful.WebService) {
 	tags := []string{"健康检查"}
-	fmt.Println(tags)
 	ws.Route(ws.GET("/").To(h.Check).
-		Doc("查询服务当前状态"))
+		Doc("查询服务当前状态").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Returns(200, "OK", Health{}))
 }
 
 func init() {

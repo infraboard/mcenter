@@ -17,5 +17,5 @@ func (h *handler) Check(r *restful.Request, w *restful.Response) {
 		return
 	}
 
-	response.Success(w, map[string]string{"status": resp.Status.String()})
+	response.Success(w, NewHealth(resp))
 }
