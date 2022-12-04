@@ -12,7 +12,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
-	"github.com/infraboard/mcenter/apps/role"
 )
 
 func (s *impl) CreateNamespace(ctx context.Context, req *namespace.CreateNamespaceRequest) (
@@ -35,29 +34,7 @@ func (s *impl) CreateNamespace(ctx context.Context, req *namespace.CreateNamespa
 			ins.Spec.Name, err)
 	}
 
-	if err := s.updateNamespacePolicy(ctx, ins); err != nil {
-		return nil, err
-	}
-
 	return ins, nil
-}
-
-func (s *impl) updateNamespacePolicy(ctx context.Context, ns *namespace.Namespace) error {
-	descR := role.NewDescribeRoleRequestWithName(role.ADMIN_ROLE_NAME)
-	r, err := s.role.DescribeRole(ctx, descR)
-	if err != nil {
-		return err
-	}
-	pReq := policy.NewCreatePolicyRequest()
-	pReq.Namespace = ns.Id
-	pReq.RoleId = r.Id
-	pReq.Username = ns.Spec.Owner
-	pReq.Type = policy.PolicyType_BUILD_IN
-	_, err = s.policy.CreatePolicy(ctx, pReq)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func (s *impl) QueryNamespace(ctx context.Context, req *namespace.QueryNamespaceRequest) (

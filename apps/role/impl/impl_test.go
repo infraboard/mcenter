@@ -40,7 +40,7 @@ func TestCreateRole(t *testing.T) {
 }
 
 func TestCreateAdminRole(t *testing.T) {
-	req := role.CreateAdminRoleRequest()
+	req := role.CreateAdminRoleRequest("admin")
 	r, err := impl.CreateRole(ctx, req)
 	if err != nil {
 		t.Fatal(err)

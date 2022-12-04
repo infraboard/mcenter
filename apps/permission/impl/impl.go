@@ -2,6 +2,7 @@ package impl
 
 import (
 	"github.com/infraboard/mcenter/apps/endpoint"
+	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/permission"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
@@ -19,16 +20,18 @@ var (
 type service struct {
 	permission.UnimplementedRPCServer
 
-	log      logger.Logger
-	policy   policy.Service
-	role     role.Service
-	endpoint endpoint.Service
+	log       logger.Logger
+	policy    policy.Service
+	role      role.Service
+	endpoint  endpoint.Service
+	namespace namespace.Service
 }
 
 func (s *service) Config() error {
 	s.policy = app.GetInternalApp(policy.AppName).(policy.Service)
 	s.role = app.GetInternalApp(role.AppName).(role.Service)
 	s.endpoint = app.GetInternalApp(endpoint.AppName).(endpoint.Service)
+	s.namespace = app.GetInternalApp(namespace.AppName).(namespace.Service)
 	s.log = zap.L().Named(s.Name())
 	return nil
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/infraboard/mcube/http/request"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
+	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/permission"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
@@ -67,6 +68,16 @@ func (s *service) CheckPermission(ctx context.Context, req *permission.CheckPerm
 		return nil, exception.NewBadRequest("validate param error, %s", err)
 	}
 
+	// 判断是否是空间所有者
+	ns, err := s.namespace.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(req.Domain, req.Namespace))
+	if err != nil {
+		return nil, err
+	}
+	if ns.IsOwner(req.Username) {
+		return role.OwnerAdminPermssion(), nil
+	}
+
+	// 空间普通用户鉴权
 	roleReq := permission.NewQueryRoleRequest(req.Namespace)
 	roleReq.WithPermission = true
 	roleReq.Username = req.Username
@@ -80,7 +91,8 @@ func (s *service) CheckPermission(ctx context.Context, req *permission.CheckPerm
 		return nil, exception.NewPermissionDeny("no permission")
 	}
 
-	ep, err := s.endpoint.DescribeEndpoint(ctx, endpoint.NewDescribeEndpointRequestWithID(endpoint.GenHashID(req.ServiceId, req.Path)))
+	fn := endpoint.NewDescribeEndpointRequestWithID(endpoint.GenHashID(req.ServiceId, req.Path))
+	ep, err := s.endpoint.DescribeEndpoint(ctx, fn)
 	if err != nil {
 		return nil, err
 	}
@@ -91,6 +103,7 @@ func (s *service) CheckPermission(ctx context.Context, req *permission.CheckPerm
 		return role.NewSkipPermission("endpoint not enable permission check, allow all access"), nil
 	}
 
+	// 验证是否有权限访问该功能
 	p, ok, err := roleSet.HasPermission(ep)
 	if err != nil {
 		return nil, err

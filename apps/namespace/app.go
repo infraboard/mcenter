@@ -32,6 +32,10 @@ func NewDefaultNamespace() *Namespace {
 	}
 }
 
+func (n *Namespace) IsOwner(owner string) bool {
+	return n.Spec.Owner == owner
+}
+
 // NewCreateNamespaceRequest todo
 func NewCreateNamespaceRequest() *CreateNamespaceRequest {
 	return &CreateNamespaceRequest{}

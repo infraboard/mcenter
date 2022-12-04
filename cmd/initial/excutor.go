@@ -13,6 +13,7 @@ import (
 	"github.com/infraboard/mcenter/apps/setting"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/logger/zap"
 
 	// 注册所有服务
 	_ "github.com/infraboard/mcenter/apps"
@@ -21,6 +22,13 @@ import (
 // NewInitialerFromCLI 初始化
 func NewExecutorFromCLI() (*excutor, error) {
 	e := newExcutor()
+
+	// debug 开关
+	if debug {
+		zap.SetLevel(zap.DebugLevel)
+	} else {
+		zap.SetLevel(zap.ErrorLevel)
+	}
 
 	// if err := i.checkIsInit(context.Background()); err != nil {
 	// 	return nil, err
@@ -88,6 +96,7 @@ func newExcutor() *excutor {
 		role:      app.GetInternalApp(role.AppName).(role.Service),
 		user:      app.GetInternalApp(user.AppName).(user.Service),
 		service:   app.GetInternalApp(service.AppName).(service.MetaService),
+		system:    app.GetInternalApp(setting.AppName).(setting.Service),
 	}
 }
 
@@ -112,7 +121,9 @@ func (e *excutor) InitDomain(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(ins)
+
+	fmt.Printf("初始化域: %17s [成功]", ins.Spec.Name)
+	fmt.Println()
 	return nil
 }
 
@@ -120,29 +131,33 @@ func (e *excutor) InitNamespace(ctx context.Context) error {
 	req := namespace.NewCreateNamespaceRequest()
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Name = namespace.DEFAULT_NAMESPACE
-	req.Owner = user.SYSTEM_INITAL_USERNAME
+	req.Owner = e.username
 	ns, err := e.namespace.CreateNamespace(ctx, req)
 	if err != nil {
-		return err
+		return fmt.Errorf("初始化空间失败: %s", err)
 	}
-	fmt.Println(ns)
+
+	fmt.Printf("初始化空间: %15s [成功]", ns.Spec.Name)
+	fmt.Println()
 	return nil
 }
 
 func (e *excutor) InitRole(ctx context.Context) error {
-	req := role.CreateAdminRoleRequest()
+	req := role.CreateAdminRoleRequest(e.username)
 	r, err := e.role.CreateRole(ctx, req)
 	if err != nil {
-		return err
+		return fmt.Errorf("初始化角色失败: %s", err)
 	}
-	fmt.Println(r)
+	fmt.Printf("初始化角色: %15s [成功]", r.Spec.Name)
+	fmt.Println()
 
-	req = role.CreateVisitorRoleRequest()
+	req = role.CreateVisitorRoleRequest(e.username)
 	r, err = e.role.CreateRole(ctx, req)
 	if err != nil {
-		return err
+		return fmt.Errorf("初始化角色失败: %s", err)
 	}
-	fmt.Println(r)
+	fmt.Printf("初始化角色: %15s [成功]", r.Spec.Name)
+	fmt.Println()
 	return nil
 }
 
@@ -150,17 +165,15 @@ func (e *excutor) InitService(ctx context.Context) error {
 	apps := NewInitApps()
 	apps.Add("maudit", "审计中心")
 	apps.Add("cmdb", "资源中心")
+	apps.Add("mpaas", "发布中心")
 
 	for _, req := range apps.items {
 		app, err := e.service.CreateService(ctx, req)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("init app %s success, client_id: %s, client_secret: %s",
-			req.Name,
-			app.Credential.ClientId,
-			app.Credential.ClientSecret,
-		)
+		fmt.Printf("初始化服务: %15s [成功]", app.Spec.Name)
+		fmt.Println()
 	}
 
 	return nil
@@ -172,7 +185,8 @@ func (e *excutor) InitSystemSetting(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(st)
+	fmt.Printf("初始化系统配置: %11s [成功]", st.Version)
+	fmt.Println()
 	return nil
 }
 
@@ -186,6 +200,7 @@ func (e *excutor) InitAdminUser(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(u)
+	fmt.Printf("初始化系统管理员: %9s [成功]", u.Spec.Username)
+	fmt.Println()
 	return nil
 }

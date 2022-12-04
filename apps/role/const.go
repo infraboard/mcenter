@@ -2,7 +2,6 @@ package role
 
 import (
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/http/label"
 )
 
@@ -18,9 +17,9 @@ const (
 	RoleMaxPermission = 500
 )
 
-func CreateAdminRoleRequest() *CreateRoleRequest {
+func CreateAdminRoleRequest(createBy string) *CreateRoleRequest {
 	req := NewCreateRoleRequest()
-	req.CreateBy = user.SYSTEM_INITAL_USERNAME
+	req.CreateBy = createBy
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Type = RoleType_GLOBAL
 	req.Name = ADMIN_ROLE_NAME
@@ -37,9 +36,9 @@ func CreateAdminRoleRequest() *CreateRoleRequest {
 	return req
 }
 
-func CreateVisitorRoleRequest() *CreateRoleRequest {
+func CreateVisitorRoleRequest(createBy string) *CreateRoleRequest {
 	req := NewCreateRoleRequest()
-	req.CreateBy = user.SYSTEM_INITAL_USERNAME
+	req.CreateBy = createBy
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Type = RoleType_GLOBAL
 	req.Name = VISITOR_ROLE_NAME
@@ -54,4 +53,16 @@ func CreateVisitorRoleRequest() *CreateRoleRequest {
 		},
 	}
 	return req
+}
+
+func OwnerAdminPermssion() *Permission {
+	p := NewDeaultPermission()
+	p.Spec = &Spec{
+		Desc:         "拥有资源的所有操作权限",
+		Effect:       EffectType_ALLOW,
+		ServiceId:    "*",
+		ResourceName: "*",
+		MatchAll:     true,
+	}
+	return p
 }
