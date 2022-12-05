@@ -109,6 +109,9 @@ message Token {
     // 令牌办法给客户端信息
     // @gotags: bson:"location" json:"location,omitempty"
     Location location = 18;
+    // 其他信息
+    // @gotags: bson:"meta" json:"meta,omitempty"
+    map<string,string> meta = 19;
 }
 
 message Status {
