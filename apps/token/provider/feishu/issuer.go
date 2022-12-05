@@ -3,11 +3,13 @@ package feishu
 import (
 	"context"
 
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 )
 
 type issuer struct {
+	conf *domain.FeishuConfig
 }
 
 func (i *issuer) Init() error {
