@@ -4,10 +4,12 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
+	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 )
 
@@ -36,12 +38,16 @@ func (h *primary) Registry(ws *restful.WebService) {
 	tags := []string{"子账号管理"}
 
 	ws.Route(ws.POST("/").To(h.CreateUser).
+		Metadata(label.Auth, true).
+		Metadata(label.Allow, user.TYPE_PRIMARY).
 		Doc("创建子账号").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(user.CreateUserRequest{}).
 		Returns(200, "创建成功", &user.User{}))
 
 	ws.Route(ws.GET("/").To(h.QueryUser).
+		Metadata(label.Auth, true).
+		Metadata(label.Allow, user.TYPE_PRIMARY).
 		Doc("查询子账号列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Returns(200, "OK", user.UserSet{}))
@@ -54,23 +60,31 @@ func (h *primary) Registry(ws *restful.WebService) {
 		Returns(200, "OK", user.User{}))
 
 	ws.Route(ws.PUT("/{id}").To(h.PutUser).
+		Metadata(label.Auth, true).
+		Metadata(label.Allow, user.TYPE_PRIMARY).
 		Doc("修改子账号").
 		Param(ws.PathParameter("id", "identifier of the user").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(user.CreateUserRequest{}))
 
 	ws.Route(ws.PATCH("/{id}").To(h.PatchUser).
+		Metadata(label.Auth, true).
+		Metadata(label.Allow, user.TYPE_PRIMARY).
 		Doc("修改子账号").
 		Param(ws.PathParameter("id", "identifier of the user").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(user.CreateUserRequest{}))
 
 	ws.Route(ws.DELETE("/{id}").To(h.DeleteUser).
+		Metadata(label.Auth, true).
+		Metadata(label.Allow, user.TYPE_PRIMARY).
 		Doc("删除子账号").
 		Param(ws.PathParameter("id", "identifier of the user").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags))
 
 	ws.Route(ws.POST("/{id}/password").To(h.ResetPassword).
+		Metadata(label.Auth, true).
+		Metadata(label.Allow, user.TYPE_PRIMARY).
 		Doc("重置子账号密码").
 		Param(ws.PathParameter("id", "identifier of the user").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags))
@@ -83,6 +97,9 @@ func (h *primary) CreateUser(r *restful.Request, w *restful.Response) {
 		response.Failed(w, err)
 		return
 	}
+
+	tk := r.Attribute(token.TOKEN_ATTRIBUTE_NAME).(*token.Token)
+	req.Domain = tk.Domain
 
 	set, err := h.service.CreateUser(r.Request.Context(), req)
 	if err != nil {

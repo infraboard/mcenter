@@ -70,7 +70,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		}
 
 		// 是不是需要返回用户的认证信息: 那个人, 那个空间下面， token本身的信息
-		req.SetAttribute("token", tk)
+		req.SetAttribute(token.TOKEN_ATTRIBUTE_NAME, tk)
 
 		if entry.PermissionEnable {
 			// 权限检查
