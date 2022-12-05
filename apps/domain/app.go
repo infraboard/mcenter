@@ -125,6 +125,13 @@ func (req *DescribeDomainRequest) Validate() error {
 	return validate.Struct(req)
 }
 
+func NewPatchPomainRequest(id string, req *CreateDomainRequest) *UpdateDomainRequest {
+	return &UpdateDomainRequest{
+		Id:   id,
+		Spec: req,
+	}
+}
+
 // Validate 校验请求是否合法
 func (req *UpdateDomainRequest) Validate() error {
 	if req.Id == "" && req.Name == "" {
@@ -237,7 +244,11 @@ func (c *FeishuConfig) MakeGetTokenFormRequest(code string) url.Values {
 }
 
 func (t *FeishuAccessToken) IsExpired() bool {
-	// 为了避免误差, 再加5秒
-	delta := time.Since(time.Unix(t.IssueAt, 0)).Seconds() + 5
+	if t.AccessToken == "" {
+		return true
+	}
+
+	// 为了避免误差, 再加30秒
+	delta := time.Since(time.Unix(t.IssueAt, 0)).Seconds() + 30
 	return delta > float64(t.ExpiresIn)
 }

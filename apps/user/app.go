@@ -95,6 +95,18 @@ func NewLDAPCreateUserRequest(domain, username, password, descriptoin string) *C
 	}
 }
 
+func NewFeishuCreateUserRequest(domain, username, password, descriptoin string) *CreateUserRequest {
+	return &CreateUserRequest{
+		Provider:    PROVIDER_FEISHU,
+		Type:        TYPE_SUB,
+		CreateBy:    CREATE_BY_ADMIN,
+		Domain:      domain,
+		Username:    username,
+		Password:    password,
+		Description: descriptoin,
+	}
+}
+
 // NewQueryUserRequestFromHTTP todo
 func NewQueryUserRequestFromHTTP(r *http.Request) *QueryUserRequest {
 	query := NewQueryUserRequest()

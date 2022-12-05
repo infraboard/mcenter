@@ -19,8 +19,13 @@ func NewFeishuClient(conf *domain.FeishuConfig) *Feishu {
 
 // 飞书客户端
 type Feishu struct {
-	conf *domain.FeishuConfig
-	rc   *rest.RESTClient
+	conf           *domain.FeishuConfig
+	rc             *rest.RESTClient
+	isRefreshToken bool
+}
+
+func (c *Feishu) IsRefreshToken() bool {
+	return c.isRefreshToken
 }
 
 // 登陆
@@ -31,6 +36,7 @@ func (c *Feishu) Login(ctx context.Context, code string) error {
 			return err
 		}
 		c.conf.Token = tk
+		c.isRefreshToken = true
 	}
 
 	// 设置Token

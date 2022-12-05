@@ -51,6 +51,8 @@ enum PROVIDER {
     LOCAL = 0;
     // 来源LDAP
     LDAP = 1;
+    // 来源FEISHU
+    FEISHU = 2;
 }
 
 // 为了防止越权, 用户可以调整的权限范围只有10已下的权限

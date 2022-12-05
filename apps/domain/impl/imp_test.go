@@ -34,7 +34,7 @@ func TestCreateDomain(t *testing.T) {
 }
 
 func TestPatchUpdateDomain(t *testing.T) {
-	conf := domain.NewDefaultConfig()
+	conf := domain.NewDefaultLDAPConfig()
 	conf.Url = "ldap://127.0.0.1:389"
 	conf.BindDn = "cn=admin,dc=example,dc=org"
 	conf.BindPassword = "admin"
@@ -43,6 +43,7 @@ func TestPatchUpdateDomain(t *testing.T) {
 
 	req := domain.NewPatchDomainRequestByName(domain.DEFAULT_DOMAIN)
 	req.Spec.LdapSetting = conf
+	req.Spec.FeishuSetting = domain.NewDefaultFeishuConfig()
 	ins, err := impl.UpdateDomain(ctx, req)
 	if err != nil {
 		t.Fatal(err)

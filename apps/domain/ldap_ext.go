@@ -6,7 +6,7 @@ import (
 )
 
 // NewDefaultConfig represents the default LDAP config.
-func NewDefaultConfig() *LdapConfig {
+func NewDefaultLDAPConfig() *LdapConfig {
 	return &LdapConfig{
 		MailAttribute:        "mail",
 		DisplayNameAttribute: "displayName",

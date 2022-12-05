@@ -36,7 +36,7 @@ func TestUserDetail(t *testing.T) {
 func TestGetBaseDNFromUser(t *testing.T) {
 	should := assert.New(t)
 
-	conf := domain.NewDefaultConfig()
+	conf := domain.NewDefaultLDAPConfig()
 	conf.BindDn = "cn=admin,dc=example,dc=org"
 	baseDN := conf.GetBaseDNFromUser()
 
@@ -46,7 +46,7 @@ func TestGetBaseDNFromUser(t *testing.T) {
 func TestBaseDnToSuffix(t *testing.T) {
 	should := assert.New(t)
 
-	conf := domain.NewDefaultConfig()
+	conf := domain.NewDefaultLDAPConfig()
 	conf.BaseDn = "dc=example,dc=org"
 	baseDN := conf.BaseDnToSuffix()
 
@@ -56,7 +56,7 @@ func TestBaseDnToSuffix(t *testing.T) {
 func init() {
 	zap.DevelopmentSetup()
 
-	conf := domain.NewDefaultConfig()
+	conf := domain.NewDefaultLDAPConfig()
 	conf.Url = "ldap://127.0.0.1:389"
 	conf.BindDn = "cn=admin,dc=example,dc=org"
 	conf.BindPassword = "admin"
