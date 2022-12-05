@@ -55,6 +55,13 @@ func NewLDAPIssueTokenRequest(username, password string) *IssueTokenRequest {
 	return req
 }
 
+func NewAuthCodeIssueTokenRequest(authcode, state string) *IssueTokenRequest {
+	req := NewIssueTokenRequest()
+	req.AuthCode = authcode
+	req.State = state
+	return req
+}
+
 // NewIssueTokenRequest 默认请求
 func NewIssueTokenRequest() *IssueTokenRequest {
 	return &IssueTokenRequest{}

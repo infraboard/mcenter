@@ -4,6 +4,7 @@ package infraboard.mcenter.domain;
 option go_package = "github.com/infraboard/mcenter/apps/domain";
 
 import "apps/domain/pb/ldap.proto";
+import "apps/domain/pb/feishu.proto";
 
 message DomainSet {
     // 总数量
@@ -72,6 +73,9 @@ message CreateDomainRequest {
     // LdapConfig 域关联的LDAP设置
     // @gotags: bson:"ldap_setting" json:"ldap_setting"
     LdapConfig ldap_setting  = 15;
+    // FeishuConfig 域关联的飞书设置
+    // @gotags: bson:"feishu_setting" json:"feishu_setting"
+    FeishuConfig feishu_setting = 16;
 }
 
 // 联系人

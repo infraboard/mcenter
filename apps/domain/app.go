@@ -3,6 +3,7 @@ package domain
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -217,4 +218,26 @@ func NewQueryDomainRequestFromHTTP(r *http.Request) *QueryDomainRequest {
 		query.Names = strings.Split(dn, ",")
 	}
 	return query
+}
+
+func NewFeishuAccessToken() *FeishuAccessToken {
+	return &FeishuAccessToken{
+		IssueAt: time.Now().Unix(),
+	}
+}
+
+func (c *FeishuConfig) MakeGetTokenFormRequest(code string) url.Values {
+	form := make(url.Values)
+	form.Add("grant_type", "authorization_code")
+	form.Add("client_id", c.AppId)
+	form.Add("client_secret", c.AppSecret)
+	form.Add("code", code)
+	form.Add("redirect_uri", c.RedirectUri)
+	return form
+}
+
+func (t *FeishuAccessToken) IsExpired() bool {
+	// 为了避免误差, 再加5秒
+	delta := time.Since(time.Unix(t.IssueAt, 0)).Seconds() + 5
+	return delta > float64(t.ExpiresIn)
 }
