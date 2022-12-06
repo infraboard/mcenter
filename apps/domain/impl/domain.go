@@ -104,7 +104,7 @@ func (s *service) UpdateDomain(ctx context.Context, req *domain.UpdateDomainRequ
 			return nil, err
 		}
 		if err := d.Spec.Validate(); err != nil {
-			return nil, nil
+			return nil, err
 		}
 	default:
 		return nil, exception.NewBadRequest("unknown update mode: %s", req.UpdateMode)

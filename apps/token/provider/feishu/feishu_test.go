@@ -15,6 +15,8 @@ var (
 )
 
 func TestGetUserInfo(t *testing.T) {
+	Login()
+
 	u, err := client.GetUserInfo(ctx)
 	if err != nil {
 		t.Fatal(err)
@@ -22,9 +24,7 @@ func TestGetUserInfo(t *testing.T) {
 	t.Log(u)
 }
 
-func init() {
-	zap.DevelopmentSetup()
-
+func Login() {
 	// 加载测试配置
 	conf := domain.NewDefaultFeishuConfig()
 	if err := env.Parse(conf); err != nil {
@@ -37,4 +37,8 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func init() {
+	zap.DevelopmentSetup()
 }

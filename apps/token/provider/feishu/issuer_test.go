@@ -2,6 +2,7 @@ package feishu_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/token"
@@ -15,7 +16,7 @@ var (
 )
 
 func TestIssueToken(t *testing.T) {
-	req := token.NewFeishuAuthCodeIssueTokenRequest("3c7t195db2324", "11111", "")
+	req := token.NewFeishuAuthCodeIssueTokenRequest(os.Getenv("AUTH_CODE"), "11111", "")
 	tk, err := impl.IssueToken(ctx, req)
 	if err != nil {
 		t.Fatal(err)

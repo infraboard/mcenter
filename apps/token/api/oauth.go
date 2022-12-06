@@ -38,7 +38,7 @@ func (h *oath2Handler) Registry(ws *restful.WebService) {
 	tags := []string{"第三方登陆"}
 
 	ws.Route(ws.GET("/feishu").To(h.Oauth2Auth).
-		Doc("飞书登陆(Oath2.0)").
+		Doc("飞书登陆").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(token.ValidateTokenRequest{}).
 		Writes(token.Token{}).

@@ -269,7 +269,11 @@ func (i *User) Patch(req *UpdateUserRequest) error {
 func SpliteUserAndDomain(username string) (string, string) {
 	kvs := strings.Split(username, "@")
 	if len(kvs) > 1 {
-		return kvs[0], strings.Join(kvs[1:], "")
+		dom := strings.Join(kvs[1:], "")
+		if dom == "" {
+			dom = domain.DEFAULT_DOMAIN
+		}
+		return kvs[0], dom
 	}
 
 	return username, domain.DEFAULT_DOMAIN

@@ -21,7 +21,7 @@ func (s *service) save(ctx context.Context, u *user.User) error {
 }
 
 func (s *service) update(ctx context.Context, ins *user.User) error {
-	if _, err := s.col.UpdateByID(ctx, ins.Id, ins); err != nil {
+	if _, err := s.col.UpdateByID(ctx, ins.Id, bson.M{"$set": ins}); err != nil {
 		return exception.NewInternalServerError("inserted user(%s) document error, %s",
 			ins.Id, err)
 	}

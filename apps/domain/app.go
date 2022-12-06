@@ -114,11 +114,11 @@ func (req *DescribeDomainRequest) Validate() error {
 	switch req.DescribeBy {
 	case DESCRIBE_BY_ID:
 		if req.Id == "" {
-			return fmt.Errorf("id required")
+			return fmt.Errorf("domain id required")
 		}
 	case DESCRIBE_BY_NAME:
 		if req.Name == "" {
-			return fmt.Errorf("name required")
+			return fmt.Errorf("domain name required")
 		}
 	}
 
