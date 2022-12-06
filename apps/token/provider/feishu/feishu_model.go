@@ -1,5 +1,7 @@
 package feishu
 
+import "github.com/infraboard/mcenter/apps/user"
+
 func NewUser() *User {
 	return &User{}
 }
@@ -33,4 +35,12 @@ type User struct {
 	Email string `json:"email"`
 	// mobile	用户手机号，申请了手机号获取权限(获取用户手机号)的应用会返回该字段
 	Mobile string `json:"mobile"`
+}
+
+func (u *User) ToProfile() *user.Profile {
+	p := user.NewProfile()
+	p.Avatar = u.AvatarUrl
+	p.Email = u.Email
+	p.Phone = u.Mobile
+	return p
 }

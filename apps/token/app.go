@@ -55,10 +55,12 @@ func NewLDAPIssueTokenRequest(username, password string) *IssueTokenRequest {
 	return req
 }
 
-func NewAuthCodeIssueTokenRequest(authcode, state string) *IssueTokenRequest {
+func NewFeishuAuthCodeIssueTokenRequest(authcode, state, domain string) *IssueTokenRequest {
 	req := NewIssueTokenRequest()
 	req.AuthCode = authcode
 	req.State = state
+	req.GrantType = GRANT_TYPE_FEISHU
+	req.Username = fmt.Sprintf("@%s", domain)
 	return req
 }
 

@@ -90,6 +90,14 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 		}
 	}
 
+	// 更新用户Profile
+	updateReq := user.NewPatchUserRequest(lu.Id)
+	updateReq.Profile = fu.ToProfile()
+	_, err = i.user.UpdateUser(ctx, updateReq)
+	if err != nil {
+		return nil, err
+	}
+
 	// 颁发Token
 	tk := token.NewToken(req)
 	tk.Domain = lu.Spec.Domain

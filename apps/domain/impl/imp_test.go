@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/caarlos0/env/v6"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/test/tools"
 	"github.com/infraboard/mcube/app"
@@ -41,9 +42,14 @@ func TestPatchUpdateDomain(t *testing.T) {
 	conf.BaseDn = "dc=example,dc=org"
 	conf.UserFilter = "(uid={input})"
 
+	feishu := domain.NewDefaultFeishuConfig()
+	if err := env.Parse(feishu); err != nil {
+		t.Fatal(err)
+	}
+
 	req := domain.NewPatchDomainRequestByName(domain.DEFAULT_DOMAIN)
 	req.Spec.LdapSetting = conf
-	req.Spec.FeishuSetting = domain.NewDefaultFeishuConfig()
+	req.Spec.FeishuSetting = feishu
 	ins, err := impl.UpdateDomain(ctx, req)
 	if err != nil {
 		t.Fatal(err)

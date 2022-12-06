@@ -15,7 +15,7 @@ var (
 )
 
 func TestIssueToken(t *testing.T) {
-	req := token.NewAuthCodeIssueTokenRequest("3c7t195db2324", "11111")
+	req := token.NewFeishuAuthCodeIssueTokenRequest("3c7t195db2324", "11111", "")
 	tk, err := impl.IssueToken(ctx, req)
 	if err != nil {
 		t.Fatal(err)
