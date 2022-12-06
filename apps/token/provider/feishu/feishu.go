@@ -19,29 +19,25 @@ func NewFeishuClient(conf *domain.FeishuConfig) *Feishu {
 
 // 飞书客户端
 type Feishu struct {
-	conf           *domain.FeishuConfig
-	rc             *rest.RESTClient
-	isRefreshToken bool
-}
-
-func (c *Feishu) IsRefreshToken() bool {
-	return c.isRefreshToken
+	conf *domain.FeishuConfig
+	rc   *rest.RESTClient
 }
 
 // 登陆
 func (c *Feishu) Login(ctx context.Context, code string) error {
-	if c.conf.Token.IsExpired() {
-		tk, err := c.GetToken(ctx, code)
-		if err != nil {
-			return err
-		}
-		c.conf.Token = tk
-		c.isRefreshToken = true
+	tk, err := c.GetToken(ctx, code)
+	if err != nil {
+		return err
 	}
+	c.conf.Token = tk
 
 	// 设置Token
 	c.rc.SetBearerTokenAuth(c.conf.Token.AccessToken)
 	return nil
+}
+
+func (c *Feishu) Token() *domain.FeishuAccessToken {
+	return c.conf.Token
 }
 
 // 获取token https://open.feishu.cn/document/common-capabilities/sso/api/get-access_token

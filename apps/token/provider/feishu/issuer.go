@@ -52,14 +52,12 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 		return nil, err
 	}
 
-	// 如果刷新了Token配置，需要更新域相关配置
-	if client.IsRefreshToken() {
-		dom.Spec.FeishuSetting.Token = client.conf.Token
-		req := domain.NewPatchPomainRequest(dom.Id, dom.Spec)
-		_, err := i.domain.UpdateDomain(ctx, req)
-		if err != nil {
-			return nil, err
-		}
+	// 需要更新域相关配置
+	dom.Spec.FeishuSetting.Token = client.Token()
+	patchReq := domain.NewPatchPomainRequest(dom.Id, dom.Spec)
+	_, err = i.domain.UpdateDomain(ctx, patchReq)
+	if err != nil {
+		return nil, err
 	}
 
 	// 获取用户信息
