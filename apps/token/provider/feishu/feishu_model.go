@@ -1,6 +1,10 @@
 package feishu
 
-import "github.com/infraboard/mcenter/apps/user"
+import (
+	"strings"
+
+	"github.com/infraboard/mcenter/apps/user"
+)
 
 func NewUser() *User {
 	return &User{}
@@ -37,10 +41,44 @@ type User struct {
 	Mobile string `json:"mobile"`
 }
 
+func (u *User) Username() string {
+	if u.Email != "" {
+		ud := strings.Split(u.Email, "@")
+		if len(ud) == 2 {
+			return ud[1]
+		}
+	}
+
+	if u.EnName != "" {
+		return u.EnName
+	}
+
+	return u.Name
+}
+
 func (u *User) ToProfile() *user.Profile {
 	p := user.NewProfile()
+	p.RealName = u.Name
 	p.Avatar = u.AvatarUrl
 	p.Email = u.Email
 	p.Phone = u.Mobile
 	return p
+}
+
+func (u *User) ToCreateUserRequest(domain, password, descriptoin string) *user.CreateUserRequest {
+	req := &user.CreateUserRequest{
+		Provider:    user.PROVIDER_FEISHU,
+		Type:        user.TYPE_SUB,
+		CreateBy:    user.CREATE_BY_ADMIN,
+		Domain:      domain,
+		Username:    u.Username(),
+		Password:    password,
+		Description: descriptoin,
+		Feishu: &user.Feishu{
+			OpenId:  u.OpenId,
+			UnionId: u.UnionId,
+			UserId:  u.UserId,
+		},
+	}
+	return req
 }

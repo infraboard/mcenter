@@ -141,7 +141,6 @@ enum CREATE_BY {
     ADMIN = 0;
     // 自己注册
     SELF = 1;
-
 }
 
 // CreateUserRequest 创建用户请求
@@ -165,8 +164,23 @@ message CreateUserRequest {
     // @gotags: json:"password" bson:"-" validate:"required,lte=80"
     string password = 6;
     // 用户描述
-    // @gotags: json:"description"
+    // @gotags: json:"description" bson:"description"
     string description = 7;
+    // 用户描述
+    // @gotags: json:"feishu" bson:"feishu"
+    Feishu feishu = 8;
+}
+
+message Feishu {
+    // 用户在飞书应用内的唯一标识
+    // @gotags: bson:"open_id" json:"open_id"
+    string open_id = 1;
+    // 用户统一ID，在同一租户开发的所有应用内的唯一标识
+    // @gotags: bson:"union_id" json:"union_id"
+    string union_id = 2;
+    // 用户 user id，申请了邮箱获取权限(获取用户 user ID)的应用会返回该字段
+    // @gotags: bson:"user_id" json:"user_id"
+    string user_id = 3; 
 }
 
 message UserSet {

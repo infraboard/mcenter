@@ -278,3 +278,8 @@ func SpliteUserAndDomain(username string) (string, string) {
 
 	return username, domain.DEFAULT_DOMAIN
 }
+
+// NewProfile todo
+func NewFeishu() *Feishu {
+	return &Feishu{}
+}

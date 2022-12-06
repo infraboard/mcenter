@@ -757,8 +757,11 @@ type CreateUserRequest struct {
 	// @gotags: json:"password" bson:"-" validate:"required,lte=80"
 	Password string `protobuf:"bytes,6,opt,name=password,proto3" json:"password" bson:"-" validate:"required,lte=80"`
 	// 用户描述
-	// @gotags: json:"description"
-	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description"`
+	// @gotags: json:"description" bson:"description"
+	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description" bson:"description"`
+	// 用户描述
+	// @gotags: json:"feishu" bson:"feishu"
+	Feishu *Feishu `protobuf:"bytes,8,opt,name=feishu,proto3" json:"feishu" bson:"feishu"`
 }
 
 func (x *CreateUserRequest) Reset() {
@@ -842,6 +845,82 @@ func (x *CreateUserRequest) GetDescription() string {
 	return ""
 }
 
+func (x *CreateUserRequest) GetFeishu() *Feishu {
+	if x != nil {
+		return x.Feishu
+	}
+	return nil
+}
+
+type Feishu struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 用户在飞书应用内的唯一标识
+	// @gotags: bson:"open_id" json:"open_id"
+	OpenId string `protobuf:"bytes,1,opt,name=open_id,json=openId,proto3" json:"open_id" bson:"open_id"`
+	// 用户统一ID，在同一租户开发的所有应用内的唯一标识
+	// @gotags: bson:"union_id" json:"union_id"
+	UnionId string `protobuf:"bytes,2,opt,name=union_id,json=unionId,proto3" json:"union_id" bson:"union_id"`
+	// 用户 user id，申请了邮箱获取权限(获取用户 user ID)的应用会返回该字段
+	// @gotags: bson:"user_id" json:"user_id"
+	UserId string `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id" bson:"user_id"`
+}
+
+func (x *Feishu) Reset() {
+	*x = Feishu{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_apps_user_pb_user_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Feishu) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Feishu) ProtoMessage() {}
+
+func (x *Feishu) ProtoReflect() protoreflect.Message {
+	mi := &file_apps_user_pb_user_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Feishu.ProtoReflect.Descriptor instead.
+func (*Feishu) Descriptor() ([]byte, []int) {
+	return file_apps_user_pb_user_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Feishu) GetOpenId() string {
+	if x != nil {
+		return x.OpenId
+	}
+	return ""
+}
+
+func (x *Feishu) GetUnionId() string {
+	if x != nil {
+		return x.UnionId
+	}
+	return ""
+}
+
+func (x *Feishu) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
 type UserSet struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -858,7 +937,7 @@ type UserSet struct {
 func (x *UserSet) Reset() {
 	*x = UserSet{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_user_pb_user_proto_msgTypes[5]
+		mi := &file_apps_user_pb_user_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -871,7 +950,7 @@ func (x *UserSet) String() string {
 func (*UserSet) ProtoMessage() {}
 
 func (x *UserSet) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_user_pb_user_proto_msgTypes[5]
+	mi := &file_apps_user_pb_user_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -884,7 +963,7 @@ func (x *UserSet) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserSet.ProtoReflect.Descriptor instead.
 func (*UserSet) Descriptor() ([]byte, []int) {
-	return file_apps_user_pb_user_proto_rawDescGZIP(), []int{5}
+	return file_apps_user_pb_user_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *UserSet) GetTotal() int64 {
@@ -973,7 +1052,7 @@ var file_apps_user_pb_user_proto_rawDesc = []byte{
 	0x52, 0x08, 0x6c, 0x61, 0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x69,
 	0x74, 0x79, 0x18, 0x09, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x63, 0x69, 0x74, 0x79, 0x12, 0x1a,
 	0x0a, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x6e, 0x63, 0x65, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x6e, 0x63, 0x65, 0x22, 0xb8, 0x02, 0x0a, 0x11, 0x43,
+	0x52, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x6e, 0x63, 0x65, 0x22, 0xf1, 0x02, 0x0a, 0x11, 0x43,
 	0x72, 0x65, 0x61, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
 	0x12, 0x3d, 0x0a, 0x08, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x0e, 0x32, 0x21, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e,
@@ -993,7 +1072,16 @@ var file_apps_user_pb_user_proto_rawDesc = []byte{
 	0x6f, 0x72, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77,
 	0x6f, 0x72, 0x64, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69,
 	0x6f, 0x6e, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69,
-	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x54, 0x0a, 0x07, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x74,
+	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x37, 0x0a, 0x06, 0x66, 0x65, 0x69, 0x73, 0x68, 0x75, 0x18,
+	0x08, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1f, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61,
+	0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e,
+	0x46, 0x65, 0x69, 0x73, 0x68, 0x75, 0x52, 0x06, 0x66, 0x65, 0x69, 0x73, 0x68, 0x75, 0x22, 0x55,
+	0x0a, 0x06, 0x46, 0x65, 0x69, 0x73, 0x68, 0x75, 0x12, 0x17, 0x0a, 0x07, 0x6f, 0x70, 0x65, 0x6e,
+	0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6f, 0x70, 0x65, 0x6e, 0x49,
+	0x64, 0x12, 0x19, 0x0a, 0x08, 0x75, 0x6e, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x07, 0x75, 0x6e, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x12, 0x17, 0x0a, 0x07,
+	0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75,
+	0x73, 0x65, 0x72, 0x49, 0x64, 0x22, 0x54, 0x0a, 0x07, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x74,
 	0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52,
 	0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x12, 0x33, 0x0a, 0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x18,
 	0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61,
@@ -1030,7 +1118,7 @@ func file_apps_user_pb_user_proto_rawDescGZIP() []byte {
 }
 
 var file_apps_user_pb_user_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_apps_user_pb_user_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_apps_user_pb_user_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_apps_user_pb_user_proto_goTypes = []interface{}{
 	(PROVIDER)(0),             // 0: infraboard.mcenter.user.PROVIDER
 	(TYPE)(0),                 // 1: infraboard.mcenter.user.TYPE
@@ -1042,23 +1130,25 @@ var file_apps_user_pb_user_proto_goTypes = []interface{}{
 	(*User)(nil),              // 7: infraboard.mcenter.user.User
 	(*Profile)(nil),           // 8: infraboard.mcenter.user.Profile
 	(*CreateUserRequest)(nil), // 9: infraboard.mcenter.user.CreateUserRequest
-	(*UserSet)(nil),           // 10: infraboard.mcenter.user.UserSet
+	(*Feishu)(nil),            // 10: infraboard.mcenter.user.Feishu
+	(*UserSet)(nil),           // 11: infraboard.mcenter.user.UserSet
 }
 var file_apps_user_pb_user_proto_depIdxs = []int32{
-	9, // 0: infraboard.mcenter.user.User.spec:type_name -> infraboard.mcenter.user.CreateUserRequest
-	8, // 1: infraboard.mcenter.user.User.profile:type_name -> infraboard.mcenter.user.Profile
-	5, // 2: infraboard.mcenter.user.User.password:type_name -> infraboard.mcenter.user.Password
-	6, // 3: infraboard.mcenter.user.User.status:type_name -> infraboard.mcenter.user.Status
-	2, // 4: infraboard.mcenter.user.Profile.gender:type_name -> infraboard.mcenter.user.Gender
-	0, // 5: infraboard.mcenter.user.CreateUserRequest.provider:type_name -> infraboard.mcenter.user.PROVIDER
-	1, // 6: infraboard.mcenter.user.CreateUserRequest.type:type_name -> infraboard.mcenter.user.TYPE
-	3, // 7: infraboard.mcenter.user.CreateUserRequest.create_by:type_name -> infraboard.mcenter.user.CREATE_BY
-	7, // 8: infraboard.mcenter.user.UserSet.items:type_name -> infraboard.mcenter.user.User
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	9,  // 0: infraboard.mcenter.user.User.spec:type_name -> infraboard.mcenter.user.CreateUserRequest
+	8,  // 1: infraboard.mcenter.user.User.profile:type_name -> infraboard.mcenter.user.Profile
+	5,  // 2: infraboard.mcenter.user.User.password:type_name -> infraboard.mcenter.user.Password
+	6,  // 3: infraboard.mcenter.user.User.status:type_name -> infraboard.mcenter.user.Status
+	2,  // 4: infraboard.mcenter.user.Profile.gender:type_name -> infraboard.mcenter.user.Gender
+	0,  // 5: infraboard.mcenter.user.CreateUserRequest.provider:type_name -> infraboard.mcenter.user.PROVIDER
+	1,  // 6: infraboard.mcenter.user.CreateUserRequest.type:type_name -> infraboard.mcenter.user.TYPE
+	3,  // 7: infraboard.mcenter.user.CreateUserRequest.create_by:type_name -> infraboard.mcenter.user.CREATE_BY
+	10, // 8: infraboard.mcenter.user.CreateUserRequest.feishu:type_name -> infraboard.mcenter.user.Feishu
+	7,  // 9: infraboard.mcenter.user.UserSet.items:type_name -> infraboard.mcenter.user.User
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_apps_user_pb_user_proto_init() }
@@ -1128,6 +1218,18 @@ func file_apps_user_pb_user_proto_init() {
 			}
 		}
 		file_apps_user_pb_user_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Feishu); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_apps_user_pb_user_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UserSet); i {
 			case 0:
 				return &v.state
@@ -1146,7 +1248,7 @@ func file_apps_user_pb_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_apps_user_pb_user_proto_rawDesc,
 			NumEnums:      5,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

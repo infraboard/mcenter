@@ -80,7 +80,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 				return nil, err
 			}
 			// 创建本地用户
-			newReq := user.NewFeishuCreateUserRequest(dom.Spec.Name, fu.Name, *randomPass, "系统自动生成")
+			newReq := fu.ToCreateUserRequest(dom.Spec.Name, *randomPass, "系统自动生成")
 			lu, err = i.user.CreateUser(ctx, newReq)
 			if err != nil {
 				return nil, err
