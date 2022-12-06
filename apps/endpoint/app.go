@@ -238,7 +238,7 @@ func NewEntryFromRestRequest(req *restful.Request) *Entry {
 
 	// 请求拦截
 	route := req.SelectedRoute()
-	if route != nil {
+	if route == nil {
 		return nil
 	}
 

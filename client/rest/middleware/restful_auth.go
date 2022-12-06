@@ -58,7 +58,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 	// 请求拦截
 	entry := endpoint.NewEntryFromRestRequest(req)
 
-	if entry.AuthEnable {
+	if entry != nil && entry.AuthEnable {
 		// 获取用户Token, Token放在Heander Authorization
 		ak := token.GetTokenFromHTTPHeader(req.Request)
 
