@@ -26,14 +26,14 @@ type FeishuConfig struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 飞书应用凭证, Oauth2.0时 也叫client_id
-	// @gotags: bson:"app_id" json:"app_id"
-	AppId string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id" bson:"app_id"`
+	// @gotags: bson:"app_id" json:"app_id" env:"FEISHU_APP_ID"
+	AppId string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id" bson:"app_id" env:"FEISHU_APP_ID"`
 	// 飞书应用凭证, Oauth2.0时 也叫client_secret
-	// @gotags: bson:"app_secret" json:"app_secret"
-	AppSecret string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret" bson:"app_secret"`
+	// @gotags: bson:"app_secret" json:"app_secret" env:"FEISHU_APP_SECRET"
+	AppSecret string `protobuf:"bytes,2,opt,name=app_secret,json=appSecret,proto3" json:"app_secret" bson:"app_secret" env:"FEISHU_APP_SECRET"`
 	// Oauth2.0时, 应用服务地址页面
-	// @gotags: bson:"redirect_uri" json:"redirect_uri"
-	RedirectUri string `protobuf:"bytes,3,opt,name=redirect_uri,json=redirectUri,proto3" json:"redirect_uri" bson:"redirect_uri"`
+	// @gotags: bson:"redirect_uri" json:"redirect_uri" env:"FEISHU_REDIRECT_URI"
+	RedirectUri string `protobuf:"bytes,3,opt,name=redirect_uri,json=redirectUri,proto3" json:"redirect_uri" bson:"redirect_uri" env:"FEISHU_REDIRECT_URI"`
 	// 飞书token
 	// @gotags: bson:"token" json:"token"
 	Token *FeishuAccessToken `protobuf:"bytes,4,opt,name=token,proto3" json:"token" bson:"token"`
