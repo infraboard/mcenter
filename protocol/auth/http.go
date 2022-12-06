@@ -36,6 +36,11 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		// 获取token
 		ak := token.GetTokenFromHTTPHeader(req.Request)
 
+		if ak == "" {
+			response.Failed(resp, token.ErrUnauthorized)
+			return
+		}
+
 		tk, err := a.tk.ValidateToken(req.Request.Context(), token.NewValidateTokenRequest(ak))
 		if err != nil {
 			response.Failed(resp, err)
