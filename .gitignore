@@ -15,9 +15,8 @@
 cover.out
 coverage.txt
 
-etc/mcenter.toml
-etc/mcenter.env
+etc/config.toml
+etc/config.env
 etc/unit_test.env
-etc/config.prod.toml
 etc/ssl
 mcenter

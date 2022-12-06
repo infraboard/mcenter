@@ -50,7 +50,7 @@ run: install dep ## Run Server
 	@go run main.go start
 
 runp: install dep ## Run product Server
-	@go run main.go start -f etc/config.prod.toml
+	@go run main.go start -f etc/config.toml
 
 clean: ## Remove previous build
 	@go clean .
