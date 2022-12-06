@@ -245,6 +245,8 @@ func NewEntryFromRestRequest(req *restful.Request) *Entry {
 	entry.FunctionName = route.Operation()
 	entry.Method = route.Method()
 	entry.LoadMeta(route.Metadata())
+	entry.Path = route.Path()
+
 	entry.Path = entry.UniquePath()
 	return entry
 }
@@ -254,6 +256,8 @@ func NewEntryFromRestRoute(route restful.Route) *Entry {
 	entry.FunctionName = route.Operation
 	entry.Method = route.Method
 	entry.LoadMeta(route.Metadata)
+	entry.Path = route.Path
+
 	entry.Path = entry.UniquePath()
 	return entry
 }
