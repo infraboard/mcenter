@@ -15,6 +15,7 @@
 cover.out
 coverage.txt
 
+index.html
 etc/config.toml
 etc/config.env
 etc/unit_test.env
