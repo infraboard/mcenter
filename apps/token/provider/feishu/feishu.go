@@ -50,7 +50,7 @@ func (c *Feishu) GetToken(ctx context.Context, code string) (*domain.FeishuAcces
 	err := c.rc.
 		Post("token").
 		Header(rest.CONTENT_TYPE_HEADER, "application/x-www-form-urlencoded").
-		Body(c.conf.MakeGetTokenFormRequest(code).Encode()).
+		Body(c.conf.MakeGetTokenFormRequest(code)).
 		Do(ctx).
 		Into(resp)
 	if err != nil {

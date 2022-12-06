@@ -233,14 +233,14 @@ func NewFeishuAccessToken() *FeishuAccessToken {
 	}
 }
 
-func (c *FeishuConfig) MakeGetTokenFormRequest(code string) url.Values {
+func (c *FeishuConfig) MakeGetTokenFormRequest(code string) string {
 	form := make(url.Values)
 	form.Add("grant_type", "authorization_code")
 	form.Add("client_id", c.AppId)
 	form.Add("client_secret", c.AppSecret)
 	form.Add("code", code)
 	form.Add("redirect_uri", c.RedirectUri)
-	return form
+	return form.Encode()
 }
 
 func (t *FeishuAccessToken) IsExpired() bool {
