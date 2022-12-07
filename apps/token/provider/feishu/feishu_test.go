@@ -15,7 +15,7 @@ var (
 )
 
 func TestGetUserInfo(t *testing.T) {
-	Login()
+	TestLogin(t)
 
 	u, err := client.GetUserInfo(ctx)
 	if err != nil {
@@ -24,19 +24,20 @@ func TestGetUserInfo(t *testing.T) {
 	t.Log(u)
 }
 
-func Login() {
+func TestLogin(t *testing.T) {
 	// 加载测试配置
 	conf := domain.NewDefaultFeishuConfig()
 	if err := env.Parse(conf); err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	// 登陆
 	client = feishu.NewFeishuClient(conf)
-	err := client.Login(ctx, os.Getenv("AUTH_CODE"))
+	tk, err := client.Login(ctx, os.Getenv("AUTH_CODE"))
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
+	t.Log(tk)
 }
 
 func init() {

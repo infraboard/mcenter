@@ -48,14 +48,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 
 	// 获取Token
 	client := NewFeishuClient(dom.Spec.FeishuSetting)
-	if err := client.Login(ctx, req.AuthCode); err != nil {
-		return nil, err
-	}
-
-	// 需要更新域相关配置
-	dom.Spec.FeishuSetting.Token = client.Token()
-	patchReq := domain.NewPatchPomainRequest(dom.Id, dom.Spec)
-	_, err = i.domain.UpdateDomain(ctx, patchReq)
+	ft, err := client.Login(ctx, req.AuthCode)
 	if err != nil {
 		return nil, err
 	}
@@ -91,6 +84,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	// 更新用户Profile
 	updateReq := user.NewPatchUserRequest(lu.Id)
 	updateReq.Profile = fu.ToProfile()
+	updateReq.Feishu.Token = ft
 	_, err = i.user.UpdateUser(ctx, updateReq)
 	if err != nil {
 		return nil, err

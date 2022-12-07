@@ -162,6 +162,7 @@ func NewPatchUserRequest(userId string) *UpdateUserRequest {
 		UserId:     userId,
 		UpdateMode: pb_request.UpdateMode_PATCH,
 		Profile:    NewProfile(),
+		Feishu:     NewFeishu(),
 	}
 }
 
@@ -259,11 +260,17 @@ func (u *User) Desensitize() {
 func (i *User) Update(req *UpdateUserRequest) {
 	i.UpdateAt = time.Now().UnixMicro()
 	i.Profile = req.Profile
+	i.Spec.Description = req.Description
+	i.Spec.Feishu = req.Feishu
 }
 
 func (i *User) Patch(req *UpdateUserRequest) error {
 	i.UpdateAt = time.Now().UnixMicro()
-	return mergo.MergeWithOverwrite(i.Profile, req.Profile)
+	err := mergo.MergeWithOverwrite(i.Profile, req.Profile)
+	if err != nil {
+		return err
+	}
+	return mergo.MergeWithOverwrite(i.Spec.Feishu, req.Feishu)
 }
 
 func SpliteUserAndDomain(username string) (string, string) {
@@ -281,5 +288,23 @@ func SpliteUserAndDomain(username string) (string, string) {
 
 // NewProfile todo
 func NewFeishu() *Feishu {
-	return &Feishu{}
+	return &Feishu{
+		Token: NewFeishuAccessToken(),
+	}
+}
+
+func NewFeishuAccessToken() *FeishuAccessToken {
+	return &FeishuAccessToken{
+		IssueAt: time.Now().Unix(),
+	}
+}
+
+func (t *FeishuAccessToken) IsExpired() bool {
+	if t.AccessToken == "" {
+		return true
+	}
+
+	// 为了避免误差, 再加30秒
+	delta := time.Since(time.Unix(t.IssueAt, 0)).Seconds() + 30
+	return delta > float64(t.ExpiresIn)
 }

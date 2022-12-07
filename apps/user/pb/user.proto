@@ -180,7 +180,31 @@ message Feishu {
     string union_id = 2;
     // 用户 user id，申请了邮箱获取权限(获取用户 user ID)的应用会返回该字段
     // @gotags: bson:"user_id" json:"user_id"
-    string user_id = 3; 
+    string user_id = 3;
+    // 飞书token
+    // @gotags: bson:"token" json:"token"
+    FeishuAccessToken token = 4;
+}
+
+message FeishuAccessToken {
+    // 飞书服务器授权的access_token，用于调用其他接口
+    // @gotags: bson:"access_token" json:"access_token"
+    string access_token = 1;
+    // token OAuth 2.0协议规定的Token类型，固定为 Bearer
+    // @gotags: bson:"token_type" json:"token_type"
+    string token_type = 2;
+    // access_token 颁发时间
+    // @gotags: bson:"issue_at" json:"issue_at"
+    int64 issue_at = 3;
+    // access_token 的有效期，三方应用服务器需要根据此返回值来控制access_token的有效时间
+    // @gotags: bson:"expires_in" json:"expires_in"
+    int64 expires_in = 4;
+    // 当 access_token 过期时，通过 refresh_token来刷新，获取新的 access_token
+    // @gotags: bson:"refresh_token" json:"refresh_token"
+    string refresh_token = 5;
+    // refresh_token 的有效期
+    // @gotags: bson:"refresh_expires_in" json:"refresh_expires_in"
+    int64 refresh_expires_in = 6;
 }
 
 message UserSet {

@@ -95,6 +95,7 @@ func (s *service) UpdateUser(ctx context.Context, req *user.UpdateUserRequest) (
 	case request.UpdateMode_PUT:
 		ins.Update(req)
 	case request.UpdateMode_PATCH:
+		ins.Spec.Description = req.Description
 		err := ins.Patch(req)
 		if err != nil {
 			return nil, err

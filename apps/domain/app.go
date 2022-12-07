@@ -227,12 +227,6 @@ func NewQueryDomainRequestFromHTTP(r *http.Request) *QueryDomainRequest {
 	return query
 }
 
-func NewFeishuAccessToken() *FeishuAccessToken {
-	return &FeishuAccessToken{
-		IssueAt: time.Now().Unix(),
-	}
-}
-
 func (c *FeishuConfig) MakeGetTokenFormRequest(code string) string {
 	form := make(url.Values)
 	form.Add("grant_type", "authorization_code")
@@ -241,14 +235,4 @@ func (c *FeishuConfig) MakeGetTokenFormRequest(code string) string {
 	form.Add("code", code)
 	form.Add("redirect_uri", c.RedirectUri)
 	return form.Encode()
-}
-
-func (t *FeishuAccessToken) IsExpired() bool {
-	if t.AccessToken == "" {
-		return true
-	}
-
-	// 为了避免误差, 再加30秒
-	delta := time.Since(time.Unix(t.IssueAt, 0)).Seconds() + 30
-	return delta > float64(t.ExpiresIn)
 }

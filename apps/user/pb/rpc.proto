@@ -105,4 +105,10 @@ message UpdateUserRequest {
     // profile 账号profile
     // @gotags: json:"profile"
 	Profile profile = 3;
+    // 用户描述
+    // @gotags: json:"description"
+    string description = 4;
+    // 用户描述
+    // @gotags: json:"feishu"
+    Feishu feishu = 5;
 }
