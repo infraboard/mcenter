@@ -159,9 +159,10 @@ func NewPutUserRequest(userId string) *UpdateUserRequest {
 // NewPatchAccountRequest todo
 func NewPatchUserRequest(userId string) *UpdateUserRequest {
 	return &UpdateUserRequest{
-		UserId:     userId,
-		UpdateMode: pb_request.UpdateMode_PATCH,
-		Profile:    NewProfile(),
+		UserId:      userId,
+		UpdateMode:  pb_request.UpdateMode_PATCH,
+		Profile:     NewProfile(),
+		FeishuToken: NewFeishuAccessToken(),
 	}
 }
 
@@ -268,6 +269,10 @@ func (i *User) Patch(req *UpdateUserRequest) error {
 	err := mergo.MergeWithOverwrite(i.Profile, req.Profile)
 	if err != nil {
 		return err
+	}
+
+	if i.FeishuToken == nil {
+		i.FeishuToken = NewFeishuAccessToken()
 	}
 	return mergo.MergeWithOverwrite(i.FeishuToken, req.FeishuToken)
 }

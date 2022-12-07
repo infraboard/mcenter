@@ -8,6 +8,7 @@ import (
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 )
 
@@ -40,7 +41,9 @@ func (h *oath2Handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.GET("/feishu").To(h.Oauth2Auth).
 		Doc("飞书登陆").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Reads(token.ValidateTokenRequest{}).
+		Param(ws.QueryParameter("code", "oauth2 auth code").DataType("string").Required(true)).
+		Param(ws.QueryParameter("state", "oauth2 state").DataType("string").Required(false)).
+		Param(ws.QueryParameter("domain", "auth domain").DataType("string").DefaultValue(domain.DEFAULT_DOMAIN)).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))
 }

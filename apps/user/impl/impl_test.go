@@ -50,6 +50,16 @@ func TestQueryUser(t *testing.T) {
 	t.Log(r)
 }
 
+func TestPatchUser(t *testing.T) {
+	req := user.NewPatchUserRequest("ce7hi8ea0brj8fmufit0")
+	req.FeishuToken.AccessToken = "xxxx"
+	r, err := impl.UpdateUser(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r)
+}
+
 func init() {
 	tools.DevelopmentSetup()
 	impl = app.GetInternalApp(user.AppName).(user.Service)

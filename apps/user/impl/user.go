@@ -98,7 +98,7 @@ func (s *service) UpdateUser(ctx context.Context, req *user.UpdateUserRequest) (
 		ins.Spec.Description = req.Description
 		err := ins.Patch(req)
 		if err != nil {
-			return nil, err
+			return nil, exception.NewBadRequest("patch error, %s", err)
 		}
 	}
 
@@ -106,7 +106,7 @@ func (s *service) UpdateUser(ctx context.Context, req *user.UpdateUserRequest) (
 		return nil, err
 	}
 
-	return nil, nil
+	return ins, nil
 }
 
 // 删除用户
