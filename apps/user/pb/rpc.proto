@@ -108,7 +108,7 @@ message UpdateUserRequest {
     // 用户描述
     // @gotags: json:"description"
     string description = 4;
-    // 用户描述
-    // @gotags: json:"feishu"
-    Feishu feishu = 5;
+    // 飞书token
+    // @gotags: bson:"feishu_token" json:"feishu_token"
+    FeishuAccessToken feishu_token = 5;
 }

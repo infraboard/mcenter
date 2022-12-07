@@ -78,7 +78,6 @@ func (u *User) ToCreateUserRequest(domain, password, descriptoin string) *user.C
 			OpenId:  u.OpenId,
 			UnionId: u.UnionId,
 			UserId:  u.UserId,
-			Token:   user.NewFeishuAccessToken(),
 		},
 	}
 	return req

@@ -162,7 +162,6 @@ func NewPatchUserRequest(userId string) *UpdateUserRequest {
 		UserId:     userId,
 		UpdateMode: pb_request.UpdateMode_PATCH,
 		Profile:    NewProfile(),
-		Feishu:     NewFeishu(),
 	}
 }
 
@@ -261,7 +260,7 @@ func (i *User) Update(req *UpdateUserRequest) {
 	i.UpdateAt = time.Now().UnixMicro()
 	i.Profile = req.Profile
 	i.Spec.Description = req.Description
-	i.Spec.Feishu = req.Feishu
+	i.FeishuToken = req.FeishuToken
 }
 
 func (i *User) Patch(req *UpdateUserRequest) error {
@@ -270,7 +269,7 @@ func (i *User) Patch(req *UpdateUserRequest) error {
 	if err != nil {
 		return err
 	}
-	return mergo.MergeWithOverwrite(i.Spec.Feishu, req.Feishu)
+	return mergo.MergeWithOverwrite(i.FeishuToken, req.FeishuToken)
 }
 
 func SpliteUserAndDomain(username string) (string, string) {
@@ -288,9 +287,7 @@ func SpliteUserAndDomain(username string) (string, string) {
 
 // NewProfile todo
 func NewFeishu() *Feishu {
-	return &Feishu{
-		Token: NewFeishuAccessToken(),
-	}
+	return &Feishu{}
 }
 
 func NewFeishuAccessToken() *FeishuAccessToken {

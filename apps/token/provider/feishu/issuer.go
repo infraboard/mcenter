@@ -84,7 +84,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	// 更新用户Profile
 	updateReq := user.NewPatchUserRequest(lu.Id)
 	updateReq.Profile = fu.ToProfile()
-	updateReq.Feishu.Token = ft
+	updateReq.FeishuToken = ft
 	_, err = i.user.UpdateUser(ctx, updateReq)
 	if err != nil {
 		return nil, err

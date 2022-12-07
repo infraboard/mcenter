@@ -90,7 +90,10 @@ message User {
     Password password = 7;
     // 用户状态
     // @gotags: bson:"status" json:"status"
-    Status status = 8; 
+    Status status = 8;
+    // 飞书token
+    // @gotags: bson:"feishu_token" json:"feishu_token"
+    FeishuAccessToken feishu_token = 9;
 }
 
 enum Gender {
@@ -181,9 +184,6 @@ message Feishu {
     // 用户 user id，申请了邮箱获取权限(获取用户 user ID)的应用会返回该字段
     // @gotags: bson:"user_id" json:"user_id"
     string user_id = 3;
-    // 飞书token
-    // @gotags: bson:"token" json:"token"
-    FeishuAccessToken token = 4;
 }
 
 message FeishuAccessToken {
