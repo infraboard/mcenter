@@ -14,7 +14,7 @@ enum PROTOCAL {
 enum PROVIDER {
     // SDK直接注册
     SDK = 0;
-    // 服务来源于kubernetes, 有operator提供注册
+    // 服务来源于kubernetes, 由operator提供注册
     KUBERNETES = 1;
 }
 

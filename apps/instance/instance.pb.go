@@ -74,7 +74,7 @@ type PROVIDER int32
 const (
 	// SDK直接注册
 	PROVIDER_SDK PROVIDER = 0
-	// 服务来源于kubernetes, 有operator提供注册
+	// 服务来源于kubernetes, 由operator提供注册
 	PROVIDER_KUBERNETES PROVIDER = 1
 )
 

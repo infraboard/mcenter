@@ -46,7 +46,7 @@ linux: dep ## Build the binary file
 init: dep ## Inital project 
 	@go run main.go init
 
-run: install dep ## Run Server
+run: ## Run Server
 	@go run main.go start
 
 runp: install dep ## Run product Server
