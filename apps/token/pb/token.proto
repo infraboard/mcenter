@@ -25,6 +25,8 @@ enum GRANT_TYPE {
     WECHAT_WORK = 7;
     // 飞书授权
     FEISHU = 8;
+    // 飞书授权
+    DINGDING = 9;
 }
 
 // 令牌类型
