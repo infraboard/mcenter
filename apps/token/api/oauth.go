@@ -55,6 +55,15 @@ func (h *oath2Handler) Registry(ws *restful.WebService) {
 		Param(ws.QueryParameter("domain", "auth domain").DataType("string").DefaultValue(domain.DEFAULT_DOMAIN)).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))
+
+	ws.Route(ws.GET("/wechat_work").To(h.WechatWorkOauth2Auth).
+		Doc("企业微信登陆").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Param(ws.QueryParameter("code", "oauth2 auth code").DataType("string").Required(true)).
+		Param(ws.QueryParameter("state", "oauth2 state").DataType("string").Required(false)).
+		Param(ws.QueryParameter("domain", "auth domain").DataType("string").DefaultValue(domain.DEFAULT_DOMAIN)).
+		Writes(token.Token{}).
+		Returns(200, "OK", token.Token{}))
 }
 
 func (u *oath2Handler) FeishuOauth2Auth(r *restful.Request, w *restful.Response) {
@@ -77,6 +86,25 @@ func (u *oath2Handler) FeishuOauth2Auth(r *restful.Request, w *restful.Response)
 }
 
 func (u *oath2Handler) DingDingOauth2Auth(r *restful.Request, w *restful.Response) {
+	req := token.NewDingDingAuthCodeIssueTokenRequest(
+		r.QueryParameter("authCode"),
+		r.QueryParameter("state"),
+		r.QueryParameter("domain"),
+	)
+
+	// 补充用户的登录时的位置信息
+	req.Location = token.NewNewLocationFromHttp(r.Request)
+
+	// 颁发Token
+	resp, err := h.service.IssueToken(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+	response.Success(w, resp)
+}
+
+func (u *oath2Handler) WechatWorkOauth2Auth(r *restful.Request, w *restful.Response) {
 	req := token.NewDingDingAuthCodeIssueTokenRequest(
 		r.QueryParameter("authCode"),
 		r.QueryParameter("state"),

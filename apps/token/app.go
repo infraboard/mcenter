@@ -73,6 +73,15 @@ func NewDingDingAuthCodeIssueTokenRequest(authcode, state, domain string) *Issue
 	return req
 }
 
+func NewWechatAuthCodeIssueTokenRequest(authcode, state, domain string) *IssueTokenRequest {
+	req := NewIssueTokenRequest()
+	req.AuthCode = authcode
+	req.State = state
+	req.GrantType = GRANT_TYPE_WECHAT_WORK
+	req.Username = fmt.Sprintf("@%s", domain)
+	return req
+}
+
 // NewIssueTokenRequest 默认请求
 func NewIssueTokenRequest() *IssueTokenRequest {
 	return &IssueTokenRequest{}
