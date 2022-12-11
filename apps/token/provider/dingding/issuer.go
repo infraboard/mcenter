@@ -40,7 +40,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 		return nil, err
 	}
 
-	if dom.Spec.FeishuSetting == nil {
+	if dom.Spec.DingdingSetting == nil {
 		return nil, fmt.Errorf("domain dingding not settting")
 	}
 

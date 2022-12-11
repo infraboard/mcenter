@@ -39,6 +39,7 @@ func (c *Feishu) Login(ctx context.Context, code string) (*user.FeishuAccessToke
 // 获取token https://open.feishu.cn/document/common-capabilities/sso/api/get-access_token
 func (c *Feishu) GetToken(ctx context.Context, code string) (*user.FeishuAccessToken, error) {
 	resp := user.NewFeishuAccessToken()
+
 	err := c.rc.
 		Post("token").
 		Header(rest.CONTENT_TYPE_HEADER, "application/x-www-form-urlencoded").

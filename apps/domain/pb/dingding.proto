@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package infraboard.mcenter.domain;
+option go_package = "github.com/infraboard/mcenter/apps/domain";
+
+message DingDingConfig {
+    // 飞书应用凭证, Oauth2.0时 也叫client_id
+    // @gotags: bson:"client_id" json:"client_id" env:"DINGDING_CLIENT_ID"
+    string client_id = 1;
+    // 飞书应用凭证, Oauth2.0时 也叫client_secret
+    // @gotags: bson:"client_secret" json:"client_secret" env:"DINGDING_CLIENT_SECRET"
+    string client_secret = 2;
+    // Oauth2.0时, 应用服务地址页面
+    // @gotags: bson:"redirect_uri" json:"redirect_uri" env:"DINGDING_REDIRECT_URI"
+    string redirect_uri = 3;
+}
+

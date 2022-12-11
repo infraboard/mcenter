@@ -5,6 +5,8 @@ option go_package = "github.com/infraboard/mcenter/apps/domain";
 
 import "apps/domain/pb/ldap.proto";
 import "apps/domain/pb/feishu.proto";
+import "apps/domain/pb/dingding.proto";
+
 
 message DomainSet {
     // 总数量
@@ -76,6 +78,9 @@ message CreateDomainRequest {
     // FeishuConfig 域关联的飞书设置
     // @gotags: bson:"feishu_setting" json:"feishu_setting"
     FeishuConfig feishu_setting = 16;
+    // DingDingConfig 域关联的钉钉设置
+    // @gotags: bson:"dingding_setting" json:"dingding_setting"
+    DingDingConfig dingding_setting = 17;
 }
 
 // 联系人

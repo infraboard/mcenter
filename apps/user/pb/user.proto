@@ -94,6 +94,9 @@ message User {
     // 飞书token
     // @gotags: bson:"feishu_token" json:"feishu_token"
     FeishuAccessToken feishu_token = 9;
+    // 钉钉token
+    // @gotags: bson:"feishu_token" json:"dingding_token"
+    DingDingAccessToken dingding_token = 10;
 }
 
 enum Gender {
@@ -205,6 +208,24 @@ message FeishuAccessToken {
     // refresh_token 的有效期
     // @gotags: bson:"refresh_expires_in" json:"refresh_expires_in"
     int64 refresh_expires_in = 6;
+}
+
+message DingDingAccessToken  {
+	// 生成的accessToken
+    // @gotags: bson:"access_token" json:"accessToken"
+    string access_token = 1;
+    // 生成的refresh_token。可以使用此刷新token，定期的获取用户的accessToken
+    // @gotags: bson:"refresh_token" json:"refreshToken"
+    string refresh_token = 2;
+    // 超时时间，单位秒。
+    // @gotags: bson:"expires_in" json:"expireIn"
+    int64 expires_in = 3;
+	// 所选企业corpId。
+    // @gotags: bson:"expires_in" json:"corpId"
+    string corp_id = 4;
+    // access_token 颁发时间
+    // @gotags: bson:"issue_at" json:"issue_at"
+    int64 issue_at = 5;
 }
 
 message UserSet {

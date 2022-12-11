@@ -310,3 +310,9 @@ func (t *FeishuAccessToken) IsExpired() bool {
 	delta := time.Since(time.Unix(t.IssueAt, 0)).Seconds() + 30
 	return delta > float64(t.ExpiresIn)
 }
+
+func NewDingDingAccessToken() *DingDingAccessToken {
+	return &DingDingAccessToken{
+		IssueAt: time.Now().Unix(),
+	}
+}
