@@ -172,9 +172,12 @@ message CreateUserRequest {
     // 用户描述
     // @gotags: json:"description" bson:"description"
     string description = 7;
-    // 用户描述
+    // 用户飞书相关信息
     // @gotags: json:"feishu" bson:"feishu"
     Feishu feishu = 8;
+    // 用户钉钉相关信息
+    // @gotags: json:"dingding" bson:"dingding"
+    DingDing dingding = 9;
 }
 
 message Feishu {
@@ -208,6 +211,15 @@ message FeishuAccessToken {
     // refresh_token 的有效期
     // @gotags: bson:"refresh_expires_in" json:"refresh_expires_in"
     int64 refresh_expires_in = 6;
+}
+
+message DingDing {
+    // 用户在飞书应用内的唯一标识
+    // @gotags: bson:"open_id" json:"open_id"
+    string open_id = 1;
+    // 用户统一ID，在同一租户开发的所有应用内的唯一标识
+    // @gotags: bson:"union_id" json:"union_id"
+    string union_id = 2;
 }
 
 message DingDingAccessToken  {

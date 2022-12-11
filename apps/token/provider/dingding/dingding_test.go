@@ -30,6 +30,16 @@ func TestLogin(t *testing.T) {
 	t.Log(tk)
 }
 
+func TestGetUserInfo(t *testing.T) {
+	TestLogin(t)
+
+	u, err := client.GetUserInfo(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(u)
+}
+
 func init() {
 	zap.DevelopmentSetup()
 }

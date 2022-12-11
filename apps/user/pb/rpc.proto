@@ -111,4 +111,7 @@ message UpdateUserRequest {
     // 飞书token
     // @gotags: bson:"feishu_token" json:"feishu_token"
     FeishuAccessToken feishu_token = 5;
+    // 钉钉token
+    // @gotags: bson:"dingding_token" json:"dingding_token"
+    DingDingAccessToken dingding_token = 6;
 }

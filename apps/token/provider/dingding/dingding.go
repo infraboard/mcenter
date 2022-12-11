@@ -11,14 +11,14 @@ import (
 
 func NewDingDingClient(conf *domain.DingDingConfig) *DingDing {
 	client := rest.NewRESTClient()
-	client.SetBaseURL("https://open.dingtalk.com")
+	client.SetBaseURL("https://api.dingtalk.com")
 	return &DingDing{
 		conf: conf,
 		rc:   client,
 	}
 }
 
-// 飞书客户端
+// 钉钉客户端
 type DingDing struct {
 	conf *domain.DingDingConfig
 	rc   *rest.RESTClient
@@ -32,7 +32,7 @@ func (d *DingDing) Login(ctx context.Context, code string) (*user.DingDingAccess
 	}
 
 	// 设置Token
-	d.rc.SetBearerTokenAuth(tk.AccessToken)
+	d.rc.SetHeader("x-acs-dingtalk-access-token", tk.AccessToken)
 	return tk, nil
 }
 
@@ -45,13 +45,26 @@ func (d *DingDing) NewGetUserTokenRequest(code string) *GetUserTokenRequest {
 	}
 }
 
-// 获取用户token https://open.dingtalk.com/document/orgapp-server/obtain-user-token?spm=ding_open_doc.document.0.0.5cf7722fu9sqAm#doc-api-dingtalk-GetUserToken
+// 获取用户个人token https://open.dingtalk.com/document/orgapp-server/obtain-user-token?spm=ding_open_doc.document.0.0.5cf7722fu9sqAm#doc-api-dingtalk-GetUserToken
 func (d *DingDing) GetToken(ctx context.Context, code string) (*user.DingDingAccessToken, error) {
 	resp := user.NewDingDingAccessToken()
 	err := d.rc.
 		Post("/v1.0/oauth2/userAccessToken").
 		Header(rest.CONTENT_TYPE_HEADER, restful.MIME_JSON).
 		Body(d.NewGetUserTokenRequest(code)).
+		Do(ctx).
+		Into(resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+// 获取用户通讯录个人信息 https://open.dingtalk.com/document/orgapp-server/dingtalk-retrieve-user-information?spm=ding_open_doc.document.0.0.5cf7722fu9sqAm#doc-api-dingtalk-GetUser
+func (c *DingDing) GetUserInfo(ctx context.Context) (*User, error) {
+	resp := NewUser()
+	err := c.rc.
+		Get("/v1.0/contact/users/me").
 		Do(ctx).
 		Into(resp)
 	if err != nil {

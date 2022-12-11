@@ -1,6 +1,7 @@
 package all
 
 import (
+	_ "github.com/infraboard/mcenter/apps/token/provider/dingding"
 	_ "github.com/infraboard/mcenter/apps/token/provider/feishu"
 	_ "github.com/infraboard/mcenter/apps/token/provider/ldap"
 	_ "github.com/infraboard/mcenter/apps/token/provider/password"
