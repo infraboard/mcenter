@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://g.alicdn.com/dingding/h5-dingtalk-login/0.21.0/ddlogin.js"></script>
+    <style>
+        /* STEP2：指定这个包裹容器元素的CSS样式，尤其注意宽高的设置 */
+        .self-defined-classname {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="self_defined_element" class="self-defined-classname"></div>
+</body>
+
+
+<script>
+    // 直接跳转去第三方网站授权
+    // https://login.dingtalk.com/oauth2/auth?redirect_uri=REDIRECT_URI&response_type=code&client_id=CLIENT_ID&scope=openid&state=dddd&prompt=consent
+
+    // STEP3：在需要的时候，调用 window.DTFrameLogin 方法构造登录二维码，并处理登录成功或失败的回调。
+    window.DTFrameLogin(
+        {
+            id: 'self_defined_element',
+            width: 300,
+            height: 300,
+        },
+        {
+            redirect_uri: encodeURIComponent('REDIRECT_URI'),
+            client_id: 'CLIENT_ID',
+            scope: 'openid',
+            response_type: 'code',
+            state: 'xxxxxxxxx',
+            prompt: 'consent',
+        },
+        (loginResult) => {
+            const {redirectUrl, authCode, state} = loginResult;
+            // 这里可以直接进行重定向
+            window.location.href = redirectUrl;
+            // 也可以在不跳转页面的情况下，使用code进行授权
+            console.log(authCode);
+        },
+        (errorMsg) => {
+            // 这里一般需要展示登录失败的具体原因
+            alert(`Login Error: ${errorMsg}`);
+        },
+    );
+</script>
