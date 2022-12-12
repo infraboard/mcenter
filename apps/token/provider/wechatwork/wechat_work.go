@@ -53,7 +53,7 @@ func (w *WechatWork) getToken(ctx context.Context) error {
 	err := w.rc.
 		Post("gettoken").
 		Param("corpid", w.conf.CorpId).
-		Param("corpsecret", w.conf.SuitSecret).
+		Param("corpsecret", w.conf.AppSecret).
 		Do(ctx).
 		Into(resp)
 	if err != nil {

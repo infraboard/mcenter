@@ -251,6 +251,9 @@ message WechatWork {
     // 用户在企业微信中的Id
     // @gotags: bson:"user_id" json:"user_id"
     string user_id = 1;
+    // 用户在企业微信唯一标识
+    // @gotags: bson:"open_id" json:"open_id"
+    string open_id = 2;
 }
 
 message UserSet {

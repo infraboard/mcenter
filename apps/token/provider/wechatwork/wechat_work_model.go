@@ -48,11 +48,8 @@ type UserDetail struct {
 }
 
 func (u *User) Username() string {
-	if u.BizMail != "" {
-		ud := strings.Split(u.BizMail, "@")
-		if len(ud) == 2 {
-			return ud[1]
-		}
+	if u.UserId != "" {
+		return u.UserId
 	}
 
 	if u.Email != "" {
@@ -60,10 +57,6 @@ func (u *User) Username() string {
 		if len(ud) == 2 {
 			return ud[1]
 		}
-	}
-
-	if u.Mobile != "" {
-		return u.Mobile
 	}
 
 	return ""
@@ -88,6 +81,7 @@ func (u *User) ToCreateUserRequest(domain, password, descriptoin string) *user.C
 		Description: descriptoin,
 		Wechatwork: &user.WechatWork{
 			UserId: u.UserId,
+			OpenId: u.OpenUserId,
 		},
 	}
 	return req
