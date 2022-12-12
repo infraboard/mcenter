@@ -16,7 +16,7 @@ var (
 )
 
 func TestIssueToken(t *testing.T) {
-	req := token.NewWechatAuthCodeIssueTokenRequest(os.Getenv("WECHAT_AUTH_CODE"), "11111", "")
+	req := token.NewWechatAuthCodeIssueTokenRequest(os.Getenv("WECHAT_WORK_AUTH_CODE"), "11111", "")
 	tk, err := impl.IssueToken(ctx, req)
 	if err != nil {
 		t.Fatal(err)

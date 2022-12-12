@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package infraboard.mcenter.domain;
+option go_package = "github.com/infraboard/mcenter/apps/domain";
+
+message WechatWorkConfig {
+    // 企业微信应用Id, Oauth2.0时 也叫client_id
+    // @gotags: bson:"suit_id" json:"suit_id" env:"WECHAT_WORK_CLIENT_ID"
+    string suit_id = 1;
+    // 企业微信应用凭证, Oauth2.0时 也叫client_secret
+    // @gotags: bson:"suit_secret" json:"suit_secret" env:"WECHAT_WORK_CLIENT_SECRET"
+    string suit_secret = 2;
+    // Oauth2.0时, 应用服务地址页面
+    // @gotags: bson:"redirect_uri" json:"redirect_uri" env:"WECHAT_WORK_REDIRECT_URI"
+    string redirect_uri = 3;
+}
