@@ -8,11 +8,11 @@ message WechatWorkConfig {
     // @gotags: bson:"corp_id" json:"corp_id" env:"WECHAT_WORK_CORP_ID"
     string corp_id = 1;
     // 企业微信应用Id, Oauth2.0时 也叫client_id
-    // @gotags: bson:"suit_id" json:"suit_id" env:"WECHAT_WORK_CLIENT_ID"
-    string suit_id = 2;
+    // @gotags: bson:"agent_id" json:"agent_id" env:"WECHAT_WORK_CLIENT_ID"
+    string agent_id = 2;
     // 企业微信应用凭证, Oauth2.0时 也叫client_secret
-    // @gotags: bson:"suit_secret" json:"suit_secret" env:"WECHAT_WORK_CLIENT_SECRET"
-    string suit_secret = 3;
+    // @gotags: bson:"app_secret" json:"app_secret" env:"WECHAT_WORK_CLIENT_SECRET"
+    string app_secret = 3;
     // Oauth2.0时, 应用服务地址页面
     // @gotags: bson:"redirect_uri" json:"redirect_uri" env:"WECHAT_WORK_REDIRECT_URI"
     string redirect_uri = 4;

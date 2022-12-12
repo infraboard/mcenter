@@ -39,7 +39,7 @@ func (w *WechatWork) GetUserInfo(ctx context.Context, code string) (*User, error
 		return nil, err
 	}
 
-	u, err := w.getUserDetail(ctx, ui.UserTicket)
+	u, err := w.getUserBase(ctx, ui.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (w *WechatWork) GetUserInfo(ctx context.Context, code string) (*User, error
 	return u, nil
 }
 
-// 获取应用access_token https://developer.work.weixin.qq.com/document/path/91039
+// 获取应用接口凭证 https://developer.work.weixin.qq.com/tutorial/detail/46
 func (w *WechatWork) getToken(ctx context.Context) error {
 	resp := NewGetTokenResponse()
 	err := w.rc.
@@ -72,7 +72,7 @@ func (w *WechatWork) getToken(ctx context.Context) error {
 func (w *WechatWork) getUserInfo(ctx context.Context, code string) (*UserInfo, error) {
 	resp := NewUserInfoResponse()
 	err := w.rc.
-		Post("auth/getuserdetail").
+		Post("auth/getuserinfo").
 		Param("access_token", w.conf.AccessToken.AccessToken).
 		Param("code", code).
 		Do(ctx).
@@ -88,13 +88,13 @@ func (w *WechatWork) getUserInfo(ctx context.Context, code string) (*UserInfo, e
 	return &resp.UserInfo, nil
 }
 
-// 获取访问用户敏感信息 https://developer.work.weixin.qq.com/document/path/95833
-func (w *WechatWork) getUserDetail(ctx context.Context, userTicket string) (*User, error) {
+// 读取成员: https://developer.work.weixin.qq.com/document/path/90196
+func (w *WechatWork) getUserBase(ctx context.Context, userId string) (*User, error) {
 	resp := NewUserDetailResponse()
 	err := w.rc.
-		Post("auth/getuserdetail").
+		Post("user/get").
 		Param("access_token", w.conf.AccessToken.AccessToken).
-		Param("user_ticket", userTicket).
+		Param("userid", userId).
 		Do(ctx).
 		Into(resp)
 	if err != nil {
@@ -106,4 +106,24 @@ func (w *WechatWork) getUserDetail(ctx context.Context, userTicket string) (*Use
 	}
 
 	return &resp.User, nil
+}
+
+// 获取访问用户敏感信息: https://developer.work.weixin.qq.com/document/path/95833
+func (w *WechatWork) getUserDetail(ctx context.Context, userTicket string) (*UserDetail, error) {
+	resp := NewUserDetailResponse()
+	err := w.rc.
+		Post("user/getuserdetail").
+		Param("access_token", w.conf.AccessToken.AccessToken).
+		Param("user_ticket", userTicket).
+		Do(ctx).
+		Into(&resp.UserDetail)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Code != 0 {
+		return nil, fmt.Errorf(resp.Message)
+	}
+
+	return &resp.UserDetail, nil
 }

@@ -18,10 +18,25 @@ type GetAppAccessTokenRequest struct {
 type User struct {
 	// 成员UserID
 	UserId string `json:"userid"`
+	// 成员名称
+	Name string `json:"name"`
+	// 职务信息
+	Position string `json:"position"`
+	// 激活状态: 1=已激活，2=已禁用，4=未激活，5=退出企业
+	Status int `json:"status"`
+	// 全局唯一。对于同一个服务商，不同应用获取到企业内同一个成员的open_userid是相同的
+	OpenUserId string `json:"open_userid"`
+
+	UserDetail
+}
+
+type UserDetail struct {
 	// 性别。0表示未定义，1表示男性，2表示女性。仅在用户同意snsapi_privateinfo授权时返回真实值，否则返回0.
 	Gender int `json:"gender"`
 	// 头像url。仅在用户同意snsapi_privateinfo授权时返回
 	AvatarUrl string `json:"avatar"`
+	// 员工个人二维码（扫描可添加为外部联系人），仅在用户同意snsapi_privateinfo授权时返回
+	QrCode string `json:"qr_code"`
 	// 手机，仅在用户同意snsapi_privateinfo授权时返回，第三方应用不可获取
 	Mobile string `json:"mobile"`
 	// 邮箱，仅在用户同意snsapi_privateinfo授权时返回，第三方应用不可获取
@@ -30,8 +45,6 @@ type User struct {
 	BizMail string `json:"biz_mail"`
 	// 仅在用户同意snsapi_privateinfo授权时返回，第三方应用不可获取
 	Address string `json:"address"`
-	// 员工个人二维码（扫描可添加为外部联系人），仅在用户同意snsapi_privateinfo授权时返回
-	QrCode string `json:"qr_code"`
 }
 
 func (u *User) Username() string {
