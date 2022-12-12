@@ -61,7 +61,7 @@ func (u *User) ToProfile() *user.Profile {
 
 func (u *User) ToCreateUserRequest(domain, password, descriptoin string) *user.CreateUserRequest {
 	req := &user.CreateUserRequest{
-		Provider:    user.PROVIDER_FEISHU,
+		Provider:    user.PROVIDER_DINGDING,
 		Type:        user.TYPE_SUB,
 		CreateBy:    user.CREATE_BY_ADMIN,
 		Domain:      domain,

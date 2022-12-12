@@ -25,7 +25,7 @@ func TestLogin(t *testing.T) {
 
 	// 登陆
 	client = wechatwork.NewWechatWorkClient(conf)
-	tk, err := client.Login(ctx, code)
+	tk, err := client.Login(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}

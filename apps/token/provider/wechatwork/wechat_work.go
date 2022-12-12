@@ -24,7 +24,7 @@ type WechatWork struct {
 }
 
 // 登陆
-func (w *WechatWork) Login(ctx context.Context, code string) (*domain.WechatWorkAccessToken, error) {
+func (w *WechatWork) Login(ctx context.Context) (*domain.WechatWorkAccessToken, error) {
 	err := w.getToken(ctx)
 	if err != nil {
 		return nil, err

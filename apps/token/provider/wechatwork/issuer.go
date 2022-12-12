@@ -5,10 +5,12 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/apps/domain/password"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -40,11 +42,64 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 		return nil, err
 	}
 
-	if dom.Spec.DingdingSetting == nil {
-		return nil, fmt.Errorf("domain dingding not settting")
+	if dom.Spec.WechatWorkSetting == nil {
+		return nil, fmt.Errorf("domain wechat work not settting")
 	}
 
-	return nil, nil
+	// 获取Token(应用登陆Token)
+	client := NewWechatWorkClient(dom.Spec.WechatWorkSetting)
+	wt, err := client.Login(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// 可以尝试更新应用Token
+	i.log.Debug(wt)
+
+	// 获取用户信息
+	du, err := client.GetUserInfo(ctx, req.AuthCode)
+	if err != nil {
+		return nil, err
+	}
+
+	// 同步企业微信用户
+	// 判断用户是否在数据库存在, 如果不存在需要同步到本地数据库
+	lu, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(du.Username()))
+	if err != nil {
+		if exception.IsNotFoundError(err) {
+			i.log.Debugf("sync user: %s(%s) to db", du.Username(), dom.Spec.Name)
+			gen := password.New(dom.Spec.SecuritySetting.PasswordSecurity)
+			randomPass, err := gen.Generate()
+			if err != nil {
+				return nil, err
+			}
+			// 创建本地用户
+			newReq := du.ToCreateUserRequest(dom.Spec.Name, *randomPass, "系统自动生成")
+			lu, err = i.user.CreateUser(ctx, newReq)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			return nil, err
+		}
+	}
+
+	// 更新用户Profile
+	updateReq := user.NewPatchUserRequest(lu.Id)
+	updateReq.Profile = du.ToProfile()
+	_, err = i.user.UpdateUser(ctx, updateReq)
+	if err != nil {
+		return nil, err
+	}
+
+	// 颁发Token
+	tk := token.NewToken(req)
+	tk.Domain = lu.Spec.Domain
+	tk.Username = lu.Spec.Username
+	tk.UserType = lu.Spec.Type
+	tk.UserId = lu.Id
+
+	return tk, nil
 }
 
 func init() {

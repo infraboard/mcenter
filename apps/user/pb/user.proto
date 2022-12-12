@@ -51,8 +51,12 @@ enum PROVIDER {
     LOCAL = 0;
     // 来源LDAP
     LDAP = 1;
-    // 来源FEISHU
+    // 来源飞书
     FEISHU = 2;
+    // 来源钉钉
+    DINGDING = 3;
+    // 来源企业微信
+    WECHAT_WORK = 4;
 }
 
 // 为了防止越权, 用户可以调整的权限范围只有10已下的权限
@@ -178,6 +182,9 @@ message CreateUserRequest {
     // 用户钉钉相关信息
     // @gotags: json:"dingding" bson:"dingding"
     DingDing dingding = 9;
+    // 用户企业微信相关信息
+    // @gotags: json:"wechatwork" bson:"wechatwork"
+    WechatWork wechatwork = 10;
 }
 
 message Feishu {
@@ -238,6 +245,12 @@ message DingDingAccessToken  {
     // access_token 颁发时间
     // @gotags: bson:"issue_at" json:"issue_at"
     int64 issue_at = 5;
+}
+
+message WechatWork {
+    // 用户在企业微信中的Id
+    // @gotags: bson:"user_id" json:"user_id"
+    string user_id = 1;
 }
 
 message UserSet {
