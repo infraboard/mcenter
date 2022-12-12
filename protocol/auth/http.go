@@ -34,7 +34,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 	// 有认证标签,并且开启了认证
 	if ok && isAuth.(bool) {
 		// 获取token
-		ak := token.GetTokenFromHTTPHeader(req.Request)
+		ak := token.GetAccessTokenFromHTTP(req.Request)
 
 		if ak == "" {
 			response.Failed(resp, token.ErrUnauthorized)

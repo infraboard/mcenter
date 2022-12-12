@@ -199,7 +199,7 @@ func (s *TokenSet) Length() int {
 }
 
 // 优先从认证头中获取, 如果头没有从Cookie中获取
-func GetTokenFromHTTPHeader(r *http.Request) string {
+func GetAccessTokenFromHTTP(r *http.Request) string {
 	auth := r.Header.Get(ACCESS_TOKEN_HEADER_KEY)
 	info := strings.Split(auth, " ")
 	if len(info) > 1 {
