@@ -2,10 +2,9 @@ package wechatwork
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/client/rest"
 )
 
@@ -25,40 +24,86 @@ type WechatWork struct {
 }
 
 // 登陆
-func (d *WechatWork) Login(ctx context.Context, code string) (*user.DingDingAccessToken, error) {
-	tk, err := d.GetToken(ctx)
+func (w *WechatWork) Login(ctx context.Context, code string) (*domain.WechatWorkAccessToken, error) {
+	err := w.getToken(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	// 设置Token
-	return tk, nil
+	return w.conf.AccessToken, nil
+}
+
+func (w *WechatWork) GetUserInfo(ctx context.Context, code string) (*User, error) {
+	ui, err := w.getUserInfo(ctx, code)
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := w.getUserDetail(ctx, ui.UserTicket)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
 
 // 获取应用access_token https://developer.work.weixin.qq.com/document/path/91039
-func (d *WechatWork) GetToken(ctx context.Context) (*user.DingDingAccessToken, error) {
-	resp := user.NewDingDingAccessToken()
-	err := d.rc.
-		Post("/v1.0/oauth2/userAccessToken").
-		Header(rest.CONTENT_TYPE_HEADER, restful.MIME_JSON).
-		Body(nil).
+func (w *WechatWork) getToken(ctx context.Context) error {
+	resp := NewGetTokenResponse()
+	err := w.rc.
+		Post("gettoken").
+		Param("corpid", w.conf.CorpId).
+		Param("corpsecret", w.conf.SuitSecret).
+		Do(ctx).
+		Into(resp)
+	if err != nil {
+		return err
+	}
+
+	if resp.Code != 0 {
+		return fmt.Errorf(resp.Message)
+	}
+
+	w.conf.AccessToken = &resp.WechatWorkAccessToken
+	return nil
+}
+
+// 获取访问用户身份 https://developer.work.weixin.qq.com/document/path/91023
+func (w *WechatWork) getUserInfo(ctx context.Context, code string) (*UserInfo, error) {
+	resp := NewUserInfoResponse()
+	err := w.rc.
+		Post("auth/getuserdetail").
+		Param("access_token", w.conf.AccessToken.AccessToken).
+		Param("code", code).
 		Do(ctx).
 		Into(resp)
 	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+
+	if resp.Code != 0 {
+		return nil, fmt.Errorf(resp.Message)
+	}
+
+	return &resp.UserInfo, nil
 }
 
 // 获取访问用户敏感信息 https://developer.work.weixin.qq.com/document/path/95833
-func (c *WechatWork) GetUserInfo(ctx context.Context) (*User, error) {
-	resp := NewUser()
-	err := c.rc.
-		Get("/v1.0/contact/users/me").
+func (w *WechatWork) getUserDetail(ctx context.Context, userTicket string) (*User, error) {
+	resp := NewUserDetailResponse()
+	err := w.rc.
+		Post("auth/getuserdetail").
+		Param("access_token", w.conf.AccessToken.AccessToken).
+		Param("user_ticket", userTicket).
 		Do(ctx).
 		Into(resp)
 	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+
+	if resp.Code != 0 {
+		return nil, fmt.Errorf(resp.Message)
+	}
+
+	return &resp.User, nil
 }
