@@ -1,4 +1,4 @@
-package wx_test
+package wechatwork_test
 
 import (
 	"context"

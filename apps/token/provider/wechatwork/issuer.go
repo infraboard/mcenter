@@ -1,4 +1,4 @@
-package wx
+package wechatwork
 
 import (
 	"context"

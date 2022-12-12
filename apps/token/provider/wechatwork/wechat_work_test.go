@@ -1,4 +1,4 @@
-package wx_test
+package wechatwork_test
 
 import (
 	"os"
@@ -6,12 +6,12 @@ import (
 
 	"github.com/caarlos0/env/v6"
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcenter/apps/token/provider/wx"
+	"github.com/infraboard/mcenter/apps/token/provider/wechatwork"
 	"github.com/infraboard/mcube/logger/zap"
 )
 
 var (
-	client *wx.WechatWork
+	client *wechatwork.WechatWork
 )
 
 func TestLogin(t *testing.T) {
@@ -22,7 +22,7 @@ func TestLogin(t *testing.T) {
 	}
 
 	// 登陆
-	client = wx.NewWechatWorkClient(conf)
+	client = wechatwork.NewWechatWorkClient(conf)
 	tk, err := client.Login(ctx, os.Getenv("WECHAT_WORK_AUTH_CODE"))
 	if err != nil {
 		t.Fatal(err)

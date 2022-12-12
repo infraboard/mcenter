@@ -1,4 +1,4 @@
-package wx
+package wechatwork
 
 // 获取access_token https://developer.work.weixin.qq.com/document/path/91039
 type GetAppAccessTokenRequest struct {
