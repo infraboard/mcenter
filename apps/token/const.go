@@ -9,6 +9,7 @@ const (
 
 const (
 	ACCESS_TOKEN_HEADER_KEY   = "Authorization"
+	ACCESS_TOKEN_COOKIE_KEY   = "mcenter.access_token"
 	VALIDATE_TOKEN_HEADER_KEY = "X-VALIDATE-TOKEN"
 )
 

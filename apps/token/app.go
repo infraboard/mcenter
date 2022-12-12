@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/logger/zap"
 	"github.com/mssola/user_agent"
 )
 
@@ -196,10 +198,7 @@ func (s *TokenSet) Length() int {
 	return len(s.Items)
 }
 
-const (
-	TOKEN_COOKIE_NAME = ""
-)
-
+// 优先从认证头中获取, 如果头没有从Cookie中获取
 func GetTokenFromHTTPHeader(r *http.Request) string {
 	auth := r.Header.Get(ACCESS_TOKEN_HEADER_KEY)
 	info := strings.Split(auth, " ")
@@ -207,15 +206,13 @@ func GetTokenFromHTTPHeader(r *http.Request) string {
 		return info[1]
 	}
 
-	return ""
-}
-
-// 基于令牌创建HTTP Cookie 用于Web登陆场景
-func NewCookie(tk *Token) *http.Cookie {
-	return &http.Cookie{
-		Name:  TOKEN_COOKIE_NAME,
-		Value: tk.AccessToken,
+	ck, err := r.Cookie(ACCESS_TOKEN_COOKIE_KEY)
+	if err != nil {
+		zap.L().Warnf("get tk from cookie: %s error, %s", ACCESS_TOKEN_COOKIE_KEY, err)
+		return ""
 	}
+
+	return ck.Value
 }
 
 func NewValidateTokenRequest(accessToken string) *ValidateTokenRequest {
@@ -260,6 +257,20 @@ func (t *Status) BlockMessage() string {
 	}
 
 	return fmt.Sprintf("token blocked at %d, reason: %s", t.BlockAt, t.BlockReason)
+}
+
+// 基于令牌创建HTTP Cookie 用于Web登陆场景
+func (c *Token) SetCookie(w http.ResponseWriter) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     ACCESS_TOKEN_COOKIE_KEY,
+		Value:    url.QueryEscape(c.AccessToken),
+		MaxAge:   0,
+		Path:     "/",
+		Domain:   "",
+		SameSite: http.SameSiteDefaultMode,
+		Secure:   false,
+		HttpOnly: true,
+	})
 }
 
 // CheckAccessIsExpired 检测token是否过期

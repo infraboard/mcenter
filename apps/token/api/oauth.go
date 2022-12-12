@@ -77,12 +77,14 @@ func (u *oath2Handler) FeishuOauth2Auth(r *restful.Request, w *restful.Response)
 	req.Location = token.NewNewLocationFromHttp(r.Request)
 
 	// 颁发Token
-	resp, err := h.service.IssueToken(r.Request.Context(), req)
+	tk, err := h.service.IssueToken(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
 		return
 	}
-	response.Success(w, resp)
+
+	tk.SetCookie(w)
+	response.Success(w, tk)
 }
 
 func (u *oath2Handler) DingDingOauth2Auth(r *restful.Request, w *restful.Response) {
@@ -96,12 +98,13 @@ func (u *oath2Handler) DingDingOauth2Auth(r *restful.Request, w *restful.Respons
 	req.Location = token.NewNewLocationFromHttp(r.Request)
 
 	// 颁发Token
-	resp, err := h.service.IssueToken(r.Request.Context(), req)
+	tk, err := h.service.IssueToken(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
 		return
 	}
-	response.Success(w, resp)
+	tk.SetCookie(w)
+	response.Success(w, tk)
 }
 
 func (u *oath2Handler) WechatWorkOauth2Auth(r *restful.Request, w *restful.Response) {
@@ -115,12 +118,14 @@ func (u *oath2Handler) WechatWorkOauth2Auth(r *restful.Request, w *restful.Respo
 	req.Location = token.NewNewLocationFromHttp(r.Request)
 
 	// 颁发Token
-	resp, err := h.service.IssueToken(r.Request.Context(), req)
+	tk, err := h.service.IssueToken(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
 		return
 	}
-	response.Success(w, resp)
+
+	tk.SetCookie(w)
+	response.Success(w, tk)
 }
 
 func init() {

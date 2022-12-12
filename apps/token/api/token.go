@@ -24,6 +24,7 @@ func (h *handler) IssueToken(r *restful.Request, w *restful.Response) {
 		return
 	}
 
+	tk.SetCookie(w)
 	response.Success(w, tk)
 }
 
