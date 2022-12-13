@@ -21,10 +21,3 @@ message Code {
     // @gotags: bson:"expired_minite" json:"expired_minite"
     uint32 expired_minite = 5;  
 }
-
-enum ISSUE_BY {
-    // 通过用户名密码 颁发验证码
-    PASSWORD = 0;
-    // 通过AccessToken颁发验证码
-    ACCESS_TOKEN = 1;
-}

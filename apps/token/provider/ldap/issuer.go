@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/domain/password"
 	"github.com/infraboard/mcenter/apps/token"
@@ -33,9 +34,9 @@ func (i *issuer) GrantType() token.GRANT_TYPE {
 	return token.GRANT_TYPE_LDAP
 }
 
-func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
+func (i *issuer) validate(ctx context.Context, username, pass string) (*user.User, error) {
 	// 从用户名中 获取到DN, 比如oldfish@default, 比如username: oldfish domain: default
-	username, domainName := user.SpliteUserAndDomain(req.Username)
+	username, domainName := user.SpliteUserAndDomain(username)
 
 	// 查询域下 对应的ldap设置
 	dom, err := i.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(domainName))
@@ -55,7 +56,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	}
 
 	// 检查用户密码是否正确
-	u, err := p.CheckUserPassword(username, req.Password)
+	u, err := p.CheckUserPassword(username, pass)
 	if err != nil {
 		return nil, err
 	}
@@ -81,14 +82,37 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 		}
 	}
 
+	return lu, nil
+}
+
+func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
+	u, err := i.validate(ctx, req.Username, req.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	// 颁发Token
 	tk := token.NewToken(req)
-	tk.Domain = lu.Spec.Domain
-	tk.Username = lu.Spec.Username
-	tk.UserType = lu.Spec.Type
-	tk.UserId = lu.Id
-
+	tk.Domain = u.Spec.Domain
+	tk.Username = u.Spec.Username
+	tk.UserType = u.Spec.Type
+	tk.UserId = u.Id
 	return nil, nil
+}
+
+func (i *issuer) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (*code.Code, error) {
+	_, err := i.validate(ctx, req.Username, req.AuthCode)
+	if err != nil {
+		return nil, err
+	}
+
+	// 颁发Token
+	c, err := code.NewCode(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return c, nil
 }
 
 func init() {

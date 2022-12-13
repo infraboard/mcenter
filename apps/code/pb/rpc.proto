@@ -4,6 +4,7 @@ package infraboard.mcenter.code;
 option go_package = "github.com/infraboard/mcenter/apps/code";
 
 import "apps/code/pb/code.proto";
+import "apps/token/pb/token.proto";
 
 // RPC 验证码服务
 service RPC {
@@ -15,16 +16,19 @@ service RPC {
 message IssueCodeRequest {
     // 颁发方式
     // @gotags: json:"issue_by"
-    ISSUE_BY issue_by = 1;
-    // 用户名
-    // @gotags: json:"username"
+    token.GRANT_TYPE issue_by = 1;
+    // PASSWORD/LDAP授权时, 用户名
+    // @gotags: json:"username,omitempty"
     string username = 2;
-    // 密码
-    // @gotags: json:"password" 
+    // PASSWORD/LDAP授权时, 用户密码
+    // @gotags: json:"password,omitempty"
     string password = 3;
-    // 令牌
-    // @gotags: json:"access_token"
-    string access_token = 6;
+    // PRIVATE_TOKEN授权时, 访问令牌
+    // @gotags: json:"access_token,omitempty"
+    string access_token = 4;
+    // AUTH_CODE授权时, Code, 针对第三方登陆: 飞书/钉钉/企业微信
+    // @gotags: json:"auth_code"
+    string auth_code = 5;
 }
 
 // IssueCodeResponse todo

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/domain/password"
 	"github.com/infraboard/mcenter/apps/token"
@@ -32,9 +33,9 @@ func (i *issuer) GrantType() token.GRANT_TYPE {
 	return token.GRANT_TYPE_WECHAT_WORK
 }
 
-func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
+func (i *issuer) validate(ctx context.Context, username, code string) (*user.User, error) {
 	// 从用户名中 获取到DN, 比如oldfish@default, 比如username: oldfish domain: default
-	_, domainName := user.SpliteUserAndDomain(req.Username)
+	_, domainName := user.SpliteUserAndDomain(username)
 
 	// 查询域下 对应的飞书设置
 	dom, err := i.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(domainName))
@@ -57,7 +58,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	i.log.Debug(wt)
 
 	// 获取用户信息
-	du, err := client.GetUserInfo(ctx, req.AuthCode)
+	du, err := client.GetUserInfo(ctx, code)
 	if err != nil {
 		return nil, err
 	}
@@ -87,19 +88,42 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	// 更新用户Profile
 	updateReq := user.NewPatchUserRequest(lu.Id)
 	updateReq.Profile = du.ToProfile()
-	_, err = i.user.UpdateUser(ctx, updateReq)
+	u, err := i.user.UpdateUser(ctx, updateReq)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
+
+func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
+	u, err := i.validate(ctx, req.Username, req.AuthCode)
 	if err != nil {
 		return nil, err
 	}
 
 	// 颁发Token
 	tk := token.NewToken(req)
-	tk.Domain = lu.Spec.Domain
-	tk.Username = lu.Spec.Username
-	tk.UserType = lu.Spec.Type
-	tk.UserId = lu.Id
-
+	tk.Domain = u.Spec.Domain
+	tk.Username = u.Spec.Username
+	tk.UserType = u.Spec.Type
+	tk.UserId = u.Id
 	return tk, nil
+}
+
+func (i *issuer) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (*code.Code, error) {
+	_, err := i.validate(ctx, req.Username, req.AuthCode)
+	if err != nil {
+		return nil, err
+	}
+
+	// 颁发Token
+	c, err := code.NewCode(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return c, nil
 }
 
 func init() {

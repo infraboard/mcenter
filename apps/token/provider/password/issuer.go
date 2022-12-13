@@ -3,6 +3,7 @@ package password
 import (
 	"context"
 
+	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
@@ -35,21 +36,17 @@ func (i *issuer) GrantType() token.GRANT_TYPE {
 	return token.GRANT_TYPE_PASSWORD
 }
 
-func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
-	if !req.GrantType.Equal(token.GRANT_TYPE_PASSWORD) {
-		return nil, exception.NewBadRequest("password issuer is only for %s", token.GRANT_TYPE_PASSWORD)
-	}
-
-	if req.Username == "" || req.Password == "" {
+func (i *issuer) validate(ctx context.Context, username, pass string) (*user.User, error) {
+	if username == "" || pass == "" {
 		return nil, AUTH_FAILED
 	}
 
 	// 检测用户的密码是否正确
-	u, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Username))
+	u, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(username))
 	if err != nil {
 		return nil, err
 	}
-	if err := u.Password.CheckPassword(req.Password); err != nil {
+	if err := u.Password.CheckPassword(pass); err != nil {
 		return nil, AUTH_FAILED
 	}
 
@@ -75,6 +72,15 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 		return nil, err
 	}
 
+	return u, nil
+}
+
+func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
+	u, err := i.validate(ctx, req.Username, req.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	// 3. 颁发Token
 	tk := token.NewToken(req)
 	tk.Domain = u.Spec.Domain
@@ -82,6 +88,21 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	tk.UserType = u.Spec.Type
 	tk.UserId = u.Id
 	return tk, nil
+}
+
+func (i *issuer) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (*code.Code, error) {
+	_, err := i.validate(ctx, req.Username, req.AuthCode)
+	if err != nil {
+		return nil, err
+	}
+
+	// 颁发Token
+	c, err := code.NewCode(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return c, nil
 }
 
 func init() {

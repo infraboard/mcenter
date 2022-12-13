@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/token"
 )
 
@@ -12,15 +13,22 @@ var (
 	m = make(map[token.GRANT_TYPE]Issuer)
 )
 
-// 令牌颁发器
+// 颁发器, 可以颁发Token或者验证码
 type Issuer interface {
 	Init() error
 	GrantType() token.GRANT_TYPE
 	TokenIssuer
+	CodeIssuer
 }
 
+// 访问令牌颁发器
 type TokenIssuer interface {
 	IssueToken(context.Context, *token.IssueTokenRequest) (*token.Token, error)
+}
+
+// 验证码颁发器
+type CodeIssuer interface {
+	IssueCode(context.Context, *code.IssueCodeRequest) (*code.Code, error)
 }
 
 // 注册令牌颁发器
