@@ -13,7 +13,8 @@ import (
 var (
 	client *wechatwork.WechatWork
 
-	code = os.Getenv("WECHAT_WORK_AUTH_CODE")
+	code     = os.Getenv("WECHAT_WORK_AUTH_CODE")
+	testUser = os.Getenv("WECHAT_WORK_TEST_USER")
 )
 
 func TestLogin(t *testing.T) {
@@ -30,6 +31,16 @@ func TestLogin(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log(tk)
+}
+
+func TestGetUserBase(t *testing.T) {
+	TestLogin(t)
+
+	u, err := client.GetUserBase(ctx, testUser)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(u)
 }
 
 func TestGetUserInfo(t *testing.T) {

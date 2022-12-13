@@ -39,7 +39,7 @@ func (w *WechatWork) GetUserInfo(ctx context.Context, code string) (*User, error
 		return nil, err
 	}
 
-	u, err := w.getUserBase(ctx, ui.UserId)
+	u, err := w.GetUserBase(ctx, ui.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (w *WechatWork) getUserInfo(ctx context.Context, code string) (*UserInfo, e
 }
 
 // 读取成员: https://developer.work.weixin.qq.com/document/path/90196
-func (w *WechatWork) getUserBase(ctx context.Context, userId string) (*User, error) {
+func (w *WechatWork) GetUserBase(ctx context.Context, userId string) (*User, error) {
 	resp := NewUserDetailResponse()
 	err := w.rc.
 		Post("user/get").
