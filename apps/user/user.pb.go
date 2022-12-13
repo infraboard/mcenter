@@ -514,8 +514,8 @@ type User struct {
 	// @gotags: bson:"feishu_token" json:"feishu_token"
 	FeishuToken *FeishuAccessToken `protobuf:"bytes,9,opt,name=feishu_token,json=feishuToken,proto3" json:"feishu_token" bson:"feishu_token"`
 	// 钉钉token
-	// @gotags: bson:"feishu_token" json:"dingding_token"
-	DingdingToken *DingDingAccessToken `protobuf:"bytes,10,opt,name=dingding_token,json=dingdingToken,proto3" json:"dingding_token" bson:"feishu_token"`
+	// @gotags: bson:"dingding_token" json:"dingding_token"
+	DingdingToken *DingDingAccessToken `protobuf:"bytes,10,opt,name=dingding_token,json=dingdingToken,proto3" json:"dingding_token" bson:"dingding_token"`
 }
 
 func (x *User) Reset() {

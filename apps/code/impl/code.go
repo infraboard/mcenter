@@ -6,7 +6,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/notify"
-	"github.com/infraboard/mcenter/apps/token"
+	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
 	"go.mongodb.org/mongo-driver/bson"
@@ -15,30 +15,18 @@ import (
 
 func (s *service) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (
 	*code.IssueCodeResponse, error) {
-	// 生成验证码
-	c, err := code.NewCode(req)
-	if err != nil {
-		return nil, err
+	// 获取验证码颁发器
+	issuer := provider.GetCodeIssuer(req.IssueBy)
+
+	// 确保有provider
+	if issuer == nil {
+		return nil, exception.NewBadRequest("grant type %s not support", req.IssueBy)
 	}
 
-	// 校验凭证合法性
-	switch req.IssueBy {
-	case code.ISSUE_BY_PASSWORD:
-		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Username))
-		if err != nil {
-			return nil, err
-		}
-		if err := u.Password.CheckPassword(req.Password); err != nil {
-			return nil, err
-		}
-	case code.ISSUE_BY_ACCESS_TOKEN:
-		tk, err := s.token.ValidateToken(ctx, token.NewValidateTokenRequest(req.AccessToken))
-		if err != nil {
-			return nil, err
-		}
-		c.Username = tk.Username
-	default:
-		return nil, exception.NewBadRequest("uknown issue_by %s", req.IssueBy)
+	// 颁发验证码
+	c, err := issuer.IssueCode(ctx, req)
+	if err != nil {
+		return nil, err
 	}
 
 	// 保存

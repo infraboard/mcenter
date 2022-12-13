@@ -25,5 +25,5 @@ func TestIssueToken(t *testing.T) {
 
 func init() {
 	tools.DevelopmentSetup()
-	impl = provider.Get(token.GRANT_TYPE_PRIVATE_TOKEN)
+	impl = provider.GetTokenIssuer(token.GRANT_TYPE_PRIVATE_TOKEN)
 }

@@ -26,5 +26,5 @@ func TestIssueToken(t *testing.T) {
 
 func init() {
 	tools.DevelopmentSetup()
-	impl = provider.Get(token.GRANT_TYPE_FEISHU)
+	impl = provider.GetTokenIssuer(token.GRANT_TYPE_FEISHU)
 }

@@ -101,7 +101,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 }
 
 func (i *issuer) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (*code.Code, error) {
-	_, err := i.validate(ctx, req.Username, req.AuthCode)
+	_, err := i.validate(ctx, req.Username, req.Password)
 	if err != nil {
 		return nil, err
 	}

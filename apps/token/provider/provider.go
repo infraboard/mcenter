@@ -36,7 +36,15 @@ func Registe(i Issuer) {
 	m[i.GrantType()] = i
 }
 
-func Get(gt token.GRANT_TYPE) TokenIssuer {
+func GetTokenIssuer(gt token.GRANT_TYPE) TokenIssuer {
+	if v, ok := m[gt]; ok {
+		return v
+	}
+
+	return nil
+}
+
+func GetCodeIssuer(gt token.GRANT_TYPE) CodeIssuer {
 	if v, ok := m[gt]; ok {
 		return v
 	}

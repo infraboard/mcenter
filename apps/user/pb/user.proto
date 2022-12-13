@@ -99,7 +99,7 @@ message User {
     // @gotags: bson:"feishu_token" json:"feishu_token"
     FeishuAccessToken feishu_token = 9;
     // 钉钉token
-    // @gotags: bson:"feishu_token" json:"dingding_token"
+    // @gotags: bson:"dingding_token" json:"dingding_token"
     DingDingAccessToken dingding_token = 10;
 }
 

@@ -43,7 +43,7 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 
 func (s *service) IssueTokenNow(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
 	// 获取令牌颁发器
-	issuer := provider.Get(req.GrantType)
+	issuer := provider.GetTokenIssuer(req.GrantType)
 
 	// 确保有provider
 	if issuer == nil {
