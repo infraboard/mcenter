@@ -22,8 +22,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	// 发送短信
+	// 短信通知
 	SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*SendResponse, error)
+	// 语言通知
+	SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*SendResponse, error)
 	// 邮件通知
 	SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*SendResponse, error)
 	// IM通知
@@ -41,6 +43,15 @@ func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 func (c *rPCClient) SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*SendResponse, error) {
 	out := new(SendResponse)
 	err := c.cc.Invoke(ctx, "/infraboard.mcenter.notify.RPC/SendSMS", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rPCClient) SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*SendResponse, error) {
+	out := new(SendResponse)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.notify.RPC/SendVoice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -69,8 +80,10 @@ func (c *rPCClient) SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	// 发送短信
+	// 短信通知
 	SendSMS(context.Context, *SendSMSRequest) (*SendResponse, error)
+	// 语言通知
+	SendVoice(context.Context, *SendVoiceRequest) (*SendResponse, error)
 	// 邮件通知
 	SendMail(context.Context, *SendMailRequest) (*SendResponse, error)
 	// IM通知
@@ -84,6 +97,9 @@ type UnimplementedRPCServer struct {
 
 func (UnimplementedRPCServer) SendSMS(context.Context, *SendSMSRequest) (*SendResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendSMS not implemented")
+}
+func (UnimplementedRPCServer) SendVoice(context.Context, *SendVoiceRequest) (*SendResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendVoice not implemented")
 }
 func (UnimplementedRPCServer) SendMail(context.Context, *SendMailRequest) (*SendResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendMail not implemented")
@@ -118,6 +134,24 @@ func _RPC_SendSMS_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RPCServer).SendSMS(ctx, req.(*SendSMSRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RPC_SendVoice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendVoiceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).SendVoice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/infraboard.mcenter.notify.RPC/SendVoice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).SendVoice(ctx, req.(*SendVoiceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -168,6 +202,10 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendSMS",
 			Handler:    _RPC_SendSMS_Handler,
+		},
+		{
+			MethodName: "SendVoice",
+			Handler:    _RPC_SendVoice_Handler,
 		},
 		{
 			MethodName: "SendMail",
