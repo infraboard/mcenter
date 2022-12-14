@@ -61,18 +61,18 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 			return
 		}
 
-		// 验证码校验
-		if entry.CodeEnable {
-			_, err := a.CheckCode(req, tk)
+		// 接口调用权限校验
+		if entry.PermissionEnable {
+			err := a.CheckPermission(req.Request.Context(), tk, entry)
 			if err != nil {
 				response.Failed(resp, err)
 				return
 			}
 		}
 
-		// 接口调用权限校验
-		if entry.PermissionEnable {
-			err := a.CheckPermission(req.Request.Context(), tk, entry)
+		// 验证码校验(双因子认证)
+		if entry.CodeEnable {
+			_, err := a.CheckCode(req, tk)
 			if err != nil {
 				response.Failed(resp, err)
 				return
