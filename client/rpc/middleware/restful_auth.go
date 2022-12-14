@@ -28,10 +28,10 @@ func RestfulServerInterceptor() restful.FilterFunction {
 // 给服务端提供的RESTful接口的 认证与鉴权中间件
 func newhttpAuther() *httpAuther {
 	return &httpAuther{
-		log:            zap.L().Named("auther.http"),
-		client:         rpc.C(),
-		cache:          cache.C(),
-		codeCheckSlice: 30 * time.Minute,
+		log:              zap.L().Named("auther.http"),
+		client:           rpc.C(),
+		cache:            cache.C(),
+		codeCheckSilence: 30 * time.Minute,
 	}
 }
 
@@ -53,12 +53,12 @@ type httpAuther struct {
 	// 缓存
 	cache cache.Cache
 	// 校验码检查静默时长, 默认值30分钟, 30分钟之内只检查一次
-	codeCheckSlice time.Duration
+	codeCheckSilence time.Duration
 }
 
 // 设置静默时长
-func (a *httpAuther) SetCodeCheckSliceTime(t time.Duration) {
-	a.codeCheckSlice = t
+func (a *httpAuther) SetCodeCheckSilenceTime(t time.Duration) {
+	a.codeCheckSilence = t
 }
 
 // 是否开启权限的控制, 交给中间件使用方去觉得
@@ -84,7 +84,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		}
 
 		// 验证码校验(双因子认证)
-		if a.IsCodeCheckSlice(tk.Username) && entry.CodeEnable {
+		if a.IsCodeCheckSilence(tk.Username) && entry.CodeEnable {
 			_, err := a.CheckCode(req, tk)
 			if err != nil {
 				response.Failed(resp, err)
@@ -132,18 +132,18 @@ func (a *httpAuther) CheckCode(req *restful.Request, tk *token.Token) (*code.Cod
 	// 保存返回的Code信息
 	req.SetAttribute(code.CODE_ATTRIBUTE_NAME, cd)
 	// 加入静默池中
-	a.SetCodeCheckSlice(cd)
-	return nil, nil
+	a.SetCodeCheckSilence(cd)
+	return cd, nil
 }
 
-func (a *httpAuther) SetCodeCheckSlice(c *code.Code) {
-	err := a.cache.PutWithTTL(c.Key(), c.Code, a.codeCheckSlice)
+func (a *httpAuther) SetCodeCheckSilence(c *code.Code) {
+	err := a.cache.PutWithTTL(c.Key(), c.Code, a.codeCheckSilence)
 	if err != nil {
-		a.log.Errorf("set code slice to cache error, %s", err)
+		a.log.Errorf("set code Silence to cache error, %s", err)
 	}
 }
 
-func (a *httpAuther) IsCodeCheckSlice(username string) bool {
+func (a *httpAuther) IsCodeCheckSilence(username string) bool {
 	return a.cache.IsExist(code.NewCodeKey(username))
 }
 
