@@ -6,7 +6,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcenter/apps/domain/password"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/user"
@@ -66,13 +65,8 @@ func (i *issuer) validate(ctx context.Context, username, pass string) (*user.Use
 	if err != nil {
 		if exception.IsNotFoundError(err) {
 			i.log.Debugf("sync user: %s(%s) to db", u.Username, dom.Spec.Name)
-			gen := password.New(dom.Spec.SecuritySetting.PasswordSecurity)
-			randomPass, err := gen.Generate()
-			if err != nil {
-				return nil, err
-			}
-			// 创建本地用户
-			newReq := user.NewLDAPCreateUserRequest(dom.Spec.Name, u.Username, *randomPass, "系统自动生成")
+			// 创建本地用户, 密码等同于LDAP密码
+			newReq := user.NewLDAPCreateUserRequest(dom.Spec.Name, u.Username, pass, "系统自动生成")
 			lu, err = i.user.CreateUser(ctx, newReq)
 			if err != nil {
 				return nil, err

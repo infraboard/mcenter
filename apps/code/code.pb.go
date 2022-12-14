@@ -32,7 +32,7 @@ type Code struct {
 	// 验证码
 	// @gotags: bson:"code" json:"code"
 	Code string `protobuf:"bytes,2,opt,name=code,proto3" json:"code" bson:"code"`
-	// 用户Id
+	// 用户名称
 	// @gotags: json:"username" validate:"required"
 	Username string `protobuf:"bytes,3,opt,name=username,proto3" json:"username" validate:"required"`
 	// 颁发时间

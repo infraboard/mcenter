@@ -48,3 +48,13 @@ func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*not
 
 	return notify.NewSendResponse(), nil
 }
+
+// 发送IM消息
+func (s *service) SendIM(ctx context.Context, req *notify.SendIMRequest) (*notify.SendResponse, error) {
+	conf, err := s.setting.GetSetting(ctx)
+	if err != nil {
+		return nil, err
+	}
+	s.log.Debug(conf)
+	return notify.NewSendResponse(), nil
+}
