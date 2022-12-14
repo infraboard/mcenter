@@ -11,7 +11,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/logger/zap"
 )
 
 const (
@@ -121,18 +120,12 @@ func NewVerifyCodeRequest(username, code string) *VerifyCodeRequest {
 	}
 }
 
-// 优先从认证头中获取, 如果头没有从Cookie中获取
+// 优先从认证头中获取, 如果头没有从Query String中获取
 func GetCodeFromHTTP(r *http.Request) string {
 	code := r.Header.Get(CODE_HEADER_KEY)
 	if code != "" {
 		return code
 	}
 
-	ck, err := r.Cookie(CODE_COOKIE_KEY)
-	if err != nil {
-		zap.L().Warnf("get code from cookie: %s error, %s", CODE_COOKIE_KEY, err)
-		return ""
-	}
-
-	return ck.Value
+	return r.URL.Query().Get(CODE_QUERY_KEY)
 }

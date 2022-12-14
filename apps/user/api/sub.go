@@ -48,6 +48,7 @@ func (h *primary) Registry(ws *restful.WebService) {
 	ws.Route(ws.GET("/").To(h.QueryUser).
 		Metadata(label.Auth, true).
 		Metadata(label.Allow, user.TYPE_PRIMARY).
+		Metadata(label.Code, true).
 		Doc("查询子账号列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Returns(200, "OK", user.UserSet{}))
