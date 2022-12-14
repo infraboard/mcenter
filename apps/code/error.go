@@ -6,5 +6,5 @@ import (
 )
 
 var (
-	ErrUnauthorized = exception.NewAPIException(version.ServiceName, 1401, "Code Header Required, Format: %s: ${code}", CODE_HEADER_KEY)
+	ErrUnauthorized = exception.NewAPIException(version.ServiceName, 1401, "验证码校验失败", "Code Header Required, Format: %s: ${code}", CODE_HEADER_KEY)
 )

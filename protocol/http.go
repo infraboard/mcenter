@@ -13,6 +13,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 
 	"github.com/infraboard/mcenter/conf"
+	"github.com/infraboard/mcenter/protocol/auth"
 	"github.com/infraboard/mcenter/swagger"
 )
 
@@ -33,6 +34,8 @@ func NewHTTPService() *HTTPService {
 		Container:      r,
 	}
 	r.Filter(cors.Filter)
+	// 添加鉴权中间件
+	r.Filter(auth.NewHttpAuther().GoRestfulAuthFunc)
 
 	server := &http.Server{
 		ReadHeaderTimeout: 60 * time.Second,

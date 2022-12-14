@@ -123,10 +123,9 @@ func NewVerifyCodeRequest(username, code string) *VerifyCodeRequest {
 
 // 优先从认证头中获取, 如果头没有从Cookie中获取
 func GetCodeFromHTTP(r *http.Request) string {
-	auth := r.Header.Get(CODE_HEADER_KEY)
-	info := strings.Split(auth, " ")
-	if len(info) > 1 {
-		return info[1]
+	code := r.Header.Get(CODE_HEADER_KEY)
+	if code != "" {
+		return code
 	}
 
 	ck, err := r.Cookie(CODE_COOKIE_KEY)

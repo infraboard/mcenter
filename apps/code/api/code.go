@@ -15,11 +15,11 @@ func (h *handler) IssueCode(r *restful.Request, w *restful.Response) {
 		return
 	}
 
-	set, err := h.service.IssueCode(r.Request.Context(), req)
+	cd, err := h.service.IssueCode(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
 		return
 	}
 
-	response.Success(w, set)
+	response.Success(w, cd)
 }

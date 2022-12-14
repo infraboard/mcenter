@@ -84,7 +84,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		}
 
 		// 验证码校验(双因子认证)
-		if a.IsCodeCheckSilence(tk.Username) && entry.CodeEnable {
+		if !a.IsCodeCheckSilence(tk.Username) && entry.CodeEnable {
 			_, err := a.CheckCode(req, tk)
 			if err != nil {
 				response.Failed(resp, err)
