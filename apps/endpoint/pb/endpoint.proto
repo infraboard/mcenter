@@ -39,9 +39,12 @@ message Entry {
     // 资源名称
     // @gotags: bson:"resource" json:"resource"
     string resource = 5;
-    // 是否校验用户身份 (acccess_token)
+    // 是否校验用户身份 (acccess_token 校验)
     // @gotags: bson:"auth_enable" json:"auth_enable"
     bool auth_enable = 6;
+    // 验证码校验(开启双因子认证需要) (code 校验)
+    // @gotags: bson:"code_enable" json:"code_enable"
+    bool code_enable = 13;
     // 是否校验用户权限
     // @gotags: bson:"permission_enable" json:"permission_enable"
     bool permission_enable = 7;

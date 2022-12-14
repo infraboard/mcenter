@@ -8,7 +8,6 @@ import "apps/token/pb/token.proto";
 
 // RPC 验证码服务
 service RPC {
-	rpc IssueCode(IssueCodeRequest) returns(IssueCodeResponse);
 	rpc VerifyCode(VerifyCodeRequest) returns(Code);
 }
 

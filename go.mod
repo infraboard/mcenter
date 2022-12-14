@@ -6,8 +6,7 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.3.2
 	github.com/BurntSushi/toml v1.1.0
 	github.com/caarlos0/env/v6 v6.9.2
-	github.com/emicklei/go-restful-openapi v1.4.1
-	github.com/emicklei/go-restful-openapi/v2 v2.9.0
+	github.com/emicklei/go-restful-openapi/v2 v2.9.1
 	github.com/emicklei/go-restful/v3 v3.8.0
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
 	github.com/go-ldap/ldap/v3 v3.4.4
@@ -15,7 +14,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
-	github.com/infraboard/mcube v1.9.4-0.20221206054051-d9ca9a414e96
+	github.com/infraboard/mcube v1.9.5-0.20221214013105-26b244239976
 	github.com/kvtools/valkeyrie v1.0.0
 	github.com/mssola/user_agent v0.5.3
 	github.com/rs/xid v1.4.0
@@ -38,7 +37,6 @@ require (
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/emicklei/go-restful v2.9.6+incompatible // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.7.7 // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.4 // indirect

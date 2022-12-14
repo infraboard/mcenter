@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"hash/fnv"
 	"math/rand"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/logger/zap"
 )
 
 const (
@@ -109,4 +111,21 @@ func NewVerifyCodeRequest(username, code string) *VerifyCodeRequest {
 		Username: username,
 		Code:     code,
 	}
+}
+
+// 优先从认证头中获取, 如果头没有从Cookie中获取
+func GetCodeFromHTTP(r *http.Request) string {
+	auth := r.Header.Get(CODE_HEADER_KEY)
+	info := strings.Split(auth, " ")
+	if len(info) > 1 {
+		return info[1]
+	}
+
+	ck, err := r.Cookie(CODE_COOKIE_KEY)
+	if err != nil {
+		zap.L().Warnf("get code from cookie: %s error, %s", CODE_COOKIE_KEY, err)
+		return ""
+	}
+
+	return ck.Value
 }

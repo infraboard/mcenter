@@ -10,6 +10,7 @@ import (
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
+	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/permission"
 	"github.com/infraboard/mcenter/apps/token"
@@ -53,26 +54,24 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 	entry := endpoint.NewEntryFromRestRequest(req)
 
 	if entry != nil && entry.AuthEnable {
-		// 获取用户Token, Token放在Heander Authorization
-		ak := token.GetAccessTokenFromHTTP(req.Request)
-
-		if ak == "" {
-			response.Failed(resp, token.ErrUnauthorized)
-			return
-		}
-
-		// 调用GRPC 校验用户Token合法性
-		tk, err := a.client.Token().ValidateToken(req.Request.Context(), token.NewValidateTokenRequest(ak))
+		// 访问令牌校验
+		tk, err := a.CheckAccessToken(req)
 		if err != nil {
 			response.Failed(resp, err)
 			return
 		}
 
-		// 是不是需要返回用户的认证信息: 那个人, 那个空间下面， token本身的信息
-		req.SetAttribute(token.TOKEN_ATTRIBUTE_NAME, tk)
+		// 验证码校验
+		if entry.CodeEnable {
+			_, err := a.CheckCode(req, tk)
+			if err != nil {
+				response.Failed(resp, err)
+				return
+			}
+		}
 
+		// 接口调用权限校验
 		if entry.PermissionEnable {
-			// 权限检查
 			err := a.CheckPermission(req.Request.Context(), tk, entry)
 			if err != nil {
 				response.Failed(resp, err)
@@ -83,6 +82,43 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 
 	// next flow
 	next.ProcessFilter(req, resp)
+}
+
+func (a *httpAuther) CheckAccessToken(req *restful.Request) (*token.Token, error) {
+	// 获取用户Token, Token放在Heander Authorization
+	ak := token.GetAccessTokenFromHTTP(req.Request)
+
+	if ak == "" {
+		return nil, token.ErrUnauthorized
+	}
+
+	// 调用GRPC 校验用户Token合法性
+	tk, err := a.client.Token().ValidateToken(req.Request.Context(), token.NewValidateTokenRequest(ak))
+	if err != nil {
+		return nil, err
+	}
+
+	// 是不是需要返回用户的认证信息: 那个人, 那个空间下面， token本身的信息
+	req.SetAttribute(token.TOKEN_ATTRIBUTE_NAME, tk)
+	return tk, nil
+}
+
+func (a *httpAuther) CheckCode(req *restful.Request, tk *token.Token) (*code.Code, error) {
+	// 获取用户Code, Code放在Heander X-MCENTER-CODE
+	cdStr := code.GetCodeFromHTTP(req.Request)
+	if cdStr == "" {
+		return nil, code.ErrUnauthorized
+	}
+
+	// 调用GRPC 校验用户Code合法性
+	cd, err := a.client.Code().VerifyCode(req.Request.Context(), code.NewVerifyCodeRequest(tk.Username, cdStr))
+	if err != nil {
+		return nil, err
+	}
+
+	// 保存返回的Code信息
+	req.SetAttribute(code.CODE_ATTRIBUTE_NAME, cd)
+	return nil, nil
 }
 
 func (a *httpAuther) CheckPermission(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
