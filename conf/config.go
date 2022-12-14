@@ -183,7 +183,7 @@ func newDefaultCache() *_cache {
 }
 
 type _cache struct {
-	Type   string         `toml:"type" json:"type" yaml:"type" env:"K_CACHE_TYPE"`
+	Type   string         `toml:"type" json:"type" yaml:"type" env:"MCENTER_CACHE_TYPE"`
 	Memory *memory.Config `toml:"memory" json:"memory" yaml:"memory"`
 	Redis  *redis.Config  `toml:"redis" json:"redis" yaml:"redis"`
 }

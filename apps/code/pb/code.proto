@@ -11,7 +11,7 @@ message Code {
     // 验证码
     // @gotags: bson:"code" json:"code"
     string code = 2;
-    // 用户Id
+    // 用户名称
     // @gotags: json:"username" validate:"required"
     string username = 3;
     // 颁发时间

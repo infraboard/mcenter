@@ -58,6 +58,14 @@ func (c *Code) ExpiredMiniteString() string {
 	return fmt.Sprintf("%d", c.ExpiredMinite)
 }
 
+func (c *Code) Key() string {
+	return NewCodeKey(c.Username)
+}
+
+func NewCodeKey(username string) string {
+	return fmt.Sprintf("%s.%s", CODE_ATTRIBUTE_NAME, username)
+}
+
 // GenRandomCode todo
 func GenRandomCode(length uint) string {
 	numbers := []string{}
