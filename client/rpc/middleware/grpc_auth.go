@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -14,8 +15,6 @@ import (
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/client/rpc"
 )
-
-var ExceptionUnaryClientInterceptor = rpc.ExceptionUnaryClientInterceptor{}
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
 func GrpcAuthUnaryServerInterceptor() grpc.UnaryServerInterceptor {
@@ -54,6 +53,16 @@ func (a *grpcAuther) Auth(
 	}
 
 	resp, err = handler(ctx, req)
+
+	// 注入自定义异常
+	if e, ok := err.(exception.APIException); ok {
+		setErr := grpc.SetTrailer(ctx, metadata.Pairs(rpc.TRAILER_ERROR_JSON_KEY, e.ToJson()))
+		if setErr != nil {
+			a.log.Error(setErr)
+		}
+		err = status.Errorf(codes.Code(e.ErrorCode()), e.Error())
+	}
+
 	return resp, err
 }
 
