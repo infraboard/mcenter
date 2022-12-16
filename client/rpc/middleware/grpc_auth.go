@@ -61,16 +61,18 @@ func (a *grpcAuther) Auth(
 	resp, err = handler(ctx, req)
 
 	// 注入自定义异常
-	var setErr error
-	if e, ok := err.(exception.APIException); ok {
-		setErr = grpc.SetTrailer(ctx, metadata.Pairs(rpc.TRAILER_ERROR_JSON_KEY, e.ToJson()))
-		err = status.Errorf(codes.Code(e.ErrorCode()), e.Error())
-	} else {
-		e := exception.NewAPIException(a.namespace, exception.InternalServerError, "系统内部错误", e.Error())
-		setErr = grpc.SetTrailer(ctx, metadata.Pairs(rpc.TRAILER_ERROR_JSON_KEY, e.ToJson()))
-	}
-	if setErr != nil {
-		a.log.Error(setErr)
+	if err != nil {
+		var setErr error
+		if e, ok := err.(exception.APIException); ok {
+			setErr = grpc.SetTrailer(ctx, metadata.Pairs(rpc.TRAILER_ERROR_JSON_KEY, e.ToJson()))
+			err = status.Errorf(codes.Code(e.ErrorCode()), e.Error())
+		} else {
+			e := exception.NewAPIException(a.namespace, exception.InternalServerError, "系统内部错误", e.Error())
+			setErr = grpc.SetTrailer(ctx, metadata.Pairs(rpc.TRAILER_ERROR_JSON_KEY, e.ToJson()))
+		}
+		if setErr != nil {
+			a.log.Error(setErr)
+		}
 	}
 
 	return resp, err
