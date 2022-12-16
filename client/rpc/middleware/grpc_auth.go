@@ -15,7 +15,7 @@ import (
 	"github.com/infraboard/mcenter/client/rpc"
 )
 
-var ExceptionUnaryClientInterceptor = rpc.ExceptionUnaryClientInterceptor
+var ExceptionUnaryClientInterceptor = rpc.ExceptionUnaryClientInterceptor{}
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
 func GrpcAuthUnaryServerInterceptor() grpc.UnaryServerInterceptor {
