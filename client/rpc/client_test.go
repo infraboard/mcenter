@@ -69,7 +69,7 @@ func TestInstanceRegistry(t *testing.T) {
 
 func TestInstanceSearch(t *testing.T) {
 	req := instance.NewSearchRequest()
-	req.ServiceName = "maudit"
+	req.ServiceName = "cmdb"
 	resp, err := c.Instance().Search(ctx, req)
 
 	if err != nil {
