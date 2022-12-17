@@ -20,8 +20,9 @@ require (
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.8.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.542
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.561
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.542
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms v1.0.561
 	github.com/traefik/paerser v0.1.9
 	go.etcd.io/etcd/client/v3 v3.5.5
 	go.mongodb.org/mongo-driver v1.9.1
