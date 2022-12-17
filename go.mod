@@ -6,6 +6,7 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.3.2
 	github.com/BurntSushi/toml v1.1.0
 	github.com/caarlos0/env/v6 v6.9.2
+	github.com/chyroc/lark v0.0.101
 	github.com/emicklei/go-restful-openapi/v2 v2.9.1
 	github.com/emicklei/go-restful/v3 v3.8.0
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
@@ -19,7 +20,7 @@ require (
 	github.com/mssola/user_agent v0.5.3
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.561
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.542
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms v1.0.561
