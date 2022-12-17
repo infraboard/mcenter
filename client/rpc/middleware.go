@@ -2,7 +2,6 @@ package rpc
 
 import (
 	"context"
-	"strings"
 
 	"github.com/infraboard/mcube/exception"
 	"google.golang.org/grpc"
@@ -13,18 +12,13 @@ const (
 	TRAILER_ERROR_JSON_KEY = "err_json"
 )
 
-func NewExceptionUnaryClientInterceptor(ns string) *ExceptionUnaryClientInterceptor {
-	return &ExceptionUnaryClientInterceptor{
-		namespace: ns,
-	}
+// grpc server端 的异常只支持 code 与 description, 为了能完整把异常传递给下游调用方, 把异常放到了grpc response header中
+// 客户端如果发现有这个key 说明该异常是我们定义的业务异常对象(API Exception), 需要还原。
+func NewExceptionUnaryClientInterceptor() *ExceptionUnaryClientInterceptor {
+	return &ExceptionUnaryClientInterceptor{}
 }
 
 type ExceptionUnaryClientInterceptor struct {
-	namespace string
-}
-
-func (e *ExceptionUnaryClientInterceptor) WithNamespace(ns string) {
-	e.namespace = ns
 }
 
 func (e *ExceptionUnaryClientInterceptor) UnaryClientInterceptor(
@@ -41,18 +35,6 @@ func (e *ExceptionUnaryClientInterceptor) UnaryClientInterceptor(
 	t := trailer.Get(TRAILER_ERROR_JSON_KEY)
 	if len(t) > 0 {
 		err = exception.NewAPIExceptionFromString(t[0])
-	}
-
-	if err != nil {
-		errMsg := err.Error()
-		if !strings.HasPrefix(errMsg, "rpc error:") {
-			err = exception.NewAPIException(
-				e.namespace,
-				exception.InternalServerError,
-				"服务内部异常",
-				errMsg,
-			)
-		}
 	}
 
 	return err

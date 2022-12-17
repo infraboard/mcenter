@@ -15,7 +15,6 @@ import (
 	"github.com/infraboard/mcenter/apps/permission"
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
-	"github.com/infraboard/mcenter/version"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 )
 
@@ -35,7 +34,7 @@ func NewClient(conf *Config) (*ClientSet, error) {
 		// gprc 支持的负载均衡策略: https://github.com/grpc/grpc/blob/master/doc/load-balancing.md
 		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
 		// 将异常转化为 API Exception
-		grpc.WithChainUnaryInterceptor(NewExceptionUnaryClientInterceptor(version.ServiceName).UnaryClientInterceptor),
+		grpc.WithChainUnaryInterceptor(NewExceptionUnaryClientInterceptor().UnaryClientInterceptor),
 	)
 
 	if err != nil {
