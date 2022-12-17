@@ -33,7 +33,10 @@ func NewClient(conf *Config) (*ClientSet, error) {
 		grpc.WithPerRPCCredentials(conf.Credentials()),
 		// gprc 支持的负载均衡策略: https://github.com/grpc/grpc/blob/master/doc/load-balancing.md
 		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
+		// 将异常转化为 API Exception
+		grpc.WithChainUnaryInterceptor(NewExceptionUnaryClientInterceptor().UnaryClientInterceptor),
 	)
+
 	if err != nil {
 		return nil, err
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -16,8 +17,8 @@ import (
 )
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
-func GrpcAuthUnaryServerInterceptor() grpc.UnaryServerInterceptor {
-	return newGrpcAuther(rpc.C().Serivce()).Auth
+func GrpcAuthUnaryServerInterceptor(namespace string) grpc.UnaryServerInterceptor {
+	return newGrpcAuther(rpc.C().Serivce()).WithNamespace(namespace).Auth
 }
 
 func newGrpcAuther(svr service.RPCClient) *grpcAuther {
@@ -29,8 +30,14 @@ func newGrpcAuther(svr service.RPCClient) *grpcAuther {
 
 // internal todo
 type grpcAuther struct {
-	log     logger.Logger
-	service service.RPCClient
+	namespace string
+	log       logger.Logger
+	service   service.RPCClient
+}
+
+func (a *grpcAuther) WithNamespace(ns string) *grpcAuther {
+	a.namespace = ns
+	return a
 }
 
 func (a *grpcAuther) Auth(
@@ -52,6 +59,23 @@ func (a *grpcAuther) Auth(
 	}
 
 	resp, err = handler(ctx, req)
+
+	// 注入自定义异常
+	if err != nil {
+		var setErr error
+		if e, ok := err.(exception.APIException); ok {
+			setErr = grpc.SetTrailer(ctx, metadata.Pairs(rpc.TRAILER_ERROR_JSON_KEY, e.ToJson()))
+			err = status.Errorf(codes.Code(e.ErrorCode()), e.Error())
+		} else {
+			e := exception.NewAPIException(a.namespace, exception.InternalServerError, "系统内部错误", err.Error())
+			setErr = grpc.SetTrailer(ctx, metadata.Pairs(rpc.TRAILER_ERROR_JSON_KEY, e.ToJson()))
+			err = status.Errorf(codes.Code(exception.InternalServerError), e.Error())
+		}
+		if setErr != nil {
+			a.log.Error(setErr)
+		}
+	}
+
 	return resp, err
 }
 
