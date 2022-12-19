@@ -24,8 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 type RPCClient interface {
 	// 短信通知
 	SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*SendResponse, error)
-	// 语言通知
-	SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*SendResponse, error)
+	// 语音通知
+	SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*SendVoiceResponse, error)
 	// 邮件通知
 	SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*SendResponse, error)
 	// IM通知
@@ -49,8 +49,8 @@ func (c *rPCClient) SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grp
 	return out, nil
 }
 
-func (c *rPCClient) SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*SendResponse, error) {
-	out := new(SendResponse)
+func (c *rPCClient) SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*SendVoiceResponse, error) {
+	out := new(SendVoiceResponse)
 	err := c.cc.Invoke(ctx, "/infraboard.mcenter.notify.RPC/SendVoice", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -82,8 +82,8 @@ func (c *rPCClient) SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.
 type RPCServer interface {
 	// 短信通知
 	SendSMS(context.Context, *SendSMSRequest) (*SendResponse, error)
-	// 语言通知
-	SendVoice(context.Context, *SendVoiceRequest) (*SendResponse, error)
+	// 语音通知
+	SendVoice(context.Context, *SendVoiceRequest) (*SendVoiceResponse, error)
 	// 邮件通知
 	SendMail(context.Context, *SendMailRequest) (*SendResponse, error)
 	// IM通知
@@ -98,7 +98,7 @@ type UnimplementedRPCServer struct {
 func (UnimplementedRPCServer) SendSMS(context.Context, *SendSMSRequest) (*SendResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendSMS not implemented")
 }
-func (UnimplementedRPCServer) SendVoice(context.Context, *SendVoiceRequest) (*SendResponse, error) {
+func (UnimplementedRPCServer) SendVoice(context.Context, *SendVoiceRequest) (*SendVoiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendVoice not implemented")
 }
 func (UnimplementedRPCServer) SendMail(context.Context, *SendMailRequest) (*SendResponse, error) {

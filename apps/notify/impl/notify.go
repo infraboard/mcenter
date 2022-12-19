@@ -50,14 +50,14 @@ func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*not
 }
 
 // 语音通知
-func (s *service) SendVoice(ctx context.Context, req *notify.SendVoiceRequest) (*notify.SendResponse, error) {
+func (s *service) SendVoice(ctx context.Context, req *notify.SendVoiceRequest) (*notify.SendVoiceResponse, error) {
 	conf, err := s.setting.GetSetting(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	s.log.Debug(conf)
-	return notify.NewSendResponse(), nil
+	return &notify.SendVoiceResponse{}, nil
 }
 
 // 发送IM消息

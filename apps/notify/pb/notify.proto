@@ -15,4 +15,8 @@ enum NOTIFY_TYPE {
     MAIL = 0;
     // 短信通知
     SMS = 1;
+    // 语音通知
+    VOICE = 2;
+    // IM个人消息
+    IM = 3;
 }

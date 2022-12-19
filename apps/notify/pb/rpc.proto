@@ -9,7 +9,7 @@ service RPC {
     // 短信通知
 	rpc SendSMS(SendSMSRequest) returns(SendResponse);
     // 语音通知
-	rpc SendVoice(SendVoiceRequest) returns(SendResponse);
+	rpc SendVoice(SendVoiceRequest) returns(SendVoiceResponse);
     // 邮件通知
     rpc SendMail(SendMailRequest) returns(SendResponse);
     // IM通知
@@ -38,6 +38,21 @@ message SendVoiceRequest {
     // 手机号码
     // @gotags: bson:"phone_numbers" json:"phone_numbers"
     repeated string phone_numbers = 3;
+	// 播放次数，可选，最多3次，默认2次
+    // @gotags: bson:"play_times" json:"play_times"
+    uint64 play_times = 4;
+	// 用户的 session 内容，腾讯 server 回包中会原样返回
+    // @gotags: bson:"session_context" json:"session_context"
+    string session_context = 5;
+}
+
+message SendVoiceResponse {
+    // 呼叫Id
+    // @gotags: bson:"call_id" json:"call_id"
+    string call_id = 1;
+	// 用户的 session 内容，腾讯 server 回包中会原样返回
+    // @gotags: bson:"session_context" json:"session_context"
+    string session_context = 2;
 }
 
 message SendMailRequest {

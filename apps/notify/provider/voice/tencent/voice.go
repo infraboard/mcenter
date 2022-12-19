@@ -17,8 +17,8 @@ import (
 	vms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms/v20200902"
 )
 
-func NewQcloudVoice(conf *Config) (*QcloudVms, error) {
-	ins := &QcloudVms{
+func NewQcloudVoice(conf *Config) (*TencentVoiceNotifyer, error) {
+	ins := &TencentVoiceNotifyer{
 		Config: conf,
 		log:    zap.L().Named("voice.tencent"),
 	}
@@ -28,12 +28,12 @@ func NewQcloudVoice(conf *Config) (*QcloudVms, error) {
 	return ins, nil
 }
 
-type QcloudVms struct {
+type TencentVoiceNotifyer struct {
 	*Config
 	log logger.Logger
 }
 
-func (q *QcloudVms) validate() error {
+func (q *TencentVoiceNotifyer) validate() error {
 	return validate.Validate(q)
 }
 func NewPhoneCallRequest(number, templateId string, templateParamSet []string) *PhoneCallRequest {
@@ -100,7 +100,7 @@ func (req *PhoneCallRequest) genVMSRequest(voiceSdkAppid string) *vms.SendTtsVoi
 * 您也可以直接在代码中写入密钥对，但需谨防泄露，不要将代码复制、上传或者分享给他人
 * CAM 密匙查询: https://console.cloud.tencent.com/cam/capi
  */
-func (v *QcloudVms) PhoneCall(req *PhoneCallRequest) (*PhoneCallResponse, error) {
+func (v *TencentVoiceNotifyer) PhoneCall(req *PhoneCallRequest) (*PhoneCallResponse, error) {
 	if err := req.Validate(); err != nil {
 		return nil, fmt.Errorf("validate PhoneCallRequest error, %s", err)
 	}

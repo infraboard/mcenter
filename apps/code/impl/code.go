@@ -58,9 +58,9 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 	}
 
 	var message string
-	switch system.Notify.Type {
+	switch system.Code.NotifyType {
 	case notify.NOTIFY_TYPE_MAIL:
-		content := system.Notify.Code.RenderMailCentent(code.Code, code.ExpiredMinite)
+		content := system.Code.RenderMailCentent(code.Code, code.ExpiredMinite)
 		// 邮件通知
 		s.log.Debugf("mail to user %s", u.Profile.Email)
 		_, err := s.notify.SendMail(ctx, notify.NewSendMailRequest([]string{u.Profile.Email}, "验证码", content))
@@ -77,7 +77,7 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 		}
 		req := notify.NewSendSMSRequest()
 		req.AddPhone(u.Profile.Phone)
-		req.TemplateId = system.Notify.Code.SmsTemplateID
+		req.TemplateId = system.Code.SmsTemplateID
 		req.AddParams(code.Code, code.ExpiredMiniteString())
 		_, err := s.notify.SendSMS(ctx, req)
 		if err != nil {
@@ -86,7 +86,7 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 		message = fmt.Sprintf("验证码已通过短信发送到你的手机: %s, 请及时查收", u.Profile.Phone)
 		s.log.Debugf("send verify code to user: %s by sms ok", code.Username)
 	default:
-		return "", fmt.Errorf("unknown notify type %s", system.Notify.Type)
+		return "", fmt.Errorf("unknown notify type %s", system.Code.NotifyType)
 	}
 
 	return message, nil

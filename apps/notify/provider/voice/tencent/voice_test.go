@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	voice *tencent.QcloudVms
+	voice *tencent.TencentVoiceNotifyer
 
 	voiceTemplateId = os.Getenv("VOICE_TENCENT_TEMPLATE_ID")
 	// 被叫手机号码，采用 e.164 标准，格式为+[国家或地区码][用户号码], 例如：+8613711112222

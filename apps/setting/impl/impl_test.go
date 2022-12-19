@@ -29,8 +29,8 @@ func TestUpdateSetting(t *testing.T) {
 	req := setting.NewDefaultSetting()
 
 	// 读取单元测试配置
-	req.Notify.Type = notify.NOTIFY_TYPE_SMS
-	req.Notify.Code.SmsTemplateID = os.Getenv("SMS_TENCENT_TEMPLATE_ID")
+	req.Code.NotifyType = notify.NOTIFY_TYPE_SMS
+	req.Code.SmsTemplateID = os.Getenv("SMS_TENCENT_TEMPLATE_ID")
 	if err := env.Parse(req.Notify.SMS.TencentConfig); err != nil {
 		panic(err)
 	}
