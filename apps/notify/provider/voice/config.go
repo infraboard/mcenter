@@ -5,6 +5,13 @@ import (
 	"github.com/infraboard/mcenter/apps/notify/provider/voice/tencent"
 )
 
+func NewDefaultVoiceSetting() *VoiceSetting {
+	return &VoiceSetting{
+		TencentConfig: tencent.DefaultConfig(),
+		AliConfig:     ali.DefaultConfig(),
+	}
+}
+
 type VoiceSetting struct {
 	// 腾讯短信服务配置
 	TencentConfig *tencent.Config `bson:"tencent_config" json:"tencent_config"`

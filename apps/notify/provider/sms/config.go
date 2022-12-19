@@ -6,15 +6,15 @@ import (
 	"github.com/infraboard/mcenter/apps/notify/provider/sms/tencent"
 )
 
-func NewDefaultSMS() *SMS {
-	return &SMS{
+func NewDefaultSmsSetting() *SmsSetting {
+	return &SmsSetting{
 		Provider:      notify.SMS_PROVIDER_TENCENT,
 		TencentConfig: tencent.NewDefaultConfig(),
 		AliConfig:     ali.NewDefaultConfig(),
 	}
 }
 
-type SMS struct {
+type SmsSetting struct {
 	// 短信服务商
 	Provider notify.SMS_PROVIDER `bson:"Provider" json:"Provider"`
 	// 腾讯短信服务配置

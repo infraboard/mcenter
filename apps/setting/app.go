@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/notify/provider/mail"
 	"github.com/infraboard/mcenter/apps/notify/provider/sms"
+	"github.com/infraboard/mcenter/apps/notify/provider/voice"
 )
 
 const (
@@ -23,7 +24,8 @@ func NewDefaultSetting() *Setting {
 		Version: DEFAULT_CONFIG_VERSION,
 		Notify: &Notify{
 			Email: mail.NewDefaultConfig(),
-			SMS:   sms.NewDefaultSMS(),
+			SMS:   sms.NewDefaultSmsSetting(),
+			Voice: voice.NewDefaultVoiceSetting(),
 		},
 		Code: code.NewDefaultCodeSetting(),
 	}
@@ -51,5 +53,7 @@ type Notify struct {
 	// 邮件通知配置
 	Email *mail.Config `bson:"email" json:"email"`
 	// 短信通知配置
-	SMS *sms.SMS `bson:"sms" json:"sms"`
+	SMS *sms.SmsSetting `bson:"sms" json:"sms"`
+	// 语音通知配置
+	Voice *voice.VoiceSetting `bson:"voice" json:"voice"`
 }
