@@ -7,7 +7,6 @@ import (
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/token/provider"
-	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -45,12 +44,6 @@ func (s *service) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (
 }
 
 func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
-	// 查询用户的详情, 获取邮箱, 电话等这些通知信息
-	u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(code.Username))
-	if err != nil {
-		return "", fmt.Errorf("get user error, %s", err)
-	}
-
 	// 根据系统配置, 给用户发送通知
 	system, err := s.setting.GetSetting(ctx)
 	if err != nil {
@@ -62,28 +55,25 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 	case notify.NOTIFY_TYPE_MAIL:
 		content := system.Code.RenderMailCentent(code.Code, code.ExpiredMinite)
 		// 邮件通知
-		s.log.Debugf("mail to user %s", u.Profile.Email)
-		_, err := s.notify.SendMail(ctx, notify.NewSendMailRequest([]string{u.Profile.Email}, "验证码", content))
+		s.log.Debugf("mail to user %s", code.Username)
+		resp, err := s.notify.SendMail(ctx, notify.NewSendMailRequest([]string{code.Username}, "验证码", content))
 		if err != nil {
 			return "", fmt.Errorf("send verify code by mail error, %s", err)
 		}
-		message = fmt.Sprintf("验证码已通过邮件发送到你的邮箱: %s, 请及时查收", u.Profile.Email)
+		message = fmt.Sprintf("验证码已通过邮件发送到你的邮箱: %s, 请及时查收", resp.SuccessedMailString())
 		s.log.Debugf("send verify code to user: %s by mail ok", code.Username)
 	case notify.NOTIFY_TYPE_SMS:
 		// 短信通知
-		s.log.Debugf("sms to user %s", u.Profile.Phone)
-		if u.Profile.Phone == "" {
-			return "", fmt.Errorf("user %s phone not found", code.Username)
-		}
+		s.log.Debugf("sms to user %s", code.Username)
 		req := notify.NewSendSMSRequest()
-		req.AddPhone(u.Profile.Phone)
+		req.AddUser(code.Username)
 		req.TemplateId = system.Code.SmsTemplateID
 		req.AddParams(code.Code, code.ExpiredMiniteString())
-		_, err := s.notify.SendSMS(ctx, req)
+		resp, err := s.notify.SendSMS(ctx, req)
 		if err != nil {
 			return "", fmt.Errorf("send verify code by sms error, %s", err)
 		}
-		message = fmt.Sprintf("验证码已通过短信发送到你的手机: %s, 请及时查收", u.Profile.Phone)
+		message = fmt.Sprintf("验证码已通过短信发送到你的手机: %s, 请及时查收", resp.SuccessedNumbersString())
 		s.log.Debugf("send verify code to user: %s by sms ok", code.Username)
 	default:
 		return "", fmt.Errorf("unknown notify type %s", system.Code.NotifyType)

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/infraboard/mcenter/apps/notify"
+	sms_provider "github.com/infraboard/mcenter/apps/notify/provider/sms"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -43,7 +43,7 @@ type Sender struct {
 }
 
 // Send todo
-func (s *Sender) Send(ctx context.Context, req *notify.SendSMSRequest) error {
+func (s *Sender) Send(ctx context.Context, req *sms_provider.SendSMSRequest) error {
 	// 补充默认+86
 	req.InjectDefaultIsoCode()
 

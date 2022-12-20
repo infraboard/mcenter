@@ -10,6 +10,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/setting"
+	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/conf"
 )
 
@@ -22,6 +23,7 @@ type service struct {
 	col *mongo.Collection
 	notify.UnimplementedRPCServer
 
+	user    user.Service
 	log     logger.Logger
 	setting setting.Service
 }
@@ -35,6 +37,7 @@ func (s *service) Config() error {
 	s.col = db.Collection(s.Name())
 	s.log = zap.L().Named(s.Name())
 	s.setting = app.GetInternalApp(setting.AppName).(setting.Service)
+	s.user = app.GetInternalApp(user.AppName).(user.Service)
 	return nil
 }
 

@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/caarlos0/env/v6"
-	"github.com/infraboard/mcenter/apps/notify"
+	"github.com/infraboard/mcenter/apps/notify/provider/sms"
 	"github.com/infraboard/mcenter/apps/notify/provider/sms/tencent"
 )
 
@@ -16,7 +16,7 @@ var (
 )
 
 func TestSend(t *testing.T) {
-	req := &notify.SendSMSRequest{}
+	req := &sms.SendSMSRequest{}
 	req.TemplateId = os.Getenv("SMS_TENCENT_TEMPLATE_ID")
 	req.AddPhone(os.Getenv("TEST_CALL_NUMBER"))
 	req.AddParams("600100", "30")

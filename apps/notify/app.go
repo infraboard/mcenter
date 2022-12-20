@@ -1,19 +1,19 @@
 package notify
 
-import (
-	"strings"
-
-	"github.com/go-playground/validator/v10"
-)
+import "strings"
 
 const (
 	AppName = "notify"
 )
 
-// use a single instance of Validate, it caches struct info
-var (
-	validate = validator.New()
-)
+// NewSendMailRequest todo
+func NewSendMailRequest(users []string, title, content string) *SendMailRequest {
+	return &SendMailRequest{
+		Users:   users,
+		Title:   title,
+		Content: content,
+	}
+}
 
 // NewSendSMSRequest todo
 func NewSendSMSRequest() *SendSMSRequest {
@@ -26,33 +26,14 @@ func (req *SendSMSRequest) AddParams(params ...string) {
 }
 
 // AddPhone todo
-func (req *SendSMSRequest) AddPhone(params ...string) {
-	req.PhoneNumbers = append(req.PhoneNumbers, params...)
+func (req *SendSMSRequest) AddUser(users ...string) {
+	req.Users = append(req.Users, users...)
 }
 
-// Validate todo
-func (req *SendSMSRequest) Validate() error {
-	return validate.Struct(req)
+func (resp *SendMailResponse) SuccessedMailString() string {
+	return strings.Join(resp.SuccessedMails, ",")
 }
 
-// InjectDefaultIsoCode todo
-func (req *SendSMSRequest) InjectDefaultIsoCode() {
-	for i, number := range req.PhoneNumbers {
-		if !strings.HasPrefix(number, "+") {
-			req.PhoneNumbers[i] = "+86" + number
-		}
-	}
-}
-
-// NewSendMailRequest todo
-func NewSendMailRequest(to []string, title, content string) *SendMailRequest {
-	return &SendMailRequest{
-		To:      to,
-		Title:   title,
-		Content: content,
-	}
-}
-
-func NewSendResponse() *SendResponse {
-	return &SendResponse{}
+func (resp *SendSmsResponse) SuccessedNumbersString() string {
+	return strings.Join(resp.SuccessedNumbers, ",")
 }

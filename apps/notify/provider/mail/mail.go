@@ -1,12 +1,12 @@
 package mail
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"sync"
 
 	"github.com/go-gomail/gomail"
-	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -41,7 +41,7 @@ func (s *Sender) init() error {
 	return nil
 }
 
-func (s *Sender) Send(req *notify.SendMailRequest) error {
+func (s *Sender) Send(ctx context.Context, req *SendMailRequest) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 

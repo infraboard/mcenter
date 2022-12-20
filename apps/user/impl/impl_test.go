@@ -2,6 +2,7 @@ package impl_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/domain"
@@ -51,8 +52,8 @@ func TestQueryUser(t *testing.T) {
 }
 
 func TestPatchUser(t *testing.T) {
-	req := user.NewPatchUserRequest("ce7hi8ea0brj8fmufit0")
-	req.FeishuToken.AccessToken = "xxxx"
+	req := user.NewPatchUserRequest("ce66ctmv9mc6669i5rm0")
+	req.Profile.Phone = os.Getenv("TEST_CALL_NUMBER")
 	r, err := impl.UpdateUser(ctx, req)
 	if err != nil {
 		t.Fatal(err)
