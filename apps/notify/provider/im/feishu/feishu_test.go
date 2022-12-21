@@ -6,16 +6,20 @@ import (
 
 	"github.com/caarlos0/env/v6"
 	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/apps/notify/provider/im"
 	"github.com/infraboard/mcenter/apps/notify/provider/im/feishu"
 )
 
 var (
-	impl *feishu.Feishu
-	ctx  = context.Background()
+	notifyer im.ImNotifyer
+	ctx      = context.Background()
 )
 
-func TestXxx(t *testing.T) {
-	impl.Send(ctx)
+func TestSendMessage(t *testing.T) {
+	req := im.NewSendMessageRequest("xxx", "验证码", "验证码测试")
+	if err := notifyer.SendMessage(ctx, req); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func init() {
@@ -23,5 +27,5 @@ func init() {
 	if err := env.Parse(conf); err != nil {
 		panic(err)
 	}
-	impl = feishu.NewFeishuNotifyer(conf)
+	notifyer = feishu.NewFeishuNotifyer(conf)
 }

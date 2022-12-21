@@ -4,6 +4,9 @@ package infraboard.mcenter.domain;
 option go_package = "github.com/infraboard/mcenter/apps/domain";
 
 message DingDingConfig {
+    // 开启钉钉认证
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 4;
     // 飞书应用凭证, Oauth2.0时 也叫client_id
     // @gotags: bson:"client_id" json:"client_id" env:"DINGDING_CLIENT_ID"
     string client_id = 1;

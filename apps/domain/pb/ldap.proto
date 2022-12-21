@@ -4,6 +4,9 @@ package infraboard.mcenter.domain;
 option go_package = "github.com/infraboard/mcenter/apps/domain";
 
 message LdapConfig {
+    // 开启LDAP认证
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 12;
     // LDAP Server URL
     // @gotags: bson:"url" json:"url"
     string url = 1;
@@ -36,5 +39,5 @@ message LdapConfig {
     string mail_attribute = 10; 
     // 用户显示名称属性名称
     // @gotags: bson:"display_name_attribute" json:"display_name_attribute"
-    string display_name_attribute = 11; 
+    string display_name_attribute = 11;
 }

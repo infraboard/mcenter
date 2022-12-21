@@ -100,5 +100,8 @@ func (s *service) SendIM(ctx context.Context, req *notify.SendIMRequest) (*notif
 		return nil, err
 	}
 	s.log.Debug(conf)
+
+	//
+
 	return nil, nil
 }

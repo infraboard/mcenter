@@ -4,6 +4,9 @@ package infraboard.mcenter.domain;
 option go_package = "github.com/infraboard/mcenter/apps/domain";
 
 message WechatWorkConfig {
+    // 开启企业微信认证
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 6;
     // 企业微信企业Id, Oauth2.0应用获取应用Token时需要
     // @gotags: bson:"corp_id" json:"corp_id" env:"WECHAT_WORK_CORP_ID"
     string corp_id = 1;
