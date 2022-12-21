@@ -1,24 +1,27 @@
 package tencent_test
 
 import (
+	"context"
 	"os"
 	"testing"
 
+	"github.com/infraboard/mcenter/apps/notify/provider/voice"
 	"github.com/infraboard/mcenter/apps/notify/provider/voice/tencent"
 	"github.com/infraboard/mcube/logger/zap"
 )
 
 var (
-	voice *tencent.TencentVoiceNotifyer
+	notifyer voice.VoiceNotifyer
 
+	ctx             = context.Background()
 	voiceTemplateId = os.Getenv("VOICE_TENCENT_TEMPLATE_ID")
 	// 被叫手机号码，采用 e.164 标准，格式为+[国家或地区码][用户号码], 例如：+8613711112222
 	testPhoneNumber = os.Getenv("VOICE_TEST_PHONE_NUMBER")
 )
 
 func TestQcloudVoice(t *testing.T) {
-	req := tencent.NewPhoneCallRequest(testPhoneNumber, voiceTemplateId, []string{"测试"})
-	_, err := voice.PhoneCall(req)
+	req := voice.NewSendVoiceRequest(testPhoneNumber, voiceTemplateId, []string{"测试"})
+	_, err := notifyer.Call(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,5 +38,5 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	voice = vms
+	notifyer = vms
 }

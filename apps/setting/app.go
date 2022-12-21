@@ -6,9 +6,10 @@ import (
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/notify/provider/mail"
-	"github.com/infraboard/mcenter/apps/notify/provider/sms/ali"
-	"github.com/infraboard/mcenter/apps/notify/provider/sms/tencent"
-	"github.com/infraboard/mcenter/apps/notify/provider/voice"
+	sms_ali "github.com/infraboard/mcenter/apps/notify/provider/sms/ali"
+	sms_tencent "github.com/infraboard/mcenter/apps/notify/provider/sms/tencent"
+	voice_ali "github.com/infraboard/mcenter/apps/notify/provider/voice/ali"
+	voice_tencent "github.com/infraboard/mcenter/apps/notify/provider/voice/tencent"
 )
 
 const (
@@ -27,7 +28,7 @@ func NewDefaultSetting() *Setting {
 		Notify: &Notify{
 			Email: mail.NewDefaultConfig(),
 			SMS:   NewDefaultSmsSetting(),
-			Voice: voice.NewDefaultVoiceSetting(),
+			Voice: NewDefaultVoiceSetting(),
 		},
 		Code: code.NewDefaultCodeSetting(),
 	}
@@ -57,14 +58,14 @@ type Notify struct {
 	// 短信通知配置
 	SMS *SmsSetting `bson:"sms" json:"sms"`
 	// 语音通知配置
-	Voice *voice.VoiceSetting `bson:"voice" json:"voice"`
+	Voice *VoiceSetting `bson:"voice" json:"voice"`
 }
 
 func NewDefaultSmsSetting() *SmsSetting {
 	return &SmsSetting{
 		Provider:      notify.SMS_PROVIDER_TENCENT,
-		TencentConfig: tencent.NewDefaultConfig(),
-		AliConfig:     ali.NewDefaultConfig(),
+		TencentConfig: sms_tencent.NewDefaultConfig(),
+		AliConfig:     sms_ali.NewDefaultConfig(),
 	}
 }
 
@@ -72,7 +73,21 @@ type SmsSetting struct {
 	// 短信服务商
 	Provider notify.SMS_PROVIDER `bson:"Provider" json:"Provider"`
 	// 腾讯短信服务配置
-	TencentConfig *tencent.Config `bson:"tencent_config" json:"tencent_config"`
+	TencentConfig *sms_tencent.Config `bson:"tencent_config" json:"tencent_config"`
 	// 阿里云短信服务配置
-	AliConfig *ali.Config `bson:"ali_config" json:"ali_config"`
+	AliConfig *sms_ali.Config `bson:"ali_config" json:"ali_config"`
+}
+
+func NewDefaultVoiceSetting() *VoiceSetting {
+	return &VoiceSetting{
+		TencentConfig: voice_tencent.DefaultConfig(),
+		AliConfig:     voice_ali.DefaultConfig(),
+	}
+}
+
+type VoiceSetting struct {
+	// 腾讯短信服务配置
+	TencentConfig *voice_tencent.Config `bson:"tencent_config" json:"tencent_config"`
+	// 阿里云短信服务配置
+	AliConfig *voice_ali.Config `bson:"ali_config" json:"ali_config"`
 }

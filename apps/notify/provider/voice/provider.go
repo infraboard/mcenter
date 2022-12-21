@@ -3,33 +3,42 @@ package voice
 import (
 	"context"
 
-	"github.com/infraboard/mcenter/apps/notify"
+	"github.com/infraboard/mcenter/common/validate"
 )
-
-var (
-	// m is a map from scheme to notifyer.
-	m = make(map[string]Notifyer)
-)
-
-type Notifyer interface {
-	Init() error
-	Vendor() string
-	VoiceNotifyer
-}
 
 type VoiceNotifyer interface {
-	Call(context.Context, *notify.SendVoiceRequest) (*notify.SendVoiceResponse, error)
+	Call(context.Context, *SendVoiceRequest) (*SendVoiceResponse, error)
 }
 
-// 注册令牌颁发器
-func Registe(i Notifyer) {
-	m[i.Vendor()] = i
-}
-
-func GetVoiceNotifyer(vendor string) VoiceNotifyer {
-	if v, ok := m[vendor]; ok {
-		return v
+func NewSendVoiceRequest(number, templateId string, templateParamSet []string) *SendVoiceRequest {
+	return &SendVoiceRequest{
+		TemplateId:     templateId,
+		TemplateParams: templateParamSet,
+		PhoneNumber:    number,
+		PlayTimes:      2,
 	}
+}
 
-	return nil
+type SendVoiceRequest struct {
+	// 短信模版的Id
+	TemplateId string `json:"template_id"`
+	// 模版参数
+	TemplateParams []string `json:"template_params"`
+	// 电话号码
+	PhoneNumber string `json:"phone_number"`
+	// 播放次数，可选，最多3次，默认2次
+	PlayTimes uint64 `json:"play_times"`
+	// 用户的 session 内容，腾讯 server 回包中会原样返回
+	SessionContext string `json:"session_context"`
+}
+
+func (req *SendVoiceRequest) Validate() error {
+	return validate.Validate(req)
+}
+
+type SendVoiceResponse struct {
+	// 呼叫Id
+	CallId string `json:"call_id" `
+	// 用户的 session 内容，腾讯 server 回包中会原样返回
+	SessionContext string `json:"session_context"`
 }

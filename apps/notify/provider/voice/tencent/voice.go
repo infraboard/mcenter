@@ -7,8 +7,10 @@ package tencent
 // 语音消息的调用地址: vms.tencentcloudapi.com
 
 import (
+	"context"
 	"fmt"
 
+	"github.com/infraboard/mcenter/apps/notify/provider/voice"
 	"github.com/infraboard/mcenter/common/validate"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -17,7 +19,7 @@ import (
 	vms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms/v20200902"
 )
 
-func NewQcloudVoice(conf *Config) (*TencentVoiceNotifyer, error) {
+func NewQcloudVoice(conf *Config) (voice.VoiceNotifyer, error) {
 	ins := &TencentVoiceNotifyer{
 		Config: conf,
 		log:    zap.L().Named("voice.tencent"),
@@ -36,41 +38,6 @@ type TencentVoiceNotifyer struct {
 func (q *TencentVoiceNotifyer) validate() error {
 	return validate.Validate(q)
 }
-func NewPhoneCallRequest(number, templateId string, templateParamSet []string) *PhoneCallRequest {
-	return &PhoneCallRequest{
-		TemplateId:       templateId,
-		TemplateParamSet: templateParamSet,
-		CalledNumber:     number,
-		playTimes:        2,
-	}
-}
-
-type PhoneCallRequest struct {
-	// 查询你的模版Id https://console.cloud.tencent.com/vms/template
-	// 模板 ID，必须填写在控制台审核通过的模板 ID，可登录 [语音消息控制台] 查看模板 ID
-	TemplateId string `validate:"required"`
-	// 模板参数，若模板没有参数，请提供为空数组
-	TemplateParamSet []string `validate:"required"`
-	// 被叫手机号码，采用 e.164 标准，格式为+[国家或地区码][用户号码], 例如：+8613711112222，其中前面有一个+号，86为国家码，13711112222为手机号
-	CalledNumber string `validate:"required"`
-	// 播放次数，可选，最多3次，默认2次
-	playTimes uint64
-	// 用户的 session 内容，腾讯 server 回包中会原样返回
-	sessionContext string
-}
-
-func (req *PhoneCallRequest) WithSessonContext(ctx string) {
-	req.sessionContext = ctx
-}
-
-type PhoneCallResponse struct {
-	CallId         string `json:"call_id"`
-	SessionContext string `json:"session_context"`
-}
-
-func (req *PhoneCallRequest) Validate() error {
-	return validate.Validate(req)
-}
 
 /* 基本类型的设置:
 * SDK 采用的是指针风格指定参数，即使对于基本类型也需要用指针来对参数赋值。
@@ -79,18 +46,18 @@ func (req *PhoneCallRequest) Validate() error {
 * 语音消息控制台：https://console.cloud.tencent.com/vms
 * vms helper：https://cloud.tencent.com/document/product/1128/37720
  */
-func (req *PhoneCallRequest) genVMSRequest(voiceSdkAppid string) *vms.SendTtsVoiceRequest {
+func (v *TencentVoiceNotifyer) genVMSRequest(req *voice.SendVoiceRequest) *vms.SendTtsVoiceRequest {
 	/* 实例化一个请求对象，根据调用的接口和实际情况，可以进一步设置请求参数
 	 * 您可以直接查询 SDK 源码确定接口有哪些属性可以设置
 	 * 属性可能是基本类型，也可能引用了另一个数据结构
 	 * 推荐使用 IDE 进行开发，可以方便地跳转查阅各个接口和数据结构的文档说明 */
 	request := vms.NewSendTtsVoiceRequest()
 	request.TemplateId = common.StringPtr(req.TemplateId)
-	request.TemplateParamSet = common.StringPtrs(req.TemplateParamSet)
-	request.CalledNumber = common.StringPtr(req.CalledNumber)
-	request.VoiceSdkAppid = common.StringPtr(voiceSdkAppid)
-	request.PlayTimes = common.Uint64Ptr(req.playTimes)
-	request.SessionContext = common.StringPtr(req.sessionContext)
+	request.TemplateParamSet = common.StringPtrs(req.TemplateParams)
+	request.CalledNumber = common.StringPtr(req.PhoneNumber)
+	request.VoiceSdkAppid = common.StringPtr(v.Config.AppId)
+	request.PlayTimes = common.Uint64Ptr(req.PlayTimes)
+	request.SessionContext = common.StringPtr(req.SessionContext)
 	return request
 }
 
@@ -100,7 +67,7 @@ func (req *PhoneCallRequest) genVMSRequest(voiceSdkAppid string) *vms.SendTtsVoi
 * 您也可以直接在代码中写入密钥对，但需谨防泄露，不要将代码复制、上传或者分享给他人
 * CAM 密匙查询: https://console.cloud.tencent.com/cam/capi
  */
-func (v *TencentVoiceNotifyer) PhoneCall(req *PhoneCallRequest) (*PhoneCallResponse, error) {
+func (v *TencentVoiceNotifyer) Call(ctx context.Context, req *voice.SendVoiceRequest) (*voice.SendVoiceResponse, error) {
 	if err := req.Validate(); err != nil {
 		return nil, fmt.Errorf("validate PhoneCallRequest error, %s", err)
 	}
@@ -119,7 +86,7 @@ func (v *TencentVoiceNotifyer) PhoneCall(req *PhoneCallRequest) (*PhoneCallRespo
 	cpf.SignMethod = v.SignMethod
 
 	client, _ := vms.NewClient(credential, v.Region, cpf)
-	request := req.genVMSRequest(v.AppId)
+	request := v.genVMSRequest(req)
 
 	// 通过 client 对象调用想要访问的接口，需要传入请求对象
 	response, err := client.SendTtsVoice(request)
@@ -131,7 +98,7 @@ func (v *TencentVoiceNotifyer) PhoneCall(req *PhoneCallRequest) (*PhoneCallRespo
 
 	// 打印返回的 JSON 字符串
 	v.log.Debugf("response: %s", response.ToJsonString())
-	return &PhoneCallResponse{
+	return &voice.SendVoiceResponse{
 		CallId:         *response.Response.SendStatus.CallId,
 		SessionContext: *response.Response.SendStatus.SessionContext,
 	}, nil
