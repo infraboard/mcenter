@@ -15,7 +15,7 @@ const (
 	ERR_BROKEN_CONN = "write: broken pipe"
 )
 
-func NewSender(conf *Config) *Sender {
+func NewSender(conf *Config) MailNotifyer {
 	s := &Sender{
 		Config: conf,
 		log:    zap.L().Named("Mail Sender"),

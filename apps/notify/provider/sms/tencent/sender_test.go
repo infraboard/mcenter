@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	sender *tencent.Sender
+	sender sms.SmsNotifyer
 	ctx    context.Context
 )
 

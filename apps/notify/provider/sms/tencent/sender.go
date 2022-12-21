@@ -13,7 +13,7 @@ import (
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20190711"
 )
 
-func NewSender(conf *Config) (*Sender, error) {
+func NewSender(conf *Config) (sms_provider.SmsNotifyer, error) {
 	if err := conf.Validate(); err != nil {
 		return nil, fmt.Errorf("validate tencent sms config error, %s", err)
 	}

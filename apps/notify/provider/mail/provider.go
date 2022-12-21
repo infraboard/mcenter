@@ -7,7 +7,7 @@ type MailNotifyer interface {
 }
 
 type SendMailRequest struct {
-	// 用户
+	// 邮箱列表
 	To []string `json:"to"  validate:"required"`
 	// 告警时标题
 	Title string `json:"title"  validate:"required"`
@@ -15,10 +15,13 @@ type SendMailRequest struct {
 	Content string `json:"content"`
 }
 
+func (req *SendMailRequest) AddTo(tos ...string) {
+	req.To = append(req.To, tos...)
+}
+
 // NewSendMailRequest todo
-func NewSendMailRequest(to []string, title, content string) *SendMailRequest {
+func NewSendMailRequest(title, content string) *SendMailRequest {
 	return &SendMailRequest{
-		To:      to,
 		Title:   title,
 		Content: content,
 	}

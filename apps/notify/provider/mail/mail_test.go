@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	sender *mail.Sender
+	sender mail.MailNotifyer
 	ctx    = context.Background()
 )
 

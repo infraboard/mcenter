@@ -11,49 +11,42 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 )
 
-// 发送短信
+// 邮件通知
 func (s *service) SendMail(ctx context.Context, req *notify.SendMailRequest) (*notify.SendMailResponse, error) {
-	conf, err := s.setting.GetSetting(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// 查询用户的详情, 获取邮箱, 电话等这些通知信息
-	mails := []string{}
-	sender := mail.NewSender(conf.Notify.Email)
+	// 查询用户邮箱, 构造邮件发送请求
+	sendReq := mail.NewSendMailRequest(req.Title, req.Content)
 	for i := range req.Users {
 		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
 		if err != nil {
 			return nil, fmt.Errorf("get user error, %s", err)
 		}
 		if u.Profile.Email != "" {
-			mails = append(mails, u.Profile.Email)
+			sendReq.AddTo(u.Profile.Email)
 		}
 	}
 
-	sendReq := mail.NewSendMailRequest(mails, req.Title, req.Content)
-	if err := sender.Send(ctx, sendReq); err != nil {
-		return nil, err
-	}
-
-	return &notify.SendMailResponse{SuccessedMails: mails}, nil
-}
-
-// 短信通知
-func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*notify.SendSmsResponse, error) {
-
+	// 查询系统邮件设置
 	conf, err := s.setting.GetSetting(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	ss := conf.Notify.SMS
+	// 发送邮件
+	sender := mail.NewSender(conf.Notify.Email)
+	if err := sender.Send(ctx, sendReq); err != nil {
+		return nil, err
+	}
 
+	return &notify.SendMailResponse{SuccessedMails: sendReq.To}, nil
+}
+
+// 短信通知
+func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*notify.SendSmsResponse, error) {
+	// 查询用户电话号码, 构造短信发送请求
 	sendReq := sms.NewSendSMSRequest()
 	sendReq.TemplateId = req.TemplateId
 	sendReq.TemplateParams = req.TemplateParams
 	for i := range req.Users {
-		// 查询用户的详情, 获取邮箱, 电话等这些通知信息
 		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
 		if err != nil {
 			return nil, fmt.Errorf("get user error, %s", err)
@@ -63,6 +56,14 @@ func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*not
 		}
 	}
 
+	// 查询系统短信发送设置
+	conf, err := s.setting.GetSetting(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// 发送短信
+	ss := conf.Notify.SMS
 	switch ss.Provider {
 	case notify.SMS_PROVIDER_TENCENT:
 		sender, err := tencent.NewSender(ss.TencentConfig)
