@@ -6,7 +6,6 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.3.2
 	github.com/BurntSushi/toml v1.1.0
 	github.com/caarlos0/env/v6 v6.9.2
-	github.com/chyroc/lark v0.0.101
 	github.com/emicklei/go-restful-openapi/v2 v2.9.1
 	github.com/emicklei/go-restful/v3 v3.8.0
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
@@ -17,6 +16,7 @@ require (
 	github.com/imdario/mergo v0.3.13
 	github.com/infraboard/mcube v1.9.6-0.20221217091956-08d98bff6f57
 	github.com/kvtools/valkeyrie v1.0.0
+	github.com/larksuite/oapi-sdk-go/v3 v3.0.10
 	github.com/mssola/user_agent v0.5.3
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0

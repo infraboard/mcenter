@@ -16,7 +16,7 @@ var (
 )
 
 func TestSendMessage(t *testing.T) {
-	req := im.NewSendMessageRequest("xxx", "验证码", "验证码测试")
+	req := im.NewSendMessageRequest("2fbc2b39", "验证码", "验证码测试")
 	if err := notifyer.SendMessage(ctx, req); err != nil {
 		t.Fatal(err)
 	}
