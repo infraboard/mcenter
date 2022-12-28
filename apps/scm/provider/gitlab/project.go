@@ -54,7 +54,6 @@ func (p *ProjectV4) AddProjectHook(ctx context.Context, req *provider.AddProject
 	return ins, nil
 }
 
-// DELETE /projects/:id/hooks/:hook_id
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html#delete-project-hook
 func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *provider.DeleteProjectReqeust) error {
 	err := p.client.

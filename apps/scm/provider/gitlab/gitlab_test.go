@@ -42,7 +42,7 @@ func TestAddProjectHook(t *testing.T) {
 }
 
 func TestDeleteProjectHook(t *testing.T) {
-	req := provider.NewDeleteProjectReqeust(ProjectID, 8439846)
+	req := provider.NewDeleteProjectReqeust(ProjectID, 15519532)
 	err := v4.Project().DeleteProjectHook(ctx, req)
 	if err != nil {
 		t.Fatal(err)
