@@ -1,36 +1,30 @@
 package gitlab_test
 
 import (
-	"fmt"
-	"os"
+	"context"
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/scm/provider"
 	"github.com/infraboard/mcenter/apps/scm/provider/gitlab"
-	"github.com/stretchr/testify/assert"
+	"github.com/infraboard/mcube/logger/zap"
 )
 
 var (
-	GitLabAddr    = "https://gitlab.com"
-	PraviateToken = ""
+	v4  *gitlab.GitlabV4
+	ctx = context.Background()
 
 	ProjectID int64 = 29032549
 )
 
 func TestListProject(t *testing.T) {
-	should := assert.New(t)
-
-	repo := gitlab.NewSCM(GitLabAddr, PraviateToken)
-	ps, err := repo.ListProjects()
-	should.NoError(err)
-	fmt.Println(ps)
+	set, err := v4.Project().ListProjects(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(set)
 }
 
 func TestAddProjectHook(t *testing.T) {
-	should := assert.New(t)
-
-	repo := gitlab.NewSCM(GitLabAddr, PraviateToken)
-
 	hook := &provider.WebHook{
 		PushEvents:          true,
 		TagPushEvents:       true,
@@ -39,21 +33,27 @@ func TestAddProjectHook(t *testing.T) {
 		Url:                 "http://www.baidu.com",
 	}
 	req := provider.NewAddProjectHookRequest(ProjectID, hook)
-	ins, err := repo.AddProjectHook(req)
-	should.NoError(err)
-	fmt.Println(ins)
+
+	resp, err := v4.Project().AddProjectHook(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(resp)
 }
 
 func TestDeleteProjectHook(t *testing.T) {
-	should := assert.New(t)
-
-	repo := gitlab.NewSCM(GitLabAddr, PraviateToken)
-
 	req := provider.NewDeleteProjectReqeust(ProjectID, 8439846)
-	err := repo.DeleteProjectHook(req)
-	should.NoError(err)
+	err := v4.Project().DeleteProjectHook(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
 }
 
 func init() {
-	PraviateToken = os.Getenv("GITLAB_PRIVATE_TOkEN")
+	zap.DevelopmentSetup()
+	conf, err := gitlab.LoadConfigFromEnv()
+	if err != nil {
+		panic(err)
+	}
+	v4 = gitlab.NewGitlabV4(conf)
 }
