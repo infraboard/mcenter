@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/go-github/v45/github"
+	"github.com/infraboard/mcube/client/rest"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"golang.org/x/oauth2"
@@ -13,6 +14,7 @@ func NewGithub(conf *Config) *Github {
 	ins := &Github{
 		conf: conf,
 		log:  zap.L().Named("scm.github"),
+		rest: rest.NewRESTClient(),
 	}
 
 	switch conf.AuthType {
@@ -33,6 +35,7 @@ type Github struct {
 	conf   *Config
 	client *github.Client
 	log    logger.Logger
+	rest   *rest.RESTClient
 }
 
 func (g *Github) oauth2Config() *oauth2.Config {
