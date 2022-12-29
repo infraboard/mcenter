@@ -7,7 +7,7 @@ import (
 	"github.com/infraboard/mcenter/apps/scm"
 )
 
-func (s *Scm) ListOrganizations(ctx context.Context) (*scm.ProjectSet, error) {
+func (s *Github) ListOrganizations(ctx context.Context) (*scm.ProjectSet, error) {
 	s.client.Organizations.List(ctx, "", &github.ListOptions{})
 	// s.client.Repositories.List()
 	// r, resp, err := s.client.Repositories.List(ctx, "", &github.RepositoryListOptions{})
@@ -15,7 +15,7 @@ func (s *Scm) ListOrganizations(ctx context.Context) (*scm.ProjectSet, error) {
 	return nil, nil
 }
 
-func (s *Scm) ListProjects(ctx context.Context) (*scm.ProjectSet, error) {
+func (s *Github) ListProjects(ctx context.Context) (*scm.ProjectSet, error) {
 	s.client.Organizations.ListProjects(ctx, "", &github.ProjectListOptions{})
 	return nil, nil
 }

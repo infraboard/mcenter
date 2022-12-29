@@ -7,25 +7,22 @@ import (
 	"golang.org/x/oauth2"
 )
 
-func NewScm(token string) *Scm {
+func NewGithubFromPersonalAccessToken(token string) *Github {
 	ctx := context.Background()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
-
-	// user, resp, err := client.Users.Get(ctx, "")
-	// if err != nil {
-	// 	fmt.Printf("\nerror: %v\n", err)
-	// 	return
-	// }
-
-	return &Scm{
+	return &Github{
 		client: client,
 	}
 }
 
-type Scm struct {
+func NewGithubFromOauthApp(conf *oauth2.Config) *Github {
+	return &Github{}
+}
+
+type Github struct {
 	client *github.Client
 }
