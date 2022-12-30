@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/go-github/v45/github"
+	"github.com/infraboard/mcube/client/negotiator"
 	"github.com/infraboard/mcube/client/rest"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -11,10 +12,14 @@ import (
 )
 
 func NewGithub(conf *Config) *Github {
+	rc := rest.NewRESTClient()
+	rc.SetBaseURL(conf.Endpoint)
+	rc.SetHeader("Accept", "application/vnd.github+json")
+
 	ins := &Github{
 		conf: conf,
 		log:  zap.L().Named("scm.github"),
-		rest: rest.NewRESTClient(),
+		rest: rc,
 	}
 
 	switch conf.AuthType {
@@ -38,19 +43,27 @@ type Github struct {
 	rest   *rest.RESTClient
 }
 
-func (g *Github) oauth2Config() *oauth2.Config {
-	return g.conf.Oauth2Config.OauthConf()
-}
-
 func (g *Github) AuthCodeURL() string {
-	return g.oauth2Config().AuthCodeURL("")
+	return g.conf.AuthCodeURL("")
 }
 
+// 参考文档: https://docs.github.com/zh/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps#2-users-are-redirected-back-to-your-site-by-github
 func (g *Github) Exchange(ctx context.Context, code string) error {
-	tk, err := g.oauth2Config().Exchange(ctx, code)
+	tk := NewTokenReponse()
+	err := g.rest.
+		Post("login/oauth/access_token").
+		Header(rest.CONTENT_TYPE_HEADER, string(negotiator.MIME_POST_FORM)).
+		Body(g.conf.Oauth2Config.ExchangeTokenRequeset(code)).
+		Do(ctx).
+		Into(tk)
+	if err == nil {
+		err = tk.Error()
+	}
+
 	if err != nil {
 		return err
 	}
+
 	g.log.Debug(tk)
 	return nil
 }
