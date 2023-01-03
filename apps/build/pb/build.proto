@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package infraboard.mcenter.build;
+option go_package = "github.com/infraboard/mcenter/apps/build";
+
+
+message BuildTaskSet {
+    // 总数量
+    // @gotags: bson:"total" json:"total"
+    int64 total = 1;
+    // 数据项
+    // @gotags: bson:"items" json:"items"
+    repeated BuildTask items = 2;
+}
+
+message BuildTask {
+    // 编号
+    // @gotags: bson:"_id" json:"id"
+    string id = 1;
+    // 所属Domain
+    // @gotags: bson:"domain" json:"domain"
+    string domain = 2;
+    // 所属空间
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 3;
+}

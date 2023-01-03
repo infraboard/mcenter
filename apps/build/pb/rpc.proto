@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package infraboard.mcenter.build;
+option go_package = "github.com/infraboard/mcenter/apps/build";
+
+import "apps/build/pb/build.proto";
+import "github.com/infraboard/mcube/pb/page/page.proto";
+
+// RPC 构建服务
+service RPC {
+	rpc RunBuild(RunBuildRequest) returns(BuildTask);
+	rpc QueryBuild(QueryBuildRequest) returns(BuildTaskSet);
+}
+
+message RunBuildRequest {
+    // 所属列表
+    // @gotags: json:"service_tags"
+    repeated string service_tags = 1;
+    // 所属列表
+    // @gotags: json:"service_ids"
+    repeated string service_ids = 2;
+}
+
+message QueryBuildRequest {
+    // 分页参数
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+    // 所属Domain
+    // @gotags: json:"domain" validate:"required"
+    string domain = 2;
+    // 所属空间
+    // @gotags: json:"namespace"
+    string namespace = 3;
+    // 所属服务
+    // @gotags: json:"service_id"
+    string service_id = 4;
+    // 构建Id
+    // @gotags: json:"task_ids"
+    repeated string task_ids = 5;
+}
+
