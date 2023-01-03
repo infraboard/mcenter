@@ -14,11 +14,24 @@ service RPC {
 
 message RunBuildRequest {
     // 所属列表
-    // @gotags: json:"service_tags"
+    // @gotags: bson:"service_tags" json:"service_tags"
     repeated string service_tags = 1;
     // 所属列表
-    // @gotags: json:"service_ids"
+    // @gotags: bson:"service_ids" json:"service_ids"
     repeated string service_ids = 2;
+    // 自动部署相关配置
+    // @gotags: bson:"auto_deploy_options" json:"auto_deploy_options"
+    AutoDeployOptions auto_deploy_options = 3;
+}
+
+// 自动部署相关配置
+message AutoDeployOptions {
+    // 是否开启服务的自动部署,如果开启 构建成功后会执行自动部署
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled  = 1;
+    // 自动部署的环境列表, 那些环境允许执行自动部署
+    // @gotags: bson:"envs" json:"envs"
+    repeated string envs = 2;
 }
 
 message QueryBuildRequest {
