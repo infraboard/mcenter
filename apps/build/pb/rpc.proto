@@ -4,6 +4,7 @@ package infraboard.mcenter.build;
 option go_package = "github.com/infraboard/mcenter/apps/build";
 
 import "apps/build/pb/build.proto";
+import "apps/label/pb/label.proto";
 import "github.com/infraboard/mcube/pb/page/page.proto";
 
 // RPC 构建服务
@@ -14,8 +15,8 @@ service RPC {
 
 message RunBuildRequest {
     // 所属列表
-    // @gotags: bson:"service_tags" json:"service_tags"
-    map<string, string> service_tags = 1;
+    // @gotags: bson:"service_selector" json:"service_selector"
+    label.LabelSelector service_selector = 1;
     // 所属列表
     // @gotags: bson:"service_ids" json:"service_ids"
     repeated string service_ids = 2;
@@ -33,8 +34,8 @@ message AutoDeployOptions {
     // @gotags: bson:"envs" json:"envs"
     repeated string envs = 2;
     // 服务标签, 打有相应标签的部署才执行自动部署
-    // @gotags: bson:"deploy_tags" json:"deploy_tags"
-    map<string, string> tags = 14;
+    // @gotags: bson:"deploy_selector" json:"deploy_selector"
+    label.LabelSelector deploy_selector = 14;
 }
 
 message QueryBuildRequest {
