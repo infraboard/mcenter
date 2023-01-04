@@ -91,6 +91,6 @@ message CreateDeployRequest {
     // @gotags: bson:"describe" json:"describe"
     string describe = 10;
     // 部署标签
-    // @gotags: bson:"tags" json:"tags"
-    map<string,string> tags = 11;
+    // @gotags: bson:"labels" json:"labels"
+    map<string,string> labels = 11;
 }

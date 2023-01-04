@@ -53,7 +53,7 @@ message SearchRequest {
     // @gotags: bson:"group" json:"group"
     string group = 7;
     // 实例标签, 可以根据标签快速过滤实例
-    // @gotags: bson:"tags" json:"tags" 
-    map<string,string> tags = 8;
+    // @gotags: bson:"labels" json:"labels" 
+    map<string,string> labels = 8;
 }
 

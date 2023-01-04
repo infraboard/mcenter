@@ -68,8 +68,8 @@ message CreateServiceRequest {
     // @gotags: bson:"repository" json:"repository"
     Repository repository = 9;
     // 服务标签
-    // @gotags: bson:"tags" json:"tags"
-    map<string, string> tags = 14;
+    // @gotags: bson:"labels" json:"labels"
+    map<string, string> labels = 14;
 }
 
 message UpdateServiceRequest {

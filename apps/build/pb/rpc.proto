@@ -15,7 +15,7 @@ service RPC {
 message RunBuildRequest {
     // 所属列表
     // @gotags: bson:"service_tags" json:"service_tags"
-    repeated string service_tags = 1;
+    map<string, string> service_tags = 1;
     // 所属列表
     // @gotags: bson:"service_ids" json:"service_ids"
     repeated string service_ids = 2;
@@ -32,6 +32,9 @@ message AutoDeployOptions {
     // 自动部署的环境列表, 那些环境允许执行自动部署
     // @gotags: bson:"envs" json:"envs"
     repeated string envs = 2;
+    // 服务标签, 打有相应标签的部署才执行自动部署
+    // @gotags: bson:"deploy_tags" json:"deploy_tags"
+    map<string, string> tags = 14;
 }
 
 message QueryBuildRequest {

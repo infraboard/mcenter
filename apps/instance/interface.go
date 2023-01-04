@@ -32,8 +32,8 @@ type Service interface {
 
 func NewSearchRequest() *SearchRequest {
 	return &SearchRequest{
-		Page: request.NewDefaultPageRequest(),
-		Tags: map[string]string{},
+		Page:   request.NewDefaultPageRequest(),
+		Labels: map[string]string{},
 	}
 }
 
@@ -113,7 +113,7 @@ func NewRegistryRequest() *RegistryRequest {
 		Region:      DefaultRegion,
 		Environment: DefaultEnvironment,
 		Group:       DefaultGroup,
-		Tags:        map[string]string{},
+		Labels:      map[string]string{},
 		Meta:        map[string]string{},
 		Build:       &Build{},
 		Provider:    PROVIDER_SDK,

@@ -61,8 +61,8 @@ message CreateGatewayRequest {
     // @gotags: bson:"traefik_config" json:"traefik_config"
     TraefikConfig traefik_config = 9;
     // 网关标签
-    // @gotags: bson:"tags" json:"tags"
-    map<string,string> tags =15;                 
+    // @gotags: bson:"labels" json:"labels"
+    map<string,string> labels =15;                 
 }
 
 // Traefik网关配置, 通过操作Etcd来操作Traefik

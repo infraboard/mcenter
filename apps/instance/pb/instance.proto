@@ -99,8 +99,8 @@ message RegistryRequest {
     // @gotags: bson:"health_check" json:"health_check" toml:"health_check" yaml:"health_check"
     HealthCheck health_check = 13;
     // 实例标签, 可以根据标签快速过滤实例
-    // @gotags: bson:"tags" json:"tags" toml:"tags" yaml:"tags" env:"MCENTER_TAGS"
-    map<string,string> tags = 9;
+    // @gotags: bson:"labels" json:"labels" toml:"labels" yaml:"labels" env:"MCENTER_LABELS"
+    map<string,string> labels = 9;
     // 实例元数据
     // @gotags: bson:"meta" json:"meta" toml:"meta" yaml:"meta" env:"MCENTER_META"
     map<string,string> meta = 11;

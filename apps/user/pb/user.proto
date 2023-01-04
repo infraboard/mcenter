@@ -176,6 +176,9 @@ message CreateUserRequest {
     // 用户描述
     // @gotags: json:"description" bson:"description"
     string description = 7;
+    // 用户标签, 用于过滤用户
+    // @gotags: json:"labels" bson:"labels"
+    map<string,string> labels = 11;
     // 用户飞书相关信息
     // @gotags: json:"feishu" bson:"feishu"
     Feishu feishu = 8;

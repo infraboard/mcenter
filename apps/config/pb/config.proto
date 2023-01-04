@@ -75,8 +75,8 @@ message Config {
     // @gotags: bson:"type" json:"type"
     TYPE type = 11;
     // 标签
-    // @gotags: bson:"tags" json:"tags"
-    map<string,string> tags = 12;
+    // @gotags: bson:"labels" json:"labels"
+    map<string,string> labels = 12;
     // 状态
     // @gotags: bson:"status" json:"status"
     STATUS status = 13;

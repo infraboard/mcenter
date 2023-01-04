@@ -55,7 +55,7 @@ type Resolver struct {
 	// 实例所属分组,默认default
 	Group string `json:"group" toml:"group" yaml:"group" env:"MCENTER_GROUP" validate:"required"`
 	// 实例标签, 可以根据标签快速过滤实例, 格式k=v,k=v
-	Tags string `json:"tags" toml:"tags" yaml:"tags" env:"MCENTER_TAGS"`
+	Labels string `json:"labels" toml:"labels" yaml:"labels" env:"MCENTER_LABELS"`
 }
 
 func (r *Resolver) ToQueryString() string {
@@ -63,6 +63,6 @@ func (r *Resolver) ToQueryString() string {
 	m.Add("region", r.Region)
 	m.Add("environment", r.Environment)
 	m.Add("group", r.Group)
-	m.Add("tags", r.Tags)
+	m.Add("labels", r.Labels)
 	return m.Encode()
 }
