@@ -36,3 +36,12 @@ func (e *WebHookEvent) ShortDesc() string {
 func (e *WebHookEvent) GetBranche() string {
 	return path.Base(e.GetRef())
 }
+
+func (req *QueryProjectRequest) SetProviderFromString(provider string) error {
+	p, err := ParsePROVIDERFromString(provider)
+	if err != nil {
+		return err
+	}
+	req.Provider = p
+	return nil
+}

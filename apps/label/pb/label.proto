@@ -13,7 +13,7 @@ option go_package = "github.com/infraboard/mcenter/apps/label";
 // matchExpressions are ANDed. An empty label selector matches all objects. A null
 // label selector matches no objects.
 // +structType=atomic
-message LabelSelector {
+message Selector {
 	// matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
 	// map is equivalent to an element of matchExpressions, whose key field is "key", the
 	// operator is "In", and the values array contains only "value". The requirements are ANDed.
@@ -21,13 +21,13 @@ message LabelSelector {
     map<string,string> match_lablels = 1;
 	// matchExpressions is a list of label selector requirements. The requirements are ANDed.
     // @gotags: bson:"match_lablels" json:"match_expressions"
-    repeated LabelSelectorRequirement match_expressions = 2;
+    repeated SelectorRequirement match_expressions = 2;
 }
 
 
 // A label selector requirement is a selector that contains values, a key, and an operator that
 // relates the key and values.
-message LabelSelectorRequirement {
+message SelectorRequirement {
     // key is the label key that the selector applies to.
     // @gotags: bson:"match_lablels" json:"match_lablels"
     string key = 1;

@@ -14,10 +14,10 @@ service RPC {
 }
 
 message RunBuildRequest {
-    // 所属列表
+    // 服务标签列表, 通过指定服务标签, 指定需要执行构建的服务
     // @gotags: bson:"service_selector" json:"service_selector"
-    label.LabelSelector service_selector = 1;
-    // 所属列表
+    label.Selector service_selector = 1;
+    // 服务列表, 已可以手动指定需要执行构建的服务Id
     // @gotags: bson:"service_ids" json:"service_ids"
     repeated string service_ids = 2;
     // 自动部署相关配置
@@ -35,7 +35,7 @@ message AutoDeployOptions {
     repeated string envs = 2;
     // 服务标签, 打有相应标签的部署才执行自动部署
     // @gotags: bson:"deploy_selector" json:"deploy_selector"
-    label.LabelSelector deploy_selector = 14;
+    label.Selector deploy_selector = 14;
 }
 
 message QueryBuildRequest {
