@@ -3,6 +3,8 @@ package scm
 import (
 	"fmt"
 	"path"
+
+	"github.com/infraboard/mcenter/common/validate"
 )
 
 const (
@@ -44,4 +46,8 @@ func (req *QueryProjectRequest) SetProviderFromString(provider string) error {
 	}
 	req.Provider = p
 	return nil
+}
+
+func (req *QueryProjectRequest) Validate() error {
+	return validate.Validate(req)
 }

@@ -26,14 +26,14 @@ type QueryProjectRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 仓库类型
-	// @gotags: json:"provider" validate:"required"
-	Provider PROVIDER `protobuf:"varint,1,opt,name=provider,proto3,enum=infraboard.mcenter.scm.PROVIDER" json:"provider" validate:"required"`
+	// @gotags: json:"provider"
+	Provider PROVIDER `protobuf:"varint,1,opt,name=provider,proto3,enum=infraboard.mcenter.scm.PROVIDER" json:"provider"`
 	// 仓库地址
-	// @gotags: json:"address" validate:"required"
-	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address" validate:"required"`
+	// @gotags: json:"address"
+	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address"`
 	// 仓库访问凭证
-	// @gotags: json:"token" validate:"required"
-	Token string `protobuf:"bytes,3,opt,name=token,proto3" json:"token" validate:"required"`
+	// @gotags: json:"token"
+	Token string `protobuf:"bytes,3,opt,name=token,proto3" json:"token"`
 }
 
 func (x *QueryProjectRequest) Reset() {

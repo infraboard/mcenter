@@ -15,12 +15,12 @@ service RPC {
 
 message QueryProjectRequest {
     // 仓库类型
-    // @gotags: json:"provider" validate:"required"
+    // @gotags: json:"provider"
     PROVIDER provider = 1;
     // 仓库地址
-    // @gotags: json:"address" validate:"required"
+    // @gotags: json:"address"
     string address = 2;
     // 仓库访问凭证
-    // @gotags: json:"token" validate:"required"
+    // @gotags: json:"token"
     string token = 3;
 }

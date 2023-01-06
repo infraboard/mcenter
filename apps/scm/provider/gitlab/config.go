@@ -31,3 +31,15 @@ type Config struct {
 func (c *Config) Validate() error {
 	return validate.Validate(c)
 }
+
+func (c *Config) SetAddress(address string) {
+	if address != "" {
+		c.Address = address
+	}
+}
+
+func (c *Config) SetPrivateToken(tk string) {
+	if tk != "" {
+		c.PrivateToken = tk
+	}
+}

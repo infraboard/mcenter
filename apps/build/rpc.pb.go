@@ -27,10 +27,10 @@ type RunBuildRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// 所属列表
+	// 服务标签列表, 通过指定服务标签, 指定需要执行构建的服务
 	// @gotags: bson:"service_selector" json:"service_selector"
 	ServiceSelector *label.Selector `protobuf:"bytes,1,opt,name=service_selector,json=serviceSelector,proto3" json:"service_selector" bson:"service_selector"`
-	// 所属列表
+	// 服务列表, 已可以手动指定需要执行构建的服务Id
 	// @gotags: bson:"service_ids" json:"service_ids"
 	ServiceIds []string `protobuf:"bytes,2,rep,name=service_ids,json=serviceIds,proto3" json:"service_ids" bson:"service_ids"`
 	// 自动部署相关配置
