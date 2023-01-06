@@ -25,6 +25,15 @@ func TestQueryProject(t *testing.T) {
 	t.Log(ps)
 }
 
+func TestHandleEvent(t *testing.T) {
+	req := scm.NewDefaultWebHookEvent()
+	ps, err := impl.HandleGitlabEvent(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ps)
+}
+
 func init() {
 	tools.DevelopmentSetup()
 	impl = app.GetInternalApp(scm.AppName).(scm.Service)

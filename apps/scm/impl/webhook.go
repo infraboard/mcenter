@@ -7,7 +7,7 @@ import (
 )
 
 // 应用事件处理
-func (s *impl) HandleEvent(ctx context.Context, in *scm.WebHookEvent) (
-	*scm.WebHookEvent, error) {
+func (s *impl) HandleEvent(ctx context.Context, in *scm.GitlabWebHookEvent) (
+	*scm.GitlabWebHookEvent, error) {
 	return nil, nil
 }

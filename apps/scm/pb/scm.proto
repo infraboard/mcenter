@@ -10,7 +10,7 @@ enum PROVIDER {
     GITHUB = 1;
 }
 
-message WebHookEvent {
+message GitlabWebHookEvent {
     // 事件类型
     // @gotags: bson:"object_kind" json:"object_kind" validate:"required"
     string object_kind = 1;

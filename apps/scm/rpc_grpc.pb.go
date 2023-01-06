@@ -24,8 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 type RPCClient interface {
 	// 查询项目列表
 	QueryProject(ctx context.Context, in *QueryProjectRequest, opts ...grpc.CallOption) (*ProjectSet, error)
-	// 应用事件处理
-	HandleEvent(ctx context.Context, in *WebHookEvent, opts ...grpc.CallOption) (*WebHookEvent, error)
+	// 处理Gitlab的事件
+	HandleGitlabEvent(ctx context.Context, in *GitlabWebHookEvent, opts ...grpc.CallOption) (*GitlabWebHookEvent, error)
 }
 
 type rPCClient struct {
@@ -45,9 +45,9 @@ func (c *rPCClient) QueryProject(ctx context.Context, in *QueryProjectRequest, o
 	return out, nil
 }
 
-func (c *rPCClient) HandleEvent(ctx context.Context, in *WebHookEvent, opts ...grpc.CallOption) (*WebHookEvent, error) {
-	out := new(WebHookEvent)
-	err := c.cc.Invoke(ctx, "/infraboard.mcenter.scm.RPC/HandleEvent", in, out, opts...)
+func (c *rPCClient) HandleGitlabEvent(ctx context.Context, in *GitlabWebHookEvent, opts ...grpc.CallOption) (*GitlabWebHookEvent, error) {
+	out := new(GitlabWebHookEvent)
+	err := c.cc.Invoke(ctx, "/infraboard.mcenter.scm.RPC/HandleGitlabEvent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -60,8 +60,8 @@ func (c *rPCClient) HandleEvent(ctx context.Context, in *WebHookEvent, opts ...g
 type RPCServer interface {
 	// 查询项目列表
 	QueryProject(context.Context, *QueryProjectRequest) (*ProjectSet, error)
-	// 应用事件处理
-	HandleEvent(context.Context, *WebHookEvent) (*WebHookEvent, error)
+	// 处理Gitlab的事件
+	HandleGitlabEvent(context.Context, *GitlabWebHookEvent) (*GitlabWebHookEvent, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -72,8 +72,8 @@ type UnimplementedRPCServer struct {
 func (UnimplementedRPCServer) QueryProject(context.Context, *QueryProjectRequest) (*ProjectSet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryProject not implemented")
 }
-func (UnimplementedRPCServer) HandleEvent(context.Context, *WebHookEvent) (*WebHookEvent, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HandleEvent not implemented")
+func (UnimplementedRPCServer) HandleGitlabEvent(context.Context, *GitlabWebHookEvent) (*GitlabWebHookEvent, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HandleGitlabEvent not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -106,20 +106,20 @@ func _RPC_QueryProject_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RPC_HandleEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WebHookEvent)
+func _RPC_HandleGitlabEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GitlabWebHookEvent)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RPCServer).HandleEvent(ctx, in)
+		return srv.(RPCServer).HandleGitlabEvent(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/infraboard.mcenter.scm.RPC/HandleEvent",
+		FullMethod: "/infraboard.mcenter.scm.RPC/HandleGitlabEvent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).HandleEvent(ctx, req.(*WebHookEvent))
+		return srv.(RPCServer).HandleGitlabEvent(ctx, req.(*GitlabWebHookEvent))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -136,8 +136,8 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RPC_QueryProject_Handler,
 		},
 		{
-			MethodName: "HandleEvent",
-			Handler:    _RPC_HandleEvent_Handler,
+			MethodName: "HandleGitlabEvent",
+			Handler:    _RPC_HandleGitlabEvent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
