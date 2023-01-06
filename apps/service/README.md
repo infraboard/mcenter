@@ -19,11 +19,3 @@
         + 发版记录
 + 服务下线
     + 代码归档, 资源回收释放
-
-
-## 服务事件
-
-
-+ SCM类型事件:
-    + [Gitlab Web Hooks](https://docs.gitlab.com/ee/user/project/integrations/webhooks.html#webhooks)
-    + [Github Web Hooks]()
