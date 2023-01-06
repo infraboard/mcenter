@@ -1,11 +1,13 @@
-package provider
+package gitlab
 
 import (
 	"fmt"
 	"net/url"
+
+	"github.com/infraboard/mcenter/apps/scm"
 )
 
-type WebHook struct {
+type GitLabWebHook struct {
 	PushEventsBranchFilter   string `json:"push_events_branch_filter"`
 	PushEvents               bool   `json:"push_events"`
 	IssuesEvents             bool   `json:"issues_events"`
@@ -20,7 +22,7 @@ type WebHook struct {
 	Url                      string `json:"url"`
 }
 
-func (req *WebHook) FormValue() url.Values {
+func (req *GitLabWebHook) FormValue() url.Values {
 	val := make(url.Values)
 	val.Set("push_events", fmt.Sprintf("%t", req.PushEvents))
 	val.Set("tag_push_events", fmt.Sprintf("%t", req.TagPushEvents))
@@ -30,27 +32,31 @@ func (req *WebHook) FormValue() url.Values {
 	return val
 }
 
-func NewAddProjectHookRequest(projectID int64, hook *WebHook) *AddProjectHookRequest {
+func NewAddProjectHookRequest(projectID int64, webhook *GitLabWebHook) *AddProjectHookRequest {
 	return &AddProjectHookRequest{
 		ProjectID: projectID,
-		Hook:      hook,
+		WebHook:   webhook,
 	}
 }
 
 type AddProjectHookRequest struct {
-	ProjectID int64
-	Hook      *WebHook
+	// 项目厂商
+	Provider scm.PROVIDER `json:"provider"`
+	// 项目Id
+	ProjectID int64 `json:"project_id"`
+	// Gitlab WebHook配置
+	WebHook *GitLabWebHook `json:"webhook"`
 }
 
 func NewAddProjectHookResponse() *AddProjectHookResponse {
 	return &AddProjectHookResponse{
-		WebHook: &WebHook{},
+		GitLabWebHook: &GitLabWebHook{},
 	}
 }
 
 type AddProjectHookResponse struct {
 	ID int64 `json:"id"`
-	*WebHook
+	*GitLabWebHook
 }
 
 func NewDeleteProjectReqeust(projectID, hookID int64) *DeleteProjectReqeust {
@@ -61,6 +67,6 @@ func NewDeleteProjectReqeust(projectID, hookID int64) *DeleteProjectReqeust {
 }
 
 type DeleteProjectReqeust struct {
-	ProjectID int64
-	HookID    int64
+	ProjectID int64 `json:"project_id"`
+	HookID    int64 `json:"hook_id"`
 }

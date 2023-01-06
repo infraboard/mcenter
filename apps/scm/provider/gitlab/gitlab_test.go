@@ -4,7 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/infraboard/mcenter/apps/scm/provider"
 	"github.com/infraboard/mcenter/apps/scm/provider/gitlab"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -25,14 +24,14 @@ func TestListProject(t *testing.T) {
 }
 
 func TestAddProjectHook(t *testing.T) {
-	hook := &provider.WebHook{
+	hook := &gitlab.GitLabWebHook{
 		PushEvents:          true,
 		TagPushEvents:       true,
 		MergeRequestsEvents: true,
 		Token:               "9999",
 		Url:                 "http://www.baidu.com",
 	}
-	req := provider.NewAddProjectHookRequest(ProjectID, hook)
+	req := gitlab.NewAddProjectHookRequest(ProjectID, hook)
 
 	resp, err := v4.Project().AddProjectHook(ctx, req)
 	if err != nil {
@@ -42,7 +41,7 @@ func TestAddProjectHook(t *testing.T) {
 }
 
 func TestDeleteProjectHook(t *testing.T) {
-	req := provider.NewDeleteProjectReqeust(ProjectID, 15519532)
+	req := gitlab.NewDeleteProjectReqeust(ProjectID, 15519532)
 	err := v4.Project().DeleteProjectHook(ctx, req)
 	if err != nil {
 		t.Fatal(err)
