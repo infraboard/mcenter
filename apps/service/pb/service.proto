@@ -68,8 +68,8 @@ message CreateServiceRequest {
     // @gotags: bson:"repository" json:"repository"
     Repository repository = 9;
     // 服务标签
-    // @gotags: bson:"tags" json:"tags"
-    map<string, string> tags = 14;
+    // @gotags: bson:"labels" json:"labels"
+    map<string, string> labels = 14;
 }
 
 message UpdateServiceRequest {
@@ -140,7 +140,7 @@ message Repository {
     // @gotags: bson:"provider" json:"provider"
     SCM_PROVIDER provider = 1;
     // token 操作仓库, 比如设置回调
-    // @gotags: bson:"token" json:"token"
+    // @gotags: bson:"token" json:"token,omitempty"
     string token = 2;
     // 仓库对应的项目Id
     // @gotags: bson:"project_id" json:"project_id"

@@ -16,24 +16,33 @@ service RPC {
 
 // QueryPolicyRequest 获取子账号列表
 message QueryPolicyRequest {
+    // 分页参数
     // @gotags: bson:"page" json:"page"
-   infraboard.mcube.page.PageRequest page = 1;
-    // @gotags: json:"username,omitempty"
-    string username = 2;
-    // @gotags: json:"role_id,omitempty"
-    string role_id = 3;
-    // @gotags: json:"namespace,omitempty"
-    string namespace = 4;
-    // @gotags: json:"type,omitempty"
-    optional PolicyType type = 5;
-    // @gotags: json:"with_role,omitempty"
-    bool with_role = 6;
-    // @gotags: json:"with_namespace,omitempty"
-    bool with_namespace = 7;
+    infraboard.mcube.page.PageRequest page = 1;
+    // 策略所属域
     // @gotags: json:"domain"
     string domain = 8;
+    // 用户名称
+    // @gotags: json:"username,omitempty"
+    string username = 2;
+    // 用户角色
+    // @gotags: json:"role_id,omitempty"
+    string role_id = 3;
+    // 用户空间
+    // @gotags: json:"namespace,omitempty"
+    string namespace = 4;
+    // 组相关策略
     // @gotags: json:"group"
-    string group = 9;     
+    string group = 9;  
+    // 策略类型
+    // @gotags: json:"type,omitempty"
+    optional PolicyType type = 5;
+    // 是否查询角色相关信息
+    // @gotags: json:"with_role,omitempty"
+    bool with_role = 6;
+    // 是否查询空间相关信息
+    // @gotags: json:"with_namespace,omitempty"
+    bool with_namespace = 7;   
 }
 
 // DescribePolicyRequest todo

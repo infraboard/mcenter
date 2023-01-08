@@ -46,7 +46,7 @@ func NewCreateServiceRequest() *CreateServiceRequest {
 		Namespace:  namespace.DEFAULT_NAMESPACE,
 		Enabled:    true,
 		Repository: &Repository{},
-		Tags:       map[string]string{},
+		Labels:     map[string]string{},
 	}
 }
 

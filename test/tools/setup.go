@@ -1,6 +1,8 @@
 package tools
 
 import (
+	"encoding/json"
+	"io"
 	"os"
 
 	"github.com/infraboard/mcenter/conf"
@@ -13,12 +15,7 @@ import (
 	_ "github.com/infraboard/mcenter/apps"
 )
 
-func AccessToken() string {
-	return os.Getenv("MCENTER_ACCESS_TOKEN")
-}
-
 func DevelopmentSetup() {
-
 	// 初始化日志实例
 	zap.DevelopmentSetup()
 
@@ -36,4 +33,22 @@ func DevelopmentSetup() {
 	if err := app.InitAllApp(); err != nil {
 		panic(err)
 	}
+}
+
+func AccessToken() string {
+	return os.Getenv("MCENTER_ACCESS_TOKEN")
+}
+
+func ReadJsonFile(filepath string, v any) error {
+	fd, err := os.Open(filepath)
+	if err != nil {
+		return err
+	}
+	defer fd.Close()
+
+	payload, err := io.ReadAll(fd)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(payload, v)
 }

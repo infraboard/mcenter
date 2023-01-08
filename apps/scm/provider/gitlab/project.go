@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcenter/apps/scm"
-	"github.com/infraboard/mcenter/apps/scm/provider"
 	"github.com/infraboard/mcube/client/negotiator"
 	"github.com/infraboard/mcube/client/rest"
 )
@@ -38,13 +37,13 @@ func (p *ProjectV4) ListProjects(ctx context.Context) (*scm.ProjectSet, error) {
 }
 
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html#add-project-hook
-func (p *ProjectV4) AddProjectHook(ctx context.Context, req *provider.AddProjectHookRequest) (
-	*provider.AddProjectHookResponse, error) {
-	ins := provider.NewAddProjectHookResponse()
+func (p *ProjectV4) AddProjectHook(ctx context.Context, req *AddProjectHookRequest) (
+	*AddProjectHookResponse, error) {
+	ins := NewAddProjectHookResponse()
 	err := p.client.
 		Post(fmt.Sprintf("%d/hooks", req.ProjectID)).
 		Header(rest.CONTENT_TYPE_HEADER, string(negotiator.MIME_POST_FORM)).
-		Body(req.Hook.FormValue()).
+		Body(req.WebHook.FormValue()).
 		Do(ctx).
 		Into(ins)
 
@@ -55,7 +54,7 @@ func (p *ProjectV4) AddProjectHook(ctx context.Context, req *provider.AddProject
 }
 
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html#delete-project-hook
-func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *provider.DeleteProjectReqeust) error {
+func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *DeleteProjectReqeust) error {
 	err := p.client.
 		Delete(fmt.Sprintf("%d/hooks/%d", req.ProjectID, req.HookID)).
 		Do(ctx).

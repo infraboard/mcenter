@@ -13,6 +13,12 @@ func (h *handler) QueryProject(r *restful.Request, w *restful.Response) {
 	req.Address = qs.Get("address")
 	req.Token = qs.Get("token")
 
+	err := req.SetProviderFromString(qs.Get("provider"))
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
 	set, err := h.scm.QueryProject(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)

@@ -7,14 +7,14 @@ require (
 	github.com/BurntSushi/toml v1.1.0
 	github.com/caarlos0/env/v6 v6.9.2
 	github.com/emicklei/go-restful-openapi/v2 v2.9.1
-	github.com/emicklei/go-restful/v3 v3.8.0
+	github.com/emicklei/go-restful/v3 v3.10.1
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
 	github.com/go-ldap/ldap/v3 v3.4.4
 	github.com/go-openapi/spec v0.20.6
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
-	github.com/infraboard/mcube v1.9.7-0.20221228073642-fc95434bf4de
+	github.com/infraboard/mcube v1.9.7-0.20230105065309-16f76ddc0a89
 	github.com/kvtools/valkeyrie v1.0.0
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.10
 	github.com/mssola/user_agent v0.5.3

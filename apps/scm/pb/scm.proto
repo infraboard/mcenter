@@ -10,7 +10,7 @@ enum PROVIDER {
     GITHUB = 1;
 }
 
-message WebHookEvent {
+message GitlabWebHookEvent {
     // 事件类型
     // @gotags: bson:"object_kind" json:"object_kind" validate:"required"
     string object_kind = 1;
@@ -101,6 +101,10 @@ message Project {
 }
 
 message ProjectSet {
+    // 项目总条数
+    // @gotags: json:"total"
+    int64 total = 1;
+    // 项目列表
     // @gotags: json:"items"
-    repeated Project items = 9; 
+    repeated Project items = 2; 
 }

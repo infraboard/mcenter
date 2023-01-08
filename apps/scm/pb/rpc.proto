@@ -8,19 +8,18 @@ import "apps/scm/pb/scm.proto";
 service RPC {
     // 查询项目列表
     rpc QueryProject(QueryProjectRequest) returns(ProjectSet);
-    // 应用事件处理
-    rpc HandleEvent(WebHookEvent) returns(WebHookEvent);
+    // 处理Gitlab的事件
+    rpc HandleGitlabEvent(GitlabWebHookEvent) returns(GitlabWebHookEvent);
 }
-
 
 message QueryProjectRequest {
     // 仓库类型
-    // @gotags: json:"provider" validate:"required"
+    // @gotags: json:"provider"
     PROVIDER provider = 1;
     // 仓库地址
-    // @gotags: json:"address" validate:"required"
+    // @gotags: json:"address"
     string address = 2;
     // 仓库访问凭证
-    // @gotags: json:"token" validate:"required"
+    // @gotags: json:"token"
     string token = 3;
 }
