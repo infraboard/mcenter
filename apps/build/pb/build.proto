@@ -3,6 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.build;
 option go_package = "github.com/infraboard/mcenter/apps/build";
 
+import "apps/service/pb/service.proto";
+
 
 message BuildTaskSet {
     // 总数量
@@ -23,4 +25,44 @@ message BuildTask {
     // 所属空间
     // @gotags: bson:"namespace" json:"namespace"
     string namespace = 3;
+    // 构建定义
+    // @gotags: bson:"spec" json:"spec"
+    BuildTaskRequest spec = 4;
+}
+
+message BuildTaskRequest {
+    // 目标仓库
+    // @gotags: bson:"repository" json:"repository"
+    service.Repository repository = 1;
+    // 构建目标类型
+    // @gotags: bson:"target_type" json:"target_type"
+    TARGET_TYPE target_type = 2;
+    // 镜像构建配置
+    // @gotags: bson:"image_build" json:"image_build"
+    ImageBuildConfig image_build = 3;
+    // 包构建配置
+    // @gotags: bson:"pkg_build" json:"pkg_build"
+    PkgBuildConfig pkg_build = 4;
+}
+
+// 构建目标的类型
+enum TARGET_TYPE {
+    // 容器镜像
+    IMAGE = 0;
+    // 包
+    PKG = 1;
+}
+
+// 容器镜像构建配置
+message ImageBuildConfig {
+    // 其他信息
+    // @gotags: bson:"extra" json:"extra"
+    map<string,string> extra = 9;
+}
+
+// 包构建配置
+message PkgBuildConfig {
+    // 其他信息
+    // @gotags: bson:"extra" json:"extra"
+    map<string,string> extra = 9;
 }
