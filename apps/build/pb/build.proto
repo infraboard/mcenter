@@ -3,8 +3,6 @@ syntax = "proto3";
 package infraboard.mcenter.build;
 option go_package = "github.com/infraboard/mcenter/apps/build";
 
-import "apps/service/pb/service.proto";
-
 
 message BuildTaskSet {
     // 总数量
@@ -31,9 +29,9 @@ message BuildTask {
 }
 
 message BuildTaskRequest {
-    // 目标仓库
-    // @gotags: bson:"repository" json:"repository"
-    service.Repository repository = 1;
+    // 构建服务的Id
+    // @gotags: bson:"service_id" json:"service_id"
+    string service_id = 1;
     // 构建目标类型
     // @gotags: bson:"target_type" json:"target_type"
     TARGET_TYPE target_type = 2;
@@ -55,6 +53,12 @@ enum TARGET_TYPE {
 
 // 容器镜像构建配置
 message ImageBuildConfig {
+    // dockerfile所在路径, 默认当前目录下 Dockerfile
+    // @gotags: bson:"docker_file" json:"docker_file"
+    string docker_file = 1;
+    // 构建时注入的环境变量
+    // @gotags: bson:"build_env_vars" json:"build_env_vars"
+    map<string,string> build_env_vars = 2;
     // 其他信息
     // @gotags: bson:"extra" json:"extra"
     map<string,string> extra = 9;
