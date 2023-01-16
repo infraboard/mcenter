@@ -16,7 +16,7 @@ func NewGithub(conf *Config) *Github {
 	rc.SetBaseURL(conf.Endpoint)
 	rc.SetHeader("Accept", "application/vnd.github+json")
 
-	ins := &Github{
+	g := &Github{
 		conf: conf,
 		log:  zap.L().Named("scm.github"),
 		rest: rc,
@@ -25,15 +25,10 @@ func NewGithub(conf *Config) *Github {
 	switch conf.AuthType {
 	case AUTH_TYPE_OAUTH2:
 	case AUTH_TYPE_PERSONAL_ACCESS_TOKEN:
-		ctx := context.Background()
-		ts := oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: conf.PersonalAccessToken},
-		)
-		tc := oauth2.NewClient(ctx, ts)
-		ins.client = github.NewClient(tc)
+		g.SetToken(conf.PersonalAccessToken)
 	}
 
-	return ins
+	return g
 }
 
 type Github struct {
@@ -63,7 +58,20 @@ func (g *Github) Exchange(ctx context.Context, code string) error {
 	if err != nil {
 		return err
 	}
-
 	g.log.Debug(tk)
+
+	g.SetToken(tk.AccessToken)
 	return nil
+}
+
+func (g *Github) SetToken(tk string) {
+	// 设置sdk token
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: tk},
+	)
+	tc := oauth2.NewClient(context.Background(), ts)
+	g.client = github.NewClient(tc)
+
+	// 设置rest client tk
+	g.rest.SetBearerTokenAuth(tk)
 }
