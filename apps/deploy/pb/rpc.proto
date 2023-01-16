@@ -2,3 +2,37 @@ syntax = "proto3";
 
 package infraboard.mcenter.deploy;
 option go_package = "github.com/infraboard/mcenter/apps/deploy";
+
+import "github.com/infraboard/mcube/pb/request/request.proto";
+import "github.com/infraboard/mcube/pb/page/page.proto";
+import "apps/deploy/pb/deploy.proto";
+
+// RPC 应用部署配置
+service RPC {
+    rpc UpdateDeploy(CreateDeployRequest) returns(Deploy);
+    rpc QueryDeploy(QueryDeployRequest) returns(DeploySet);
+}
+
+message QueryDeployRequest {
+    // 分页请求
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+}
+
+message UpdateDeployRequest {
+    // 更新模式
+    // @gotags: json:"update_mode"
+    infraboard.mcube.request.UpdateMode update_mode = 1;
+    // 部署Id
+    // @gotags: json:"id"
+    string id = 2;
+    // 创建信息
+    // @gotags: json:"spec"
+    CreateDeployRequest spec = 3;
+}
+
+message DeleteDeployRequest {
+    // 部署Id
+    // @gotags: json:"id"
+    string id = 1;
+}
