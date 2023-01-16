@@ -9,7 +9,7 @@ import "apps/deploy/pb/deploy.proto";
 
 // RPC 应用部署配置
 service RPC {
-    rpc UpdateDeploy(CreateDeployRequest) returns(Deploy);
+    rpc UpdateDeploy(UpdateDeployRequest) returns(Deploy);
     rpc QueryDeploy(QueryDeployRequest) returns(DeploySet);
 }
 
@@ -20,6 +20,20 @@ message QueryDeployRequest {
     // 部署Id列表
     // @gotags: json:"ids"
     repeated string ids = 2;
+}
+
+enum DESCRIBE_BY {
+    // 用户的ID
+    ID = 0;
+}
+
+message DescribeDeployRequest {
+    // 查询方式
+    // @gotags: json:"describe_by"
+    DESCRIBE_BY describe_by = 1;
+    // 查询值
+    // @gotags: json:"describe_value"  validate:"required"
+    string describe_value = 2;
 }
 
 message UpdateDeployRequest {
@@ -39,3 +53,4 @@ message DeleteDeployRequest {
     // @gotags: json:"id"
     string id = 1;
 }
+

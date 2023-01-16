@@ -2,10 +2,12 @@ package deploy
 
 import (
 	context "context"
+	"fmt"
 	"time"
 
 	"github.com/infraboard/mcenter/common/validate"
 	"github.com/infraboard/mcube/http/request"
+	pb_request "github.com/infraboard/mcube/pb/request"
 	"github.com/rs/xid"
 )
 
@@ -46,4 +48,26 @@ func NewQueryDeployRequest() *QueryDeployRequest {
 
 func NewCreateDeployRequest() *CreateDeployRequest {
 	return &CreateDeployRequest{}
+}
+
+// Validate 校验请求是否合法
+func (req *UpdateDeployRequest) Validate() error {
+	if req.Id == "" {
+		return fmt.Errorf("id required")
+	}
+	if req.UpdateMode.Equal(pb_request.UpdateMode_PUT) {
+		return validate.Validate(req)
+	}
+
+	return nil
+}
+
+func NewDescribeDeployRequest(id string) *DescribeDeployRequest {
+	return &DescribeDeployRequest{
+		DescribeValue: id,
+	}
+}
+
+func (req *DescribeDeployRequest) Validate() error {
+	return validate.Validate(req)
 }

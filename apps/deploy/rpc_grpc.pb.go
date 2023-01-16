@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	UpdateDeploy(ctx context.Context, in *CreateDeployRequest, opts ...grpc.CallOption) (*Deploy, error)
+	UpdateDeploy(ctx context.Context, in *UpdateDeployRequest, opts ...grpc.CallOption) (*Deploy, error)
 	QueryDeploy(ctx context.Context, in *QueryDeployRequest, opts ...grpc.CallOption) (*DeploySet, error)
 }
 
@@ -34,7 +34,7 @@ func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 	return &rPCClient{cc}
 }
 
-func (c *rPCClient) UpdateDeploy(ctx context.Context, in *CreateDeployRequest, opts ...grpc.CallOption) (*Deploy, error) {
+func (c *rPCClient) UpdateDeploy(ctx context.Context, in *UpdateDeployRequest, opts ...grpc.CallOption) (*Deploy, error) {
 	out := new(Deploy)
 	err := c.cc.Invoke(ctx, "/infraboard.mcenter.deploy.RPC/UpdateDeploy", in, out, opts...)
 	if err != nil {
@@ -56,7 +56,7 @@ func (c *rPCClient) QueryDeploy(ctx context.Context, in *QueryDeployRequest, opt
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	UpdateDeploy(context.Context, *CreateDeployRequest) (*Deploy, error)
+	UpdateDeploy(context.Context, *UpdateDeployRequest) (*Deploy, error)
 	QueryDeploy(context.Context, *QueryDeployRequest) (*DeploySet, error)
 	mustEmbedUnimplementedRPCServer()
 }
@@ -65,7 +65,7 @@ type RPCServer interface {
 type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedRPCServer) UpdateDeploy(context.Context, *CreateDeployRequest) (*Deploy, error) {
+func (UnimplementedRPCServer) UpdateDeploy(context.Context, *UpdateDeployRequest) (*Deploy, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDeploy not implemented")
 }
 func (UnimplementedRPCServer) QueryDeploy(context.Context, *QueryDeployRequest) (*DeploySet, error) {
@@ -85,7 +85,7 @@ func RegisterRPCServer(s grpc.ServiceRegistrar, srv RPCServer) {
 }
 
 func _RPC_UpdateDeploy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDeployRequest)
+	in := new(UpdateDeployRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -97,7 +97,7 @@ func _RPC_UpdateDeploy_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: "/infraboard.mcenter.deploy.RPC/UpdateDeploy",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).UpdateDeploy(ctx, req.(*CreateDeployRequest))
+		return srv.(RPCServer).UpdateDeploy(ctx, req.(*UpdateDeployRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
