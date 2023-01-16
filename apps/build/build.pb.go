@@ -27,7 +27,7 @@ type TARGET_TYPE int32
 const (
 	// 容器镜像
 	TARGET_TYPE_IMAGE TARGET_TYPE = 0
-	// 可执行文件
+	// 包
 	TARGET_TYPE_PKG TARGET_TYPE = 1
 )
 

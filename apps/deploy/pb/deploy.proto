@@ -50,7 +50,7 @@ message K8sTypeConfig {
     // @gotags: bson:"workload_config" json:"workload_config" validate:"required"
     string workload_config = 3;
     // k8s service配置
-    // @gotags: bson:"service" json:"service" validate:"required"
+    // @gotags: bson:"service" json:"service"
     string service = 4;
 }
 

@@ -223,8 +223,8 @@ type K8STypeConfig struct {
 	// @gotags: bson:"workload_config" json:"workload_config" validate:"required"
 	WorkloadConfig string `protobuf:"bytes,3,opt,name=workload_config,json=workloadConfig,proto3" json:"workload_config" bson:"workload_config" validate:"required"`
 	// k8s service配置
-	// @gotags: bson:"service" json:"service" validate:"required"
-	Service string `protobuf:"bytes,4,opt,name=service,proto3" json:"service" bson:"service" validate:"required"`
+	// @gotags: bson:"service" json:"service"
+	Service string `protobuf:"bytes,4,opt,name=service,proto3" json:"service" bson:"service"`
 }
 
 func (x *K8STypeConfig) Reset() {
