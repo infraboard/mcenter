@@ -3,6 +3,7 @@ package instance
 import (
 	"fmt"
 	"hash/fnv"
+	"net/http"
 	"sort"
 	"time"
 
@@ -28,6 +29,19 @@ var (
 
 type Service interface {
 	RPCServer
+}
+
+func NewSearchRequestFromHttp(r *http.Request) *SearchRequest {
+	qs := r.URL.Query()
+	req := NewSearchRequest()
+	req.Page = request.NewPageRequestFromHTTP(r)
+	req.Domain = qs.Get("domain")
+	req.Namespace = qs.Get("namespace")
+	req.ServiceName = qs.Get("service_name")
+	req.Region = qs.Get("region")
+	req.Environment = qs.Get("env")
+	req.Group = qs.Get("group")
+	return req
 }
 
 func NewSearchRequest() *SearchRequest {

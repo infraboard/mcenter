@@ -34,3 +34,15 @@ func (h *handler) UnRegistryInstance(r *restful.Request, w *restful.Response) {
 
 	response.Success(w, set)
 }
+
+func (h *handler) SearchInstance(r *restful.Request, w *restful.Response) {
+	req := instance.NewSearchRequestFromHttp(r.Request)
+
+	set, err := h.service.Search(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	response.Success(w, set)
+}

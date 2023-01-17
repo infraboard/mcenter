@@ -35,6 +35,12 @@ func (h *handler) Version() string {
 func (h *handler) Registry(ws *restful.WebService) {
 	tags := []string{"服务实例管理"}
 
+	ws.Route(ws.GET("/").To(h.SearchInstance).
+		Doc("搜索实例").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Reads(instance.RegistryRequest{}).
+		Writes(instance.Instance{}))
+
 	ws.Route(ws.POST("/").To(h.RegistryInstance).
 		Doc("实例注册").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
