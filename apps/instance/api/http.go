@@ -44,14 +44,14 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.RegistryInstance).
 		Doc("实例注册").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Reads(instance.RegistryRequest{}).
+		Reads(instance.UnregistryRequest{}).
 		Writes(instance.Instance{}))
 
 	ws.Route(ws.DELETE("/{instance_id}").To(h.RegistryInstance).
 		Doc("实例注销").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Reads(instance.RegistryRequest{}).
-		Writes(instance.Instance{}))
+		Reads(instance.SearchRequest{}).
+		Writes(instance.InstanceSet{}))
 }
 
 func init() {
