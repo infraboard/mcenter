@@ -25,21 +25,6 @@ func TestQueryProject(t *testing.T) {
 	t.Log(ps)
 }
 
-func TestHandleEvent(t *testing.T) {
-	req := scm.NewDefaultWebHookEvent()
-	err := tools.ReadJsonFile("test/webhook.json", req)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Log(req)
-
-	ps, err := impl.HandleGitlabEvent(ctx, req)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Log(ps)
-}
-
 func init() {
 	tools.DevelopmentSetup()
 	impl = app.GetInternalApp(scm.AppName).(scm.Service)

@@ -8,8 +8,6 @@ import "apps/scm/pb/scm.proto";
 service RPC {
     // 查询项目列表
     rpc QueryProject(QueryProjectRequest) returns(ProjectSet);
-    // 处理Gitlab的事件
-    rpc HandleGitlabEvent(GitlabWebHookEvent) returns(GitlabWebHookEvent);
 }
 
 message QueryProjectRequest {

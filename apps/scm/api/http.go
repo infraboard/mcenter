@@ -42,12 +42,6 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Param(ws.QueryParameter("token", "oauth2 state").DataType("string").Required(false)).
 		Writes(scm.ProjectSet{}).
 		Returns(200, "OK", scm.ProjectSet{}))
-
-	ws.Route(ws.GET("events/gitlab").To(h.HandleGitlabEvent).
-		Doc("处理Gitlab Webhook事件").
-		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Writes(scm.ProjectSet{}).
-		Returns(200, "OK", scm.ProjectSet{}))
 }
 
 func init() {
