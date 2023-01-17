@@ -15,7 +15,6 @@ require (
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
 	github.com/infraboard/mcube v1.9.7-0.20230105065309-16f76ddc0a89
-	github.com/kvtools/valkeyrie v1.0.0
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.10
 	github.com/mssola/user_agent v0.5.3
 	github.com/rs/xid v1.4.0
@@ -24,8 +23,6 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.561
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.542
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms v1.0.561
-	github.com/traefik/paerser v0.1.9
-	go.etcd.io/etcd/client/v3 v3.5.5
 	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
@@ -36,8 +33,6 @@ require (
 require (
 	github.com/Azure/go-ntlmssp v0.0.0-20220621081337-cb9428e4ac1e // indirect
 	github.com/bluele/gcache v0.0.2 // indirect
-	github.com/coreos/go-semver v0.3.0 // indirect
-	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.7.7 // indirect
@@ -49,7 +44,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
@@ -75,8 +69,6 @@ require (
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	go.etcd.io/etcd/api/v3 v3.5.5 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.5.5 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.20.0 // indirect
