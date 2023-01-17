@@ -22,3 +22,15 @@ func (h *handler) RegistryInstance(r *restful.Request, w *restful.Response) {
 
 	response.Success(w, set)
 }
+
+func (h *handler) UnRegistryInstance(r *restful.Request, w *restful.Response) {
+	req := instance.NewUnregistryRequest(r.PathParameter("instance_id"))
+
+	set, err := h.service.UnRegistryInstance(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	response.Success(w, set)
+}

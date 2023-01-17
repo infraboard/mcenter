@@ -1,8 +1,7 @@
 package api
 
 import (
-	"fmt"
-
+	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcube/app"
@@ -34,8 +33,19 @@ func (h *handler) Version() string {
 }
 
 func (h *handler) Registry(ws *restful.WebService) {
-	tags := []string{"instances"}
-	fmt.Println(tags)
+	tags := []string{"服务实例管理"}
+
+	ws.Route(ws.POST("/").To(h.RegistryInstance).
+		Doc("实例注册").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Reads(instance.RegistryRequest{}).
+		Writes(instance.Instance{}))
+
+	ws.Route(ws.DELETE("/{instance_id}").To(h.RegistryInstance).
+		Doc("实例注销").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Reads(instance.RegistryRequest{}).
+		Writes(instance.Instance{}))
 }
 
 func init() {

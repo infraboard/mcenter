@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	AppName = "instance"
+	AppName = "instances"
 )
 
 const (
