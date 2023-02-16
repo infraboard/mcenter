@@ -12,9 +12,13 @@ import (
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/instance"
+	"github.com/infraboard/mcenter/apps/namespace"
+	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/permission"
+	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
+	"github.com/infraboard/mcenter/apps/user"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 )
 
@@ -98,6 +102,26 @@ func (c *ClientSet) Token() token.RPCClient {
 // Code服务的SDK
 func (c *ClientSet) Code() code.RPCClient {
 	return code.NewRPCClient(c.conn)
+}
+
+// Namespace服务的SDK
+func (c *ClientSet) Namespace() namespace.RPCClient {
+	return namespace.NewRPCClient(c.conn)
+}
+
+// User服务的SDK
+func (c *ClientSet) User() user.RPCClient {
+	return user.NewRPCClient(c.conn)
+}
+
+// Notify服务的SDK
+func (c *ClientSet) Notify() notify.RPCClient {
+	return notify.NewRPCClient(c.conn)
+}
+
+// Role服务的SDK
+func (c *ClientSet) Role() role.RPCClient {
+	return role.NewRPCClient(c.conn)
 }
 
 // Permission服务的SDK
