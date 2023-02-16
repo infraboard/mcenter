@@ -34,7 +34,7 @@ func TestQueryService(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(set)
+	t.Log(tools.MustToJson(set))
 }
 
 func init() {
