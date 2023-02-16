@@ -18,7 +18,7 @@ import (
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
 func GrpcAuthUnaryServerInterceptor(namespace string) grpc.UnaryServerInterceptor {
-	return newGrpcAuther(rpc.C().Serivce()).WithNamespace(namespace).Auth
+	return newGrpcAuther(rpc.C().Service()).WithNamespace(namespace).Auth
 }
 
 func newGrpcAuther(svr service.RPCClient) *grpcAuther {

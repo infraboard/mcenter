@@ -129,11 +129,6 @@ func (c *ClientSet) Permission() permission.RPCClient {
 	return permission.NewRPCClient(c.conn)
 }
 
-// Service服务的SDK
-func (c *ClientSet) Serivce() service.RPCClient {
-	return service.NewRPCClient(c.conn)
-}
-
 // Endpoint服务的SDK
 func (c *ClientSet) Endpoint() endpoint.RPCClient {
 	return endpoint.NewRPCClient(c.conn)
