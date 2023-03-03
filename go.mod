@@ -28,6 +28,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.27.1
+	sigs.k8s.io/yaml v1.3.0
 )
 
 require (
@@ -83,5 +84,4 @@ require (
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	sigs.k8s.io/yaml v1.3.0 // indirect
 )
