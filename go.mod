@@ -12,7 +12,6 @@ require (
 	github.com/go-ldap/ldap/v3 v3.4.4
 	github.com/go-openapi/spec v0.20.6
 	github.com/go-playground/validator/v10 v10.11.0
-	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
 	github.com/infraboard/mcube v1.9.7-0.20230105065309-16f76ddc0a89
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.10
@@ -25,7 +24,6 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms v1.0.561
 	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
-	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.27.1
 	sigs.k8s.io/yaml v1.3.0
@@ -47,7 +45,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
-	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -78,7 +76,6 @@ require (
 	golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect

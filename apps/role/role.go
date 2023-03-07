@@ -135,7 +135,6 @@ func (r *Role) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error) {
 		zap.L().Debugf("label match: %v from [key: %v, value: %v, result: %v",
 			ep.Entry.Labels, perm.Spec.LabelKey, perm.Spec.LabelValues, lok)
 		if rok && lok {
-
 			return perm, true, nil
 		}
 	}
@@ -158,7 +157,8 @@ func (s *RoleSet) Add(item *Role) {
 // HasPermission todo
 func (s *RoleSet) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error) {
 	for i := range s.Items {
-		p, ok, err := s.Items[i].HasPermission(ep)
+		role := s.Items[i]
+		p, ok, err := role.HasPermission(ep)
 		if err != nil {
 			return nil, false, err
 		}
