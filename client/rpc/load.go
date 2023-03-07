@@ -13,9 +13,17 @@ func C() *ClientSet {
 	return client
 }
 
-func LoadClientFromEnv() error {
+func NewConfigFromEnv() (*Config, error) {
 	conf := NewDefaultConfig()
 	err := env.Parse(conf)
+	if err != nil {
+		return nil, err
+	}
+	return conf, nil
+}
+
+func LoadClientFromEnv() error {
+	conf, err := NewConfigFromEnv()
 	if err != nil {
 		return err
 	}
