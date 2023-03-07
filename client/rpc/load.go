@@ -1,6 +1,8 @@
 package rpc
 
-import "github.com/caarlos0/env/v6"
+import (
+	"github.com/caarlos0/env/v6"
+)
 
 var (
 	client *ClientSet
@@ -11,6 +13,10 @@ func C() *ClientSet {
 		panic("mcenter rpc client config not load")
 	}
 	return client
+}
+
+func HasLoaded() bool {
+	return client != nil
 }
 
 func LoadClientFromEnv() error {

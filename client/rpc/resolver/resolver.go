@@ -38,6 +38,10 @@ func (*McenterResolverBuilder) Build(
 	opts resolver.BuildOptions) (
 	resolver.Resolver, error) {
 
+	if rpc.C() == nil {
+		return nil, fmt.Errorf("mcenter client not loaded, load client first")
+	}
+
 	r := &mcenterResolver{
 		mcenter:            rpc.C().Instance(),
 		target:             target,
