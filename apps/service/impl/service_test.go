@@ -10,8 +10,8 @@ import (
 
 func TestCreateService(t *testing.T) {
 	req := service.NewCreateServiceRequest()
-	req.Name = "cmdb"
-	req.Description = "资源中心"
+	req.Name = "moperator"
+	req.Description = "k8s operator"
 	req.Owner = "admin"
 	app, err := impl.CreateService(ctx, req)
 	if err != nil {
