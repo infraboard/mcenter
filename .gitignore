@@ -21,3 +21,4 @@ etc/config.env
 etc/unit_test.env
 etc/ssl
 mcenter
+mcenter-api

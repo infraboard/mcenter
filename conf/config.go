@@ -3,6 +3,7 @@ package conf
 import (
 	"context"
 	"fmt"
+	"os"
 	"sync"
 	"time"
 
@@ -104,18 +105,47 @@ func newDefaultLog() *log {
 }
 
 func newDefaultMongoDB() *mongodb {
-	return &mongodb{
-		Database:  "",
-		Endpoints: []string{"127.0.0.1:27017"},
+	m := &mongodb{
+		UserName:       "mcenter",
+		Password:       "123456",
+		Database:       "mcenter",
+		AuthDB:         "",
+		Endpoints:      []string{"127.0.0.1:27017"},
+		K8sServiceName: "MONGODB",
 	}
+	m.LoadK8sEnv()
+	return m
 }
 
 type mongodb struct {
-	Endpoints []string `toml:"endpoints" env:"MONGO_ENDPOINTS" envSeparator:","`
-	UserName  string   `toml:"username" env:"MONGO_USERNAME"`
-	Password  string   `toml:"password" env:"MONGO_PASSWORD"`
-	Database  string   `toml:"database" env:"MONGO_DATABASE"`
-	lock      sync.Mutex
+	Endpoints      []string `toml:"endpoints" env:"MONGO_ENDPOINTS" envSeparator:","`
+	UserName       string   `toml:"username" env:"MONGO_USERNAME"`
+	Password       string   `toml:"password" env:"MONGO_PASSWORD"`
+	Database       string   `toml:"database" env:"MONGO_DATABASE"`
+	AuthDB         string   `toml:"auth_db" env:"MONGO_AUTH_DB"`
+	K8sServiceName string   `toml:"k8s_service_name" env:"K8S_SERVICE_NAME"`
+	lock           sync.Mutex
+}
+
+// 当 Pod 运行在 Node 上，kubelet 会为每个活跃的 Service 添加一组环境变量。
+// kubelet 为 Pod 添加环境变量 {SVCNAME}_SERVICE_HOST 和 {SVCNAME}_SERVICE_PORT。
+// 这里 Service 的名称需大写，横线被转换成下划线
+// 具体请参考: https://kubernetes.io/zh-cn/docs/concepts/services-networking/service/#environment-variables
+func (m *mongodb) LoadK8sEnv() {
+	host := os.Getenv(fmt.Sprintf("%s_SERVICE_HOST", m.K8sServiceName))
+	port := os.Getenv(fmt.Sprintf("%s_SERVICE_PORT", m.K8sServiceName))
+	addr := fmt.Sprintf("%s:%s", host, port)
+	if host != "" && port != "" {
+		m.Endpoints = []string{addr}
+	}
+}
+
+func (m *mongodb) GetAuthDB() string {
+	if m.AuthDB != "" {
+		return m.AuthDB
+	}
+
+	return m.Database
 }
 
 // Client 获取一个全局的mongodb客户端连接
@@ -145,11 +175,11 @@ func (m *mongodb) GetDB() (*mongo.Database, error) {
 func (m *mongodb) getClient() (*mongo.Client, error) {
 	opts := options.Client()
 
-	cred := options.Credential{
-		AuthSource: m.Database,
-	}
-
 	if m.UserName != "" && m.Password != "" {
+		cred := options.Credential{
+			AuthSource: m.GetAuthDB(),
+		}
+
 		cred.Username = m.UserName
 		cred.Password = m.Password
 		cred.PasswordSet = true
