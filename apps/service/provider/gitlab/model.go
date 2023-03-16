@@ -15,6 +15,16 @@ type ProjectSet struct {
 	Items []*Project
 }
 
+func (s *ProjectSet) GitSshUrls() (urls []string) {
+	for i := range s.Items {
+		item := s.Items[i]
+		if item.GitSshUrl != "" {
+			urls = append(urls, item.GitSshUrl)
+		}
+	}
+	return
+}
+
 type Project struct {
 	// 项目id
 	Id int64 `json:"id"`

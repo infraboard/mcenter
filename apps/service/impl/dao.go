@@ -56,6 +56,11 @@ func (r *queryRequest) FindOptions() *options.FindOptions {
 
 func (r *queryRequest) FindFilter() bson.M {
 	filter := bson.M{}
+
+	if len(r.RepositorySshUrls) > 0 {
+		filter["spec.repository.ssh_url"] = bson.M{"$in": r.RepositorySshUrls}
+	}
+
 	// if r.Keywords != "" {
 	// 	filter["$or"] = bson.A{
 	// 		bson.M{"data.name": bson.M{"$regex": r.Keywords, "$options": "im"}},

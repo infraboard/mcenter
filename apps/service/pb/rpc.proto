@@ -31,8 +31,8 @@ message QueryServiceRequest {
     // @gotags: json:"type" yaml:"type"
     Type type = 2;
     // 服务代码SSH仓库地址
-    // @gotags: json:"repository_ssh_url" yaml:"repository_ssh_url"
-    repeated string repository_ssh_url = 3;
+    // @gotags: json:"repository_ssh_urls" yaml:"repository_ssh_urls"
+    repeated string repository_ssh_urls = 3;
 }
 
 enum DescribeBy {

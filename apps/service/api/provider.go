@@ -17,10 +17,13 @@ var (
 
 type providerHandler struct {
 	log logger.Logger
+
+	service service.MetaService
 }
 
 func (h *providerHandler) Config() error {
 	h.log = zap.L().Named(service.AppName)
+	h.service = app.GetInternalApp(service.AppName).(service.MetaService)
 	return nil
 }
 
@@ -53,6 +56,22 @@ func (h *providerHandler) QueryGitlabProject(r *restful.Request, w *restful.Resp
 		response.Failed(w, err)
 		return
 	}
+
+	gitSshUrls := set.GitSshUrls()
+	query := service.NewQueryServiceRequest()
+	query.RepositorySshUrls = gitSshUrls
+	query.Page.PageSize = uint64(len(gitSshUrls))
+	svcs, err := h.service.QueryService(r.Request.Context(), query)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	for i := range set.Items {
+		p := set.Items[i]
+		svcs.UpdateFromGitProject(p)
+	}
+
 	response.Success(w, set)
 }
 
