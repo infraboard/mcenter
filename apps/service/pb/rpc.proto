@@ -11,7 +11,18 @@ service RPC {
 	rpc ValidateCredential(ValidateCredentialRequest) returns(Service);
 	rpc QueryService(QueryServiceRequest) returns(ServiceSet);
 	rpc DescribeService(DescribeServiceRequest) returns(Service);
+    rpc QueryGitlabProject(QueryGitlabProjectRequest) returns(ServiceSet);
 }
+
+message QueryGitlabProjectRequest {
+    // gitlab服务地址
+    // @gotags: json:"address"
+    string address = 1;
+    // 访问Token
+    // @gotags: json:"token" validate:"required"
+    string token = 2;
+}
+
 
 // ValidateCredentialRequest 校验服务凭证
 message ValidateCredentialRequest {

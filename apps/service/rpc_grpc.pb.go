@@ -22,6 +22,7 @@ const (
 	RPC_ValidateCredential_FullMethodName = "/infraboard.mcenter.service.RPC/ValidateCredential"
 	RPC_QueryService_FullMethodName       = "/infraboard.mcenter.service.RPC/QueryService"
 	RPC_DescribeService_FullMethodName    = "/infraboard.mcenter.service.RPC/DescribeService"
+	RPC_QueryGitlabProject_FullMethodName = "/infraboard.mcenter.service.RPC/QueryGitlabProject"
 )
 
 // RPCClient is the client API for RPC service.
@@ -31,6 +32,7 @@ type RPCClient interface {
 	ValidateCredential(ctx context.Context, in *ValidateCredentialRequest, opts ...grpc.CallOption) (*Service, error)
 	QueryService(ctx context.Context, in *QueryServiceRequest, opts ...grpc.CallOption) (*ServiceSet, error)
 	DescribeService(ctx context.Context, in *DescribeServiceRequest, opts ...grpc.CallOption) (*Service, error)
+	QueryGitlabProject(ctx context.Context, in *QueryGitlabProjectRequest, opts ...grpc.CallOption) (*ServiceSet, error)
 }
 
 type rPCClient struct {
@@ -68,6 +70,15 @@ func (c *rPCClient) DescribeService(ctx context.Context, in *DescribeServiceRequ
 	return out, nil
 }
 
+func (c *rPCClient) QueryGitlabProject(ctx context.Context, in *QueryGitlabProjectRequest, opts ...grpc.CallOption) (*ServiceSet, error) {
+	out := new(ServiceSet)
+	err := c.cc.Invoke(ctx, RPC_QueryGitlabProject_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RPCServer is the server API for RPC service.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
@@ -75,6 +86,7 @@ type RPCServer interface {
 	ValidateCredential(context.Context, *ValidateCredentialRequest) (*Service, error)
 	QueryService(context.Context, *QueryServiceRequest) (*ServiceSet, error)
 	DescribeService(context.Context, *DescribeServiceRequest) (*Service, error)
+	QueryGitlabProject(context.Context, *QueryGitlabProjectRequest) (*ServiceSet, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -90,6 +102,9 @@ func (UnimplementedRPCServer) QueryService(context.Context, *QueryServiceRequest
 }
 func (UnimplementedRPCServer) DescribeService(context.Context, *DescribeServiceRequest) (*Service, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DescribeService not implemented")
+}
+func (UnimplementedRPCServer) QueryGitlabProject(context.Context, *QueryGitlabProjectRequest) (*ServiceSet, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryGitlabProject not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -158,6 +173,24 @@ func _RPC_DescribeService_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RPC_QueryGitlabProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGitlabProjectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).QueryGitlabProject(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RPC_QueryGitlabProject_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).QueryGitlabProject(ctx, req.(*QueryGitlabProjectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +209,10 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DescribeService",
 			Handler:    _RPC_DescribeService_Handler,
+		},
+		{
+			MethodName: "QueryGitlabProject",
+			Handler:    _RPC_QueryGitlabProject_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

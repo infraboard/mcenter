@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/pb/request"
 )
@@ -72,6 +73,31 @@ func (i *impl) QueryService(ctx context.Context, req *service.QueryServiceReques
 	*service.ServiceSet, error) {
 	query := newQueryRequest(req)
 	return i.query(ctx, query)
+}
+
+func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabProjectRequest) (
+	*service.ServiceSet, error) {
+	v4 := gitlab.NewGitlabV4(in.MakeConfig())
+	set, err := v4.Project().ListProjects(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	gitSshUrls := set.GitSshUrls()
+	query := service.NewQueryServiceRequest()
+	query.RepositorySshUrls = gitSshUrls
+	query.Page.PageSize = uint64(len(gitSshUrls))
+	svcs, err := i.QueryService(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range set.Items {
+		p := set.Items[i]
+		svcs.UpdateFromGitProject(p)
+	}
+
+	return svcs, nil
 }
 
 func (i *impl) DescribeService(ctx context.Context, req *service.DescribeServiceRequest) (

@@ -40,6 +40,10 @@ type Project struct {
 	NamespacePath string `json:"path_with_namespace"`
 }
 
+func (s *Project) IdToString() string {
+	return fmt.Sprintf("%d", s.Id)
+}
+
 type GitLabWebHook struct {
 	PushEventsBranchFilter   string `json:"push_events_branch_filter"`
 	PushEvents               bool   `json:"push_events"`

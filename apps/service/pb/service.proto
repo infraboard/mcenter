@@ -145,6 +145,9 @@ message Repository {
     // 仓库对应的项目Id
     // @gotags: bson:"project_id" json:"project_id"
     string project_id = 3;
+    // 仓库对应空间
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 9;
     // 仓库ssh url地址
     // @gotags: bson:"ssh_url" json:"ssh_url"
     string ssh_url = 4;

@@ -16,6 +16,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
+	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
 	"github.com/infraboard/mcenter/apps/token"
 )
 
@@ -102,7 +103,7 @@ func (s *ServiceSet) Add(item *Service) {
 
 func NewDefaultService() *Service {
 	return &Service{
-		Spec: &CreateServiceRequest{},
+		Spec: NewCreateServiceRequest(),
 	}
 }
 
@@ -211,4 +212,30 @@ func GetClientCredential(ctx context.Context) (clientId, clientSecret string) {
 	}
 
 	return
+}
+
+func NewQueryGitlabProjectRequestFromHTTP(r *http.Request) *QueryGitlabProjectRequest {
+	conf := NewQueryGitlabProjectRequest()
+
+	qs := r.URL.Query()
+	addr := qs.Get("address")
+	if addr != "" {
+		conf.Address = addr
+	}
+	conf.Token = r.Header.Get("GITLAB_PRIVATE_TOKEN")
+
+	return conf
+}
+
+func NewQueryGitlabProjectRequest() *QueryGitlabProjectRequest {
+	return &QueryGitlabProjectRequest{}
+}
+
+func (req *QueryGitlabProjectRequest) MakeConfig() *gitlab.Config {
+	conf := gitlab.NewDefaultConfig()
+	if req.Address != "" {
+		conf.Address = req.Address
+	}
+	conf.PrivateToken = req.Token
+	return conf
 }

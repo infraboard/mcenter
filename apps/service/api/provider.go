@@ -4,7 +4,6 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/logger"
@@ -48,30 +47,12 @@ func (h *providerHandler) Registry(ws *restful.WebService) {
 }
 
 func (h *providerHandler) QueryGitlabProject(r *restful.Request, w *restful.Response) {
-	conf := gitlab.NewConfigFromHTTP(r.Request)
-
-	v4 := gitlab.NewGitlabV4(conf)
-	set, err := v4.Project().ListProjects(r.Request.Context())
+	req := service.NewQueryGitlabProjectRequestFromHTTP(r.Request)
+	set, err := h.service.QueryGitlabProject(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
 		return
 	}
-
-	gitSshUrls := set.GitSshUrls()
-	query := service.NewQueryServiceRequest()
-	query.RepositorySshUrls = gitSshUrls
-	query.Page.PageSize = uint64(len(gitSshUrls))
-	svcs, err := h.service.QueryService(r.Request.Context(), query)
-	if err != nil {
-		response.Failed(w, err)
-		return
-	}
-
-	for i := range set.Items {
-		p := set.Items[i]
-		svcs.UpdateFromGitProject(p)
-	}
-
 	response.Success(w, set)
 }
 
