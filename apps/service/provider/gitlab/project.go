@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcube/client/negotiator"
 	"github.com/infraboard/mcube/client/rest"
 )
@@ -20,8 +19,8 @@ type ProjectV4 struct {
 }
 
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html
-func (p *ProjectV4) ListProjects(ctx context.Context) (*service.ServiceSet, error) {
-	set := service.NewServiceSet()
+func (p *ProjectV4) ListProjects(ctx context.Context) (*ProjectSet, error) {
+	set := NewProjectSet()
 
 	err := p.client.
 		Get("/").

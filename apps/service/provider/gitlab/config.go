@@ -1,9 +1,24 @@
 package gitlab
 
 import (
+	"net/http"
+
 	"github.com/caarlos0/env/v6"
 	"github.com/infraboard/mcenter/common/validate"
 )
+
+func NewConfigFromHTTP(r *http.Request) *Config {
+	conf := NewDefaultConfig()
+
+	qs := r.URL.Query()
+	addr := qs.Get("address")
+	if addr != "" {
+		conf.Address = addr
+	}
+	conf.PrivateToken = r.Header.Get("GITLAB_PRIVATE_TOKEN")
+
+	return conf
+}
 
 func NewDefaultConfig() *Config {
 	return &Config{
@@ -25,7 +40,7 @@ func LoadConfigFromEnv() (*Config, error) {
 
 type Config struct {
 	Address      string `json:"address" env:"GITLAB_ADDRESS" validate:"required"`
-	PrivateToken string `json:"private_token" env:"GITLAB_PRIVATE_TOkEN" validate:"required"`
+	PrivateToken string `json:"private_token" env:"GITLAB_PRIVATE_TOKEN" validate:"required"`
 }
 
 func (c *Config) Validate() error {

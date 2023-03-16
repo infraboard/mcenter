@@ -5,6 +5,31 @@ import (
 	"net/url"
 )
 
+func NewProjectSet() *ProjectSet {
+	return &ProjectSet{
+		Items: []*Project{},
+	}
+}
+
+type ProjectSet struct {
+	Items []*Project
+}
+
+type Project struct {
+	// 项目id
+	Id int64 `json:"id"`
+	// 描述
+	Description string `json:"description"`
+	// 名称
+	Name string `json:"name"`
+	// ssh 地址
+	GitSshUrl string `json:"ssh_url_to_repo"`
+	// http 地址
+	GitHttpUrl string `json:"http_url_to_repo"`
+	// namespace
+	NamespacePath string `json:"path_with_namespace"`
+}
+
 type GitLabWebHook struct {
 	PushEventsBranchFilter   string `json:"push_events_branch_filter"`
 	PushEvents               bool   `json:"push_events"`
