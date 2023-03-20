@@ -32,6 +32,10 @@ type Project struct {
 	Description string `json:"description"`
 	// 名称
 	Name string `json:"name"`
+	// 项目的Web访问地址
+	WebURL string `json:"web_url"`
+	// 项目的Logo地址
+	AvatarURL string `json:"avatar_url"`
 	// ssh 地址
 	GitSshUrl string `json:"ssh_url_to_repo"`
 	// http 地址

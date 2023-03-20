@@ -58,6 +58,9 @@ message CreateServiceRequest {
     // 服务名称
     // @gotags: bson:"name" json:"name"
     string name = 6;
+    // 服务Logo
+    // @gotags: bson:"logo" json:"logo"
+    string logo = 10;
     // 服务描述信息
     // @gotags: bson:"description" json:"description"
     string description = 7;
@@ -148,6 +151,9 @@ message Repository {
     // 仓库对应空间
     // @gotags: bson:"namespace" json:"namespace"
     string namespace = 9;
+    // 仓库web url地址
+    // @gotags: bson:"web_url" json:"web_url"
+    string web_url = 10;
     // 仓库ssh url地址
     // @gotags: bson:"ssh_url" json:"ssh_url"
     string ssh_url = 4;

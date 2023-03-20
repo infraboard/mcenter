@@ -79,8 +79,8 @@ type QueryGitlabProjectRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// gitlab服务地址
-	// @gotags: json:"address" validate:"required"
-	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address" validate:"required"`
+	// @gotags: json:"address"
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address"`
 	// 访问Token
 	// @gotags: json:"token" validate:"required"
 	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" validate:"required"`

@@ -25,11 +25,13 @@ func NewServiceFromProject(p *gitlab.Project) *Service {
 	svc := NewDefaultService()
 	spec := svc.Spec
 	spec.Name = p.Name
+	spec.Logo = p.AvatarURL
 	spec.Description = p.Description
 	spec.Repository.ProjectId = p.IdToString()
 	spec.Repository.SshUrl = p.GitSshUrl
 	spec.Repository.HttpUrl = p.GitHttpUrl
 	spec.Repository.Namespace = p.NamespacePath
+	spec.Repository.WebUrl = p.WebURL
 	return svc
 }
 
