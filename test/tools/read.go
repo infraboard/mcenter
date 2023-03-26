@@ -58,6 +58,13 @@ func MustReadYamlFile(filepath string, v any) {
 	}
 }
 
+func MustReadJsonFile(filepath string, v any) {
+	err := ReadJsonFile(filepath, v)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func ReadJsonFile(filepath string, v any) error {
 	fd, err := os.Open(filepath)
 	if err != nil {

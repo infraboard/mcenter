@@ -1,0 +1,25 @@
+{
+    "domain": "default",
+    "namespace": "default",
+    "owner": "",
+    "enabled": true,
+    "type": "PLATFORM",
+    "name": "sample-devcloud",
+    "logo": "",
+    "description": "测试使用",
+    "level": 0,
+    "repository": {
+       "provider": "GITLAB",
+       "project_id": "29032549",
+       "namespace": "yumaojun03/sample-devcloud",
+       "web_url": "https://gitlab.com/yumaojun03/sample-devcloud",
+       "ssh_url": "git@gitlab.com:yumaojun03/sample-devcloud.git",
+       "http_url": "https://gitlab.com/yumaojun03/sample-devcloud.git",
+       "language": "JAVA",
+       "enable_hook": true,
+       "hook_config": "{\n   \"push_events_branch_filter\": \"\",\n   \"push_events\": true,\n   \"issues_events\": true,\n   \"confidential_issues_events\": false,\n   \"merge_requests_events\": true,\n   \"tag_push_events\": true,\n   \"note_events\": true,\n   \"confidential_note_events\": false,\n   \"wiki_page_events\": false,\n   \"releases_events\": true,\n   \"token\": \"自动填充服务的Id\",\n   \"url\": \"http://api.mdevcloud.cn/mpaas/api/v1/triggers/gitlab\"\n}",
+       "hook_id": "",
+       "created_at": 1629603874
+    },
+    "labels": {}
+ }

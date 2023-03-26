@@ -102,6 +102,10 @@ type GitLabWebHook struct {
 	Url                      string `json:"url"`
 }
 
+func (h *GitLabWebHook) ToJson() string {
+	return format.Prettify(h)
+}
+
 func (req *GitLabWebHook) FormValue() url.Values {
 	val := make(url.Values)
 	val.Set("push_events", fmt.Sprintf("%t", req.PushEvents))

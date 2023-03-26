@@ -57,7 +57,7 @@ init: dep ## Inital project
 run: ## Run Server
 	@go run main.go start
 
-runp: install dep ## Run product Server
+runp: dep ## Run product Server
 	@go run main.go start -f etc/config.toml
 
 clean: ## Remove previous build

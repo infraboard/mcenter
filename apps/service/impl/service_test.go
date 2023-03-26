@@ -21,6 +21,16 @@ func TestCreateService(t *testing.T) {
 	t.Log(app)
 }
 
+func TestCreateServiceFromGitLab(t *testing.T) {
+	req := service.NewCreateServiceRequest()
+	tools.MustReadJsonFile("./test/create_service.json", req)
+	app, err := impl.CreateService(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(app)
+}
+
 func TestQueryService(t *testing.T) {
 	req := service.NewQueryServiceRequest()
 	set, err := impl.QueryService(ctx, req)

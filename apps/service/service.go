@@ -50,6 +50,11 @@ func NewServiceFromProject(p *gitlab.Project) *Service {
 	spec.Repository.Namespace = p.NamespacePath
 	spec.Repository.WebUrl = p.WebURL
 	spec.Repository.CreatedAt = p.CreatedAt.Unix()
+	spec.Repository.EnableHook = true
+	spec.Repository.HookConfig = gitlab.NewGitLabWebHook(
+		"自动填充服务的Id",
+		"http://api.mdevcloud.cn/mpaas/api/v1/triggers/gitlab",
+	).ToJson()
 	return svc
 }
 
