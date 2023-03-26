@@ -251,7 +251,7 @@ func (x *QueryServiceRequest) GetType() Type {
 	if x != nil {
 		return x.Type
 	}
-	return Type_SYSTEM
+	return Type_PLATFORM
 }
 
 func (x *QueryServiceRequest) GetRepositorySshUrls() []string {

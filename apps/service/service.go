@@ -19,6 +19,14 @@ func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project) {
 	}
 }
 
+func (s *ServiceSet) UpdateScope(domain, namespace string) {
+	for i := range s.Items {
+		item := s.Items[i]
+		item.Spec.Domain = domain
+		item.Spec.Namespace = namespace
+	}
+}
+
 func (s *ServiceSet) GetServiceByGitSshUrl(gitSshUrl string) *Service {
 	for i := range s.Items {
 		item := s.Items[i]

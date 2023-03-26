@@ -6,12 +6,14 @@ option go_package = "github.com/infraboard/mcenter/apps/service";
 import "github.com/infraboard/mcube/pb/request/request.proto";
 
 enum Type {
-	// SYSTEM  系统应用
-	SYSTEM = 0;
-    // USER 用户应用, 为用户提供业务功能的服务
-    USER = 1;
-	// THIRD  第三方应用
-	THIRD = 9;
+	// PLATFORM 平台服务, 为业务提供非功能性需求的服务, 比如监控，告警, 发布 等。
+	PLATFORM = 0;
+    // 应用负载, 也就是业务服务
+    WORKLOAD = 1;
+    // 应用中间件
+    MIDDLEWARE = 2;
+	// 其他类型
+	OTHER = 15;
 }
 
 // Service is service provider

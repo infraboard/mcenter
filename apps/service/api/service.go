@@ -5,6 +5,7 @@ import (
 	"github.com/infraboard/mcube/http/restful/response"
 
 	"github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcenter/apps/token"
 )
 
 func (h *handler) CreateService(r *restful.Request, w *restful.Response) {
@@ -14,6 +15,11 @@ func (h *handler) CreateService(r *restful.Request, w *restful.Response) {
 		response.Failed(w, err)
 		return
 	}
+
+	// 补充用户信息
+	tk := token.GetTokenFromRequest(r)
+	req.Domain = tk.Domain
+	req.Namespace = tk.Namespace
 
 	set, err := h.service.CreateService(r.Request.Context(), req)
 	if err != nil {

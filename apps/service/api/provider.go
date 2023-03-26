@@ -53,6 +53,7 @@ func (h *providerHandler) QueryGitlabProject(r *restful.Request, w *restful.Resp
 		response.Failed(w, err)
 		return
 	}
+
 	response.Success(w, set)
 }
 
