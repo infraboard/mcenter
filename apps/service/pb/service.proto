@@ -172,6 +172,9 @@ message Repository {
    // scm设置Hook后返回的id, 用于删除应用时，取消hook使用
     // @gotags: bson:"hook_id" json:"hook_id"
     string hook_id = 11;
+    // 仓库的创建时间
+    // @gotags: bson:"created_at" json:"created_at"
+    int64 created_at = 12;
 }
 
 // 服务安全相关信息

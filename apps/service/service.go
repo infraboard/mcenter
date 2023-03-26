@@ -41,6 +41,7 @@ func NewServiceFromProject(p *gitlab.Project) *Service {
 	spec.Repository.HttpUrl = p.GitHttpUrl
 	spec.Repository.Namespace = p.NamespacePath
 	spec.Repository.WebUrl = p.WebURL
+	spec.Repository.CreatedAt = p.CreatedAt.Unix()
 	return svc
 }
 

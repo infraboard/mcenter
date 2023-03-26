@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"time"
+
+	"github.com/infraboard/mcenter/common/format"
 )
 
 func NewProjectSet() *ProjectSet {
@@ -14,6 +17,10 @@ func NewProjectSet() *ProjectSet {
 
 type ProjectSet struct {
 	Items []*Project
+}
+
+func (s *ProjectSet) String() string {
+	return format.Prettify(s)
 }
 
 func (s *ProjectSet) Len() int {
@@ -35,6 +42,8 @@ type Project struct {
 	Id int64 `json:"id"`
 	// 描述
 	Description string `json:"description"`
+	// 项目创建时间
+	CreatedAt time.Time `json:"created_at"`
 	// 名称
 	Name string `json:"name"`
 	// 项目的Web访问地址

@@ -104,18 +104,21 @@ func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabPr
 		return nil, err
 	}
 
-	gitSshUrls := set.GitSshUrls()
-	query := service.NewQueryServiceRequest()
-	query.RepositorySshUrls = gitSshUrls
-	query.Page.PageSize = uint64(len(gitSshUrls))
-	svcs, err := i.QueryService(ctx, query)
-	if err != nil {
-		return nil, err
-	}
+	svcs := service.NewServiceSet()
+	if set.Len() > 0 {
+		gitSshUrls := set.GitSshUrls()
+		query := service.NewQueryServiceRequest()
+		query.RepositorySshUrls = gitSshUrls
+		query.Page.PageSize = uint64(len(gitSshUrls))
+		svcs, err = i.QueryService(ctx, query)
+		if err != nil {
+			return nil, err
+		}
 
-	for i := range set.Items {
-		p := set.Items[i]
-		svcs.UpdateFromGitProject(p)
+		for i := range set.Items {
+			p := set.Items[i]
+			svcs.UpdateFromGitProject(p)
+		}
 	}
 
 	return svcs, nil
