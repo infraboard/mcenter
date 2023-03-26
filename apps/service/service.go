@@ -52,6 +52,12 @@ func (s *Service) GetRepositorySshUrl() string {
 	return ""
 }
 
+func NewRepository() *Repository {
+	return &Repository{
+		EnableHook: true,
+	}
+}
+
 func (r *Repository) ProjectIdToInt64() int64 {
 	pid, _ := strconv.ParseInt(r.ProjectId, 10, 64)
 	return pid
