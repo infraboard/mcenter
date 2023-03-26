@@ -136,6 +136,21 @@ func (i *impl) DeleteService(ctx context.Context, req *service.DeleteServiceRequ
 		return nil, err
 	}
 
+	// 如果开启了Hook需要移除Hook设置
+	repo := ins.Spec.Repository
+	if repo.EnableHook {
+		gc, err := repo.MakeGitlabConfig()
+		if err != nil {
+			return nil, err
+		}
+		v4 := gitlab.NewGitlabV4(gc)
+		removeHookReq := gitlab.NewDeleteProjectHookReqeust(repo.ProjectIdToInt64(), repo.HookIdToInt64())
+		err = v4.Project().DeleteProjectHook(ctx, removeHookReq)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	if err := i.delete(ctx, ins); err != nil {
 		return nil, err
 	}

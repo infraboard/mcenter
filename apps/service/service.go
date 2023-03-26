@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"net/url"
 	"strconv"
 
@@ -53,7 +54,6 @@ func NewServiceFromProject(p *gitlab.Project) *Service {
 	spec.Repository.EnableHook = true
 	spec.Repository.HookConfig = gitlab.NewGitLabWebHook(
 		"自动填充服务的Id",
-		"http://api.mdevcloud.cn/mpaas/api/v1/triggers/gitlab",
 	).ToJson()
 	return svc
 }
@@ -77,6 +77,11 @@ func (r *Repository) ProjectIdToInt64() int64 {
 	return pid
 }
 
+func (r *Repository) HookIdToInt64() int64 {
+	pid, _ := strconv.ParseInt(r.HookId, 10, 64)
+	return pid
+}
+
 func (r *Repository) MakeGitlabConfig() (*gitlab.Config, error) {
 	conf := gitlab.NewDefaultConfig()
 	addr, err := r.HostAddress()
@@ -93,5 +98,5 @@ func (r *Repository) HostAddress() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return u.Host, nil
+	return fmt.Sprintf("%s://%s", u.Scheme, u.Host), nil
 }

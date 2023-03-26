@@ -21,14 +21,15 @@ func TestCreateService(t *testing.T) {
 	t.Log(app)
 }
 
-func TestCreateServiceFromGitLab(t *testing.T) {
-	req := service.NewCreateServiceRequest()
-	tools.MustReadJsonFile("./test/create_service.json", req)
-	app, err := impl.CreateService(ctx, req)
+func TestQueryGitlabProject(t *testing.T) {
+	req := service.NewQueryGitlabProjectRequest()
+	req.Address = os.Getenv("GITLAB_ADDRESS")
+	req.Token = os.Getenv("GITLAB_PRIVATE_TOKEN")
+	set, err := impl.QueryGitlabProject(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(app)
+	t.Log(tools.MustToJson(set))
 }
 
 func TestQueryService(t *testing.T) {
@@ -40,13 +41,23 @@ func TestQueryService(t *testing.T) {
 	t.Log(tools.MustToJson(set))
 }
 
-func TestQueryGitlabProject(t *testing.T) {
-	req := service.NewQueryGitlabProjectRequest()
-	req.Address = os.Getenv("GITLAB_ADDRESS")
-	req.Token = os.Getenv("GITLAB_PRIVATE_TOKEN")
-	set, err := impl.QueryGitlabProject(ctx, req)
+func TestCreateServiceFromGitLab(t *testing.T) {
+	req := service.NewCreateServiceRequest()
+	req.Repository.Token = os.Getenv("GITLAB_PRIVATE_TOKEN")
+	tools.MustReadJsonFile("./test/create_service.json", req)
+
+	app, err := impl.CreateService(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(tools.MustToJson(set))
+	t.Log(app)
+}
+
+func TestDeleteService(t *testing.T) {
+	req := service.NewDeleteServiceRequestWithID("c40e9e7d")
+	app, err := impl.DeleteService(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(app)
 }

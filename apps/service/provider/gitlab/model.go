@@ -62,7 +62,7 @@ func (s *Project) IdToString() string {
 	return fmt.Sprintf("%d", s.Id)
 }
 
-func NewGitLabWebHook(token, url string) *GitLabWebHook {
+func NewGitLabWebHook(token string) *GitLabWebHook {
 	return &GitLabWebHook{
 		PushEvents:          true,
 		IssuesEvents:        true,
@@ -71,12 +71,12 @@ func NewGitLabWebHook(token, url string) *GitLabWebHook {
 		NoteEvents:          true,
 		ReleasesEvents:      true,
 		Token:               token,
-		Url:                 url,
+		Url:                 "http://api.mdevcloud.cn/mpaas/api/v1/triggers/gitlab",
 	}
 }
 
 func ParseGitLabWebHookFromString(conf string) (*GitLabWebHook, error) {
-	hook := NewGitLabWebHook("", "")
+	hook := NewGitLabWebHook("")
 	if conf != "" {
 		err := json.Unmarshal([]byte(conf), hook)
 		if err != nil {
@@ -145,14 +145,14 @@ func (r *AddProjectHookResponse) IDToString() string {
 	return fmt.Sprintf("%d", r.ID)
 }
 
-func NewDeleteProjectReqeust(projectID, hookID int64) *DeleteProjectReqeust {
-	return &DeleteProjectReqeust{
+func NewDeleteProjectHookReqeust(projectID, hookID int64) *DeleteProjectHookReqeust {
+	return &DeleteProjectHookReqeust{
 		ProjectID: projectID,
 		HookID:    hookID,
 	}
 }
 
-type DeleteProjectReqeust struct {
+type DeleteProjectHookReqeust struct {
 	ProjectID int64 `json:"project_id"`
 	HookID    int64 `json:"hook_id"`
 }

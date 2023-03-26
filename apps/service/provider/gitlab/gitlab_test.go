@@ -24,13 +24,7 @@ func TestListProject(t *testing.T) {
 }
 
 func TestAddProjectHook(t *testing.T) {
-	hook := &gitlab.GitLabWebHook{
-		PushEvents:          true,
-		TagPushEvents:       true,
-		MergeRequestsEvents: true,
-		Token:               "9999",
-		Url:                 "http://www.baidu.com",
-	}
+	hook := gitlab.NewGitLabWebHook("9999")
 	req := gitlab.NewAddProjectHookRequest(ProjectID, hook)
 
 	resp, err := v4.Project().AddProjectHook(ctx, req)
@@ -41,7 +35,7 @@ func TestAddProjectHook(t *testing.T) {
 }
 
 func TestDeleteProjectHook(t *testing.T) {
-	req := gitlab.NewDeleteProjectReqeust(ProjectID, 15519532)
+	req := gitlab.NewDeleteProjectHookReqeust(ProjectID, 18877715)
 	err := v4.Project().DeleteProjectHook(ctx, req)
 	if err != nil {
 		t.Fatal(err)

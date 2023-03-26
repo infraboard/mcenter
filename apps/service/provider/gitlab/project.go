@@ -53,7 +53,7 @@ func (p *ProjectV4) AddProjectHook(ctx context.Context, req *AddProjectHookReque
 }
 
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html#delete-project-hook
-func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *DeleteProjectReqeust) error {
+func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *DeleteProjectHookReqeust) error {
 	err := p.client.
 		Delete(fmt.Sprintf("%d/hooks/%d", req.ProjectID, req.HookID)).
 		Do(ctx).
