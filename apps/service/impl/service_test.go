@@ -33,7 +33,7 @@ func TestQueryService(t *testing.T) {
 func TestQueryGitlabProject(t *testing.T) {
 	req := service.NewQueryGitlabProjectRequest()
 	req.Address = os.Getenv("GITLAB_ADDRESS")
-	req.Token = os.Getenv("GITLAB_PRIVATE_TOkEN")
+	req.Token = os.Getenv("GITLAB_PRIVATE_TOKEN")
 	set, err := impl.QueryGitlabProject(ctx, req)
 	if err != nil {
 		t.Fatal(err)

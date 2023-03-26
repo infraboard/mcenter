@@ -7,6 +7,10 @@ import (
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
 )
 
+func (s *ServiceSet) Len() int {
+	return len(s.Items)
+}
+
 func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project) {
 	svc := s.GetServiceByGitSshUrl(p.GitSshUrl)
 	if svc == nil {

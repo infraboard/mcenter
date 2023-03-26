@@ -163,15 +163,15 @@ message Repository {
     // 源代码使用的编程语言, 构建时, 不同语言有不同的构建环境
     // @gotags: bson:"language" json:"language"
     LANGUAGE language = 6;
-    // hook设置的回调地址
-    // @gotags: bson:"hook_callback_url" json:"hook_callback_url"
-    string hook_callback_url = 7;
-    // scm设置Hook后返回的id, 用于删除应用时，取消hook使用
+    // 开启Hook设置
+    // @gotags: bson:"enable_hook" json:"enable_hook"
+    bool enable_hook = 7;
+    // Hook设置
+    // @gotags: bson:"hook_config" json:"hook_config"
+    string hook_config = 8;
+   // scm设置Hook后返回的id, 用于删除应用时，取消hook使用
     // @gotags: bson:"hook_id" json:"hook_id"
-    string hook_id = 8;
-    // 创建hook过程中的错误信息
-    // @gotags: bson:"hook_error" json:"hook_error"
-    string hook_error = 11;
+    string hook_id = 11;
 }
 
 // 服务安全相关信息

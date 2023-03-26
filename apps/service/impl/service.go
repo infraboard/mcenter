@@ -35,17 +35,22 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 
 	// 设置WebHook
 	repo := ins.Spec.Repository
-	gc, err := repo.MakeGitlabConfig()
-	if err != nil {
-		return nil, err
-	}
-	v4 := gitlab.NewGitlabV4(gc)
-	hookSetting := gitlab.NewGitLabWebHook(ins.Id, repo.HookCallbackUrl)
-	addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectIdToInt64(), hookSetting)
-	resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
-	if err != nil {
-		repo.HookError = err.Error()
-	} else {
+	if repo.EnableHook {
+		gc, err := repo.MakeGitlabConfig()
+		if err != nil {
+			return nil, err
+		}
+		v4 := gitlab.NewGitlabV4(gc)
+		hookSetting, err := gitlab.ParseGitLabWebHookFromString(repo.HookConfig)
+		if err != nil {
+			return nil, err
+		}
+		hookSetting.Token = ins.Id
+		addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectIdToInt64(), hookSetting)
+		resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
+		if err != nil {
+			return nil, err
+		}
 		repo.HookId = resp.IDToString()
 	}
 

@@ -1,6 +1,7 @@
 package gitlab
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 )
@@ -13,6 +14,10 @@ func NewProjectSet() *ProjectSet {
 
 type ProjectSet struct {
 	Items []*Project
+}
+
+func (s *ProjectSet) Len() int {
+	return len(s.Items)
 }
 
 func (s *ProjectSet) GitSshUrls() (urls []string) {
@@ -59,6 +64,18 @@ func NewGitLabWebHook(token, url string) *GitLabWebHook {
 		Token:               token,
 		Url:                 url,
 	}
+}
+
+func ParseGitLabWebHookFromString(conf string) (*GitLabWebHook, error) {
+	hook := NewGitLabWebHook("", "")
+	if conf != "" {
+		err := json.Unmarshal([]byte(conf), hook)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return hook, nil
 }
 
 type GitLabWebHook struct {
