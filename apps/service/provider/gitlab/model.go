@@ -48,6 +48,19 @@ func (s *Project) IdToString() string {
 	return fmt.Sprintf("%d", s.Id)
 }
 
+func NewGitLabWebHook(token, url string) *GitLabWebHook {
+	return &GitLabWebHook{
+		PushEvents:          true,
+		IssuesEvents:        true,
+		MergeRequestsEvents: true,
+		TagPushEvents:       true,
+		NoteEvents:          true,
+		ReleasesEvents:      true,
+		Token:               token,
+		Url:                 url,
+	}
+}
+
 type GitLabWebHook struct {
 	PushEventsBranchFilter   string `json:"push_events_branch_filter"`
 	PushEvents               bool   `json:"push_events"`
@@ -96,6 +109,10 @@ func NewAddProjectHookResponse() *AddProjectHookResponse {
 type AddProjectHookResponse struct {
 	ID int64 `json:"id"`
 	*GitLabWebHook
+}
+
+func (r *AddProjectHookResponse) IDToString() string {
+	return fmt.Sprintf("%d", r.ID)
 }
 
 func NewDeleteProjectReqeust(projectID, hookID int64) *DeleteProjectReqeust {

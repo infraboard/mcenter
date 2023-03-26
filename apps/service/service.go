@@ -1,6 +1,11 @@
 package service
 
-import "github.com/infraboard/mcenter/apps/service/provider/gitlab"
+import (
+	"net/url"
+	"strconv"
+
+	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
+)
 
 func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project) {
 	svc := s.GetServiceByGitSshUrl(p.GitSshUrl)
@@ -41,4 +46,28 @@ func (s *Service) GetRepositorySshUrl() string {
 	}
 
 	return ""
+}
+
+func (r *Repository) ProjectIdToInt64() int64 {
+	pid, _ := strconv.ParseInt(r.ProjectId, 10, 64)
+	return pid
+}
+
+func (r *Repository) MakeGitlabConfig() (*gitlab.Config, error) {
+	conf := gitlab.NewDefaultConfig()
+	addr, err := r.HostAddress()
+	if err != nil {
+		return nil, err
+	}
+	conf.Address = addr
+	conf.PrivateToken = r.Token
+	return conf, nil
+}
+
+func (r *Repository) HostAddress() (string, error) {
+	u, err := url.Parse(r.WebUrl)
+	if err != nil {
+		return "", err
+	}
+	return u.Host, nil
 }

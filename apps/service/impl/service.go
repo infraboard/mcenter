@@ -33,6 +33,22 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 		return nil, exception.NewBadRequest("validate create book error, %s", err)
 	}
 
+	// 设置WebHook
+	repo := ins.Spec.Repository
+	gc, err := repo.MakeGitlabConfig()
+	if err != nil {
+		return nil, err
+	}
+	v4 := gitlab.NewGitlabV4(gc)
+	hookSetting := gitlab.NewGitLabWebHook(ins.Id, repo.HookCallbackUrl)
+	addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectIdToInt64(), hookSetting)
+	resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
+	if err != nil {
+		repo.HookError = err.Error()
+	} else {
+		repo.HookId = resp.IDToString()
+	}
+
 	if err := i.save(ctx, ins); err != nil {
 		return nil, err
 	}
