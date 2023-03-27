@@ -99,7 +99,8 @@ func (i *impl) QueryService(ctx context.Context, req *service.QueryServiceReques
 func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabProjectRequest) (
 	*service.ServiceSet, error) {
 	v4 := gitlab.NewGitlabV4(in.MakeConfig())
-	set, err := v4.Project().ListProjects(ctx)
+	pReq := gitlab.NewListProjectRequest()
+	set, err := v4.Project().ListProjects(ctx, pReq)
 	if err != nil {
 		return nil, err
 	}

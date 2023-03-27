@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"sort"
 	"time"
 
 	"github.com/infraboard/mcenter/common/format"
@@ -16,6 +17,7 @@ func NewProjectSet() *ProjectSet {
 }
 
 type ProjectSet struct {
+	Total int64
 	Items []*Project
 }
 
@@ -155,4 +157,77 @@ func NewDeleteProjectHookReqeust(projectID, hookID int64) *DeleteProjectHookReqe
 type DeleteProjectHookReqeust struct {
 	ProjectID int64 `json:"project_id"`
 	HookID    int64 `json:"hook_id"`
+}
+
+func NewListProjectRequest() *ListProjectRequest {
+	return &ListProjectRequest{
+		Owned:     true,
+		Simple:    true,
+		PageNumer: 1,
+		PageSize:  20,
+	}
+}
+
+type ListProjectRequest struct {
+	Owned     bool
+	Simple    bool
+	PageSize  int64
+	PageNumer int64
+}
+
+func (r *ListProjectRequest) PageSizeToString() string {
+	return fmt.Sprintf("%d", r.PageSize)
+}
+
+func (r *ListProjectRequest) PageNumerToString() string {
+	return fmt.Sprintf("%d", r.PageNumer)
+}
+
+func NewProjectLanguageSet(percentage map[string]float64) *ProjectLanguageSet {
+	set := &ProjectLanguageSet{
+		Items: []*ProjectLanguage{},
+	}
+	for k, v := range percentage {
+		set.Add(&ProjectLanguage{
+			Language:   k,
+			Percentage: v,
+		})
+	}
+	sort.Sort(set)
+	return set
+}
+
+type ProjectLanguageSet struct {
+	Items []*ProjectLanguage `json:"items"`
+}
+
+type ProjectLanguage struct {
+	Language   string  `json:"language"`
+	Percentage float64 `json:"percentage"`
+}
+
+func (p *ProjectLanguageSet) String() string {
+	return format.Prettify(p)
+}
+
+func (p *ProjectLanguageSet) Add(item *ProjectLanguage) {
+	p.Items = append(p.Items, item)
+}
+
+func (p *ProjectLanguageSet) Len() int {
+	return len(p.Items)
+}
+func (p *ProjectLanguageSet) Less(i, j int) bool {
+	return p.Items[i].Percentage > p.Items[j].Percentage
+}
+func (p *ProjectLanguageSet) Swap(i, j int) {
+	p.Items[i], p.Items[j] = p.Items[j], p.Items[i]
+}
+
+// 主语言
+func (p *ProjectLanguageSet) Primary() string {
+	if p.Len() == 0 {
+		return ""
+	}
+	return p.Items[0].Language
 }

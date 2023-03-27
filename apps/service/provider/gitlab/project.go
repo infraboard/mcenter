@@ -3,6 +3,7 @@ package gitlab
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/infraboard/mcube/client/negotiator"
 	"github.com/infraboard/mcube/client/rest"
@@ -19,19 +20,41 @@ type ProjectV4 struct {
 }
 
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html
-func (p *ProjectV4) ListProjects(ctx context.Context) (*ProjectSet, error) {
+func (p *ProjectV4) ListProjects(ctx context.Context, in *ListProjectRequest) (*ProjectSet, error) {
 	set := NewProjectSet()
 
 	err := p.client.
 		Get("/").
-		Param("owned", "true").
-		Param("simple", "true").
+		Param("owned", strconv.FormatBool(in.Owned)).
+		Param("simple", strconv.FormatBool(in.Simple)).
+		Param("page", in.PageNumerToString()).
+		Param("per_page", in.PageSizeToString()).
+		Param("order_by", "created_at").
+		Param("sort", "desc").
 		Do(ctx).
 		Into(&set.Items)
 
 	if err != nil {
 		return nil, err
 	}
+	return set, nil
+}
+
+// Get languages used in a project with percentage value.
+// 参考文档: https://docs.gitlab.com/ee/api/projects.html#languages
+func (p *ProjectV4) ListProjectLanguages(ctx context.Context, pid string) (*ProjectLanguageSet, error) {
+	resp := map[string]float64{}
+
+	err := p.client.Group(pid).
+		Get("languages").
+		Do(ctx).
+		Into(&resp)
+
+	if err != nil {
+		return nil, err
+	}
+
+	set := NewProjectLanguageSet(resp)
 	return set, nil
 }
 

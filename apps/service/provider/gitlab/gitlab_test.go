@@ -16,11 +16,22 @@ var (
 )
 
 func TestListProject(t *testing.T) {
-	set, err := v4.Project().ListProjects(ctx)
+	req := gitlab.NewListProjectRequest()
+	req.PageSize = 20
+	req.PageNumer = 2
+	set, err := v4.Project().ListProjects(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Log(set)
+}
+
+func TestListProjectLanguages(t *testing.T) {
+	set, err := v4.Project().ListProjectLanguages(ctx, "3702")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(set.Primary())
 }
 
 func TestAddProjectHook(t *testing.T) {
