@@ -23,6 +23,7 @@ type ProjectV4 struct {
 func (p *ProjectV4) ListProjects(ctx context.Context, in *ListProjectRequest) (*ProjectSet, error) {
 	set := NewProjectSet()
 
+	var total string
 	err := p.client.
 		Get("/").
 		Param("owned", strconv.FormatBool(in.Owned)).
@@ -31,9 +32,12 @@ func (p *ProjectV4) ListProjects(ctx context.Context, in *ListProjectRequest) (*
 		Param("per_page", in.PageSizeToString()).
 		Param("order_by", "created_at").
 		Param("sort", "desc").
+		Param("search", in.Keywords).
 		Do(ctx).
+		Header("X-Total", &total).
 		Into(&set.Items)
 
+	set.SetTotalFromString(total)
 	if err != nil {
 		return nil, err
 	}

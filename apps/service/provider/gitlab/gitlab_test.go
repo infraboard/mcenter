@@ -18,7 +18,8 @@ var (
 func TestListProject(t *testing.T) {
 	req := gitlab.NewListProjectRequest()
 	req.PageSize = 20
-	req.PageNumer = 2
+	req.PageNumer = 1
+	req.Keywords = "xxx"
 	set, err := v4.Project().ListProjects(ctx, req)
 	if err != nil {
 		t.Fatal(err)

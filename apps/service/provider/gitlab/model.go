@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/infraboard/mcenter/common/format"
@@ -19,6 +20,10 @@ func NewProjectSet() *ProjectSet {
 type ProjectSet struct {
 	Total int64
 	Items []*Project
+}
+
+func (s *ProjectSet) SetTotalFromString(t string) {
+	s.Total, _ = strconv.ParseInt(t, 10, 64)
 }
 
 func (s *ProjectSet) String() string {
@@ -173,6 +178,7 @@ type ListProjectRequest struct {
 	Simple    bool
 	PageSize  int64
 	PageNumer int64
+	Keywords  string
 }
 
 func (r *ListProjectRequest) PageSizeToString() string {
