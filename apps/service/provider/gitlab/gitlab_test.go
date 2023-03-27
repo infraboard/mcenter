@@ -27,12 +27,22 @@ func TestListProject(t *testing.T) {
 	t.Log(set)
 }
 
-func TestListProjectLanguages(t *testing.T) {
-	set, err := v4.Project().ListProjectLanguages(ctx, "3702")
+func TestListProjectLanguage(t *testing.T) {
+	set, err := v4.Project().ListProjectLanguage(ctx, "3702")
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Log(set.Primary())
+}
+
+func TestListProjectBranch(t *testing.T) {
+	req := gitlab.NewListProjectBranchRequest()
+	req.ProjectId = "3702"
+	set, err := v4.Project().ListProjectBranch(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(set)
 }
 
 func TestAddProjectHook(t *testing.T) {

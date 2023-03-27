@@ -19,7 +19,8 @@ type ProjectV4 struct {
 	client *rest.RESTClient
 }
 
-// 参考文档: https://docs.gitlab.com/ce/api/projects.html
+// Get a list of all visible projects across GitLab for the authenticated user.
+// 参考文档: https://docs.gitlab.com/ee/api/projects.html#list-all-projects
 func (p *ProjectV4) ListProjects(ctx context.Context, in *ListProjectRequest) (*ProjectSet, error) {
 	set := NewProjectSet()
 
@@ -46,7 +47,7 @@ func (p *ProjectV4) ListProjects(ctx context.Context, in *ListProjectRequest) (*
 
 // Get languages used in a project with percentage value.
 // 参考文档: https://docs.gitlab.com/ee/api/projects.html#languages
-func (p *ProjectV4) ListProjectLanguages(ctx context.Context, pid string) (*ProjectLanguageSet, error) {
+func (p *ProjectV4) ListProjectLanguage(ctx context.Context, pid string) (*ProjectLanguageSet, error) {
 	resp := map[string]float64{}
 
 	err := p.client.Group(pid).
@@ -62,6 +63,7 @@ func (p *ProjectV4) ListProjectLanguages(ctx context.Context, pid string) (*Proj
 	return set, nil
 }
 
+// Adds a hook to a specified project.
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html#add-project-hook
 func (p *ProjectV4) AddProjectHook(ctx context.Context, req *AddProjectHookRequest) (
 	*AddProjectHookResponse, error) {
@@ -79,6 +81,8 @@ func (p *ProjectV4) AddProjectHook(ctx context.Context, req *AddProjectHookReque
 	return ins, nil
 }
 
+// Removes a hook from a project.
+// This is an idempotent method and can be called multiple times. Either the hook is available or not.
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html#delete-project-hook
 func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *DeleteProjectHookReqeust) error {
 	err := p.client.
@@ -90,4 +94,20 @@ func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *DeleteProjectHoo
 		return err
 	}
 	return nil
+}
+
+// Get a list of repository branches from a project, sorted by name alphabetically.
+// 参考文档: https://docs.gitlab.com/ee/api/branches.html#list-repository-branches
+func (p *ProjectV4) ListProjectBranch(ctx context.Context, in *ListProjectBranchRequest) (*BranchSet, error) {
+	set := NewBranchSet()
+
+	err := p.client.Group(in.ProjectId).Group("repository").
+		Get("branches").
+		Do(ctx).
+		Into(&set.Items)
+
+	if err != nil {
+		return nil, err
+	}
+	return set, nil
 }

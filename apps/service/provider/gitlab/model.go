@@ -237,3 +237,50 @@ func (p *ProjectLanguageSet) Primary() string {
 	}
 	return p.Items[0].Language
 }
+
+func NewListProjectBranchRequest() *ListProjectBranchRequest {
+	return &ListProjectBranchRequest{}
+}
+
+type ListProjectBranchRequest struct {
+	ProjectId string
+	PageSize  int64
+	PageNumer int64
+	Keywords  string
+}
+
+func NewBranchSet() *BranchSet {
+	return &BranchSet{
+		Items: []*Branch{},
+	}
+}
+
+type BranchSet struct {
+	Items []*Branch `json:"items"`
+}
+
+func (s *BranchSet) String() string {
+	return format.Prettify(s)
+}
+
+type Branch struct {
+	Name               string  `json:"name"`
+	Merged             bool    `json:"merged"`
+	Protected          bool    `json:"protected"`
+	Default            bool    `json:"default"`
+	DevelopersCanPush  bool    `json:"developers_can_push"`
+	DevelopersCanMerge bool    `json:"developers_can_merge"`
+	CanPush            bool    `json:"can_push"`
+	WebUrl             string  `json:"web_url"`
+	Commit             *Commit `json:"commit"`
+}
+
+type Commit struct {
+	Id             string `json:"id"`
+	ShortId        string `json:"short_id"`
+	Title          string `json:"title"`
+	Message        string `json:"message"`
+	CommittedDate  string `json:"committed_date"`
+	CommitterEmail string `json:"committer_email"`
+	CommitterName  string `json:"committer_name"`
+}
