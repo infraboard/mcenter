@@ -164,7 +164,7 @@ message Repository {
     string http_url = 5;
     // 源代码使用的编程语言, 构建时, 不同语言有不同的构建环境
     // @gotags: bson:"language" json:"language"
-    LANGUAGE language = 6;
+    optional LANGUAGE language = 6;
     // 开启Hook设置
     // @gotags: bson:"enable_hook" json:"enable_hook"
     bool enable_hook = 7;

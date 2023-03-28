@@ -72,6 +72,10 @@ func NewRepository() *Repository {
 	}
 }
 
+func (r *Repository) SetLanguage(v LANGUAGE) {
+	r.Language = &v
+}
+
 func (r *Repository) ProjectIdToInt64() int64 {
 	pid, _ := strconv.ParseInt(r.ProjectId, 10, 64)
 	return pid

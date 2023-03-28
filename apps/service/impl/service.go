@@ -35,12 +35,12 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 
 	// 设置WebHook
 	repo := ins.Spec.Repository
+	gc, err := repo.MakeGitlabConfig()
+	if err != nil {
+		return nil, err
+	}
+	v4 := gitlab.NewGitlabV4(gc)
 	if repo.EnableHook {
-		gc, err := repo.MakeGitlabConfig()
-		if err != nil {
-			return nil, err
-		}
-		v4 := gitlab.NewGitlabV4(gc)
 		hookSetting, err := gitlab.ParseGitLabWebHookFromString(repo.HookConfig)
 		if err != nil {
 			return nil, err
@@ -52,6 +52,18 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 			return nil, err
 		}
 		repo.HookId = resp.IDToString()
+	}
+
+	if repo.Language == nil {
+		languages, err := v4.Project().ListProjectLanguage(ctx, repo.ProjectId)
+		if err != nil {
+			return nil, err
+		}
+		lan, err := service.ParseLANGUAGEFromString(languages.Primary())
+		if err != nil {
+			return nil, err
+		}
+		repo.SetLanguage(lan)
 	}
 
 	if err := i.save(ctx, ins); err != nil {
