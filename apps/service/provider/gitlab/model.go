@@ -316,6 +316,6 @@ func NewGetProjectBranchRequest() *GetProjectBranchRequest {
 }
 
 type GetProjectBranchRequest struct {
-	ProjectId string
-	Branch    string
+	ProjectId string `json:"project_id"`
+	Branch    string `json:"branch"`
 }
