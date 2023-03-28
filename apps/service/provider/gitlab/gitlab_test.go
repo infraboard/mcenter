@@ -38,6 +38,8 @@ func TestListProjectLanguage(t *testing.T) {
 func TestListProjectBranch(t *testing.T) {
 	req := gitlab.NewListProjectBranchRequest()
 	req.ProjectId = "3702"
+	req.PageSize = 2
+	req.Keywords = "master"
 	set, err := v4.Project().ListProjectBranch(ctx, req)
 	if err != nil {
 		t.Fatal(err)

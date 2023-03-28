@@ -35,7 +35,7 @@ func (p *ProjectV4) ListProjects(ctx context.Context, in *ListProjectRequest) (*
 		Param("sort", "desc").
 		Param("search", in.Keywords).
 		Do(ctx).
-		Header("X-Total", &total).
+		Header(RESPONSE_HEADER_X_TOTAL, &total).
 		Into(&set.Items)
 
 	set.SetTotalFromString(total)
@@ -101,13 +101,23 @@ func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *DeleteProjectHoo
 func (p *ProjectV4) ListProjectBranch(ctx context.Context, in *ListProjectBranchRequest) (*BranchSet, error) {
 	set := NewBranchSet()
 
-	err := p.client.Group(in.ProjectId).Group("repository").
+	var total string
+	err := p.client.
+		Group(in.ProjectId).
+		Group("repository").
 		Get("branches").
+		Param("page", in.PageNumerToString()).
+		Param("per_page", in.PageSizeToString()).
+		Param("search", in.Keywords).
 		Do(ctx).
+		Header(RESPONSE_HEADER_X_TOTAL, &total).
 		Into(&set.Items)
+
+	set.SetTotalFromString(total)
 
 	if err != nil {
 		return nil, err
 	}
+
 	return set, nil
 }

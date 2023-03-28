@@ -166,27 +166,37 @@ type DeleteProjectHookReqeust struct {
 
 func NewListProjectRequest() *ListProjectRequest {
 	return &ListProjectRequest{
-		Owned:     true,
-		Simple:    true,
+		Owned:  true,
+		Simple: true,
+		Page:   NewDefaultPage(),
+	}
+}
+
+func NewDefaultPage() *Page {
+	return &Page{
 		PageNumer: 1,
 		PageSize:  20,
 	}
 }
 
-type ListProjectRequest struct {
-	Owned     bool
-	Simple    bool
+type Page struct {
 	PageSize  int64
 	PageNumer int64
-	Keywords  string
 }
 
-func (r *ListProjectRequest) PageSizeToString() string {
+func (r *Page) PageSizeToString() string {
 	return fmt.Sprintf("%d", r.PageSize)
 }
 
-func (r *ListProjectRequest) PageNumerToString() string {
+func (r *Page) PageNumerToString() string {
 	return fmt.Sprintf("%d", r.PageNumer)
+}
+
+type ListProjectRequest struct {
+	*Page
+	Owned    bool
+	Simple   bool
+	Keywords string
 }
 
 func NewProjectLanguageSet(percentage map[string]float64) *ProjectLanguageSet {
@@ -239,13 +249,14 @@ func (p *ProjectLanguageSet) Primary() string {
 }
 
 func NewListProjectBranchRequest() *ListProjectBranchRequest {
-	return &ListProjectBranchRequest{}
+	return &ListProjectBranchRequest{
+		Page: NewDefaultPage(),
+	}
 }
 
 type ListProjectBranchRequest struct {
+	*Page
 	ProjectId string
-	PageSize  int64
-	PageNumer int64
 	Keywords  string
 }
 
@@ -256,11 +267,16 @@ func NewBranchSet() *BranchSet {
 }
 
 type BranchSet struct {
+	Total int64     `json:"total"`
 	Items []*Branch `json:"items"`
 }
 
 func (s *BranchSet) String() string {
 	return format.Prettify(s)
+}
+
+func (s *BranchSet) SetTotalFromString(t string) {
+	s.Total, _ = strconv.ParseInt(t, 10, 64)
 }
 
 type Branch struct {
