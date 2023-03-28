@@ -47,6 +47,17 @@ func TestListProjectBranch(t *testing.T) {
 	t.Log(set)
 }
 
+func TestGetProjectBranch(t *testing.T) {
+	req := gitlab.NewGetProjectBranchRequest()
+	req.ProjectId = "3702"
+	req.Branch = "master"
+	set, err := v4.Project().GetProjectBranch(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(set)
+}
+
 func TestAddProjectHook(t *testing.T) {
 	hook := gitlab.NewGitLabWebHook("9999")
 	req := gitlab.NewAddProjectHookRequest(ProjectID, hook)

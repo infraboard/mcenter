@@ -279,6 +279,12 @@ func (s *BranchSet) SetTotalFromString(t string) {
 	s.Total, _ = strconv.ParseInt(t, 10, 64)
 }
 
+func NewBranch() *Branch {
+	return &Branch{
+		Commit: &Commit{},
+	}
+}
+
 type Branch struct {
 	Name               string  `json:"name"`
 	Merged             bool    `json:"merged"`
@@ -291,6 +297,10 @@ type Branch struct {
 	Commit             *Commit `json:"commit"`
 }
 
+func (b *Branch) String() string {
+	return format.Prettify(b)
+}
+
 type Commit struct {
 	Id             string `json:"id"`
 	ShortId        string `json:"short_id"`
@@ -299,4 +309,13 @@ type Commit struct {
 	CommittedDate  string `json:"committed_date"`
 	CommitterEmail string `json:"committer_email"`
 	CommitterName  string `json:"committer_name"`
+}
+
+func NewGetProjectBranchRequest() *GetProjectBranchRequest {
+	return &GetProjectBranchRequest{}
+}
+
+type GetProjectBranchRequest struct {
+	ProjectId string
+	Branch    string
 }

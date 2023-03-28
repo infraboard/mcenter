@@ -121,3 +121,20 @@ func (p *ProjectV4) ListProjectBranch(ctx context.Context, in *ListProjectBranch
 
 	return set, nil
 }
+
+// Get a single project repository branch.
+// 参考文档: https://docs.gitlab.com/ee/api/branches.html#get-single-repository-branch
+func (p *ProjectV4) GetProjectBranch(ctx context.Context, in *GetProjectBranchRequest) (*Branch, error) {
+	ins := NewBranch()
+	err := p.client.
+		Group(in.ProjectId).
+		Group("repository").
+		Group("branches").
+		Get(in.Branch).
+		Do(ctx).
+		Into(ins)
+	if err != nil {
+		return nil, err
+	}
+	return ins, nil
+}
