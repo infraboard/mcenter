@@ -116,6 +116,13 @@ $ make dep
 $ make run
 ```
 
+## 推送gitlab仓库
+
+```
+git remote add gitlab https://gitlab.com/infraboard/mcenter.git
+git push -u gitlab --all 
+```
+
 ## 相关文档
 
 https://petstore.swagger.io/#/
