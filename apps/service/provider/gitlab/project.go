@@ -11,7 +11,7 @@ import (
 
 func newProjectV4(gitlab *GitlabV4) *ProjectV4 {
 	return &ProjectV4{
-		client: gitlab.client.Group("projects"),
+		client: gitlab.client,
 	}
 }
 
@@ -27,6 +27,7 @@ func (p *ProjectV4) ListProjects(ctx context.Context, in *ListProjectRequest) (*
 	var total string
 	err := p.client.
 		Get("/").
+		Prefix("projects").
 		Param("owned", strconv.FormatBool(in.Owned)).
 		Param("simple", strconv.FormatBool(in.Simple)).
 		Param("page", in.PageNumerToString()).
