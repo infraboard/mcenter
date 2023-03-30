@@ -43,7 +43,6 @@ func TestQueryService(t *testing.T) {
 
 func TestCreateServiceFromGitLab(t *testing.T) {
 	req := service.NewCreateServiceRequest()
-	req.Repository.Token = os.Getenv("GITLAB_PRIVATE_TOKEN")
 	tools.MustReadJsonFile("./test/create_service.json", req)
 
 	app, err := impl.CreateService(ctx, req)

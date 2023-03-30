@@ -20,6 +20,13 @@ func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project) {
 	}
 }
 
+func (s *ServiceSet) UpdateToken(tk string) {
+	for i := range s.Items {
+		item := s.Items[i]
+		item.Spec.Repository.Token = tk
+	}
+}
+
 func (s *ServiceSet) UpdateScope(domain, namespace string) {
 	for i := range s.Items {
 		item := s.Items[i]

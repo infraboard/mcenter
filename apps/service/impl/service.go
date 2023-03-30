@@ -131,6 +131,7 @@ func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabPr
 		for i := range set.Items {
 			p := set.Items[i]
 			svcs.UpdateFromGitProject(p)
+			svcs.UpdateToken(in.Token)
 		}
 	}
 
