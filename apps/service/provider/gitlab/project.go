@@ -2,7 +2,6 @@ package gitlab
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/infraboard/mcube/client/negotiator"
@@ -11,7 +10,7 @@ import (
 
 func newProjectV4(gitlab *GitlabV4) *ProjectV4 {
 	return &ProjectV4{
-		client: gitlab.client,
+		client: gitlab.client.Group("projects"),
 	}
 }
 
@@ -27,7 +26,6 @@ func (p *ProjectV4) ListProjects(ctx context.Context, in *ListProjectRequest) (*
 	var total string
 	err := p.client.
 		Get("/").
-		Prefix("projects").
 		Param("owned", strconv.FormatBool(in.Owned)).
 		Param("simple", strconv.FormatBool(in.Simple)).
 		Param("page", in.PageNumerToString()).
@@ -51,8 +49,9 @@ func (p *ProjectV4) ListProjects(ctx context.Context, in *ListProjectRequest) (*
 func (p *ProjectV4) ListProjectLanguage(ctx context.Context, pid string) (*ProjectLanguageSet, error) {
 	resp := map[string]float64{}
 
-	err := p.client.Group(pid).
-		Get("languages").
+	err := p.client.
+		Get(pid).
+		Suffix("languages").
 		Do(ctx).
 		Into(&resp)
 
@@ -70,7 +69,8 @@ func (p *ProjectV4) AddProjectHook(ctx context.Context, req *AddProjectHookReque
 	*AddProjectHookResponse, error) {
 	ins := NewAddProjectHookResponse()
 	err := p.client.
-		Post(fmt.Sprintf("%d/hooks", req.ProjectID)).
+		Post(req.ProjectID).
+		Suffix("hooks").
 		Header(rest.CONTENT_TYPE_HEADER, string(negotiator.MIME_POST_FORM)).
 		Body(req.WebHook.FormValue()).
 		Do(ctx).
@@ -87,7 +87,9 @@ func (p *ProjectV4) AddProjectHook(ctx context.Context, req *AddProjectHookReque
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html#delete-project-hook
 func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *DeleteProjectHookReqeust) error {
 	err := p.client.
-		Delete(fmt.Sprintf("%d/hooks/%d", req.ProjectID, req.HookID)).
+		Delete(req.ProjectID).
+		Suffix("hooks").
+		Suffix(req.HookID).
 		Do(ctx).
 		Error()
 
@@ -104,9 +106,9 @@ func (p *ProjectV4) ListProjectBranch(ctx context.Context, in *ListProjectBranch
 
 	var total string
 	err := p.client.
-		Group(in.ProjectId).
-		Group("repository").
-		Get("branches").
+		Get(in.ProjectId).
+		Suffix("repository").
+		Suffix("branches").
 		Param("page", in.PageNumerToString()).
 		Param("per_page", in.PageSizeToString()).
 		Param("search", in.Keywords).
@@ -128,10 +130,10 @@ func (p *ProjectV4) ListProjectBranch(ctx context.Context, in *ListProjectBranch
 func (p *ProjectV4) GetProjectBranch(ctx context.Context, in *GetProjectBranchRequest) (*Branch, error) {
 	ins := NewBranch()
 	err := p.client.
-		Group(in.ProjectId).
-		Group("repository").
-		Group("branches").
-		Get(in.Branch).
+		Get(in.ProjectId).
+		Suffix("repository").
+		Suffix("branches").
+		Suffix(in.Branch).
 		Do(ctx).
 		Into(ins)
 	if err != nil {

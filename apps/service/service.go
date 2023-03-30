@@ -12,18 +12,12 @@ func (s *ServiceSet) Len() int {
 	return len(s.Items)
 }
 
-func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project) {
+func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
 	svc := s.GetServiceByGitSshUrl(p.GitSshUrl)
 	if svc == nil {
 		svc = NewServiceFromProject(p)
+		svc.Spec.Repository.Token = tk
 		s.Add(svc)
-	}
-}
-
-func (s *ServiceSet) UpdateToken(tk string) {
-	for i := range s.Items {
-		item := s.Items[i]
-		item.Spec.Repository.Token = tk
 	}
 }
 

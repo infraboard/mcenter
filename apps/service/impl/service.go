@@ -40,20 +40,6 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 		return nil, err
 	}
 	v4 := gitlab.NewGitlabV4(gc)
-	if repo.EnableHook {
-		hookSetting, err := gitlab.ParseGitLabWebHookFromString(repo.HookConfig)
-		if err != nil {
-			return nil, err
-		}
-		hookSetting.Token = ins.Id
-		addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectIdToInt64(), hookSetting)
-		resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
-		if err != nil {
-			return nil, err
-		}
-		repo.HookId = resp.IDToString()
-	}
-
 	if repo.Language == nil {
 		languages, err := v4.Project().ListProjectLanguage(ctx, repo.ProjectId)
 		if err != nil {
@@ -64,6 +50,19 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 			return nil, err
 		}
 		repo.SetLanguage(lan)
+	}
+	if repo.EnableHook {
+		hookSetting, err := gitlab.ParseGitLabWebHookFromString(repo.HookConfig)
+		if err != nil {
+			return nil, err
+		}
+		hookSetting.Token = ins.Id
+		addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectId, hookSetting)
+		resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
+		if err != nil {
+			return nil, err
+		}
+		repo.HookId = resp.IDToString()
 	}
 
 	if err := i.save(ctx, ins); err != nil {
@@ -130,8 +129,7 @@ func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabPr
 
 		for i := range set.Items {
 			p := set.Items[i]
-			svcs.UpdateFromGitProject(p)
-			svcs.UpdateToken(in.Token)
+			svcs.UpdateFromGitProject(p, in.Token)
 		}
 	}
 
@@ -158,7 +156,7 @@ func (i *impl) DeleteService(ctx context.Context, req *service.DeleteServiceRequ
 			return nil, err
 		}
 		v4 := gitlab.NewGitlabV4(gc)
-		removeHookReq := gitlab.NewDeleteProjectHookReqeust(repo.ProjectIdToInt64(), repo.HookIdToInt64())
+		removeHookReq := gitlab.NewDeleteProjectHookReqeust(repo.ProjectId, repo.HookId)
 		err = v4.Project().DeleteProjectHook(ctx, removeHookReq)
 		if err != nil {
 			return nil, err

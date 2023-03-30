@@ -114,16 +114,16 @@ func (h *GitLabWebHook) ToJson() string {
 }
 
 func (req *GitLabWebHook) FormValue() url.Values {
-	val := make(url.Values)
-	val.Set("push_events", fmt.Sprintf("%t", req.PushEvents))
-	val.Set("tag_push_events", fmt.Sprintf("%t", req.TagPushEvents))
-	val.Set("merge_requests_events", fmt.Sprintf("%t", req.MergeRequestsEvents))
-	val.Set("token", req.Token)
-	val.Set("url", req.Url)
-	return val
+	params := make(url.Values)
+	params.Set("push_events", fmt.Sprintf("%t", req.PushEvents))
+	params.Set("tag_push_events", fmt.Sprintf("%t", req.TagPushEvents))
+	params.Set("merge_requests_events", fmt.Sprintf("%t", req.MergeRequestsEvents))
+	params.Set("token", req.Token)
+	params.Set("url", req.Url)
+	return params
 }
 
-func NewAddProjectHookRequest(projectID int64, webhook *GitLabWebHook) *AddProjectHookRequest {
+func NewAddProjectHookRequest(projectID string, webhook *GitLabWebHook) *AddProjectHookRequest {
 	return &AddProjectHookRequest{
 		ProjectID: projectID,
 		WebHook:   webhook,
@@ -132,7 +132,7 @@ func NewAddProjectHookRequest(projectID int64, webhook *GitLabWebHook) *AddProje
 
 type AddProjectHookRequest struct {
 	// 项目Id
-	ProjectID int64 `json:"project_id"`
+	ProjectID string `json:"project_id"`
 	// Gitlab WebHook配置
 	WebHook *GitLabWebHook `json:"webhook"`
 }
@@ -152,7 +152,7 @@ func (r *AddProjectHookResponse) IDToString() string {
 	return fmt.Sprintf("%d", r.ID)
 }
 
-func NewDeleteProjectHookReqeust(projectID, hookID int64) *DeleteProjectHookReqeust {
+func NewDeleteProjectHookReqeust(projectID, hookID string) *DeleteProjectHookReqeust {
 	return &DeleteProjectHookReqeust{
 		ProjectID: projectID,
 		HookID:    hookID,
@@ -160,8 +160,8 @@ func NewDeleteProjectHookReqeust(projectID, hookID int64) *DeleteProjectHookReqe
 }
 
 type DeleteProjectHookReqeust struct {
-	ProjectID int64 `json:"project_id"`
-	HookID    int64 `json:"hook_id"`
+	ProjectID string `json:"project_id"`
+	HookID    string `json:"hook_id"`
 }
 
 func NewListProjectRequest() *ListProjectRequest {
