@@ -32,7 +32,7 @@ func TestCreateSupperUser(t *testing.T) {
 func TestCreateSubUser(t *testing.T) {
 	req := user.NewCreateUserRequest()
 	req.Domain = domain.DEFAULT_DOMAIN
-	req.Username = "喻茂峻"
+	req.Username = "test"
 	req.Password = "123456"
 	req.Type = user.TYPE_SUB
 	r, err := impl.CreateUser(ctx, req)
