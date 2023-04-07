@@ -37,7 +37,6 @@ func New(req *CreateUserRequest) (*User, error) {
 	}
 
 	u := &User{
-		Id:            xid.New().String(),
 		CreateAt:      time.Now().UnixMilli(),
 		Spec:          req,
 		Password:      pass,
@@ -46,6 +45,12 @@ func New(req *CreateUserRequest) (*User, error) {
 		Status: &Status{
 			Locked: false,
 		},
+	}
+
+	if req.UseFullNamedUid {
+		u.MakeFullNamedUid()
+	} else {
+		u.Id = xid.New().String()
 	}
 
 	return u, nil
@@ -80,7 +85,9 @@ func (p *Password) SetNeedReset(format string, a ...interface{}) {
 
 // NewCreateUserRequest 创建请求
 func NewCreateUserRequest() *CreateUserRequest {
-	return &CreateUserRequest{}
+	return &CreateUserRequest{
+		UseFullNamedUid: true,
+	}
 }
 
 func NewLDAPCreateUserRequest(domain, username, password, descriptoin string) *CreateUserRequest {
@@ -255,6 +262,11 @@ func (u *User) Desensitize() {
 		u.Password.Password = ""
 		u.Password.History = []string{}
 	}
+}
+
+// Desensitize 关键数据脱敏
+func (u *User) MakeFullNamedUid() {
+	u.Id = fmt.Sprintf("%s@%s", u.Spec.Username, u.Spec.Domain)
 }
 
 func (i *User) Update(req *UpdateUserRequest) {

@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"sort"
+	"strconv"
 	"time"
 
 	"github.com/infraboard/mcenter/common/format"
@@ -16,7 +18,12 @@ func NewProjectSet() *ProjectSet {
 }
 
 type ProjectSet struct {
+	Total int64
 	Items []*Project
+}
+
+func (s *ProjectSet) SetTotalFromString(t string) {
+	s.Total, _ = strconv.ParseInt(t, 10, 64)
 }
 
 func (s *ProjectSet) String() string {
@@ -107,16 +114,16 @@ func (h *GitLabWebHook) ToJson() string {
 }
 
 func (req *GitLabWebHook) FormValue() url.Values {
-	val := make(url.Values)
-	val.Set("push_events", fmt.Sprintf("%t", req.PushEvents))
-	val.Set("tag_push_events", fmt.Sprintf("%t", req.TagPushEvents))
-	val.Set("merge_requests_events", fmt.Sprintf("%t", req.MergeRequestsEvents))
-	val.Set("token", req.Token)
-	val.Set("url", req.Url)
-	return val
+	params := make(url.Values)
+	params.Set("push_events", fmt.Sprintf("%t", req.PushEvents))
+	params.Set("tag_push_events", fmt.Sprintf("%t", req.TagPushEvents))
+	params.Set("merge_requests_events", fmt.Sprintf("%t", req.MergeRequestsEvents))
+	params.Set("token", req.Token)
+	params.Set("url", req.Url)
+	return params
 }
 
-func NewAddProjectHookRequest(projectID int64, webhook *GitLabWebHook) *AddProjectHookRequest {
+func NewAddProjectHookRequest(projectID string, webhook *GitLabWebHook) *AddProjectHookRequest {
 	return &AddProjectHookRequest{
 		ProjectID: projectID,
 		WebHook:   webhook,
@@ -125,7 +132,7 @@ func NewAddProjectHookRequest(projectID int64, webhook *GitLabWebHook) *AddProje
 
 type AddProjectHookRequest struct {
 	// 项目Id
-	ProjectID int64 `json:"project_id"`
+	ProjectID string `json:"project_id"`
 	// Gitlab WebHook配置
 	WebHook *GitLabWebHook `json:"webhook"`
 }
@@ -145,7 +152,7 @@ func (r *AddProjectHookResponse) IDToString() string {
 	return fmt.Sprintf("%d", r.ID)
 }
 
-func NewDeleteProjectHookReqeust(projectID, hookID int64) *DeleteProjectHookReqeust {
+func NewDeleteProjectHookReqeust(projectID, hookID string) *DeleteProjectHookReqeust {
 	return &DeleteProjectHookReqeust{
 		ProjectID: projectID,
 		HookID:    hookID,
@@ -153,6 +160,162 @@ func NewDeleteProjectHookReqeust(projectID, hookID int64) *DeleteProjectHookReqe
 }
 
 type DeleteProjectHookReqeust struct {
-	ProjectID int64 `json:"project_id"`
-	HookID    int64 `json:"hook_id"`
+	ProjectID string `json:"project_id"`
+	HookID    string `json:"hook_id"`
+}
+
+func NewListProjectRequest() *ListProjectRequest {
+	return &ListProjectRequest{
+		Owned:  true,
+		Simple: true,
+		Page:   NewDefaultPage(),
+	}
+}
+
+func NewDefaultPage() *Page {
+	return &Page{
+		PageNumer: 1,
+		PageSize:  20,
+	}
+}
+
+type Page struct {
+	PageSize  int64
+	PageNumer int64
+}
+
+func (r *Page) PageSizeToString() string {
+	return fmt.Sprintf("%d", r.PageSize)
+}
+
+func (r *Page) PageNumerToString() string {
+	return fmt.Sprintf("%d", r.PageNumer)
+}
+
+type ListProjectRequest struct {
+	*Page
+	Owned    bool
+	Simple   bool
+	Keywords string
+}
+
+func NewProjectLanguageSet(percentage map[string]float64) *ProjectLanguageSet {
+	set := &ProjectLanguageSet{
+		Items: []*ProjectLanguage{},
+	}
+	for k, v := range percentage {
+		set.Add(&ProjectLanguage{
+			Language:   k,
+			Percentage: v,
+		})
+	}
+	sort.Sort(set)
+	return set
+}
+
+type ProjectLanguageSet struct {
+	Items []*ProjectLanguage `json:"items"`
+}
+
+type ProjectLanguage struct {
+	Language   string  `json:"language"`
+	Percentage float64 `json:"percentage"`
+}
+
+func (p *ProjectLanguageSet) String() string {
+	return format.Prettify(p)
+}
+
+func (p *ProjectLanguageSet) Add(item *ProjectLanguage) {
+	p.Items = append(p.Items, item)
+}
+
+func (p *ProjectLanguageSet) Len() int {
+	return len(p.Items)
+}
+func (p *ProjectLanguageSet) Less(i, j int) bool {
+	return p.Items[i].Percentage > p.Items[j].Percentage
+}
+func (p *ProjectLanguageSet) Swap(i, j int) {
+	p.Items[i], p.Items[j] = p.Items[j], p.Items[i]
+}
+
+// 主语言
+func (p *ProjectLanguageSet) Primary() string {
+	if p.Len() == 0 {
+		return ""
+	}
+	return p.Items[0].Language
+}
+
+func NewListProjectBranchRequest() *ListProjectBranchRequest {
+	return &ListProjectBranchRequest{
+		Page: NewDefaultPage(),
+	}
+}
+
+type ListProjectBranchRequest struct {
+	*Page
+	ProjectId string
+	Keywords  string
+}
+
+func NewBranchSet() *BranchSet {
+	return &BranchSet{
+		Items: []*Branch{},
+	}
+}
+
+type BranchSet struct {
+	Total int64     `json:"total"`
+	Items []*Branch `json:"items"`
+}
+
+func (s *BranchSet) String() string {
+	return format.Prettify(s)
+}
+
+func (s *BranchSet) SetTotalFromString(t string) {
+	s.Total, _ = strconv.ParseInt(t, 10, 64)
+}
+
+func NewBranch() *Branch {
+	return &Branch{
+		Commit: &Commit{},
+	}
+}
+
+type Branch struct {
+	Name               string  `json:"name"`
+	Merged             bool    `json:"merged"`
+	Protected          bool    `json:"protected"`
+	Default            bool    `json:"default"`
+	DevelopersCanPush  bool    `json:"developers_can_push"`
+	DevelopersCanMerge bool    `json:"developers_can_merge"`
+	CanPush            bool    `json:"can_push"`
+	WebUrl             string  `json:"web_url"`
+	Commit             *Commit `json:"commit"`
+}
+
+func (b *Branch) String() string {
+	return format.Prettify(b)
+}
+
+type Commit struct {
+	Id             string `json:"id"`
+	ShortId        string `json:"short_id"`
+	Title          string `json:"title"`
+	Message        string `json:"message"`
+	CommittedDate  string `json:"committed_date"`
+	CommitterEmail string `json:"committer_email"`
+	CommitterName  string `json:"committer_name"`
+}
+
+func NewGetProjectBranchRequest() *GetProjectBranchRequest {
+	return &GetProjectBranchRequest{}
+}
+
+type GetProjectBranchRequest struct {
+	ProjectId string `json:"project_id"`
+	Branch    string `json:"branch"`
 }

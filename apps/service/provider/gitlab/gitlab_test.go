@@ -12,11 +12,46 @@ var (
 	v4  *gitlab.GitlabV4
 	ctx = context.Background()
 
-	ProjectID int64 = 29032549
+	ProjectID string = "29032549"
 )
 
 func TestListProject(t *testing.T) {
-	set, err := v4.Project().ListProjects(ctx)
+	req := gitlab.NewListProjectRequest()
+	req.PageSize = 20
+	req.PageNumer = 1
+	req.Keywords = ""
+	set, err := v4.Project().ListProjects(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(set)
+}
+
+func TestListProjectLanguage(t *testing.T) {
+	set, err := v4.Project().ListProjectLanguage(ctx, ProjectID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(set.Primary())
+}
+
+func TestListProjectBranch(t *testing.T) {
+	req := gitlab.NewListProjectBranchRequest()
+	req.ProjectId = ProjectID
+	req.PageSize = 2
+	req.Keywords = ""
+	set, err := v4.Project().ListProjectBranch(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(set)
+}
+
+func TestGetProjectBranch(t *testing.T) {
+	req := gitlab.NewGetProjectBranchRequest()
+	req.ProjectId = ProjectID
+	req.Branch = "main"
+	set, err := v4.Project().GetProjectBranch(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,7 +70,7 @@ func TestAddProjectHook(t *testing.T) {
 }
 
 func TestDeleteProjectHook(t *testing.T) {
-	req := gitlab.NewDeleteProjectHookReqeust(ProjectID, 18877715)
+	req := gitlab.NewDeleteProjectHookReqeust(ProjectID, "19001857")
 	err := v4.Project().DeleteProjectHook(ctx, req)
 	if err != nil {
 		t.Fatal(err)

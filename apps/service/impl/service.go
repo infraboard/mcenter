@@ -35,18 +35,29 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 
 	// 设置WebHook
 	repo := ins.Spec.Repository
-	if repo.EnableHook {
-		gc, err := repo.MakeGitlabConfig()
+	gc, err := repo.MakeGitlabConfig()
+	if err != nil {
+		return nil, err
+	}
+	v4 := gitlab.NewGitlabV4(gc)
+	if repo.Language == nil {
+		languages, err := v4.Project().ListProjectLanguage(ctx, repo.ProjectId)
 		if err != nil {
 			return nil, err
 		}
-		v4 := gitlab.NewGitlabV4(gc)
+		lan, err := service.ParseLANGUAGEFromString(languages.Primary())
+		if err != nil {
+			return nil, err
+		}
+		repo.SetLanguage(lan)
+	}
+	if repo.EnableHook {
 		hookSetting, err := gitlab.ParseGitLabWebHookFromString(repo.HookConfig)
 		if err != nil {
 			return nil, err
 		}
 		hookSetting.Token = ins.Id
-		addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectIdToInt64(), hookSetting)
+		addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectId, hookSetting)
 		resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
 		if err != nil {
 			return nil, err
@@ -99,7 +110,8 @@ func (i *impl) QueryService(ctx context.Context, req *service.QueryServiceReques
 func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabProjectRequest) (
 	*service.ServiceSet, error) {
 	v4 := gitlab.NewGitlabV4(in.MakeConfig())
-	set, err := v4.Project().ListProjects(ctx)
+	pReq := gitlab.NewListProjectRequest()
+	set, err := v4.Project().ListProjects(ctx, pReq)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +129,7 @@ func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabPr
 
 		for i := range set.Items {
 			p := set.Items[i]
-			svcs.UpdateFromGitProject(p)
+			svcs.UpdateFromGitProject(p, in.Token)
 		}
 	}
 
@@ -144,7 +156,7 @@ func (i *impl) DeleteService(ctx context.Context, req *service.DeleteServiceRequ
 			return nil, err
 		}
 		v4 := gitlab.NewGitlabV4(gc)
-		removeHookReq := gitlab.NewDeleteProjectHookReqeust(repo.ProjectIdToInt64(), repo.HookIdToInt64())
+		removeHookReq := gitlab.NewDeleteProjectHookReqeust(repo.ProjectId, repo.HookId)
 		err = v4.Project().DeleteProjectHook(ctx, removeHookReq)
 		if err != nil {
 			return nil, err

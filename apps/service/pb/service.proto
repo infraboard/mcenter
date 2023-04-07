@@ -124,19 +124,20 @@ enum LANGUAGE {
     JAVA = 0;
     JAVASCRIPT = 1;
     GOLANG = 2;
-    PYTHON = 3;
-    PHP = 4;
-    C_SHARP = 5;
-    C = 6;
-    C_PLUS_PLUS = 7;
-    SWIFT = 8;
-    OBJECT_C = 9;
-    RUST = 10;
-    RUBY = 11;
-    DART = 12;
-    KOTLIN = 13;
-    SHELL = 14;
-    POWER_SHELL = 15;
+    GO = 3;
+    PYTHON = 4;
+    PHP = 5;
+    C_SHARP = 6;
+    C = 7;
+    C_PLUS_PLUS = 8;
+    SWIFT = 9;
+    OBJECT_C = 10;
+    RUST = 11;
+    RUBY = 12;
+    DART = 13;
+    KOTLIN = 14;
+    SHELL = 15;
+    POWER_SHELL = 16;
 }
 
 // 服务仓库信息
@@ -164,7 +165,7 @@ message Repository {
     string http_url = 5;
     // 源代码使用的编程语言, 构建时, 不同语言有不同的构建环境
     // @gotags: bson:"language" json:"language"
-    LANGUAGE language = 6;
+    optional LANGUAGE language = 6;
     // 开启Hook设置
     // @gotags: bson:"enable_hook" json:"enable_hook"
     bool enable_hook = 7;

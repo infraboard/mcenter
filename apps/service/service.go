@@ -12,10 +12,11 @@ func (s *ServiceSet) Len() int {
 	return len(s.Items)
 }
 
-func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project) {
+func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
 	svc := s.GetServiceByGitSshUrl(p.GitSshUrl)
 	if svc == nil {
 		svc = NewServiceFromProject(p)
+		svc.Spec.Repository.Token = tk
 		s.Add(svc)
 	}
 }
@@ -70,6 +71,10 @@ func NewRepository() *Repository {
 	return &Repository{
 		EnableHook: true,
 	}
+}
+
+func (r *Repository) SetLanguage(v LANGUAGE) {
+	r.Language = &v
 }
 
 func (r *Repository) ProjectIdToInt64() int64 {

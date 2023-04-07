@@ -1,6 +1,6 @@
 module github.com/infraboard/mcenter
 
-go 1.18
+go 1.20
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.2
@@ -14,7 +14,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
-	github.com/infraboard/mcube v1.9.7-0.20230105065309-16f76ddc0a89
+	github.com/infraboard/mcube v1.9.11
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.10
 	github.com/mssola/user_agent v0.5.3
 	github.com/rs/xid v1.4.0

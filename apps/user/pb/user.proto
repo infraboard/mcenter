@@ -188,6 +188,9 @@ message CreateUserRequest {
     // 用户企业微信相关信息
     // @gotags: json:"wechatwork" bson:"wechatwork"
     WechatWork wechatwork = 10;
+    // 使用全名作为uid, 比如 admin@default, 默认使用uuid
+    // @gotags: json:"use_full_named_uid" bson:"use_full_named_uid"
+    bool use_full_named_uid = 12;
 }
 
 message Feishu {
