@@ -95,6 +95,7 @@ func (s *service) SendVoice(ctx context.Context, req *notify.SendVoiceRequest) (
 
 // 发送IM消息
 func (s *service) SendIM(ctx context.Context, req *notify.SendIMRequest) (*notify.SendImResponse, error) {
+	// 获取用户的信息
 	conf, err := s.setting.GetSetting(ctx)
 	if err != nil {
 		return nil, err
