@@ -2,6 +2,7 @@ package feishu_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/caarlos0/env/v6"
@@ -16,7 +17,7 @@ var (
 )
 
 func TestSendMessage(t *testing.T) {
-	req := im.NewSendMessageRequest("cg88d139", "验证码", "验证码测试")
+	req := im.NewSendMessageRequest("验证码", "验证码测试", os.Getenv("FEISHU_USER_ID"))
 	if err := notifyer.SendMessage(ctx, req); err != nil {
 		t.Fatal(err)
 	}

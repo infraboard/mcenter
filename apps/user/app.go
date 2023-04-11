@@ -77,6 +77,14 @@ func (req *CreateUserRequest) Validate() error {
 	return validate.Struct(req)
 }
 
+func (req *CreateUserRequest) GetFeishuUserId() string {
+	if req.Feishu == nil {
+		return ""
+	}
+
+	return req.Feishu.UserId
+}
+
 // SetNeedReset 需要被重置
 func (p *Password) SetNeedReset(format string, a ...interface{}) {
 	p.NeedReset = true

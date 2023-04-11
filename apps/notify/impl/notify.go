@@ -15,12 +15,16 @@ import (
 	"github.com/infraboard/mcenter/apps/notify/provider/voice"
 	vtencent "github.com/infraboard/mcenter/apps/notify/provider/voice/tencent"
 	"github.com/infraboard/mcenter/apps/user"
+	"github.com/infraboard/mcube/exception"
 )
 
 // 邮件通知
 func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest) (*notify.Record, error) {
-	r := notify.NewRecord(req)
+	if err := req.Validate(); err != nil {
+		return nil, exception.NewBadRequest("validate SendNotifyRequest error, %s", err)
+	}
 
+	r := notify.NewRecord(req)
 	// 查询用户邮箱, 构造邮件发送请求
 	for i := range req.Users {
 		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
@@ -49,7 +53,7 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 			resp := s.SendVoice(ctx, sendReq)
 			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_IM:
-			sendReq := im.NewSendMessageRequest(req.Title, req.Content, u.Spec.Feishu.UserId)
+			sendReq := im.NewSendMessageRequest(req.Title, req.Content, u.Spec.GetFeishuUserId())
 			resp := s.SendIM(ctx, u.Spec.Domain, sendReq)
 			r.AddResponse(resp)
 		}
@@ -154,8 +158,12 @@ func (s *service) SendVoice(ctx context.Context, req *voice.SendVoiceRequest) *n
 // 发送IM消息
 func (s *service) SendIM(ctx context.Context, dom string, req *im.SendMessageRequest) *notify.SendResponse {
 	resp := notify.NewSendResponse(req.Uid)
+	if req.Uid == "" {
+		resp.SendError(errors.New("feishu uid not found"))
+		return resp
+	}
 
-	d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestById(dom))
+	d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(dom))
 	if err != nil {
 		resp.SendError(fmt.Errorf("get user domain error, %s", err))
 		return resp

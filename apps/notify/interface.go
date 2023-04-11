@@ -1,6 +1,10 @@
 package notify
 
-import "github.com/infraboard/mcenter/common/meta"
+import (
+	"fmt"
+
+	"github.com/infraboard/mcenter/common/meta"
+)
 
 const (
 	AppName = "notify"
@@ -37,6 +41,15 @@ func NewSendSMSRequest(templateId string, templateParams []string, users ...stri
 	req.AddSmsParams(templateParams...)
 	req.AddUser(users...)
 	return req
+}
+
+// AddParams todo
+func (req *SendNotifyRequest) Validate() error {
+	if len(req.Users) == 0 {
+		return fmt.Errorf("users required")
+	}
+
+	return nil
 }
 
 // AddParams todo
