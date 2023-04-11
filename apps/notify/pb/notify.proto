@@ -5,7 +5,7 @@ option go_package = "github.com/infraboard/mcenter/apps/notify";
 
 import "common/meta/meta.proto";
 
-enum SMS_PROVIDER {
+enum PROVIDER {
     // 腾讯短信服务
     TENCENT = 0;
     // 阿里短信服务

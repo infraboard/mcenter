@@ -7,7 +7,7 @@ type ImNotifyer interface {
 	SendMessage(context.Context, *SendMessageRequest) error
 }
 
-func NewSendMessageRequest(uid, title, content string) *SendMessageRequest {
+func NewSendMessageRequest(title, content string, uid string) *SendMessageRequest {
 	return &SendMessageRequest{
 		Uid:     uid,
 		Title:   title,

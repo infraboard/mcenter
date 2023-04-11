@@ -12,6 +12,8 @@ import (
 	"github.com/infraboard/mcenter/apps/notify/provider/mail"
 	"github.com/infraboard/mcenter/apps/notify/provider/sms"
 	"github.com/infraboard/mcenter/apps/notify/provider/sms/tencent"
+	"github.com/infraboard/mcenter/apps/notify/provider/voice"
+	vtencent "github.com/infraboard/mcenter/apps/notify/provider/voice/tencent"
 	"github.com/infraboard/mcenter/apps/user"
 )
 
@@ -29,22 +31,36 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 		case notify.NOTIFY_TYPE_MAIL:
 			// 查询用户邮箱, 构造邮件发送请求
 			sendReq := mail.NewSendMailRequest(req.Title, req.Content, u.Profile.Email)
-			r.AddResponse(s.SendMailMail(ctx, sendReq))
+			resp := s.SendMailMail(ctx, sendReq)
+			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_SMS:
 			sendReq := sms.NewSendSMSRequest()
 			sendReq.TemplateId = req.SmsRequest.TemplateId
 			sendReq.TemplateParams = req.SmsRequest.TemplateParams
 			sendReq.AddPhone(u.Profile.Phone)
+			resp := s.SendSMS(ctx, sendReq)
+			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_VOICE:
+			sendReq := voice.NewSendVoiceRequest(
+				u.Profile.Phone,
+				req.VoiceRequest.TemplateId,
+				req.VoiceRequest.TemplateParams,
+			)
+			resp := s.SendVoice(ctx, sendReq)
+			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_IM:
+			sendReq := im.NewSendMessageRequest(req.Title, req.Content, u.Spec.Feishu.UserId)
+			resp := s.SendIM(ctx, u.Spec.Domain, sendReq)
+			r.AddResponse(resp)
 		}
 	}
-	return nil, nil
+	return r, nil
 }
 
 // 邮件通知
 func (s *service) SendMailMail(ctx context.Context, req *mail.SendMailRequest) *notify.SendResponse {
 	resp := notify.NewSendResponse(req.ToStrings())
+
 	// 查询系统邮件设置
 	conf, err := s.setting.GetSetting(ctx)
 	if err != nil {
@@ -77,7 +93,7 @@ func (s *service) SendSMS(ctx context.Context, req *sms.SendSMSRequest) *notify.
 	// 发送短信
 	ss := conf.Notify.SMS
 	switch ss.Provider {
-	case notify.SMS_PROVIDER_TENCENT:
+	case notify.PROVIDER_TENCENT:
 		sender, err := tencent.NewSender(ss.TencentConfig)
 		if err != nil {
 			resp.SendError(err)
@@ -88,52 +104,70 @@ func (s *service) SendSMS(ctx context.Context, req *sms.SendSMSRequest) *notify.
 			resp.SendError(err)
 			return resp
 		}
-	case notify.SMS_PROVIDER_ALI:
+	case notify.PROVIDER_ALI:
 		resp.SendError(errors.New("not impl"))
 	default:
 		resp.SendError(fmt.Errorf("unknow provier: %s", ss.Provider))
 	}
 
+	resp.SendSuccess()
 	return resp
 }
 
 // 语音通知
-func (s *service) SendVoice(ctx context.Context, req *notify.SendNotifyRequest) (*notify.Record, error) {
+func (s *service) SendVoice(ctx context.Context, req *voice.SendVoiceRequest) *notify.SendResponse {
+	resp := notify.NewSendResponse(req.PhoneNumber)
+
+	// 查询系统短信发送设置
 	conf, err := s.setting.GetSetting(ctx)
 	if err != nil {
-		return nil, err
+		resp.SendError(err)
+		return resp
+	}
+	s.log.Debug(conf)
+
+	// 发送短信
+	ss := conf.Notify.Voice
+	switch ss.Provider {
+	case notify.PROVIDER_TENCENT:
+		sender, err := vtencent.NewQcloudVoice(ss.TencentConfig)
+		if err != nil {
+			resp.SendError(err)
+			return resp
+		}
+		result, err := sender.Call(ctx, req)
+		if err != nil {
+			resp.SendError(err)
+			return resp
+		}
+		resp.VoiceResponse = result
+	case notify.PROVIDER_ALI:
+		resp.SendError(errors.New("not impl"))
+	default:
+		resp.SendError(fmt.Errorf("unknow provier: %s", ss.Provider))
 	}
 
-	s.log.Debug(conf)
-	return nil, nil
+	resp.SendSuccess()
+	return resp
 }
 
 // 发送IM消息
 func (s *service) SendIM(ctx context.Context, dom string, req *im.SendMessageRequest) *notify.SendResponse {
 	resp := notify.NewSendResponse(req.Uid)
 
-	// u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
-	// if err != nil {
-	// 	resp.SendError(err)
-	// 	return resp
-	// }
-
-	// if u.Spec.Feishu.UserId == "" {
-	// 	resp.SendError(fmt.Errorf("user feishu id not found"))
-	// 	return resp
-	// }
 	d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestById(dom))
 	if err != nil {
 		resp.SendError(fmt.Errorf("get user domain error, %s", err))
 		return resp
 	}
 	notifyer := feishu.NewFeishuNotifyer(d.Spec.FeishuSetting)
-	// msg := im.NewSendMessageRequest(u.Spec.Feishu.UserId, req.Title, req.Content)
+
 	err = notifyer.SendMessage(ctx, req)
 	if err != nil {
 		resp.SendError(fmt.Errorf("send msg error, %s", err))
 		return resp
 	}
 
+	resp.SendSuccess()
 	return resp
 }

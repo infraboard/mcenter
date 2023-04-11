@@ -3,11 +3,12 @@ package voice
 import (
 	"context"
 
+	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/common/validate"
 )
 
 type VoiceNotifyer interface {
-	Call(context.Context, *SendVoiceRequest) (*SendVoiceResponse, error)
+	Call(context.Context, *SendVoiceRequest) (*notify.VoiceResponse, error)
 }
 
 func NewSendVoiceRequest(number, templateId string, templateParamSet []string) *SendVoiceRequest {

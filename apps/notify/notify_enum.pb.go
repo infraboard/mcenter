@@ -9,24 +9,24 @@ import (
 	"strings"
 )
 
-// ParseSMS_PROVIDERFromString Parse SMS_PROVIDER from string
-func ParseSMS_PROVIDERFromString(str string) (SMS_PROVIDER, error) {
+// ParsePROVIDERFromString Parse PROVIDER from string
+func ParsePROVIDERFromString(str string) (PROVIDER, error) {
 	key := strings.Trim(string(str), `"`)
-	v, ok := SMS_PROVIDER_value[strings.ToUpper(key)]
+	v, ok := PROVIDER_value[strings.ToUpper(key)]
 	if !ok {
-		return 0, fmt.Errorf("unknown SMS_PROVIDER: %s", str)
+		return 0, fmt.Errorf("unknown PROVIDER: %s", str)
 	}
 
-	return SMS_PROVIDER(v), nil
+	return PROVIDER(v), nil
 }
 
 // Equal type compare
-func (t SMS_PROVIDER) Equal(target SMS_PROVIDER) bool {
+func (t PROVIDER) Equal(target PROVIDER) bool {
 	return t == target
 }
 
 // IsIn todo
-func (t SMS_PROVIDER) IsIn(targets ...SMS_PROVIDER) bool {
+func (t PROVIDER) IsIn(targets ...PROVIDER) bool {
 	for _, target := range targets {
 		if t.Equal(target) {
 			return true
@@ -37,7 +37,7 @@ func (t SMS_PROVIDER) IsIn(targets ...SMS_PROVIDER) bool {
 }
 
 // MarshalJSON todo
-func (t SMS_PROVIDER) MarshalJSON() ([]byte, error) {
+func (t PROVIDER) MarshalJSON() ([]byte, error) {
 	b := bytes.NewBufferString(`"`)
 	b.WriteString(strings.ToUpper(t.String()))
 	b.WriteString(`"`)
@@ -45,8 +45,8 @@ func (t SMS_PROVIDER) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON todo
-func (t *SMS_PROVIDER) UnmarshalJSON(b []byte) error {
-	ins, err := ParseSMS_PROVIDERFromString(string(b))
+func (t *PROVIDER) UnmarshalJSON(b []byte) error {
+	ins, err := ParsePROVIDERFromString(string(b))
 	if err != nil {
 		return err
 	}

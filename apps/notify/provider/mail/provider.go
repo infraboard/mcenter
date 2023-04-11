@@ -23,14 +23,19 @@ func (req *SendMailRequest) ToStrings() string {
 }
 
 func (req *SendMailRequest) AddTo(tos ...string) {
-	req.To = append(req.To, tos...)
+	for _, v := range tos {
+		if v != "" {
+			req.To = append(req.To, v)
+		}
+	}
 }
 
 // NewSendMailRequest todo
 func NewSendMailRequest(title, content string, tos ...string) *SendMailRequest {
-	return &SendMailRequest{
+	req := &SendMailRequest{
 		Title:   title,
 		Content: content,
-		To:      tos,
 	}
+	req.AddTo(tos...)
+	return req
 }

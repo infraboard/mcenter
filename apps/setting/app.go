@@ -63,7 +63,7 @@ type Notify struct {
 
 func NewDefaultSmsSetting() *SmsSetting {
 	return &SmsSetting{
-		Provider:      notify.SMS_PROVIDER_TENCENT,
+		Provider:      notify.PROVIDER_TENCENT,
 		TencentConfig: sms_tencent.NewDefaultConfig(),
 		AliConfig:     sms_ali.NewDefaultConfig(),
 	}
@@ -71,7 +71,7 @@ func NewDefaultSmsSetting() *SmsSetting {
 
 type SmsSetting struct {
 	// 短信服务商
-	Provider notify.SMS_PROVIDER `bson:"Provider" json:"Provider"`
+	Provider notify.PROVIDER `bson:"provider" json:"provider"`
 	// 腾讯短信服务配置
 	TencentConfig *sms_tencent.Config `bson:"tencent_config" json:"tencent_config"`
 	// 阿里云短信服务配置
@@ -86,6 +86,8 @@ func NewDefaultVoiceSetting() *VoiceSetting {
 }
 
 type VoiceSetting struct {
+	// 音频服务商
+	Provider notify.PROVIDER `bson:"provider" json:"provider"`
 	// 腾讯短信服务配置
 	TencentConfig *voice_tencent.Config `bson:"tencent_config" json:"tencent_config"`
 	// 阿里云短信服务配置

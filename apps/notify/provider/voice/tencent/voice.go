@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/notify/provider/voice"
 	"github.com/infraboard/mcenter/common/validate"
 	"github.com/infraboard/mcube/logger"
@@ -67,7 +68,7 @@ func (v *TencentVoiceNotifyer) genVMSRequest(req *voice.SendVoiceRequest) *vms.S
 * 您也可以直接在代码中写入密钥对，但需谨防泄露，不要将代码复制、上传或者分享给他人
 * CAM 密匙查询: https://console.cloud.tencent.com/cam/capi
  */
-func (v *TencentVoiceNotifyer) Call(ctx context.Context, req *voice.SendVoiceRequest) (*voice.SendVoiceResponse, error) {
+func (v *TencentVoiceNotifyer) Call(ctx context.Context, req *voice.SendVoiceRequest) (*notify.VoiceResponse, error) {
 	if err := req.Validate(); err != nil {
 		return nil, fmt.Errorf("validate PhoneCallRequest error, %s", err)
 	}
@@ -98,7 +99,7 @@ func (v *TencentVoiceNotifyer) Call(ctx context.Context, req *voice.SendVoiceReq
 
 	// 打印返回的 JSON 字符串
 	v.log.Debugf("response: %s", response.ToJsonString())
-	return &voice.SendVoiceResponse{
+	return &notify.VoiceResponse{
 		CallId:         *response.Response.SendStatus.CallId,
 		SessionContext: *response.Response.SendStatus.SessionContext,
 	}, nil
