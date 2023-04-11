@@ -1,6 +1,9 @@
 package mail
 
-import "context"
+import (
+	"context"
+	"strings"
+)
 
 type MailNotifyer interface {
 	Send(context.Context, *SendMailRequest) error
@@ -15,14 +18,19 @@ type SendMailRequest struct {
 	Content string `json:"content"`
 }
 
+func (req *SendMailRequest) ToStrings() string {
+	return strings.Join(req.To, ",")
+}
+
 func (req *SendMailRequest) AddTo(tos ...string) {
 	req.To = append(req.To, tos...)
 }
 
 // NewSendMailRequest todo
-func NewSendMailRequest(title, content string) *SendMailRequest {
+func NewSendMailRequest(title, content string, tos ...string) *SendMailRequest {
 	return &SendMailRequest{
 		Title:   title,
 		Content: content,
+		To:      tos,
 	}
 }

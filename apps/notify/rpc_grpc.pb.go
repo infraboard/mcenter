@@ -19,24 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RPC_SendSMS_FullMethodName   = "/infraboard.mcenter.notify.RPC/SendSMS"
-	RPC_SendVoice_FullMethodName = "/infraboard.mcenter.notify.RPC/SendVoice"
-	RPC_SendMail_FullMethodName  = "/infraboard.mcenter.notify.RPC/SendMail"
-	RPC_SendIM_FullMethodName    = "/infraboard.mcenter.notify.RPC/SendIM"
+	RPC_SendNotify_FullMethodName = "/infraboard.mcenter.notify.RPC/SendNotify"
 )
 
 // RPCClient is the client API for RPC service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	// 短信通知
-	SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*Record, error)
-	// 语音通知
-	SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*Record, error)
-	// 邮件通知
-	SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*Record, error)
-	// IM通知
-	SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.CallOption) (*Record, error)
+	// 用户消息通知
+	SendNotify(ctx context.Context, in *SendNotifyRequest, opts ...grpc.CallOption) (*Record, error)
 }
 
 type rPCClient struct {
@@ -47,36 +38,9 @@ func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 	return &rPCClient{cc}
 }
 
-func (c *rPCClient) SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*Record, error) {
+func (c *rPCClient) SendNotify(ctx context.Context, in *SendNotifyRequest, opts ...grpc.CallOption) (*Record, error) {
 	out := new(Record)
-	err := c.cc.Invoke(ctx, RPC_SendSMS_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPCClient) SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*Record, error) {
-	out := new(Record)
-	err := c.cc.Invoke(ctx, RPC_SendVoice_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPCClient) SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*Record, error) {
-	out := new(Record)
-	err := c.cc.Invoke(ctx, RPC_SendMail_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPCClient) SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.CallOption) (*Record, error) {
-	out := new(Record)
-	err := c.cc.Invoke(ctx, RPC_SendIM_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, RPC_SendNotify_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -87,14 +51,8 @@ func (c *rPCClient) SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	// 短信通知
-	SendSMS(context.Context, *SendSMSRequest) (*Record, error)
-	// 语音通知
-	SendVoice(context.Context, *SendVoiceRequest) (*Record, error)
-	// 邮件通知
-	SendMail(context.Context, *SendMailRequest) (*Record, error)
-	// IM通知
-	SendIM(context.Context, *SendIMRequest) (*Record, error)
+	// 用户消息通知
+	SendNotify(context.Context, *SendNotifyRequest) (*Record, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -102,17 +60,8 @@ type RPCServer interface {
 type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedRPCServer) SendSMS(context.Context, *SendSMSRequest) (*Record, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendSMS not implemented")
-}
-func (UnimplementedRPCServer) SendVoice(context.Context, *SendVoiceRequest) (*Record, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendVoice not implemented")
-}
-func (UnimplementedRPCServer) SendMail(context.Context, *SendMailRequest) (*Record, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendMail not implemented")
-}
-func (UnimplementedRPCServer) SendIM(context.Context, *SendIMRequest) (*Record, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendIM not implemented")
+func (UnimplementedRPCServer) SendNotify(context.Context, *SendNotifyRequest) (*Record, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendNotify not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -127,74 +76,20 @@ func RegisterRPCServer(s grpc.ServiceRegistrar, srv RPCServer) {
 	s.RegisterService(&RPC_ServiceDesc, srv)
 }
 
-func _RPC_SendSMS_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendSMSRequest)
+func _RPC_SendNotify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendNotifyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RPCServer).SendSMS(ctx, in)
+		return srv.(RPCServer).SendNotify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: RPC_SendSMS_FullMethodName,
+		FullMethod: RPC_SendNotify_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).SendSMS(ctx, req.(*SendSMSRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_SendVoice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendVoiceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).SendVoice(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RPC_SendVoice_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).SendVoice(ctx, req.(*SendVoiceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_SendMail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendMailRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).SendMail(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RPC_SendMail_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).SendMail(ctx, req.(*SendMailRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_SendIM_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendIMRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).SendIM(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RPC_SendIM_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).SendIM(ctx, req.(*SendIMRequest))
+		return srv.(RPCServer).SendNotify(ctx, req.(*SendNotifyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -207,20 +102,8 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*RPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SendSMS",
-			Handler:    _RPC_SendSMS_Handler,
-		},
-		{
-			MethodName: "SendVoice",
-			Handler:    _RPC_SendVoice_Handler,
-		},
-		{
-			MethodName: "SendMail",
-			Handler:    _RPC_SendMail_Handler,
-		},
-		{
-			MethodName: "SendIM",
-			Handler:    _RPC_SendIM_Handler,
+			MethodName: "SendNotify",
+			Handler:    _RPC_SendNotify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -26,6 +26,11 @@ func NewSendSMSRequest() *SendSMSRequest {
 }
 
 // AddParams todo
+func (req *SendSMSRequest) PhoneNumbersString() string {
+	return strings.Join(req.PhoneNumbers, ",")
+}
+
+// AddParams todo
 func (req *SendSMSRequest) AddParams(params ...string) {
 	req.TemplateParams = append(req.TemplateParams, params...)
 }

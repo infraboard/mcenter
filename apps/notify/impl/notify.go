@@ -2,6 +2,7 @@ package impl
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/infraboard/mcenter/apps/domain"
@@ -15,54 +16,62 @@ import (
 )
 
 // 邮件通知
-func (s *service) SendMail(ctx context.Context, req *notify.SendMailRequest) (*notify.Record, error) {
+func (s *service) SendMail(ctx context.Context, req *notify.SendNotifyRequest) (*notify.Record, error) {
+	r := notify.NewRecord(req)
+
 	// 查询用户邮箱, 构造邮件发送请求
-	sendReq := mail.NewSendMailRequest(req.Title, req.Content)
 	for i := range req.Users {
 		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
 		if err != nil {
 			return nil, fmt.Errorf("get user error, %s", err)
 		}
-		if u.Profile.Email != "" {
-			sendReq.AddTo(u.Profile.Email)
+		switch req.NotifyTye {
+		case notify.NOTIFY_TYPE_MAIL:
+			// 查询用户邮箱, 构造邮件发送请求
+			sendReq := mail.NewSendMailRequest(req.Title, req.Content, u.Profile.Email)
+			r.AddResponse(s.SendMailMail(ctx, sendReq))
+		case notify.NOTIFY_TYPE_SMS:
+			sendReq := sms.NewSendSMSRequest()
+			sendReq.TemplateId = req.SmsRequest.TemplateId
+			sendReq.TemplateParams = req.SmsRequest.TemplateParams
+			sendReq.AddPhone(u.Profile.Phone)
+		case notify.NOTIFY_TYPE_VOICE:
+		case notify.NOTIFY_TYPE_IM:
 		}
 	}
+	return nil, nil
+}
 
+// 邮件通知
+func (s *service) SendMailMail(ctx context.Context, req *mail.SendMailRequest) *notify.SendResponse {
+	resp := notify.NewSendResponse(req.ToStrings())
 	// 查询系统邮件设置
 	conf, err := s.setting.GetSetting(ctx)
 	if err != nil {
-		return nil, err
+		resp.SendError(err)
+		return resp
 	}
 
 	// 发送邮件
 	sender := mail.NewSender(conf.Notify.Email)
-	if err := sender.Send(ctx, sendReq); err != nil {
-		return nil, err
+	if err := sender.Send(ctx, req); err != nil {
+		resp.SendError(err)
+		return resp
 	}
 
-	return nil, nil
+	resp.SendSuccess()
+	return resp
 }
 
 // 短信通知
-func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*notify.Record, error) {
-	// 查询用户电话号码, 构造短信发送请求
-	sendReq := sms.NewSendSMSRequest()
-	sendReq.TemplateId = req.TemplateId
-	sendReq.TemplateParams = req.TemplateParams
-	for i := range req.Users {
-		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
-		if err != nil {
-			return nil, fmt.Errorf("get user error, %s", err)
-		}
-		if u.Profile.Phone != "" {
-			sendReq.AddPhone(u.Profile.Phone)
-		}
-	}
+func (s *service) SendSMS(ctx context.Context, req *sms.SendSMSRequest) *notify.SendResponse {
+	resp := notify.NewSendResponse(req.PhoneNumbersString())
 
 	// 查询系统短信发送设置
 	conf, err := s.setting.GetSetting(ctx)
 	if err != nil {
-		return nil, err
+		resp.SendError(err)
+		return resp
 	}
 
 	// 发送短信
@@ -71,22 +80,25 @@ func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*not
 	case notify.SMS_PROVIDER_TENCENT:
 		sender, err := tencent.NewSender(ss.TencentConfig)
 		if err != nil {
-			return nil, err
+			resp.SendError(err)
+			return resp
 		}
-		if err := sender.Send(ctx, sendReq); err != nil {
-			return nil, err
+		err = sender.Send(ctx, req)
+		if err != nil {
+			resp.SendError(err)
+			return resp
 		}
 	case notify.SMS_PROVIDER_ALI:
-		return nil, fmt.Errorf("not impl")
+		resp.SendError(errors.New("not impl"))
 	default:
-		return nil, fmt.Errorf("unknow provier: %s", ss.Provider)
+		resp.SendError(fmt.Errorf("unknow provier: %s", ss.Provider))
 	}
 
-	return nil, nil
+	return resp
 }
 
 // 语音通知
-func (s *service) SendVoice(ctx context.Context, req *notify.SendVoiceRequest) (*notify.Record, error) {
+func (s *service) SendVoice(ctx context.Context, req *notify.SendNotifyRequest) (*notify.Record, error) {
 	conf, err := s.setting.GetSetting(ctx)
 	if err != nil {
 		return nil, err
@@ -97,7 +109,7 @@ func (s *service) SendVoice(ctx context.Context, req *notify.SendVoiceRequest) (
 }
 
 // 发送IM消息
-func (s *service) SendIM(ctx context.Context, req *notify.SendIMRequest) (*notify.Record, error) {
+func (s *service) SendIM(ctx context.Context, req *notify.SendNotifyRequest) (*notify.Record, error) {
 	for i := range req.Users {
 		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
 		if err != nil {
