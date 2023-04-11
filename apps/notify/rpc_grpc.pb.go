@@ -30,13 +30,13 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
 	// 短信通知
-	SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
+	SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*Record, error)
 	// 语音通知
-	SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*SendVoiceResponse, error)
+	SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*Record, error)
 	// 邮件通知
-	SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*SendMailResponse, error)
+	SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*Record, error)
 	// IM通知
-	SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.CallOption) (*SendImResponse, error)
+	SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.CallOption) (*Record, error)
 }
 
 type rPCClient struct {
@@ -47,8 +47,8 @@ func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 	return &rPCClient{cc}
 }
 
-func (c *rPCClient) SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*SendSmsResponse, error) {
-	out := new(SendSmsResponse)
+func (c *rPCClient) SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grpc.CallOption) (*Record, error) {
+	out := new(Record)
 	err := c.cc.Invoke(ctx, RPC_SendSMS_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +56,8 @@ func (c *rPCClient) SendSMS(ctx context.Context, in *SendSMSRequest, opts ...grp
 	return out, nil
 }
 
-func (c *rPCClient) SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*SendVoiceResponse, error) {
-	out := new(SendVoiceResponse)
+func (c *rPCClient) SendVoice(ctx context.Context, in *SendVoiceRequest, opts ...grpc.CallOption) (*Record, error) {
+	out := new(Record)
 	err := c.cc.Invoke(ctx, RPC_SendVoice_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -65,8 +65,8 @@ func (c *rPCClient) SendVoice(ctx context.Context, in *SendVoiceRequest, opts ..
 	return out, nil
 }
 
-func (c *rPCClient) SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*SendMailResponse, error) {
-	out := new(SendMailResponse)
+func (c *rPCClient) SendMail(ctx context.Context, in *SendMailRequest, opts ...grpc.CallOption) (*Record, error) {
+	out := new(Record)
 	err := c.cc.Invoke(ctx, RPC_SendMail_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -74,8 +74,8 @@ func (c *rPCClient) SendMail(ctx context.Context, in *SendMailRequest, opts ...g
 	return out, nil
 }
 
-func (c *rPCClient) SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.CallOption) (*SendImResponse, error) {
-	out := new(SendImResponse)
+func (c *rPCClient) SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.CallOption) (*Record, error) {
+	out := new(Record)
 	err := c.cc.Invoke(ctx, RPC_SendIM_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -88,13 +88,13 @@ func (c *rPCClient) SendIM(ctx context.Context, in *SendIMRequest, opts ...grpc.
 // for forward compatibility
 type RPCServer interface {
 	// 短信通知
-	SendSMS(context.Context, *SendSMSRequest) (*SendSmsResponse, error)
+	SendSMS(context.Context, *SendSMSRequest) (*Record, error)
 	// 语音通知
-	SendVoice(context.Context, *SendVoiceRequest) (*SendVoiceResponse, error)
+	SendVoice(context.Context, *SendVoiceRequest) (*Record, error)
 	// 邮件通知
-	SendMail(context.Context, *SendMailRequest) (*SendMailResponse, error)
+	SendMail(context.Context, *SendMailRequest) (*Record, error)
 	// IM通知
-	SendIM(context.Context, *SendIMRequest) (*SendImResponse, error)
+	SendIM(context.Context, *SendIMRequest) (*Record, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -102,16 +102,16 @@ type RPCServer interface {
 type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedRPCServer) SendSMS(context.Context, *SendSMSRequest) (*SendSmsResponse, error) {
+func (UnimplementedRPCServer) SendSMS(context.Context, *SendSMSRequest) (*Record, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendSMS not implemented")
 }
-func (UnimplementedRPCServer) SendVoice(context.Context, *SendVoiceRequest) (*SendVoiceResponse, error) {
+func (UnimplementedRPCServer) SendVoice(context.Context, *SendVoiceRequest) (*Record, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendVoice not implemented")
 }
-func (UnimplementedRPCServer) SendMail(context.Context, *SendMailRequest) (*SendMailResponse, error) {
+func (UnimplementedRPCServer) SendMail(context.Context, *SendMailRequest) (*Record, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendMail not implemented")
 }
-func (UnimplementedRPCServer) SendIM(context.Context, *SendIMRequest) (*SendImResponse, error) {
+func (UnimplementedRPCServer) SendIM(context.Context, *SendIMRequest) (*Record, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendIM not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}

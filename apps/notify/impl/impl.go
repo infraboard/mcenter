@@ -8,6 +8,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/setting"
 	"github.com/infraboard/mcenter/apps/user"
@@ -26,6 +27,7 @@ type service struct {
 	user    user.Service
 	log     logger.Logger
 	setting setting.Service
+	domain  domain.Service
 }
 
 func (s *service) Config() error {
@@ -38,6 +40,7 @@ func (s *service) Config() error {
 	s.log = zap.L().Named(s.Name())
 	s.setting = app.GetInternalApp(setting.AppName).(setting.Service)
 	s.user = app.GetInternalApp(user.AppName).(user.Service)
+	s.domain = app.GetInternalApp(domain.AppName).(domain.Service)
 	return nil
 }
 

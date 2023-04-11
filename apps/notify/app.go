@@ -1,7 +1,5 @@
 package notify
 
-import "strings"
-
 const (
 	AppName = "notify"
 )
@@ -28,12 +26,4 @@ func (req *SendSMSRequest) AddParams(params ...string) {
 // AddPhone todo
 func (req *SendSMSRequest) AddUser(users ...string) {
 	req.Users = append(req.Users, users...)
-}
-
-func (resp *SendMailResponse) SuccessedMailString() string {
-	return strings.Join(resp.SuccessedMails, ",")
-}
-
-func (resp *SendSmsResponse) SuccessedNumbersString() string {
-	return strings.Join(resp.SuccessedNumbers, ",")
 }

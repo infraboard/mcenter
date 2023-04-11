@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/notify"
+	"github.com/infraboard/mcenter/apps/notify/provider/im"
+	"github.com/infraboard/mcenter/apps/notify/provider/im/feishu"
 	"github.com/infraboard/mcenter/apps/notify/provider/mail"
 	"github.com/infraboard/mcenter/apps/notify/provider/sms"
 	"github.com/infraboard/mcenter/apps/notify/provider/sms/tencent"
@@ -12,7 +15,7 @@ import (
 )
 
 // 邮件通知
-func (s *service) SendMail(ctx context.Context, req *notify.SendMailRequest) (*notify.SendMailResponse, error) {
+func (s *service) SendMail(ctx context.Context, req *notify.SendMailRequest) (*notify.Record, error) {
 	// 查询用户邮箱, 构造邮件发送请求
 	sendReq := mail.NewSendMailRequest(req.Title, req.Content)
 	for i := range req.Users {
@@ -37,11 +40,11 @@ func (s *service) SendMail(ctx context.Context, req *notify.SendMailRequest) (*n
 		return nil, err
 	}
 
-	return &notify.SendMailResponse{SuccessedMails: sendReq.To}, nil
+	return nil, nil
 }
 
 // 短信通知
-func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*notify.SendSmsResponse, error) {
+func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*notify.Record, error) {
 	// 查询用户电话号码, 构造短信发送请求
 	sendReq := sms.NewSendSMSRequest()
 	sendReq.TemplateId = req.TemplateId
@@ -83,26 +86,37 @@ func (s *service) SendSMS(ctx context.Context, req *notify.SendSMSRequest) (*not
 }
 
 // 语音通知
-func (s *service) SendVoice(ctx context.Context, req *notify.SendVoiceRequest) (*notify.SendVoiceResponse, error) {
+func (s *service) SendVoice(ctx context.Context, req *notify.SendVoiceRequest) (*notify.Record, error) {
 	conf, err := s.setting.GetSetting(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	s.log.Debug(conf)
-	return &notify.SendVoiceResponse{}, nil
+	return nil, nil
 }
 
 // 发送IM消息
-func (s *service) SendIM(ctx context.Context, req *notify.SendIMRequest) (*notify.SendImResponse, error) {
-	// 获取用户的信息
-	conf, err := s.setting.GetSetting(ctx)
-	if err != nil {
-		return nil, err
+func (s *service) SendIM(ctx context.Context, req *notify.SendIMRequest) (*notify.Record, error) {
+	for i := range req.Users {
+		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
+		if err != nil {
+			return nil, fmt.Errorf("get user error, %s", err)
+		}
+		if u.Spec.Feishu.UserId == "" {
+			return nil, fmt.Errorf("user feishu id not found")
+		}
+		d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestById(u.Spec.Domain))
+		if err != nil {
+			return nil, fmt.Errorf("get user domain error, %s", err)
+		}
+		notifyer := feishu.NewFeishuNotifyer(d.Spec.FeishuSetting)
+		msg := im.NewSendMessageRequest(u.Spec.Feishu.UserId, req.Title, req.Content)
+		err = notifyer.SendMessage(ctx, msg)
+		if err != nil {
+			return nil, fmt.Errorf("send msg error, %s", err)
+		}
 	}
-	s.log.Debug(conf)
-
-	//
 
 	return nil, nil
 }
