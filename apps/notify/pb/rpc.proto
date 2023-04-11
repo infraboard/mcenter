@@ -21,6 +21,12 @@ message QueryRecordRequest {
     // @gotags: json:"page"
     infraboard.mcube.page.PageRequest page = 1;
     // 通知类型
-    // @gotags: json:"notify_tye" bson:"notify_tye"
+    // @gotags: json:"notify_tye"
     optional NOTIFY_TYPE notify_tye = 2;
+    // 域
+    // @gotags: json:"namespace"
+    string domain = 3;
+    // 空间
+    // @gotags: json:"namespace"
+    string namespace = 4;
 }

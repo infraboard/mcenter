@@ -21,6 +21,7 @@ func NewSendNotifyRequest() *SendNotifyRequest {
 		Users:        []string{},
 		SmsRequest:   NewSMSRequest(),
 		VoiceRequest: NewVoiceRequest(),
+		Extra:        map[string]string{},
 	}
 }
 

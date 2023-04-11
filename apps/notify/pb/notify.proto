@@ -24,24 +24,33 @@ enum NOTIFY_TYPE {
 }
 
 message SendNotifyRequest {
+    // 域
+    // @gotags: json:"domain" bson:"domain" validate:"required"
+    string domain = 1;
+    // 空间
+    // @gotags: json:"namespace" bson:"namespace" validate:"required"
+    string namespace = 2;
     // 通知类型
     // @gotags: json:"notify_tye" bson:"notify_tye"
-    NOTIFY_TYPE notify_tye = 1;
+    NOTIFY_TYPE notify_tye = 3;
     // 用户
     // @gotags: json:"users" bson:"users" validate:"required"
-    repeated string users = 2;
+    repeated string users = 4;
     // 告警时标题
     // @gotags: json:"title" bson:"title" validate:"required"
-    string title = 4;
+    string title = 5;
     // 告警内容
     // @gotags: json:"content" bson:"content"
-    string content = 5;
+    string content = 6;
     // 短信通知请求参数
     // @gotags: json:"sms_request" bson:"sms_request"
-    SMSRequest sms_request = 6;
+    SMSRequest sms_request = 7;
     // 语音通知请求参数
     // @gotags: json:"voice_request" bson:"voice_request"
-    VoiceRequest voice_request = 7;
+    VoiceRequest voice_request = 8;
+    // 扩展参数
+    // @gotags: json:"extra" bson:"extra"
+    map<string,string> extra = 15;
 }
 
 message SMSRequest {
@@ -69,9 +78,12 @@ message VoiceRequest {
 }
 
 message RecordSet {
+    // 总数
+    // @gotags: json:"total" bson:"total"
+    int64 total = 1;
     // 发生记录
     // @gotags: json:"items" bson:"items"
-    repeated Record items = 1;
+    repeated Record items = 2;
 }
 
 message Record {
