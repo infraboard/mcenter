@@ -1,5 +1,7 @@
 package notify
 
+import "github.com/infraboard/mcenter/common/meta"
+
 const (
 	AppName = "notify"
 )
@@ -61,6 +63,7 @@ func NewVoiceRequest() *VoiceRequest {
 
 func NewRecord(req *SendNotifyRequest) *Record {
 	return &Record{
+		Meta:     meta.NewMeta(),
 		Request:  req,
 		Response: []*SendResponse{},
 	}

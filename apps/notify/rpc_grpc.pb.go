@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RPC_SendNotify_FullMethodName = "/infraboard.mcenter.notify.RPC/SendNotify"
+	RPC_SendNotify_FullMethodName  = "/infraboard.mcenter.notify.RPC/SendNotify"
+	RPC_QueryRecord_FullMethodName = "/infraboard.mcenter.notify.RPC/QueryRecord"
 )
 
 // RPCClient is the client API for RPC service.
@@ -28,6 +29,8 @@ const (
 type RPCClient interface {
 	// 用户消息通知
 	SendNotify(ctx context.Context, in *SendNotifyRequest, opts ...grpc.CallOption) (*Record, error)
+	// 查询发送记录
+	QueryRecord(ctx context.Context, in *QueryRecordRequest, opts ...grpc.CallOption) (*RecordSet, error)
 }
 
 type rPCClient struct {
@@ -47,12 +50,23 @@ func (c *rPCClient) SendNotify(ctx context.Context, in *SendNotifyRequest, opts 
 	return out, nil
 }
 
+func (c *rPCClient) QueryRecord(ctx context.Context, in *QueryRecordRequest, opts ...grpc.CallOption) (*RecordSet, error) {
+	out := new(RecordSet)
+	err := c.cc.Invoke(ctx, RPC_QueryRecord_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RPCServer is the server API for RPC service.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
 	// 用户消息通知
 	SendNotify(context.Context, *SendNotifyRequest) (*Record, error)
+	// 查询发送记录
+	QueryRecord(context.Context, *QueryRecordRequest) (*RecordSet, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -62,6 +76,9 @@ type UnimplementedRPCServer struct {
 
 func (UnimplementedRPCServer) SendNotify(context.Context, *SendNotifyRequest) (*Record, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendNotify not implemented")
+}
+func (UnimplementedRPCServer) QueryRecord(context.Context, *QueryRecordRequest) (*RecordSet, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryRecord not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -94,6 +111,24 @@ func _RPC_SendNotify_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RPC_QueryRecord_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRecordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).QueryRecord(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RPC_QueryRecord_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).QueryRecord(ctx, req.(*QueryRecordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -104,6 +139,10 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendNotify",
 			Handler:    _RPC_SendNotify_Handler,
+		},
+		{
+			MethodName: "QueryRecord",
+			Handler:    _RPC_QueryRecord_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

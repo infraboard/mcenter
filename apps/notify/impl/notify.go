@@ -16,7 +16,7 @@ import (
 )
 
 // 邮件通知
-func (s *service) SendMail(ctx context.Context, req *notify.SendNotifyRequest) (*notify.Record, error) {
+func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest) (*notify.Record, error) {
 	r := notify.NewRecord(req)
 
 	// 查询用户邮箱, 构造邮件发送请求
@@ -109,26 +109,31 @@ func (s *service) SendVoice(ctx context.Context, req *notify.SendNotifyRequest) 
 }
 
 // 发送IM消息
-func (s *service) SendIM(ctx context.Context, req *notify.SendNotifyRequest) (*notify.Record, error) {
-	for i := range req.Users {
-		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
-		if err != nil {
-			return nil, fmt.Errorf("get user error, %s", err)
-		}
-		if u.Spec.Feishu.UserId == "" {
-			return nil, fmt.Errorf("user feishu id not found")
-		}
-		d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestById(u.Spec.Domain))
-		if err != nil {
-			return nil, fmt.Errorf("get user domain error, %s", err)
-		}
-		notifyer := feishu.NewFeishuNotifyer(d.Spec.FeishuSetting)
-		msg := im.NewSendMessageRequest(u.Spec.Feishu.UserId, req.Title, req.Content)
-		err = notifyer.SendMessage(ctx, msg)
-		if err != nil {
-			return nil, fmt.Errorf("send msg error, %s", err)
-		}
+func (s *service) SendIM(ctx context.Context, dom string, req *im.SendMessageRequest) *notify.SendResponse {
+	resp := notify.NewSendResponse(req.Uid)
+
+	// u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
+	// if err != nil {
+	// 	resp.SendError(err)
+	// 	return resp
+	// }
+
+	// if u.Spec.Feishu.UserId == "" {
+	// 	resp.SendError(fmt.Errorf("user feishu id not found"))
+	// 	return resp
+	// }
+	d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestById(dom))
+	if err != nil {
+		resp.SendError(fmt.Errorf("get user domain error, %s", err))
+		return resp
+	}
+	notifyer := feishu.NewFeishuNotifyer(d.Spec.FeishuSetting)
+	// msg := im.NewSendMessageRequest(u.Spec.Feishu.UserId, req.Title, req.Content)
+	err = notifyer.SendMessage(ctx, req)
+	if err != nil {
+		resp.SendError(fmt.Errorf("send msg error, %s", err))
+		return resp
 	}
 
-	return nil, nil
+	return resp
 }
