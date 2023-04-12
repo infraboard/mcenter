@@ -9,11 +9,11 @@ message Meta  {
     string id = 1;
     // 创建时间
     // @gotags: bson:"create_at" json:"create_at"
-    int64 create_at = 4;
+    int64 create_at = 2;
     // 更新时间
     // @gotags: bson:"update_at" json:"update_at"
-    int64 update_at = 5;
+    int64 update_at = 3;
     // 更新人
     // @gotags: bson:"update_by" json:"update_by"
-    string update_by = 6;
+    string update_by = 4;
 }
