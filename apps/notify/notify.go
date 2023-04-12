@@ -2,6 +2,8 @@ package notify
 
 import (
 	"encoding/json"
+	"fmt"
+	"strings"
 
 	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcenter/common/meta"
@@ -46,4 +48,26 @@ func (r *Record) FailedResponse() (items []*SendResponse) {
 	}
 
 	return
+}
+
+func (r *Record) FailedResponseToMessage() string {
+	resps := r.FailedResponse()
+	if len(resps) == 0 {
+		return ""
+	}
+
+	errors := []string{}
+	for i := range resps {
+		resp := resps[i]
+		errors = append(errors, resp.DetailMessage())
+	}
+
+	return strings.Join(errors, ",")
+}
+
+func (r *SendResponse) DetailMessage() string {
+	if r.Message == "" {
+		return ""
+	}
+	return fmt.Sprintf("send message to user %s[%s] error, %s", r.User, r.Target, r.Message)
 }

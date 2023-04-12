@@ -31,4 +31,7 @@ func TestQueryRecord(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log(tools.MustToJson(set))
+	for i := range set.Items {
+		t.Log(set.Items[i].FailedResponseToMessage())
+	}
 }
