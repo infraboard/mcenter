@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/infraboard/mcenter/common/format"
-	"github.com/infraboard/mcenter/common/meta"
+	"github.com/infraboard/mcube/pb/resource"
 )
 
 func NewRecordSet() *RecordSet {
@@ -25,7 +25,7 @@ func NewDefaultRecord() *Record {
 
 func (r *Record) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
-		*meta.Meta
+		*resource.Meta
 		*SendNotifyRequest
 		Response []*SendResponse
 	}{r.Meta, r.Request, r.Response})

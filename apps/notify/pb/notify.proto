@@ -3,7 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.notify;
 option go_package = "github.com/infraboard/mcenter/apps/notify";
 
-import "common/meta/meta.proto";
+import "github.com/infraboard/mcube/pb/resource/meta.proto";
 
 enum PROVIDER {
     // 腾讯短信服务
@@ -92,7 +92,7 @@ message RecordSet {
 message Record {
     // 元信息
     // @gotags: bson:",inline" json:"meta"
-    common.meta.Meta meta = 1;
+    infraboard.mcube.resource.Meta meta = 1;
     // 请求
     // @gotags: json:"request" bson:",inline"
     SendNotifyRequest request = 2;

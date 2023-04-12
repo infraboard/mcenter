@@ -3,8 +3,8 @@ package notify
 import (
 	"fmt"
 
-	"github.com/infraboard/mcenter/common/meta"
 	"github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/pb/resource"
 )
 
 const (
@@ -78,7 +78,7 @@ func NewVoiceRequest() *VoiceRequest {
 
 func NewRecord(req *SendNotifyRequest) *Record {
 	return &Record{
-		Meta:     meta.NewMeta(),
+		Meta:     resource.NewMeta(),
 		Request:  req,
 		Response: []*SendResponse{},
 	}
