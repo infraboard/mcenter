@@ -34,8 +34,8 @@ type QueryRecordRequest struct {
 	// @gotags: json:"notify_tye"
 	NotifyTye *NOTIFY_TYPE `protobuf:"varint,2,opt,name=notify_tye,json=notifyTye,proto3,enum=infraboard.mcenter.notify.NOTIFY_TYPE,oneof" json:"notify_tye"`
 	// 域
-	// @gotags: json:"namespace"
-	Domain string `protobuf:"bytes,3,opt,name=domain,proto3" json:"namespace"`
+	// @gotags: json:"domain"
+	Domain string `protobuf:"bytes,3,opt,name=domain,proto3" json:"domain"`
 	// 空间
 	// @gotags: json:"namespace"
 	Namespace string `protobuf:"bytes,4,opt,name=namespace,proto3" json:"namespace"`

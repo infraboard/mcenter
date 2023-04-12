@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcenter/common/meta"
+	"github.com/infraboard/mcube/http/request"
 )
 
 const (
@@ -111,4 +112,10 @@ func (r *SendResponse) SendError(err error) {
 
 func (r *SendResponse) SendSuccess() {
 	r.Success = true
+}
+
+func NewQueryRecordRequest() *QueryRecordRequest {
+	return &QueryRecordRequest{
+		Page: request.NewDefaultPageRequest(),
+	}
 }

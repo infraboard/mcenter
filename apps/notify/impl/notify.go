@@ -25,7 +25,7 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 	}
 
 	r := notify.NewRecord(req)
-	// 查询用户邮箱, 构造邮件发送请求
+	mailSendReq := mail.NewSendMailRequest(req.Title, req.Content)
 	for i := range req.Users {
 		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
 		if err != nil {
@@ -33,11 +33,10 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 		}
 		switch req.NotifyTye {
 		case notify.NOTIFY_TYPE_MAIL:
-			// 查询用户邮箱, 构造邮件发送请求
-			sendReq := mail.NewSendMailRequest(req.Title, req.Content, u.Profile.Email)
-			resp := s.SendMailMail(ctx, sendReq)
-			r.AddResponse(resp)
+			// 添加邮件人
+			mailSendReq.AddTo(u.Profile.Email)
 		case notify.NOTIFY_TYPE_SMS:
+			// 添加电话号码
 			sendReq := sms.NewSendSMSRequest()
 			sendReq.TemplateId = req.SmsRequest.TemplateId
 			sendReq.TemplateParams = req.SmsRequest.TemplateParams
@@ -45,18 +44,31 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 			resp := s.SendSMS(ctx, sendReq)
 			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_VOICE:
+			// 添加电话号码
 			sendReq := voice.NewSendVoiceRequest(
 				u.Profile.Phone,
 				req.VoiceRequest.TemplateId,
 				req.VoiceRequest.TemplateParams,
 			)
+			sendReq.SessionContext = req.SessionContext
 			resp := s.SendVoice(ctx, sendReq)
 			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_IM:
+			// 补充IM Id
 			sendReq := im.NewSendMessageRequest(req.Title, req.Content, u.Spec.GetFeishuUserId())
 			resp := s.SendIM(ctx, u.Spec.Domain, sendReq)
 			r.AddResponse(resp)
 		}
+	}
+
+	// 邮件批量通知
+	if mailSendReq.HasTo() {
+		resp := s.SendMailMail(ctx, mailSendReq)
+		r.AddResponse(resp)
+	}
+
+	if _, err := s.col.InsertOne(ctx, r); err != nil {
+		return nil, exception.NewInternalServerError("inserted a notify record document error, %s", err)
 	}
 	return r, nil
 }
@@ -178,4 +190,32 @@ func (s *service) SendIM(ctx context.Context, dom string, req *im.SendMessageReq
 
 	resp.SendSuccess()
 	return resp
+}
+
+// 查询发送记录
+func (s *service) QueryRecord(ctx context.Context, in *notify.QueryRecordRequest) (*notify.RecordSet, error) {
+	r := newQueryRequest(in)
+	resp, err := s.col.Find(ctx, r.FindFilter(), r.FindOptions())
+
+	if err != nil {
+		return nil, exception.NewInternalServerError("find record error, error is %s", err)
+	}
+
+	set := notify.NewRecordSet()
+	// 循环
+	for resp.Next(ctx) {
+		ins := notify.NewDefaultRecord()
+		if err := resp.Decode(ins); err != nil {
+			return nil, exception.NewInternalServerError("decode user error, error is %s", err)
+		}
+		set.Add(ins)
+	}
+
+	// count
+	count, err := s.col.CountDocuments(ctx, r.FindFilter())
+	if err != nil {
+		return nil, exception.NewInternalServerError("get user count error, error is %s", err)
+	}
+	set.Total = count
+	return set, nil
 }

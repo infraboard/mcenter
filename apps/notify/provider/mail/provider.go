@@ -18,6 +18,10 @@ type SendMailRequest struct {
 	Content string `json:"content"`
 }
 
+func (req *SendMailRequest) HasTo() bool {
+	return len(req.To) > 0
+}
+
 func (req *SendMailRequest) ToStrings() string {
 	return strings.Join(req.To, ",")
 }
