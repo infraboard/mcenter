@@ -3,6 +3,7 @@ package notify
 import (
 	"encoding/json"
 
+	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcenter/common/meta"
 )
 
@@ -26,4 +27,23 @@ func (r *Record) MarshalJSON() ([]byte, error) {
 		*SendNotifyRequest
 		Response []*SendResponse
 	}{r.Meta, r.Request, r.Response})
+}
+
+func (r *Record) ToJson() string {
+	return format.Prettify(r)
+}
+
+func (r *Record) FailedResponse() (items []*SendResponse) {
+	if r.Response == nil {
+		return
+	}
+
+	for i := range r.Response {
+		resp := r.Response[i]
+		if !resp.Success {
+			items = append(items, resp)
+		}
+	}
+
+	return
 }
