@@ -16,7 +16,7 @@ func TestSendNotify(t *testing.T) {
 	req.NotifyTye = notify.NOTIFY_TYPE_IM
 	req.AddUser("admin")
 	req.Title = "test"
-	req.Content = "test content"
+	req.Content = "test content2"
 	set, err := impl.SendNotify(ctx, req)
 	if err != nil {
 		t.Fatal(err)

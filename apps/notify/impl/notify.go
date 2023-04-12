@@ -42,6 +42,7 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 			sendReq.TemplateParams = req.SmsRequest.TemplateParams
 			sendReq.AddPhone(u.Profile.Phone)
 			resp := s.SendSMS(ctx, sendReq)
+			resp.User = u.Spec.Username
 			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_VOICE:
 			// 添加电话号码
@@ -52,11 +53,13 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 			)
 			sendReq.SessionContext = req.SessionContext
 			resp := s.SendVoice(ctx, sendReq)
+			resp.User = u.Spec.Username
 			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_IM:
 			// 补充IM Id
 			sendReq := im.NewSendMessageRequest(req.Title, req.Content, u.Spec.GetFeishuUserId())
 			resp := s.SendIM(ctx, u.Spec.Domain, sendReq)
+			resp.User = u.Spec.Username
 			r.AddResponse(resp)
 		}
 	}

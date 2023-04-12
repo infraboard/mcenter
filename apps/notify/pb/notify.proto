@@ -96,19 +96,9 @@ message Record {
     // 请求
     // @gotags: json:"request" bson:",inline"
     SendNotifyRequest request = 2;
-    // 记录状态
-    // @gotags: json:"status" bson:"status"
-    RecordStatus status = 3;
     // 发送响应
     // @gotags: json:"response" bson:"response"
     repeated SendResponse response = 15;
-}
-
-// 记录状态
-message RecordStatus {
-    // 是否已读
-    // @gotags: bson:"is_read" json:"is_read"
-    bool is_read = 1;
 }
 
 message SendResponse {
