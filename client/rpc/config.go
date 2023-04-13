@@ -18,7 +18,7 @@ func NewDefaultConfig() *Config {
 
 // Config 客户端配置
 type Config struct {
-	Address      string `json:"adress" toml:"adress" yaml:"adress" env:"MCENTER_GRPC_ADDRESS"`
+	Address      string `json:"address" toml:"address" yaml:"address" env:"MCENTER_GRPC_ADDRESS"`
 	ClientID     string `json:"client_id" toml:"client_id" yaml:"client_id" env:"MCENTER_CLINET_ID"`
 	ClientSecret string `json:"client_secret" toml:"client_secret" yaml:"client_secret" env:"MCENTER_CLIENT_SECRET"`
 	// 默认值10秒
