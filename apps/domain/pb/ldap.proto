@@ -40,4 +40,7 @@ message LdapConfig {
     // 用户显示名称属性名称
     // @gotags: bson:"display_name_attribute" json:"display_name_attribute"
     string display_name_attribute = 11;
+    // 新增用户或者注销用户时，是否同步, 默认不做同步, 只读区用户信息
+    // @gotags: bson:"data_sync" json:"data_sync"
+    bool data_sync = 13;
 }
