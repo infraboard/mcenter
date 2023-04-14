@@ -2,6 +2,10 @@ package user
 
 import context "context"
 
+const (
+	AppName = "user"
+)
+
 type Service interface {
 	// 创建用户
 	CreateUser(context.Context, *CreateUserRequest) (*User, error)

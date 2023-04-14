@@ -14,16 +14,16 @@ import (
 func (s *service) save(ctx context.Context, u *user.User) error {
 	if _, err := s.col.InsertOne(ctx, u); err != nil {
 		return exception.NewInternalServerError("inserted user(%s) document error, %s",
-			u.Id, err)
+			u.Meta.Id, err)
 	}
 
 	return nil
 }
 
 func (s *service) update(ctx context.Context, ins *user.User) error {
-	if _, err := s.col.UpdateByID(ctx, ins.Id, bson.M{"$set": ins}); err != nil {
+	if _, err := s.col.UpdateByID(ctx, ins.Meta.Id, bson.M{"$set": ins}); err != nil {
 		return exception.NewInternalServerError("inserted user(%s) document error, %s",
-			ins.Id, err)
+			ins.Meta.Id, err)
 	}
 
 	return nil
@@ -83,13 +83,13 @@ func (r *queryRequest) FindFilter() bson.M {
 	filter := bson.M{}
 
 	if r.Domain != "" {
-		filter["spec.domain"] = r.Domain
+		filter["domain"] = r.Domain
 	}
 	if r.Provider != nil {
-		filter["spec.provider"] = r.Provider
+		filter["provider"] = r.Provider
 	}
 	if r.Type != nil {
-		filter["spec.type"] = r.Type
+		filter["type"] = r.Type
 	}
 	if len(r.UserIds) > 0 {
 		filter["_id"] = bson.M{"$in": r.UserIds}

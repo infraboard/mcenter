@@ -3,6 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.user;
 option go_package = "github.com/infraboard/mcenter/apps/user";
 
+import "github.com/infraboard/mcube/pb/resource/meta.proto";
+
 message Password {
     // hash过后的密码
     // @gotags: bson:"password" json:"password,omitempty"
@@ -32,6 +34,9 @@ message Password {
 
 // Status 用户状态
 message Status {
+    // 用户是否初始化
+    // @gotags: bson:"is_initialized" json:"is_initialized"
+    bool is_initialized = 5; 
     // 是否冻结
     // @gotags: bson:"locked" json:"locked"
     bool locked = 1;
@@ -71,36 +76,27 @@ enum TYPE {
 
 // User 用户账号
 message User {
-    // 用户Id
-    // @gotags: bson:"_id" json:"id"
-    string id = 1;
-    // 用户创建的时间
-    // @gotags: bson:"create_at" json:"create_at"
-    int64 create_at = 2;
-    // 修改时间
-    // @gotags: bson:"update_at" json:"update_at"
-    int64 update_at = 3;
+    // 元信息
+    // @gotags: bson:",inline" json:"meta"
+    infraboard.mcube.resource.Meta meta = 1;
     // 定义信息
-    // @gotags: bson:"spec" json:"spec"
-    CreateUserRequest spec = 4;
+    // @gotags: bson:",inline" json:"spec"
+    CreateUserRequest spec = 2;
     // Profile信息
-    // @gotags: json:"profile"
-    Profile profile = 5;
-    // 用户是否初始化
-    // @gotags: bson:"is_initialized" json:"is_initialized"
-    bool is_initialized = 6; 
+    // @gotags bson:"profile" json:"profile"
+    Profile profile = 3;
     // 密码相关信息
     // @gotags: bson:"password" json:"password"
-    Password password = 7;
+    Password password = 4;
     // 用户状态
     // @gotags: bson:"status" json:"status"
-    Status status = 8;
+    Status status = 5;
     // 飞书token
     // @gotags: bson:"feishu_token" json:"feishu_token"
-    FeishuAccessToken feishu_token = 9;
+    FeishuAccessToken feishu_token = 6;
     // 钉钉token
     // @gotags: bson:"dingding_token" json:"dingding_token"
-    DingDingAccessToken dingding_token = 10;
+    DingDingAccessToken dingding_token = 7;
 }
 
 enum Gender {

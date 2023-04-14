@@ -43,8 +43,8 @@ func (s *service) Config() error {
 		},
 		{
 			Keys: bsonx.Doc{
-				{Key: "spec.domain", Value: bsonx.Int32(-1)},
-				{Key: "spec.username", Value: bsonx.Int32(-1)},
+				{Key: "domain", Value: bsonx.Int32(-1)},
+				{Key: "username", Value: bsonx.Int32(-1)},
 			},
 			Options: options.Index().SetUnique(true),
 		},

@@ -86,7 +86,7 @@ func (i *issuer) validate(ctx context.Context, username, code string) (*user.Use
 	}
 
 	// 更新用户Profile
-	updateReq := user.NewPatchUserRequest(lu.Id)
+	updateReq := user.NewPatchUserRequest(lu.Meta.Id)
 	updateReq.Profile = du.ToProfile()
 	u, err := i.user.UpdateUser(ctx, updateReq)
 	if err != nil {
@@ -107,7 +107,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	tk.Domain = u.Spec.Domain
 	tk.Username = u.Spec.Username
 	tk.UserType = u.Spec.Type
-	tk.UserId = u.Id
+	tk.UserId = u.Meta.Id
 	return tk, nil
 }
 

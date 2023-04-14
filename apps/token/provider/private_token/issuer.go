@@ -61,7 +61,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	newTk.Domain = u.Spec.Domain
 	newTk.Username = u.Spec.Username
 	newTk.UserType = u.Spec.Type
-	newTk.UserId = u.Id
+	newTk.UserId = u.Meta.Id
 
 	return newTk, nil
 }

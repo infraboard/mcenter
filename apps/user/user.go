@@ -1,6 +1,7 @@
 package user
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -12,12 +13,9 @@ import (
 	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
+	"github.com/infraboard/mcube/pb/resource"
 	"github.com/rs/xid"
 	"golang.org/x/crypto/bcrypt"
-)
-
-const (
-	AppName = "user"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -37,20 +35,20 @@ func New(req *CreateUserRequest) (*User, error) {
 	}
 
 	u := &User{
-		CreateAt:      time.Now().UnixMilli(),
-		Spec:          req,
-		Password:      pass,
-		Profile:       &Profile{},
-		IsInitialized: false,
+		Meta:     resource.NewMeta(),
+		Spec:     req,
+		Password: pass,
+		Profile:  &Profile{},
 		Status: &Status{
-			Locked: false,
+			IsInitialized: false,
+			Locked:        false,
 		},
 	}
 
 	if req.UseFullNamedUid {
 		u.MakeFullNamedUid()
 	} else {
-		u.Id = xid.New().String()
+		u.Meta.Id = xid.New().String()
 	}
 
 	return u, nil
@@ -244,7 +242,7 @@ func (s *UserSet) Add(item *User) {
 
 func (s *UserSet) HasUser(userId string) bool {
 	for i := range s.Items {
-		if s.Items[i].Id == userId {
+		if s.Items[i].Meta.Id == userId {
 			return true
 		}
 	}
@@ -254,7 +252,7 @@ func (s *UserSet) HasUser(userId string) bool {
 
 func (s *UserSet) UserIds() (uids []string) {
 	for i := range s.Items {
-		uids = append(uids, s.Items[i].Id)
+		uids = append(uids, s.Items[i].Meta.Id)
 	}
 
 	return
@@ -272,20 +270,30 @@ func (u *User) Desensitize() {
 	}
 }
 
+func (u *User) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		*resource.Meta
+		*CreateUserRequest
+		Profile  *Profile  `json:"profile"`
+		Password *Password `json:"password"`
+		Status   *Status   `json:"status"`
+	}{u.Meta, u.Spec, u.Profile, u.Password, u.Status})
+}
+
 // Desensitize 关键数据脱敏
 func (u *User) MakeFullNamedUid() {
-	u.Id = fmt.Sprintf("%s@%s", u.Spec.Username, u.Spec.Domain)
+	u.Meta.Id = fmt.Sprintf("%s@%s", u.Spec.Username, u.Spec.Domain)
 }
 
 func (i *User) Update(req *UpdateUserRequest) {
-	i.UpdateAt = time.Now().UnixMicro()
+	i.Meta.UpdateAt = time.Now().UnixMicro()
 	i.Profile = req.Profile
 	i.Spec.Description = req.Description
 	i.FeishuToken = req.FeishuToken
 }
 
 func (i *User) Patch(req *UpdateUserRequest) error {
-	i.UpdateAt = time.Now().UnixMicro()
+	i.Meta.UpdateAt = time.Now().UnixMicro()
 	err := mergo.MergeWithOverwrite(i.Profile, req.Profile)
 	if err != nil {
 		return err
