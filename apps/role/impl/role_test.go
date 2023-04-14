@@ -11,7 +11,7 @@ func TestCreateRole(t *testing.T) {
 	req := role.NewCreateRoleRequest()
 	req.CreateBy = "admin"
 	req.Domain = domain.DEFAULT_DOMAIN
-	req.Type = role.RoleType_GLOBAL
+	req.Global = true
 	req.Name = "maudit_admin"
 	req.Description = "审计中心管理员"
 	req.Specs = []*role.Spec{

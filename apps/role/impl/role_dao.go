@@ -32,7 +32,7 @@ func (req *describeRoleRequest) FindFilter() bson.M {
 	}
 
 	if req.Name != "" {
-		filter["spec.name"] = req.Name
+		filter["name"] = req.Name
 	}
 
 	return filter
@@ -72,17 +72,6 @@ func (r *queryRoleRequest) FindOptions() *options.FindOptions {
 
 func (r *queryRoleRequest) FindFilter() bson.M {
 	filter := bson.M{}
-
-	if r.Type != nil {
-		filter["spec.type"] = *r.Type
-	} else {
-		// 获取内建和全局的角色以及域内自己创建的角色
-		filter["$or"] = bson.A{
-			bson.M{"spec.type": role.RoleType_BUILDIN},
-			bson.M{"spec.type": role.RoleType_GLOBAL},
-			bson.M{"spec.type": role.RoleType_CUSTOM, "spec.domain": r.Domain},
-		}
-	}
 
 	return filter
 }

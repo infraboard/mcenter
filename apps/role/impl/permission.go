@@ -76,7 +76,7 @@ func (s *impl) AddPermissionToRole(ctx context.Context, req *role.AddPermissionT
 	queryPerm := role.NewQueryPermissionRequest()
 	queryPerm.Page = request.NewPageRequest(role.RoleMaxPermission, 1)
 	queryPerm.SkipItems = true
-	queryPerm.RoleId = ins.Id
+	queryPerm.RoleId = ins.Meta.Id
 	ps, err := s.QueryPermission(ctx, queryPerm)
 	if err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (s *impl) AddPermissionToRole(ctx context.Context, req *role.AddPermissionT
 			role.RoleMaxPermission, ps.Total, req.Length())
 	}
 
-	perms := role.NewPermission(ins.Id, req.Permissions)
+	perms := role.NewPermission(ins.Meta.Id, req.Permissions)
 	if _, err := s.perm.InsertMany(ctx, TansferPermissionToDocs(perms)); err != nil {
 		return nil, exception.NewInternalServerError("inserted permission(%s) document error, %s",
 			perms, err)

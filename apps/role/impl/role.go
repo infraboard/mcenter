@@ -2,7 +2,6 @@ package impl
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/request"
@@ -29,7 +28,7 @@ func (s *impl) CreateRole(ctx context.Context, req *role.CreateRoleRequest) (*ro
 	addReq := role.NewAddPermissionToRoleRequest()
 	addReq.CreateBy = req.CreateBy
 	addReq.Permissions = req.Specs
-	addReq.RoleId = r.Id
+	addReq.RoleId = r.Meta.Id
 	perms, err := s.AddPermissionToRole(ctx, addReq)
 	if err != nil {
 		return nil, err
@@ -60,7 +59,7 @@ func (s *impl) QueryRole(ctx context.Context, req *role.QueryRoleRequest) (*role
 		// 补充权限
 		if req.WithPermission {
 			pReq := role.NewQueryPermissionRequest()
-			pReq.RoleId = ins.Id
+			pReq.RoleId = ins.Meta.Id
 			pReq.Page = request.NewPageRequest(role.RoleMaxPermission, 1)
 			ps, err := s.QueryPermission(ctx, pReq)
 			if err != nil {
@@ -98,7 +97,7 @@ func (s *impl) DescribeRole(ctx context.Context, req *role.DescribeRoleRequest) 
 
 	// 补充权限
 	pReq := role.NewQueryPermissionRequest()
-	pReq.RoleId = ins.Id
+	pReq.RoleId = ins.Meta.Id
 	pReq.Page = request.NewPageRequest(role.RoleMaxPermission, 1)
 	ps, err := s.QueryPermission(ctx, pReq)
 	if err != nil {
@@ -113,10 +112,6 @@ func (s *impl) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest) (*ro
 	r, err := s.DescribeRole(ctx, role.NewDescribeRoleRequestWithID(req.Id))
 	if err != nil {
 		return nil, err
-	}
-
-	if r.Spec.Type.Equal(role.RoleType_BUILDIN) {
-		return nil, fmt.Errorf("build_in role can't be delete")
 	}
 
 	if !req.DeletePolicy {

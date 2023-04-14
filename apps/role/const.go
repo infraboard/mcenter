@@ -21,7 +21,7 @@ func CreateAdminRoleRequest(createBy string) *CreateRoleRequest {
 	req := NewCreateRoleRequest()
 	req.CreateBy = createBy
 	req.Domain = domain.DEFAULT_DOMAIN
-	req.Type = RoleType_GLOBAL
+	req.Global = true
 	req.Name = ADMIN_ROLE_NAME
 	req.Description = "管理员"
 	req.Specs = []*Spec{
@@ -40,7 +40,7 @@ func CreateVisitorRoleRequest(createBy string) *CreateRoleRequest {
 	req := NewCreateRoleRequest()
 	req.CreateBy = createBy
 	req.Domain = domain.DEFAULT_DOMAIN
-	req.Type = RoleType_GLOBAL
+	req.Global = true
 	req.Name = VISITOR_ROLE_NAME
 	req.Description = "访客"
 	req.Specs = []*Spec{

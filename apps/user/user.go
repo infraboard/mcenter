@@ -94,6 +94,7 @@ func (p *Password) SetNeedReset(format string, a ...interface{}) {
 func NewCreateUserRequest() *CreateUserRequest {
 	return &CreateUserRequest{
 		UseFullNamedUid: true,
+		Labels:          map[string]string{},
 	}
 }
 

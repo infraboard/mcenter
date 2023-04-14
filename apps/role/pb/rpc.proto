@@ -35,8 +35,6 @@ message QueryPermissionRequest {
 message QueryRoleRequest {
     // @gotags: json:"page"
     infraboard.mcube.page.PageRequest page = 1;
-    // @gotags: json:"type"
-    optional RoleType type = 2;
     // @gotags: json:"domain"
     string domain = 3;
     // @gotags: json:"with_permission"
@@ -50,8 +48,6 @@ message DescribeRoleRequest {
     string id = 1;
     // @gotags: json:"name,omitempty" validate:"required,lte=64"
     string name = 2;
-    // @gotags: bson:"type" json:"type"
-    RoleType type = 3;
 }
 
 // DescribeRoleRequest role详情

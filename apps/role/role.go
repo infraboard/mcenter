@@ -1,19 +1,16 @@
 package role
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/endpoint"
+	"github.com/infraboard/mcenter/common/format"
 	request "github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/logger/zap"
-	"github.com/infraboard/mcube/types/ftime"
-	"github.com/rs/xid"
-)
-
-const (
-	AppName = "role"
+	"github.com/infraboard/mcube/pb/resource"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -79,9 +76,7 @@ func New(req *CreateRoleRequest) (*Role, error) {
 	}
 
 	r := &Role{
-		Id:          xid.New().String(),
-		CreateAt:    ftime.Now().Timestamp(),
-		UpdateAt:    ftime.Now().Timestamp(),
+		Meta:        resource.NewMeta(),
 		Spec:        req,
 		Permissions: []*Permission{},
 	}
@@ -99,15 +94,9 @@ func NewDefaultRole() *Role {
 // NewCreateRoleRequest 实例化请求
 func NewCreateRoleRequest() *CreateRoleRequest {
 	return &CreateRoleRequest{
-		Type:  RoleType_CUSTOM,
 		Meta:  map[string]string{},
 		Specs: []*Spec{},
 	}
-}
-
-// IsCumstomType todo
-func (req *CreateRoleRequest) IsCumstomType() bool {
-	return req.Type.Equal(RoleType_CUSTOM)
 }
 
 // Validate 请求校验
@@ -115,9 +104,17 @@ func (req *CreateRoleRequest) Validate() error {
 	return validate.Struct(req)
 }
 
-// CheckPermission 检测该角色是否具有该权限
-func (r *Role) CheckPermission() error {
-	return nil
+func (r *Role) ToJson() string {
+	return format.Prettify(r)
+}
+
+func (r *Role) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		*resource.Meta
+		*CreateRoleRequest
+		Scope       string        `json:"scope"`
+		Permissions []*Permission `json:"permissions"`
+	}{r.Meta, r.Spec, r.Scope, r.Permissions})
 }
 
 // HasPermission 权限判断
@@ -152,6 +149,10 @@ func NewRoleSet() *RoleSet {
 func (s *RoleSet) Add(item *Role) {
 	s.Total++
 	s.Items = append(s.Items, item)
+}
+
+func (s *RoleSet) ToJson() string {
+	return format.Prettify(s)
 }
 
 // HasPermission todo

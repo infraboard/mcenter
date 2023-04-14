@@ -68,7 +68,11 @@ func (u *Policy) MarshalJSON() ([]byte, error) {
 
 // NewCreatePolicyRequest 请求实例
 func NewCreatePolicyRequest() *CreatePolicyRequest {
-	return &CreatePolicyRequest{}
+	return &CreatePolicyRequest{
+		Enabled: true,
+		Scope:   map[string]string{},
+		Extra:   map[string]string{},
+	}
 }
 
 // Validate 校验请求合法

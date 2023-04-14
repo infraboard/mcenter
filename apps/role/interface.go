@@ -2,6 +2,10 @@ package role
 
 import context "context"
 
+const (
+	AppName = "role"
+)
+
 type Service interface {
 	CreateRole(context.Context, *CreateRoleRequest) (*Role, error)
 	DeleteRole(context.Context, *DeleteRoleRequest) (*Role, error)
