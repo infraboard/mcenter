@@ -43,11 +43,12 @@ type MetaService interface {
 
 func NewCreateServiceRequest() *CreateServiceRequest {
 	return &CreateServiceRequest{
-		Domain:     domain.DEFAULT_DOMAIN,
-		Namespace:  namespace.DEFAULT_NAMESPACE,
-		Enabled:    true,
-		Repository: NewRepository(),
-		Labels:     map[string]string{},
+		Domain:          domain.DEFAULT_DOMAIN,
+		Namespace:       namespace.DEFAULT_NAMESPACE,
+		Enabled:         true,
+		CodeRepository:  NewCodeRepository(),
+		ImageRepository: NewImageRepository(),
+		Labels:          map[string]string{},
 	}
 }
 

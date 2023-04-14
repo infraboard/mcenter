@@ -6,12 +6,10 @@ option go_package = "github.com/infraboard/mcenter/apps/service";
 import "github.com/infraboard/mcube/pb/request/request.proto";
 
 enum Type {
-	// PLATFORM 平台服务, 为业务提供非功能性需求的服务, 比如监控，告警, 发布 等。
-	PLATFORM = 0;
-    // 应用负载, 也就是业务服务
-    WORKLOAD = 1;
-    // 应用中间件
-    MIDDLEWARE = 2;
+	// 源码类型的应用, 需要填写代码仓库信息
+	SOURCE_CODE = 0;
+    // 镜像类型的应用, 需要添加镜像信息
+    CONTAINER_IMAGE = 1;
 	// 其他类型
 	OTHER = 15;
 }
@@ -69,9 +67,12 @@ message CreateServiceRequest {
     // 服务等级, 默认0
     // @gotags: bson:"level" json:"level"
     uint32 level = 8;
-    // 仓库地址
-    // @gotags: bson:"repository" json:"repository"
-    Repository repository = 9;
+    // 代码仓库信息
+    // @gotags: bson:"code_repository" json:"code_repository"
+    CodeRepository code_repository = 9;
+    // 镜像仓库信息
+    // @gotags: bson:"image_repository" json:"image_repository"
+    ImageRepository image_repository = 11;
     // 服务标签
     // @gotags: bson:"labels" json:"labels"
     map<string, string> labels = 14;
@@ -140,8 +141,8 @@ enum LANGUAGE {
     POWER_SHELL = 16;
 }
 
-// 服务仓库信息
-message Repository {
+// 服务代码仓库信息
+message CodeRepository {
     // 仓库提供商
     // @gotags: bson:"provider" json:"provider"
     SCM_PROVIDER provider = 1;
@@ -178,6 +179,13 @@ message Repository {
     // 仓库的创建时间
     // @gotags: bson:"created_at" json:"created_at"
     int64 created_at = 12;
+}
+
+// 镜像仓库
+message ImageRepository {
+    // 镜像地址
+    // @gotags: bson:"address" json:"address"
+    string address = 1;
 }
 
 // 服务安全相关信息

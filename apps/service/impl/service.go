@@ -34,35 +34,41 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 	}
 
 	// 设置WebHook
-	repo := ins.Spec.Repository
-	gc, err := repo.MakeGitlabConfig()
-	if err != nil {
-		return nil, err
-	}
-	v4 := gitlab.NewGitlabV4(gc)
-	if repo.Language == nil {
-		languages, err := v4.Project().ListProjectLanguage(ctx, repo.ProjectId)
+	switch req.Type {
+	case service.Type_SOURCE_CODE:
+		repo := ins.Spec.CodeRepository
+		if err := repo.Validate(); err != nil {
+			return nil, exception.NewBadRequest("Repository validate failed, %s", err)
+		}
+		gc, err := repo.MakeGitlabConfig()
 		if err != nil {
 			return nil, err
 		}
-		lan, err := service.ParseLANGUAGEFromString(languages.Primary())
-		if err != nil {
-			return nil, err
+		v4 := gitlab.NewGitlabV4(gc)
+		if repo.Language == nil {
+			languages, err := v4.Project().ListProjectLanguage(ctx, repo.ProjectId)
+			if err != nil {
+				return nil, err
+			}
+			lan, err := service.ParseLANGUAGEFromString(languages.Primary())
+			if err != nil {
+				return nil, err
+			}
+			repo.SetLanguage(lan)
 		}
-		repo.SetLanguage(lan)
-	}
-	if repo.EnableHook {
-		hookSetting, err := gitlab.ParseGitLabWebHookFromString(repo.HookConfig)
-		if err != nil {
-			return nil, err
+		if repo.EnableHook {
+			hookSetting, err := gitlab.ParseGitLabWebHookFromString(repo.HookConfig)
+			if err != nil {
+				return nil, err
+			}
+			hookSetting.Token = ins.Id
+			addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectId, hookSetting)
+			resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
+			if err != nil {
+				return nil, err
+			}
+			repo.HookId = resp.IDToString()
 		}
-		hookSetting.Token = ins.Id
-		addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectId, hookSetting)
-		resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
-		if err != nil {
-			return nil, err
-		}
-		repo.HookId = resp.IDToString()
 	}
 
 	if err := i.save(ctx, ins); err != nil {
@@ -149,7 +155,7 @@ func (i *impl) DeleteService(ctx context.Context, req *service.DeleteServiceRequ
 	}
 
 	// 如果开启了Hook需要移除Hook设置
-	repo := ins.Spec.Repository
+	repo := ins.Spec.CodeRepository
 	if repo.EnableHook {
 		gc, err := repo.MakeGitlabConfig()
 		if err != nil {

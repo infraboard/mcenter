@@ -16,7 +16,7 @@ func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
 	svc := s.GetServiceByGitSshUrl(p.GitSshUrl)
 	if svc == nil {
 		svc = NewServiceFromProject(p)
-		svc.Spec.Repository.Token = tk
+		svc.Spec.CodeRepository.Token = tk
 		s.Add(svc)
 	}
 }
@@ -46,48 +46,56 @@ func NewServiceFromProject(p *gitlab.Project) *Service {
 	spec.Name = p.Name
 	spec.Logo = p.AvatarURL
 	spec.Description = p.Description
-	spec.Repository.ProjectId = p.IdToString()
-	spec.Repository.SshUrl = p.GitSshUrl
-	spec.Repository.HttpUrl = p.GitHttpUrl
-	spec.Repository.Namespace = p.NamespacePath
-	spec.Repository.WebUrl = p.WebURL
-	spec.Repository.CreatedAt = p.CreatedAt.Unix()
-	spec.Repository.EnableHook = true
-	spec.Repository.HookConfig = gitlab.NewGitLabWebHook(
+	spec.CodeRepository.ProjectId = p.IdToString()
+	spec.CodeRepository.SshUrl = p.GitSshUrl
+	spec.CodeRepository.HttpUrl = p.GitHttpUrl
+	spec.CodeRepository.Namespace = p.NamespacePath
+	spec.CodeRepository.WebUrl = p.WebURL
+	spec.CodeRepository.CreatedAt = p.CreatedAt.Unix()
+	spec.CodeRepository.EnableHook = true
+	spec.CodeRepository.HookConfig = gitlab.NewGitLabWebHook(
 		"自动填充服务的Id",
 	).ToJson()
 	return svc
 }
 
 func (s *Service) GetRepositorySshUrl() string {
-	if s.Spec.Repository != nil {
-		return s.Spec.Repository.SshUrl
+	if s.Spec.CodeRepository != nil {
+		return s.Spec.CodeRepository.SshUrl
 	}
 
 	return ""
 }
 
-func NewRepository() *Repository {
-	return &Repository{
+func NewImageRepository() *ImageRepository {
+	return &ImageRepository{}
+}
+
+func NewCodeRepository() *CodeRepository {
+	return &CodeRepository{
 		EnableHook: true,
 	}
 }
 
-func (r *Repository) SetLanguage(v LANGUAGE) {
+func (r *CodeRepository) SetLanguage(v LANGUAGE) {
 	r.Language = &v
 }
 
-func (r *Repository) ProjectIdToInt64() int64 {
+func (r *CodeRepository) ProjectIdToInt64() int64 {
 	pid, _ := strconv.ParseInt(r.ProjectId, 10, 64)
 	return pid
 }
 
-func (r *Repository) HookIdToInt64() int64 {
+func (r *CodeRepository) Validate() error {
+	return validate.Struct(r)
+}
+
+func (r *CodeRepository) HookIdToInt64() int64 {
 	pid, _ := strconv.ParseInt(r.HookId, 10, 64)
 	return pid
 }
 
-func (r *Repository) MakeGitlabConfig() (*gitlab.Config, error) {
+func (r *CodeRepository) MakeGitlabConfig() (*gitlab.Config, error) {
 	conf := gitlab.NewDefaultConfig()
 	addr, err := r.HostAddress()
 	if err != nil {
@@ -98,7 +106,7 @@ func (r *Repository) MakeGitlabConfig() (*gitlab.Config, error) {
 	return conf, nil
 }
 
-func (r *Repository) HostAddress() (string, error) {
+func (r *CodeRepository) HostAddress() (string, error) {
 	u, err := url.Parse(r.WebUrl)
 	if err != nil {
 		return "", err
