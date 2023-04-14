@@ -40,7 +40,7 @@ func TestQueryUser(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(r.ToJson())
 }
 
 func TestPatchUser(t *testing.T) {

@@ -10,6 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/imdario/mergo"
 	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
@@ -236,6 +237,10 @@ func NewUserSet() *UserSet {
 	}
 }
 
+func (s *UserSet) ToJson() string {
+	return format.Prettify(s)
+}
+
 func (s *UserSet) Add(item *User) {
 	s.Items = append(s.Items, item)
 }
@@ -268,6 +273,10 @@ func (u *User) Desensitize() {
 		u.Password.Password = ""
 		u.Password.History = []string{}
 	}
+}
+
+func (u *User) ToJson() string {
+	return format.Prettify(u)
 }
 
 func (u *User) MarshalJSON() ([]byte, error) {
