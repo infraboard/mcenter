@@ -1,21 +1,13 @@
 package impl_test
 
 import (
-	"context"
 	"os"
 	"testing"
 
-	"github.com/infraboard/mcube/app"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/test/tools"
-)
-
-var (
-	impl instance.Service
-	ctx  = context.Background()
 )
 
 func TestSearch(t *testing.T) {
@@ -38,9 +30,4 @@ func TestRegistry(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log(ins)
-}
-
-func init() {
-	tools.DevelopmentSetup()
-	impl = app.GetInternalApp(instance.AppName).(instance.Service)
 }
