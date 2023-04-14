@@ -236,8 +236,8 @@ type Service struct {
 	// @gotags: bson:"update_by" json:"update_by"
 	UpdateBy string `protobuf:"bytes,6,opt,name=update_by,json=updateBy,proto3" json:"update_by" bson:"update_by"`
 	// 服务定义
-	// @gotags: bson:"spec" json:"spec"
-	Spec *CreateServiceRequest `protobuf:"bytes,7,opt,name=spec,proto3" json:"spec" bson:"spec"`
+	// @gotags: bson:",inline" json:"spec"
+	Spec *CreateServiceRequest `protobuf:"bytes,7,opt,name=spec,proto3" json:"spec" bson:",inline"`
 	// 服务的凭证, 用于服务注册
 	// @gotags: bson:"credential" json:"credential"
 	Credential *Credential `protobuf:"bytes,8,opt,name=credential,proto3" json:"credential" bson:"credential"`

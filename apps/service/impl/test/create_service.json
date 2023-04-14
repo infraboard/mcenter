@@ -3,12 +3,12 @@
    "namespace": "default",
    "owner": "",
    "enabled": true,
-   "type": "PLATFORM",
+   "type": "SOURCE_CODE",
    "name": "mcenter",
    "logo": "",
    "description": "",
    "level": 0,
-   "repository": {
+   "code_repository": {
       "provider": "GITLAB",
       "project_id": "44712580",
       "namespace": "infraboard/mcenter",

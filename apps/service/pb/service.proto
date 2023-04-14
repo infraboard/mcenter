@@ -29,7 +29,7 @@ message Service {
     // @gotags: bson:"update_by" json:"update_by"
     string update_by = 6;
     // 服务定义
-    // @gotags: bson:"spec" json:"spec"
+    // @gotags: bson:",inline" json:"spec"
     CreateServiceRequest spec = 7;
     // 服务的凭证, 用于服务注册
     // @gotags: bson:"credential" json:"credential"
