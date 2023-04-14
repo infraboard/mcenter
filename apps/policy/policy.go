@@ -2,6 +2,7 @@ package policy
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"strings"
@@ -11,15 +12,12 @@ import (
 	"github.com/infraboard/mcube/pb/resource"
 
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcenter/common/format"
 )
 
 // use a single instance of Validate, it caches struct info
 var (
 	validate = validator.New()
-)
-
-const (
-	AppName = "policy"
 )
 
 // New 新实例
@@ -56,6 +54,18 @@ func (p *Policy) IsAllNamespace() bool {
 	return p.Spec.Namespace == "*"
 }
 
+func (p *Policy) ToJson() string {
+	return format.Prettify(p)
+}
+
+func (u *Policy) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		*resource.Meta
+		*CreatePolicyRequest
+		Role *role.Role
+	}{u.Meta, u.Spec, u.Role})
+}
+
 // NewCreatePolicyRequest 请求实例
 func NewCreatePolicyRequest() *CreatePolicyRequest {
 	return &CreatePolicyRequest{}
@@ -84,6 +94,10 @@ func NewPolicySet() *PolicySet {
 	return &PolicySet{
 		Items: []*Policy{},
 	}
+}
+
+func (p *PolicySet) ToJson() string {
+	return format.Prettify(p)
 }
 
 // Users 策略包含的所有用户ID, 已去重
