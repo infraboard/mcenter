@@ -44,6 +44,9 @@ message QueryServiceRequest {
     // 服务代码SSH仓库地址
     // @gotags: json:"repository_ssh_urls" yaml:"repository_ssh_urls"
     repeated string repository_ssh_urls = 3;
+    // 名称关键字搜索
+    // @gotags: json:"keywords" yaml:"keywords"
+    string keywords = 15;
 }
 
 enum DescribeBy {

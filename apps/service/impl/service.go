@@ -61,7 +61,7 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 			if err != nil {
 				return nil, err
 			}
-			hookSetting.Token = ins.Id
+			hookSetting.Token = ins.Meta.Id
 			addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectId, hookSetting)
 			resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
 			if err != nil {

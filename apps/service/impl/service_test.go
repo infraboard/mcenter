@@ -54,7 +54,7 @@ func TestCreateServiceFromGitLab(t *testing.T) {
 }
 
 func TestDeleteService(t *testing.T) {
-	req := service.NewDeleteServiceRequestWithID("c40e9e7d")
+	req := service.NewDeleteServiceRequestWithID("11fdd50a")
 	app, err := impl.DeleteService(ctx, req)
 	if err != nil {
 		t.Fatal(err)

@@ -21,7 +21,7 @@ func (i *impl) save(ctx context.Context, ins *service.Service) error {
 }
 
 func (i *impl) update(ctx context.Context, ins *service.Service) error {
-	if _, err := i.col.UpdateByID(ctx, ins.Id, ins); err != nil {
+	if _, err := i.col.UpdateByID(ctx, ins.Meta.Id, ins); err != nil {
 		return exception.NewInternalServerError("inserted Service(%s) document error, %s",
 			ins.Spec.Name, err)
 	}
@@ -58,15 +58,13 @@ func (r *queryRequest) FindFilter() bson.M {
 	filter := bson.M{}
 
 	if len(r.RepositorySshUrls) > 0 {
-		filter["spec.repository.ssh_url"] = bson.M{"$in": r.RepositorySshUrls}
+		filter["code_repository.ssh_url"] = bson.M{"$in": r.RepositorySshUrls}
 	}
 
-	// if r.Keywords != "" {
-	// 	filter["$or"] = bson.A{
-	// 		bson.M{"data.name": bson.M{"$regex": r.Keywords, "$options": "im"}},
-	// 		bson.M{"data.author": bson.M{"$regex": r.Keywords, "$options": "im"}},
-	// 	}
-	// }
+	if r.Keywords != "" {
+		filter["name"] = bson.M{"$regex": r.Keywords, "$options": "im"}
+	}
+
 	return filter
 }
 
@@ -106,7 +104,7 @@ func (i *impl) get(ctx context.Context, req *service.DescribeServiceRequest) (*s
 	case service.DescribeBy_SERVICE_CLIENT_ID:
 		filter["credential.client_id"] = req.ClientId
 	case service.DescribeBy_SERVICE_NAME:
-		filter["spec.name"] = req.Name
+		filter["name"] = req.Name
 	}
 
 	ins := service.NewDefaultService()
@@ -122,17 +120,17 @@ func (i *impl) get(ctx context.Context, req *service.DescribeServiceRequest) (*s
 }
 
 func (i *impl) delete(ctx context.Context, ins *service.Service) error {
-	if ins == nil || ins.Id == "" {
+	if ins == nil || ins.Meta.Id == "" {
 		return fmt.Errorf("service is nil")
 	}
 
-	result, err := i.col.DeleteOne(ctx, bson.M{"_id": ins.Id})
+	result, err := i.col.DeleteOne(ctx, bson.M{"_id": ins.Meta.Id})
 	if err != nil {
-		return exception.NewInternalServerError("delete Service(%s) error, %s", ins.Id, err)
+		return exception.NewInternalServerError("delete Service(%s) error, %s", ins.Meta.Id, err)
 	}
 
 	if result.DeletedCount == 0 {
-		return exception.NewNotFound("Service %s not found", ins.Id)
+		return exception.NewNotFound("service %s not found", ins.Meta.Id)
 	}
 
 	return nil

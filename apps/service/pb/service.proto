@@ -3,6 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.service;
 option go_package = "github.com/infraboard/mcenter/apps/service";
 
+import "github.com/infraboard/mcube/pb/resource/meta.proto";
 import "github.com/infraboard/mcube/pb/request/request.proto";
 
 enum Type {
@@ -16,27 +17,18 @@ enum Type {
 
 // Service is service provider
 message Service {
-    // 微服务ID
-    // @gotags: bson:"_id" json:"id"
-    string id = 1;
-    // 创建的时间
-    // @gotags: bson:"create_at" json:"create_at"
-    int64 create_at = 4;
-    // 更新时间
-    // @gotags: bson:"update_at" json:"update_at"
-    int64 update_at = 5;
-    // 更新人
-    // @gotags: bson:"update_by" json:"update_by"
-    string update_by = 6;
+    // 元信息
+    // @gotags: bson:",inline" json:"meta"
+    infraboard.mcube.resource.Meta meta = 1;
     // 服务定义
     // @gotags: bson:",inline" json:"spec"
-    CreateServiceRequest spec = 7;
+    CreateServiceRequest spec = 2;
     // 服务的凭证, 用于服务注册
     // @gotags: bson:"credential" json:"credential"
-    Credential credential = 8;
+    Credential credential = 3;
     // 服务安全所需配置
     // @gotags: bson:"security" json:"security"
-    Security security = 9;
+    Security security = 4;
 }
 
 message CreateServiceRequest {

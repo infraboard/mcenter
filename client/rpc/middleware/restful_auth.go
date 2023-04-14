@@ -196,7 +196,7 @@ func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.To
 	req := permission.NewCheckPermissionRequest()
 	req.Username = tk.Username
 	req.Namespace = tk.Namespace
-	req.ServiceId = ci.Id
+	req.ServiceId = ci.Meta.Id
 	req.Path = e.UniquePath()
 	_, err = a.client.Permission().CheckPermission(ctx, req)
 	if err != nil {

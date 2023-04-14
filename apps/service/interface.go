@@ -11,7 +11,7 @@ import (
 	"github.com/imdario/mergo"
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
-	"github.com/rs/xid"
+	"github.com/infraboard/mcube/pb/resource"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/infraboard/mcenter/apps/domain"
@@ -58,13 +58,12 @@ func NewService(req *CreateServiceRequest) (*Service, error) {
 	}
 
 	app := &Service{
-		Id:         xid.New().String(),
-		CreateAt:   time.Now().UnixMilli(),
+		Meta:       resource.NewMeta(),
 		Spec:       req,
 		Credential: NewRandomCredential(),
 		Security:   NewRandomSecurity(),
 	}
-	app.Id = app.FullNameHash()
+	app.Meta.Id = app.FullNameHash()
 	return app, nil
 }
 
@@ -143,14 +142,14 @@ func (i *Service) FullName() string {
 }
 
 func (i *Service) Update(req *UpdateServiceRequest) {
-	i.UpdateAt = time.Now().UnixMilli()
-	i.UpdateBy = req.UpdateBy
+	i.Meta.UpdateAt = time.Now().UnixMilli()
+	i.Meta.UpdateBy = req.UpdateBy
 	i.Spec = req.Spec
 }
 
 func (i *Service) Patch(req *UpdateServiceRequest) error {
-	i.UpdateAt = time.Now().UnixMicro()
-	i.UpdateBy = req.UpdateBy
+	i.Meta.UpdateAt = time.Now().UnixMicro()
+	i.Meta.UpdateBy = req.UpdateBy
 	return mergo.MergeWithOverwrite(i.Spec, req.Spec)
 }
 

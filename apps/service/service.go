@@ -1,15 +1,22 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strconv"
 
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
+	"github.com/infraboard/mcenter/common/format"
+	"github.com/infraboard/mcube/pb/resource"
 )
 
 func (s *ServiceSet) Len() int {
 	return len(s.Items)
+}
+
+func (s *ServiceSet) ToJson() string {
+	return format.Prettify(s)
 }
 
 func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
@@ -65,6 +72,19 @@ func (s *Service) GetRepositorySshUrl() string {
 	}
 
 	return ""
+}
+
+func (s *Service) ToJson() string {
+	return format.Prettify(s)
+}
+
+func (s *Service) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		*resource.Meta
+		*CreateServiceRequest
+		Credential *Credential `json:"status"`
+		Security   *Security   `json:"security"`
+	}{s.Meta, s.Spec, s.Credential, s.Security})
 }
 
 func NewImageRepository() *ImageRepository {

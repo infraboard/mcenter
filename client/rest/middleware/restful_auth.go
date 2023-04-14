@@ -134,7 +134,7 @@ func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.To
 	req := permission.NewCheckPermissionRequest()
 	req.Username = tk.Username
 	req.Namespace = tk.Namespace
-	req.ServiceId = svr.Id
+	req.ServiceId = svr.Meta.Id
 	req.Path = e.UniquePath()
 	_, err = a.client.Permission().CheckPermission(ctx, req)
 	if err != nil {

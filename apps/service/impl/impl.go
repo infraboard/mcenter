@@ -41,9 +41,9 @@ func (i *impl) Config() error {
 		},
 		{
 			Keys: bsonx.Doc{
-				{Key: "spec.domain", Value: bsonx.Int32(-1)},
-				{Key: "spec.namespace", Value: bsonx.Int32(-1)},
-				{Key: "spec.name", Value: bsonx.Int32(-1)},
+				{Key: "domain", Value: bsonx.Int32(-1)},
+				{Key: "namespace", Value: bsonx.Int32(-1)},
+				{Key: "name", Value: bsonx.Int32(-1)},
 			},
 			Options: options.Index().SetUnique(true),
 		},

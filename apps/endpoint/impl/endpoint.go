@@ -81,7 +81,7 @@ func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryReque
 	}
 
 	// 生产该服务的Endpoint
-	endpoints := req.Endpoints(svr.Id)
+	endpoints := req.Endpoints(svr.Meta.Id)
 
 	// 更新已有的记录
 	news := make([]interface{}, 0, len(endpoints))
