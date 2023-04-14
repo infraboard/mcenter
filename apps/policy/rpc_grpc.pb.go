@@ -29,9 +29,13 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
+	// 创建策略
 	CreatePolicy(ctx context.Context, in *CreatePolicyRequest, opts ...grpc.CallOption) (*Policy, error)
+	// 查询策略列表
 	QueryPolicy(ctx context.Context, in *QueryPolicyRequest, opts ...grpc.CallOption) (*PolicySet, error)
+	// 查询策略详情
 	DescribePolicy(ctx context.Context, in *DescribePolicyRequest, opts ...grpc.CallOption) (*Policy, error)
+	// 删除策略
 	DeletePolicy(ctx context.Context, in *DeletePolicyRequest, opts ...grpc.CallOption) (*Policy, error)
 }
 
@@ -83,9 +87,13 @@ func (c *rPCClient) DeletePolicy(ctx context.Context, in *DeletePolicyRequest, o
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
+	// 创建策略
 	CreatePolicy(context.Context, *CreatePolicyRequest) (*Policy, error)
+	// 查询策略列表
 	QueryPolicy(context.Context, *QueryPolicyRequest) (*PolicySet, error)
+	// 查询策略详情
 	DescribePolicy(context.Context, *DescribePolicyRequest) (*Policy, error)
+	// 删除策略
 	DeletePolicy(context.Context, *DeletePolicyRequest) (*Policy, error)
 	mustEmbedUnimplementedRPCServer()
 }

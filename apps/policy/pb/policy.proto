@@ -3,32 +3,20 @@ syntax = "proto3";
 package infraboard.mcenter.policy;
 option go_package = "github.com/infraboard/mcenter/apps/policy";
 
+import "github.com/infraboard/mcube/pb/resource/meta.proto";
 import "apps/role/pb/role.proto";
-
-enum PolicyType {
-    // CustomPolicy (custom) 用户自己定义的策略
-    CUSTOM = 0;
-    // BuildInPolicy (build_in) 系统内部逻辑, 不允许用户看到并修改
-    BUILD_IN = 1;
-}
 
 // Policy 权限策略
 message Policy {
-    // 策略ID
-    // @gotags: bson:"_id" json:"id"
-    string id = 1;
-    // 创建时间
-    // @gotags: bson:"create_at" json:"create_at"
-    int64 create_at = 2;
-    // 更新时间
-    // @gotags: bson:"update_at" json:"update_at"
-    int64 update_at = 3;
+    // 元信息
+    // @gotags: bson:",inline" json:"meta"
+    infraboard.mcube.resource.Meta meta = 1;
     // 策略定义
-    // @gotags: bson:"spec" json:"spec"
-    CreatePolicyRequest spec = 4;
+    // @gotags: bson:",inline" json:"spec"
+    CreatePolicyRequest spec = 2;
     // 关联的角色对象
     // @gotags: bson:"-" json:"role,omitempty"
-    role.Role role = 13;
+    role.Role role = 3;
 }
 
 // CreatePolicyRequest 创建策略的请求
@@ -42,24 +30,27 @@ message CreatePolicyRequest {
     // 范围
     // @gotags: bson:"namespace" json:"namespace" validate:"lte=120"
     string namespace = 3;
-    // 角色名称
-    // @gotags: bson:"group" json:"group"
-    string group = 4;
-    // 范围控制
-    // @gotags: bson:"scope" json:"scope"
-    string scope = 5;
     // 用户
     // @gotags: bson:"username" json:"username" validate:"required,lte=120"
-    string username = 6;
-    // 角色名称
+    string username = 4;
+    // 角色Id
     // @gotags: bson:"role_id" json:"role_id" validate:"required,lte=40"
-    string role_id = 7;
+    string role_id = 5;
+    // 该角色的生效范围
+    // @gotags: bson:"scope" json:"scope"
+    map<string, string> scope = 6;
     // 策略过期时间
     // @gotags: bson:"expired_time" json:"expired_time"
-    int64 expired_time = 8;
-    // 策略的类型
-    // @gotags: bson:"type" json:"type"
-    PolicyType type = 9;        
+    int64 expired_time = 7;
+    // 只读策略, 不允许用户修改, 一般用于系统管理
+    // @gotags: bson:"read_only" json:"read_only"
+    bool read_only = 8;
+    // 启用该策略
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 9;  
+    // 扩展属性
+    // @gotags: bson:"extra" json:"extra"
+    map<string,string> extra = 15;        
 }
 
 message PolicySet {

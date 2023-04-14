@@ -8,9 +8,13 @@ import "github.com/infraboard/mcube/pb/page/page.proto";
 
 // RPC 策略服务
 service RPC {
+    // 创建策略
 	rpc CreatePolicy(CreatePolicyRequest) returns(Policy);
+    // 查询策略列表
 	rpc QueryPolicy(QueryPolicyRequest) returns(PolicySet);
+    // 查询策略详情
 	rpc DescribePolicy(DescribePolicyRequest) returns(Policy);
+    // 删除策略
 	rpc DeletePolicy(DeletePolicyRequest) returns(Policy);
 }
 
@@ -23,25 +27,22 @@ message QueryPolicyRequest {
     // @gotags: json:"domain"
     string domain = 8;
     // 用户名称
-    // @gotags: json:"username,omitempty"
+    // @gotags: json:"username"
     string username = 2;
     // 用户角色
-    // @gotags: json:"role_id,omitempty"
+    // @gotags: json:"role_id"
     string role_id = 3;
     // 用户空间
-    // @gotags: json:"namespace,omitempty"
+    // @gotags: json:"namespace"
     string namespace = 4;
     // 组相关策略
     // @gotags: json:"group"
     string group = 9;  
-    // 策略类型
-    // @gotags: json:"type,omitempty"
-    optional PolicyType type = 5;
     // 是否查询角色相关信息
-    // @gotags: json:"with_role,omitempty"
+    // @gotags: json:"with_role"
     bool with_role = 6;
     // 是否查询空间相关信息
-    // @gotags: json:"with_namespace,omitempty"
+    // @gotags: json:"with_namespace"
     bool with_namespace = 7;   
 }
 
@@ -55,14 +56,14 @@ message DescribePolicyRequest {
 message DeletePolicyRequest {
     // @gotags: json:"id"
 	string id = 1;
-    // @gotags: json:"username,omitempty"
+    // @gotags: json:"username"
     string username = 2;
-    // @gotags: json:"role_id,omitempty"
+    // @gotags: json:"role_id"
     string role_id = 3;
-    // @gotags: json:"namespace,omitempty"
+    // @gotags: json:"namespace"
     string namespace = 4;
-    // @gotags: json:"type,omitempty"
-    optional PolicyType type = 5;
+    // @gotags: json:"type"
+    optional bool read_only = 5;
     // @gotags: json:"domain"
     string domain = 6;  
 }

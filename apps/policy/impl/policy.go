@@ -28,7 +28,7 @@ func (s *impl) CreatePolicy(ctx context.Context, req *policy.CreatePolicyRequest
 
 	if _, err := s.col.InsertOne(ctx, ins); err != nil {
 		return nil, exception.NewInternalServerError("inserted policy(%s) document error, %s",
-			ins.Id, err)
+			ins.Meta.Id, err)
 	}
 
 	return ins, nil

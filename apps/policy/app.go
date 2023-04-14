@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"hash/fnv"
 	"strings"
-	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/pb/resource"
 
 	"github.com/infraboard/mcenter/apps/role"
 )
@@ -29,9 +29,8 @@ func New(req *CreatePolicyRequest) (*Policy, error) {
 	}
 
 	p := &Policy{
-		CreateAt: time.Now().UnixMilli(),
-		UpdateAt: time.Now().UnixMilli(),
-		Spec:     req,
+		Meta: resource.NewMeta(),
+		Spec: req,
 	}
 	p.genID()
 
@@ -45,11 +44,11 @@ func NewDefaultPolicy() *Policy {
 
 func (p *Policy) genID() {
 	h := fnv.New32a()
-	hashedStr := fmt.Sprintf("%s-%s-%s-%s-%s",
-		p.Spec.Domain, p.Spec.Namespace, p.Spec.Group, p.Spec.Username, p.Spec.RoleId)
+	hashedStr := fmt.Sprintf("%s-%s-%s-%s",
+		p.Spec.Domain, p.Spec.Namespace, p.Spec.Username, p.Spec.RoleId)
 
 	h.Write([]byte(hashedStr))
-	p.Id = fmt.Sprintf("%x", h.Sum32())
+	p.Meta.Id = fmt.Sprintf("%x", h.Sum32())
 }
 
 // IsAllNamespace 是否是对账所有namespace的测试
@@ -65,6 +64,19 @@ func NewCreatePolicyRequest() *CreatePolicyRequest {
 // Validate 校验请求合法
 func (req *CreatePolicyRequest) Validate() error {
 	return validate.Struct(req)
+}
+
+func (p *CreatePolicyRequest) ScopeToString() string {
+	list := []string{}
+	for k, v := range p.Scope {
+		list = append(list, fmt.Sprintf("%s=%s", k, v))
+	}
+
+	if len(list) == 0 {
+		return ""
+	}
+
+	return strings.Join(list, ";")
 }
 
 // NewPolicySet todo
@@ -109,7 +121,7 @@ func (s *PolicySet) GetRoles(ctx context.Context, r role.Service, withPermission
 			return nil, err
 		}
 		// 继承policy上的范围限制
-		ins.Scope = s.Items[i].Spec.Scope
+		ins.Scope = s.Items[i].Spec.ScopeToString()
 		set.Add(ins)
 	}
 	return set, nil
@@ -130,18 +142,6 @@ func (s *PolicySet) UserRoles(username string) []string {
 	}
 
 	return rns
-}
-
-// GetScope todo
-func (s *PolicySet) GetScope(username string) string {
-	scopes := []string{}
-	for i := range s.Items {
-		item := s.Items[i]
-		if item.Spec.Username == username {
-			scopes = append(scopes, item.Spec.Scope)
-		}
-	}
-	return strings.Join(scopes, " ")
 }
 
 func (s *PolicySet) GetNamespace() (nss []string) {
