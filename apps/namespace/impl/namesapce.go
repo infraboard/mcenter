@@ -6,8 +6,7 @@ import (
 
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/types/ftime"
-	"github.com/rs/xid"
+	"github.com/infraboard/mcube/pb/resource"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/infraboard/mcenter/apps/namespace"
@@ -26,7 +25,7 @@ func (s *impl) CreateNamespace(ctx context.Context, req *namespace.CreateNamespa
 		if err != nil {
 			return nil, err
 		}
-		ins.Id = fmt.Sprintf("%s-%d", req.ParentId, c.Value)
+		ins.Meta.Id = fmt.Sprintf("%s-%d", req.ParentId, c.Value)
 	}
 
 	if _, err := s.col.InsertOne(ctx, ins); err != nil {
@@ -135,10 +134,8 @@ func (s *impl) newNamespace(ctx context.Context, req *namespace.CreateNamespaceR
 	}
 
 	ins := &namespace.Namespace{
-		Id:       xid.New().String(),
-		CreateAt: ftime.Now().Timestamp(),
-		UpdateAt: ftime.Now().Timestamp(),
-		Spec:     req,
+		Meta: resource.NewMeta(),
+		Spec: req,
 	}
 
 	return ins, nil

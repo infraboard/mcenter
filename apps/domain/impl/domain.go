@@ -110,10 +110,10 @@ func (s *service) UpdateDomain(ctx context.Context, req *domain.UpdateDomainRequ
 		return nil, exception.NewBadRequest("unknown update mode: %s", req.UpdateMode)
 	}
 
-	d.UpdateAt = time.Now().UnixMilli()
-	_, err = s.col.UpdateOne(ctx, bson.M{"_id": d.Id}, bson.M{"$set": d})
+	d.Meta.UpdateAt = time.Now().Unix()
+	_, err = s.col.UpdateOne(ctx, bson.M{"_id": d.Meta.Id}, bson.M{"$set": d})
 	if err != nil {
-		return nil, exception.NewInternalServerError("update domain(%s) error, %s", d.Id, err)
+		return nil, exception.NewInternalServerError("update domain(%s) error, %s", d.Meta.Id, err)
 	}
 
 	return d, nil

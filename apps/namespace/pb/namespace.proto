@@ -3,6 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.namespace;
 option go_package = "github.com/infraboard/mcenter/apps/namespace";
 
+import "github.com/infraboard/mcube/pb/resource/meta.proto";
+
 enum Visible {
     // 默认空间是私有的
     PRIVATE = 0;
@@ -12,18 +14,12 @@ enum Visible {
 
 // Namespace tenant resource container
 message Namespace {
-    // 空间Id
-    // @gotags: bson:"_id" json:"id"
-    string id = 1;
-    // 创建时间
-    // @gotags: bson:"create_at" json:"create_at"
-    int64 create_at = 2;
-    // 项目修改时间
-    // @gotags: bson:"update_at" json:"update_at"
-    int64 update_at = 3;
+    // 元信息
+    // @gotags: bson:",inline" json:"meta"
+    infraboard.mcube.resource.Meta meta = 1;
     // 空间定义
-    // @gotags: bson:"spec" json:"spec"
-    CreateNamespaceRequest spec = 4;
+    // @gotags: bson:",inline" json:"spec"
+    CreateNamespaceRequest spec = 2;
 }
 
 message CreateNamespaceRequest {

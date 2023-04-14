@@ -1,22 +1,21 @@
 package namespace
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/token"
+	"github.com/infraboard/mcenter/common/format"
 	request "github.com/infraboard/mcube/http/request"
+	resource "github.com/infraboard/mcube/pb/resource"
 )
 
 // use a single instance of Validate, it caches struct info
 var (
 	validate = validator.New()
-)
-
-const (
-	AppName = "namespace"
 )
 
 const (
@@ -34,6 +33,17 @@ func NewDefaultNamespace() *Namespace {
 
 func (n *Namespace) IsOwner(owner string) bool {
 	return n.Spec.Owner == owner
+}
+
+func (n *Namespace) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		*resource.Meta
+		*CreateNamespaceRequest
+	}{n.Meta, n.Spec})
+}
+
+func (n *Namespace) ToJson() string {
+	return format.Prettify(n)
 }
 
 // NewCreateNamespaceRequest todo
@@ -56,6 +66,10 @@ func NewNamespaceSet() *NamespaceSet {
 	return &NamespaceSet{
 		Items: []*Namespace{},
 	}
+}
+
+func (s *NamespaceSet) ToJson() string {
+	return format.Prettify(s)
 }
 
 // Add 添加应用

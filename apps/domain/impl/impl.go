@@ -36,7 +36,7 @@ func (s *service) Config() error {
 		},
 		{
 			Keys: bsonx.Doc{
-				{Key: "spec.name", Value: bsonx.Int32(-1)},
+				{Key: "name", Value: bsonx.Int32(-1)},
 			},
 			Options: options.Index().SetUnique(true),
 		},

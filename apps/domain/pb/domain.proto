@@ -3,11 +3,11 @@ syntax = "proto3";
 package infraboard.mcenter.domain;
 option go_package = "github.com/infraboard/mcenter/apps/domain";
 
+import "github.com/infraboard/mcube/pb/resource/meta.proto";
 import "apps/domain/pb/ldap.proto";
 import "apps/domain/pb/feishu.proto";
 import "apps/domain/pb/dingding.proto";
 import "apps/domain/pb/wechat_work.proto";
-
 
 message DomainSet {
     // 总数量
@@ -19,18 +19,12 @@ message DomainSet {
 }
 
 message Domain  {
-    // 公司或者组织名称
-    // @gotags: bson:"_id" json:"id"
-    string id = 1;
-    // 创建时间
-    // @gotags: bson:"create_at" json:"create_at"
-    int64 create_at = 2;
-    // 更新时间
-    // @gotags: bson:"update_at" json:"update_at"
-    int64 update_at = 3;
+    // 元信息
+    // @gotags: bson:",inline" json:"meta"
+    infraboard.mcube.resource.Meta meta = 1;
     // 创建信息
-    // @gotags: bson:"spec" json:"spec"
-    CreateDomainRequest spec = 4;
+    // @gotags: bson:",inline" json:"spec"
+    CreateDomainRequest spec = 2;
 }
 
 message CreateDomainRequest {

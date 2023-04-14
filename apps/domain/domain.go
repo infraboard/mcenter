@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -8,14 +9,11 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/rs/xid"
 
+	"github.com/infraboard/mcenter/common/format"
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
-)
-
-const (
-	AppName = "domain"
+	"github.com/infraboard/mcube/pb/resource"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -27,6 +25,31 @@ func NewDefaultDomain() *Domain {
 	return &Domain{
 		Spec: NewCreateDomainRequest(),
 	}
+}
+
+// New 新建一个domain
+func New(req *CreateDomainRequest) (*Domain, error) {
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
+
+	d := &Domain{
+		Meta: resource.NewMeta(),
+		Spec: req,
+	}
+
+	return d, nil
+}
+
+func (d *Domain) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		*resource.Meta
+		*CreateDomainRequest
+	}{d.Meta, d.Spec})
+}
+
+func (d *Domain) ToJson() string {
+	return format.Prettify(d)
 }
 
 func (d *Domain) Desensitize() {
@@ -80,21 +103,6 @@ func NewDefaultLoginSecurity() *LoginSecurity {
 			Ip: []string{},
 		},
 	}
-}
-
-// New 新建一个domain
-func New(req *CreateDomainRequest) (*Domain, error) {
-	if err := req.Validate(); err != nil {
-		return nil, err
-	}
-
-	d := &Domain{
-		Id:       xid.New().String(),
-		CreateAt: time.Now().UnixMilli(),
-		Spec:     req,
-	}
-
-	return d, nil
 }
 
 // Validate 校验请求是否合法
@@ -194,6 +202,10 @@ func NewDomainSet() *DomainSet {
 	return &DomainSet{
 		Items: []*Domain{},
 	}
+}
+
+func (s *DomainSet) ToJson() string {
+	return format.Prettify(s)
 }
 
 func (s *DomainSet) Add(item *Domain) {

@@ -39,7 +39,7 @@ func (r *queryRequest) FindFilter() bson.M {
 	}
 
 	if len(r.Names) > 0 {
-		filter["spec.name"] = bson.M{"$in": r.Names}
+		filter["name"] = bson.M{"$in": r.Names}
 	}
 
 	return filter
