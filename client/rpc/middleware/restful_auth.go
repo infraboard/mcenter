@@ -32,6 +32,7 @@ func newhttpAuther() *httpAuther {
 		client:           rpc.C(),
 		cache:            cache.C(),
 		codeCheckSilence: 30 * time.Minute,
+		mode:             PRBAC_MODE,
 	}
 }
 
@@ -54,6 +55,11 @@ type httpAuther struct {
 	cache cache.Cache
 	// 校验码检查静默时长, 默认值30分钟, 30分钟之内只检查一次
 	codeCheckSilence time.Duration
+}
+
+// 设置权限校验策略
+func (a *httpAuther) SetPermissionMode(m PermissionMode) {
+	a.mode = m
 }
 
 // 设置静默时长
