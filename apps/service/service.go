@@ -88,7 +88,9 @@ func (s *Service) MarshalJSON() ([]byte, error) {
 }
 
 func NewImageRepository() *ImageRepository {
-	return &ImageRepository{}
+	return &ImageRepository{
+		Version: "latest",
+	}
 }
 
 func NewCodeRepository() *CodeRepository {

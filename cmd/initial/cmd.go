@@ -2,8 +2,6 @@ package initial
 
 import (
 	"github.com/spf13/cobra"
-
-	"github.com/infraboard/mcenter/apps/service"
 )
 
 var (
@@ -36,28 +34,14 @@ var Cmd = &cobra.Command{
 		err = exec.InitRole(ctx)
 		cobra.CheckErr(err)
 
+		// 初始化内置服务
+		err = exec.InitService(ctx)
+		cobra.CheckErr(err)
+
 		// 初始化系统设置
 		err = exec.InitSystemSetting(ctx)
 		cobra.CheckErr(err)
 	},
-}
-
-func NewInitApps() *InitApps {
-	return &InitApps{
-		items: []*service.CreateServiceRequest{},
-	}
-}
-
-type InitApps struct {
-	items []*service.CreateServiceRequest
-}
-
-func (i *InitApps) Add(name, descrption string) {
-	req := service.NewCreateServiceRequest()
-	req.Name = name
-	req.Description = descrption
-	req.Owner = "admin"
-	i.items = append(i.items, req)
 }
 
 func init() {
