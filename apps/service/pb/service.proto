@@ -175,9 +175,12 @@ message CodeRepository {
 
 // 镜像仓库
 message ImageRepository {
-    // 镜像地址
+    // 服务镜像地址
     // @gotags: bson:"address" json:"address"
     string address = 1;
+    // 镜像版本
+    // @gotags: bson:"version" json:"version"
+    string version = 2;
 }
 
 // 服务安全相关信息

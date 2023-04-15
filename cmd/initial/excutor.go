@@ -161,24 +161,6 @@ func (e *excutor) InitRole(ctx context.Context) error {
 	return nil
 }
 
-func (e *excutor) InitService(ctx context.Context) error {
-	apps := NewInitApps()
-	apps.Add("maudit", "审计中心")
-	apps.Add("cmdb", "资源中心")
-	apps.Add("mpaas", "发布中心")
-
-	for _, req := range apps.items {
-		app, err := e.service.CreateService(ctx, req)
-		if err != nil {
-			return err
-		}
-		fmt.Printf("初始化服务: %15s [成功]", app.Spec.Name)
-		fmt.Println()
-	}
-
-	return nil
-}
-
 func (e *excutor) InitSystemSetting(ctx context.Context) error {
 	sysConf := setting.NewDefaultSetting()
 	st, err := e.system.UpdateSetting(ctx, sysConf)
