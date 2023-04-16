@@ -12,16 +12,24 @@ func TestCreateRole(t *testing.T) {
 	req.CreateBy = "admin"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Global = true
-	req.Name = "maudit_admin"
-	req.Description = "审计中心管理员"
+	req.Name = "developer"
+	req.Description = "开发"
 	req.Specs = []*role.Spec{
 		{
-			Desc:         "测试",
+			Desc:         "mpaas只读权限",
 			Effect:       role.EffectType_ALLOW,
-			ServiceId:    "2a4e174e",
-			ResourceName: "book",
+			ServiceId:    "cd08fc9c",
+			ResourceName: "*",
 			LabelKey:     "action",
 			LabelValues:  []string{"list", "get"},
+		},
+		{
+			Desc:         "构建配置管理权限",
+			Effect:       role.EffectType_ALLOW,
+			ServiceId:    "cd08fc9c",
+			ResourceName: "builds",
+			LabelKey:     "action",
+			MatchAll:     true,
 		},
 	}
 	r, err := impl.CreateRole(ctx, req)

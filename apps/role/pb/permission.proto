@@ -23,7 +23,7 @@ message Permission {
     // @gotags: bson:"role_id" json:"role_id"
     string role_id = 3;
     // 权限具体定义
-    // @gotags: bson:"spec" json:"spec"
+    // @gotags: bson:",inline" json:"spec"
     Spec spec = 4;
     // 范围, 角色范围限制, 由策略引擎动态补充
     // @gotags: bson:"-" json:"scope"

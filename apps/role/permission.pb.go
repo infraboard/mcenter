@@ -85,8 +85,8 @@ type Permission struct {
 	// @gotags: bson:"role_id" json:"role_id"
 	RoleId string `protobuf:"bytes,3,opt,name=role_id,json=roleId,proto3" json:"role_id" bson:"role_id"`
 	// 权限具体定义
-	// @gotags: bson:"spec" json:"spec"
-	Spec *Spec `protobuf:"bytes,4,opt,name=spec,proto3" json:"spec" bson:"spec"`
+	// @gotags: bson:",inline" json:"spec"
+	Spec *Spec `protobuf:"bytes,4,opt,name=spec,proto3" json:"spec" bson:",inline"`
 	// 范围, 角色范围限制, 由策略引擎动态补充
 	// @gotags: bson:"-" json:"scope"
 	Scope string `protobuf:"bytes,5,opt,name=scope,proto3" json:"scope" bson:"-"`
