@@ -88,8 +88,8 @@ type Permission struct {
 	// @gotags: bson:",inline" json:"spec"
 	Spec *Spec `protobuf:"bytes,4,opt,name=spec,proto3" json:"spec" bson:",inline"`
 	// 范围, 角色范围限制, 由策略引擎动态补充
-	// @gotags: bson:"-" json:"scope"
-	Scope string `protobuf:"bytes,5,opt,name=scope,proto3" json:"scope" bson:"-"`
+	// @gotags: bson:"-" json:"scope,omitempty"
+	Scope string `protobuf:"bytes,5,opt,name=scope,proto3" json:"scope,omitempty" bson:"-"`
 }
 
 func (x *Permission) Reset() {

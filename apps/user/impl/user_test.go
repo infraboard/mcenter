@@ -18,7 +18,7 @@ func TestCreateSupperUser(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(r.ToJson())
 }
 
 func TestCreateSubUser(t *testing.T) {
@@ -31,7 +31,7 @@ func TestCreateSubUser(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(r.ToJson())
 }
 
 func TestQueryUser(t *testing.T) {
@@ -50,5 +50,5 @@ func TestPatchUser(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(r.ToJson())
 }

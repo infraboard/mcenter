@@ -3,6 +3,7 @@ package role
 import (
 	"encoding/json"
 	"fmt"
+	"hash/fnv"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -80,6 +81,7 @@ func New(req *CreateRoleRequest) (*Role, error) {
 		Spec:        req,
 		Permissions: []*Permission{},
 	}
+	r.Meta.Id = r.FullNameHash()
 	return r, nil
 }
 
@@ -112,9 +114,19 @@ func (r *Role) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		*resource.Meta
 		*CreateRoleRequest
-		Scope       string        `json:"scope"`
+		Scope       string        `json:"scope,omitempty"`
 		Permissions []*Permission `json:"permissions"`
 	}{r.Meta, r.Spec, r.Scope, r.Permissions})
+}
+
+func (r *Role) FullNameHash() string {
+	hash := fnv.New32a()
+	hash.Write([]byte(r.FullName()))
+	return fmt.Sprintf("%x", hash.Sum32())
+}
+
+func (r *Role) FullName() string {
+	return fmt.Sprintf("%s.%s@%s", r.Spec.Name, r.Spec.Name, r.Spec.Domain)
 }
 
 // HasPermission 权限判断

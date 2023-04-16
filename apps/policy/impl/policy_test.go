@@ -11,15 +11,16 @@ import (
 func TestCreatePolicy(t *testing.T) {
 	req := policy.NewCreatePolicyRequest()
 	req.Username = "test"
-	req.RoleId = "cdahojmv9mc70r5h74gg"
+	req.RoleId = "cgtlcjts99bkv5rhgc10"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
+	req.Scope["env"] = "test"
 	req.CreateBy = "admin"
 	r, err := impl.CreatePolicy(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(r.ToJson())
 }
 
 func TestQueryPolicy(t *testing.T) {
@@ -29,5 +30,5 @@ func TestQueryPolicy(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(r.ToJson())
 }

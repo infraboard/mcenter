@@ -34,8 +34,8 @@ type Role struct {
 	// @gotags: bson:",inline" json:"spec"
 	Spec *CreateRoleRequest `protobuf:"bytes,2,opt,name=spec,proto3" json:"spec" bson:",inline"`
 	// 范围, 角色范围限制, 由策略引擎动态补充
-	// @gotags: bson:"-" json:"scope"
-	Scope string `protobuf:"bytes,3,opt,name=scope,proto3" json:"scope" bson:"-"`
+	// @gotags: bson:"-" json:"scope,omitempty"
+	Scope string `protobuf:"bytes,3,opt,name=scope,proto3" json:"scope,omitempty" bson:"-"`
 	// 角色的权限
 	// @gotags: bson:"-" json:"permissions,omitempty"
 	Permissions []*Permission `protobuf:"bytes,4,rep,name=permissions,proto3" json:"permissions,omitempty" bson:"-"`

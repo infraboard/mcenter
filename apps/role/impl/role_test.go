@@ -72,7 +72,7 @@ func TestQueryRole(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(r.ToJson())
 }
 
 func TestDescribeRoleWithName(t *testing.T) {
@@ -85,7 +85,7 @@ func TestDescribeRoleWithName(t *testing.T) {
 }
 
 func TestDescribeRoleWithId(t *testing.T) {
-	req := role.NewDescribeRoleRequestWithID("cd9ncsmv9mc17sg8rr90")
+	req := role.NewDescribeRoleRequestWithID("cgtlcjts99bkv5rhgc10")
 	r, err := impl.DescribeRole(ctx, req)
 	if err != nil {
 		t.Fatal(err)
@@ -94,7 +94,7 @@ func TestDescribeRoleWithId(t *testing.T) {
 }
 
 func TestDeleteRole(t *testing.T) {
-	req := role.NewDeleteRoleWithID("cgtl4f5s99bkdpnfnufg")
+	req := role.NewDeleteRoleWithID("cgtlcjts99bkv5rhgc10")
 	r, err := impl.DeleteRole(ctx, req)
 	if err != nil {
 		t.Fatal(err)
