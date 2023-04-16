@@ -67,7 +67,7 @@ func (s *service) DescribeUser(ctx context.Context, req *user.DescribeUserReques
 	case user.DESCRIBE_BY_USER_ID:
 		filter["_id"] = req.Id
 	case user.DESCRIBE_BY_USER_NAME:
-		filter["spec.username"] = req.Username
+		filter["username"] = req.Username
 	default:
 		return nil, exception.NewBadRequest("unknow desribe by %s", req.DescribeBy)
 	}

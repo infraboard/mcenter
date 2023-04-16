@@ -13,11 +13,21 @@ func TestCheckPermission(t *testing.T) {
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
 	req.Username = "test"
-	req.ServiceId = "2a4e174e"
-	req.Path = "xxx"
+
+	// 检查test用户在默认空间下是否有访问mpaas服务的构建配置功能
+	req.ServiceId = "cd08fc9c"
+	req.Path = "POST./mpaas/api/v1/builds"
 	r, err := impl.CheckPermission(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(r.ToJson())
+
+	// 检查是否有创建Pipeline权限
+	req.Path = "POST./mpaas/api/v1/pipelines"
+	r, err = impl.CheckPermission(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r.ToJson())
 }

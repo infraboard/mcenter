@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
+	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/logger/zap"
@@ -132,6 +133,10 @@ func (p *Spec) Validate() error {
 // ID 计算唯一ID
 func (p *Permission) ID(namespace string) string {
 	return namespace + "." + p.Spec.ResourceName
+}
+
+func (p *Permission) ToJson() string {
+	return format.Prettify(p)
 }
 
 // MatchResource 检测资源是否匹配

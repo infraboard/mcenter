@@ -11,7 +11,7 @@ import (
 func TestCreatePolicy(t *testing.T) {
 	req := policy.NewCreatePolicyRequest()
 	req.Username = "test"
-	req.RoleId = "cgtlcjts99bkv5rhgc10"
+	req.RoleId = "bac61744"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
 	req.Scope["env"] = "test"
@@ -26,6 +26,11 @@ func TestCreatePolicy(t *testing.T) {
 func TestQueryPolicy(t *testing.T) {
 	req := policy.NewQueryPolicyRequest()
 	req.WithRole = true
+	// 查询test用户在默认空间的策略
+	req.Username = "test"
+	req.Domain = domain.DEFAULT_DOMAIN
+	req.Namespace = namespace.DEFAULT_NAMESPACE
+
 	r, err := impl.QueryPolicy(ctx, req)
 	if err != nil {
 		t.Fatal(err)

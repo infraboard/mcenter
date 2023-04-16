@@ -62,7 +62,7 @@ func (u *Policy) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		*resource.Meta
 		*CreatePolicyRequest
-		Role *role.Role
+		Role *role.Role `json:"role"`
 	}{u.Meta, u.Spec, u.Role})
 }
 
