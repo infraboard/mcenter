@@ -21,7 +21,7 @@ message Endpoint {
     // @gotags: bson:"version" json:"version,omitempty" validate:"required,lte=64"
     string version = 5;
     // 路由条目信息
-    // @gotags: bson:"entry" json:"entry" validate:"required"
+    // @gotags: bson:",inline" json:"entry" validate:"required"
     Entry entry = 6;
 }
 

@@ -42,8 +42,8 @@ type Endpoint struct {
 	// @gotags: bson:"version" json:"version,omitempty" validate:"required,lte=64"
 	Version string `protobuf:"bytes,5,opt,name=version,proto3" json:"version,omitempty" bson:"version" validate:"required,lte=64"`
 	// 路由条目信息
-	// @gotags: bson:"entry" json:"entry" validate:"required"
-	Entry *Entry `protobuf:"bytes,6,opt,name=entry,proto3" json:"entry" bson:"entry" validate:"required"`
+	// @gotags: bson:",inline" json:"entry" validate:"required"
+	Entry *Entry `protobuf:"bytes,6,opt,name=entry,proto3" json:"entry" bson:",inline" validate:"required"`
 }
 
 func (x *Endpoint) Reset() {
