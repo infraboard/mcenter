@@ -80,7 +80,7 @@ func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryReque
 		return nil, err
 	}
 
-	// 生产该服务的Endpoint
+	// 生成该服务的Endpoint
 	endpoints := req.Endpoints(svr.Meta.Id)
 
 	// 更新已有的记录

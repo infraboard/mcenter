@@ -35,6 +35,7 @@ func (i *impl) Config() error {
 	i.role = db.Collection("role")
 	i.perm = db.Collection("permission")
 
+	i.policy = app.GetInternalApp(policy.AppName).(policy.Service)
 	i.log = zap.L().Named(i.Name())
 	return nil
 }

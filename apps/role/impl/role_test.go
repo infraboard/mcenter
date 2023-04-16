@@ -13,7 +13,7 @@ func TestCreateRole(t *testing.T) {
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Global = true
 	req.Name = "developer"
-	req.Description = "开发"
+	req.Description = "服务"
 	req.Specs = []*role.Spec{
 		{
 			Desc:         "mpaas只读权限",
@@ -24,12 +24,28 @@ func TestCreateRole(t *testing.T) {
 			LabelValues:  []string{"list", "get"},
 		},
 		{
-			Desc:         "构建配置管理权限",
+			Desc:         "构建配置权限",
 			Effect:       role.EffectType_ALLOW,
 			ServiceId:    "cd08fc9c",
 			ResourceName: "builds",
 			LabelKey:     "action",
 			MatchAll:     true,
+		},
+		{
+			Desc:         "部署权限",
+			Effect:       role.EffectType_ALLOW,
+			ServiceId:    "cd08fc9c",
+			ResourceName: "deploys",
+			LabelKey:     "action",
+			MatchAll:     true,
+		},
+		{
+			Desc:         "Gitlab事件模拟",
+			Effect:       role.EffectType_ALLOW,
+			ServiceId:    "cd08fc9c",
+			ResourceName: "triggers",
+			LabelKey:     "action",
+			LabelValues:  []string{"create"},
 		},
 	}
 	r, err := impl.CreateRole(ctx, req)
@@ -71,6 +87,15 @@ func TestDescribeRoleWithName(t *testing.T) {
 func TestDescribeRoleWithId(t *testing.T) {
 	req := role.NewDescribeRoleRequestWithID("cd9ncsmv9mc17sg8rr90")
 	r, err := impl.DescribeRole(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r)
+}
+
+func TestDeleteRole(t *testing.T) {
+	req := role.NewDeleteRoleWithID("cgtl4f5s99bkdpnfnufg")
+	r, err := impl.DeleteRole(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
