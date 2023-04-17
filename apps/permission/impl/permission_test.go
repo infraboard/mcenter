@@ -6,6 +6,8 @@ import (
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/permission"
+	"github.com/infraboard/mcenter/apps/policy"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func TestCheckPermission(t *testing.T) {
@@ -22,6 +24,11 @@ func TestCheckPermission(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log(r.ToJson())
+
+	t.Log(policy.ScopeToMap(r.Scope))
+	filter := bson.M{}
+	policy.ScopeWithMongoFilter(r.Scope, "labels", filter)
+	t.Log(filter)
 
 	// 检查是否有创建Pipeline权限
 	req.Path = "POST./mpaas/api/v1/pipelines"

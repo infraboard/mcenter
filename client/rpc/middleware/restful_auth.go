@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -15,6 +14,7 @@ import (
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/permission"
+	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/client/rpc"
@@ -82,7 +82,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 
 		// 接口调用权限校验
 		if entry.PermissionEnable {
-			err := a.CheckPermission(req.Request.Context(), tk, entry)
+			err := a.CheckPermission(req, tk, entry)
 			if err != nil {
 				response.Failed(resp, err)
 				return
@@ -153,7 +153,7 @@ func (a *httpAuther) IsCodeCheckSilence(username string) bool {
 	return a.cache.IsExist(code.NewCodeKey(username))
 }
 
-func (a *httpAuther) CheckPermission(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
+func (a *httpAuther) CheckPermission(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	if tk == nil {
 		return exception.NewUnauthorized("validate permission need token")
 	}
@@ -166,15 +166,15 @@ func (a *httpAuther) CheckPermission(ctx context.Context, tk *token.Token, e *en
 
 	switch a.mode {
 	case ACL_MODE:
-		return a.ValidatePermissionByACL(ctx, tk, e)
+		return a.ValidatePermissionByACL(req, tk, e)
 	case PRBAC_MODE:
-		return a.ValidatePermissionByPRBAC(ctx, tk, e)
+		return a.ValidatePermissionByPRBAC(req, tk, e)
 	default:
 		return fmt.Errorf("only support acl and prbac")
 	}
 }
 
-func (a *httpAuther) ValidatePermissionByACL(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
+func (a *httpAuther) ValidatePermissionByACL(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
 		a.log.Debugf("[%s] start check permission to keyauth ...", tk.Username)
@@ -187,8 +187,8 @@ func (a *httpAuther) ValidatePermissionByACL(ctx context.Context, tk *token.Toke
 	return nil
 }
 
-func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
-	ci, err := a.client.ClientInfo(ctx)
+func (a *httpAuther) ValidatePermissionByPRBAC(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+	ci, err := a.client.ClientInfo(r.Request.Context())
 	if err != nil {
 		return err
 	}
@@ -198,10 +198,13 @@ func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.To
 	req.Namespace = tk.Namespace
 	req.ServiceId = ci.Meta.Id
 	req.Path = e.UniquePath()
-	_, err = a.client.Permission().CheckPermission(ctx, req)
+	perm, err := a.client.Permission().CheckPermission(r.Request.Context(), req)
 	if err != nil {
 		return exception.NewPermissionDeny(err.Error())
 	}
 	a.log.Debugf("[%s] permission check passed", tk.Username)
+
+	// 保存访问访问信息
+	r.SetAttribute(policy.SCOPE_ATTRIBUTE_NAME, perm.Scope)
 	return nil
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/pb/resource"
+	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/common/format"
@@ -239,5 +240,39 @@ func NewDeletePolicyRequestWithNamespace(domain, namespace string) *DeletePolicy
 	return &DeletePolicyRequest{
 		Domain:    domain,
 		Namespace: namespace,
+	}
+}
+
+func ScopeToMap(scope string) map[string]string {
+	filter := map[string]string{}
+
+	if scope == "" {
+		return filter
+	}
+
+	items := strings.Split(scope, ";")
+	fmt.Println(items)
+	for _, item := range items {
+		kv := strings.Split(item, "=")
+		if len(kv) > 1 {
+			filter[kv[0]] = strings.Join(kv[1:], "")
+		}
+	}
+
+	return filter
+}
+
+func ScopeWithMongoFilter(scope, labelName string, filter bson.M) {
+	m := ScopeToMap(scope)
+	for k, v := range m {
+		// 如果value 为空或者* 表示不过滤
+		if v == "" || v == "*" {
+			continue
+		}
+		if strings.Contains(v, ",") {
+			filter[fmt.Sprintf("%s.%s", labelName, k)] = bson.M{"$in": strings.Split(v, ",")}
+		} else {
+			filter[fmt.Sprintf("%s.%s", labelName, k)] = v
+		}
 	}
 }
