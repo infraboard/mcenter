@@ -125,7 +125,7 @@ func (r *Role) FullNameHash() string {
 }
 
 func (r *Role) FullName() string {
-	return fmt.Sprintf("%s.%s@%s", r.Spec.Name, r.Spec.Name, r.Spec.Domain)
+	return fmt.Sprintf("%s@%s", r.Spec.Name, r.Spec.Domain)
 }
 
 // HasPermission 权限判断
