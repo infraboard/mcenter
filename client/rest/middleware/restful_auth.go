@@ -79,7 +79,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 
 		if entry.PermissionEnable {
 			// 权限检查
-			err := a.CheckPermission(req.Request.Context(), tk, entry)
+			err := a.CheckPermission(req, tk, entry)
 			if err != nil {
 				response.Failed(resp, err)
 				return
@@ -91,7 +91,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 	next.ProcessFilter(req, resp)
 }
 
-func (a *httpAuther) CheckPermission(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
+func (a *httpAuther) CheckPermission(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	if tk == nil {
 		return exception.NewUnauthorized("validate permission need token")
 	}
@@ -104,15 +104,15 @@ func (a *httpAuther) CheckPermission(ctx context.Context, tk *token.Token, e *en
 
 	switch a.mode {
 	case ACL_MODE:
-		return a.ValidatePermissionByACL(ctx, tk, e)
+		return a.ValidatePermissionByACL(r, tk, e)
 	case PRBAC_MODE:
-		return a.ValidatePermissionByPRBAC(ctx, tk, e)
+		return a.ValidatePermissionByPRBAC(r, tk, e)
 	default:
 		return fmt.Errorf("only support acl and prbac")
 	}
 }
 
-func (a *httpAuther) ValidatePermissionByACL(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
+func (a *httpAuther) ValidatePermissionByACL(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
 		a.log.Debugf("[%s] start check permission to keyauth ...", tk.Username)
@@ -125,8 +125,8 @@ func (a *httpAuther) ValidatePermissionByACL(ctx context.Context, tk *token.Toke
 	return nil
 }
 
-func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
-	svr, err := a.getService(ctx)
+func (a *httpAuther) ValidatePermissionByPRBAC(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+	svr, err := a.getService(r.Request.Context())
 	if err != nil {
 		return err
 	}
@@ -136,11 +136,13 @@ func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.To
 	req.Namespace = tk.Namespace
 	req.ServiceId = svr.Meta.Id
 	req.Path = e.UniquePath()
-	_, err = a.client.Policy().CheckPermission(ctx, req)
+	perm, err := a.client.Policy().CheckPermission(r.Request.Context(), req)
 	if err != nil {
 		return exception.NewPermissionDeny(err.Error())
 	}
 	a.log.Debugf("[%s] permission check passed", tk.Username)
+	// 保存访问访问信息
+	r.SetAttribute(policy.SCOPE_ATTRIBUTE_NAME, perm.Scope)
 	return nil
 }
 

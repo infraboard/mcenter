@@ -3,6 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
+import "apps/label/pb/label.proto";
+
 // EffectType 授权效力包括两种：允许（Allow）和拒绝（Deny）
 enum EffectType {
     // 允许访问
@@ -25,9 +27,9 @@ message Permission {
     // 权限具体定义
     // @gotags: bson:",inline" json:"spec"
     Spec spec = 4;
-    // 范围, 角色范围限制, 由策略引擎动态补充
+    // 范围限制, 由策略引擎动态补充
     // @gotags: bson:"-" json:"scope"
-    string scope = 5;
+    repeated label.LabelRequirement scope = 6;
 }
 
 message Spec {

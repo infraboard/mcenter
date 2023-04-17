@@ -201,7 +201,7 @@ func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionR
 		}
 		if ok {
 			perm = permOk
-			perm.Scope = p.Spec.ScopeToString()
+			perm.Scope = p.Spec.Scope
 			s.log.Debugf("check roles %s has permission access endpoint [%s]", p.Role.Spec.Name, ep.Entry)
 		}
 	}
