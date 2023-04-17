@@ -2,6 +2,7 @@ package tracer
 
 import (
 	"context"
+	"os"
 
 	"github.com/infraboard/mcenter/version"
 	"go.opentelemetry.io/otel"
@@ -11,15 +12,28 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 	oteltrace "go.opentelemetry.io/otel/trace"
+
+	"go.opentelemetry.io/otel/exporters/jaeger"
 )
 
 var Tracer oteltrace.Tracer
 
 func InitTracer() error {
-	exporter, err := stdout.New(stdout.WithPrettyPrint())
+	ep := os.Getenv("GAEGER_ENDPINT")
+
+	var (
+		exporter sdktrace.SpanExporter
+		err      error
+	)
+	if ep != "" {
+		exporter, err = jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(ep)))
+	} else {
+		exporter, err = stdout.New(stdout.WithPrettyPrint())
+	}
 	if err != nil {
 		return err
 	}
+
 	tp := sdktrace.NewTracerProvider(
 		sdktrace.WithSampler(sdktrace.AlwaysSample()),
 		sdktrace.WithBatcher(exporter),

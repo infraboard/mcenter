@@ -52,11 +52,63 @@ _, span := tracer.Start(req.Request.Context(), "getUser", oteltrace.WithAttribut
 defer span.End()
 ```
 
+[jaeger exporter配置](https://github.com/open-telemetry/opentelemetry-go/tree/main/exporters)
+```go
+import (
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
+)
+
+// tracerProvider returns an OpenTelemetry TracerProvider configured to use
+// the Jaeger exporter that will send spans to the provided url. The returned
+// TracerProvider will also use a Resource configured with all the information
+// about the application.
+func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
+	// Create the Jaeger exporter
+	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
+	if err != nil {
+		return nil, err
+	}
+	tp := tracesdk.NewTracerProvider(
+		// Always be sure to batch in production.
+		tracesdk.WithBatcher(exp),
+		// Record information about this application in a Resource.
+		tracesdk.WithResource(resource.NewWithAttributes(
+			semconv.SchemaURL,
+			semconv.ServiceName(service),
+			attribute.String("environment", environment),
+			attribute.Int64("ID", id),
+		)),
+	)
+	
+	otel.SetTracerProvider(tp)
+	return tp, nil
+}
+```
+
+## 部署Jaeger
+
+```
+docker run -d --name jaeger \
+  -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
+  -e COLLECTOR_OTLP_ENABLED=true \
+  -p 6831:6831/udp \
+  -p 6832:6832/udp \
+  -p 5778:5778 \
+  -p 16686:16686 \
+  -p 4317:4317 \
+  -p 4318:4318 \
+  -p 14250:14250 \
+  -p 14268:14268 \
+  -p 14269:14269 \
+  -p 9411:9411 \
+  jaegertracing/all-in-one:1.44
+```
+
 ## 参考
 
 + [opentelemetry 官网](https://opentelemetry.io/)
 + [opentelemetry 文档](https://opentelemetry.io/docs/)
 + [opentelemetry SDK](https://opentelemetry.io/docs/instrumentation/)
 + [opentelemetry 中间件](https://opentelemetry.io/ecosystem/registry)
-+ [go-restful 中间件](https://github.com/open-telemetry/opentelemetry-go-contrib/tree/main/instrumentation/github.com/emicklei/go-restful)
-+ [grpc 中间件](https://github.com/open-telemetry/opentelemetry-go-contrib/tree/main/instrumentation/google.golang.org/grpc/otelgrpc)
++ [jaeger 官方文档](https://www.jaegertracing.io/docs/1.44/)
