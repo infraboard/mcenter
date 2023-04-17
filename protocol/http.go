@@ -29,7 +29,6 @@ func NewHTTPService() *HTTPService {
 
 	// create the Otel filter
 	filter := otelrestful.OTelFilter(version.ServiceName)
-	// use it
 	restful.DefaultContainer.Filter(filter)
 
 	// Optionally, you may need to enable CORS for the UI to work.
