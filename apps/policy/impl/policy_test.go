@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 )
@@ -14,7 +15,7 @@ func TestCreatePolicy(t *testing.T) {
 	req.RoleId = "bac61744"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
-	req.Scope["env"] = "test"
+	req.AddScope(label.NewLabelRequirement("env", "test", "prod"))
 	req.CreateBy = "admin"
 	r, err := impl.CreatePolicy(ctx, req)
 	if err != nil {

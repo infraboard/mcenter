@@ -12,6 +12,7 @@ import (
 	"github.com/infraboard/mcube/pb/resource"
 	"go.mongodb.org/mongo-driver/bson"
 
+	label "github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/common/format"
 )
@@ -63,7 +64,7 @@ func (u *Policy) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		*resource.Meta
 		*CreatePolicyRequest
-		Role *role.Role `json:"role"`
+		Role *role.Role `json:"role,omitempty"`
 	}{u.Meta, u.Spec, u.Role})
 }
 
@@ -71,7 +72,7 @@ func (u *Policy) MarshalJSON() ([]byte, error) {
 func NewCreatePolicyRequest() *CreatePolicyRequest {
 	return &CreatePolicyRequest{
 		Enabled: true,
-		Scope:   map[string]string{},
+		Scope:   []*label.LabelRequirement{},
 		Extra:   map[string]string{},
 	}
 }
@@ -81,10 +82,14 @@ func (req *CreatePolicyRequest) Validate() error {
 	return validate.Struct(req)
 }
 
+func (req *CreatePolicyRequest) AddScope(item *label.LabelRequirement) {
+	req.Scope = append(req.Scope, item)
+}
+
 func (p *CreatePolicyRequest) ScopeToString() string {
 	list := []string{}
-	for k, v := range p.Scope {
-		list = append(list, fmt.Sprintf("%s=%s", k, v))
+	for i := range p.Scope {
+		list = append(list, p.Scope[i].Expr())
 	}
 
 	if len(list) == 0 {
@@ -99,6 +104,10 @@ func NewPolicySet() *PolicySet {
 	return &PolicySet{
 		Items: []*Policy{},
 	}
+}
+
+func (p *PolicySet) Len() int {
+	return len(p.Items)
 }
 
 func (p *PolicySet) ToJson() string {
@@ -139,28 +148,18 @@ func (s *PolicySet) GetRoles(ctx context.Context, r role.Service, withPermission
 		if err != nil {
 			return nil, err
 		}
-		// 继承policy上的范围限制
-		ins.Scope = s.Items[i].Spec.ScopeToString()
 		set.Add(ins)
 	}
 	return set, nil
 }
 
 // UserRoles 获取用户的角色
-func (s *PolicySet) UserRoles(username string) []string {
-	rns := []string{}
+func (s *PolicySet) RoleNames() (rns []string) {
 	for i := range s.Items {
 		item := s.Items[i]
-		if item.Spec.Username == username {
-			rns = append(rns, item.Spec.RoleId)
-		}
+		rns = append(rns, item.Role.FullName())
 	}
-
-	if len(rns) == 0 {
-		rns = append(rns, "vistor")
-	}
-
-	return rns
+	return
 }
 
 func (s *PolicySet) GetNamespace() (nss []string) {

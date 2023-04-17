@@ -13,7 +13,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
-	"github.com/infraboard/mcenter/apps/permission"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
@@ -193,12 +192,12 @@ func (a *httpAuther) ValidatePermissionByPRBAC(r *restful.Request, tk *token.Tok
 		return err
 	}
 
-	req := permission.NewCheckPermissionRequest()
+	req := policy.NewCheckPermissionRequest()
 	req.Username = tk.Username
 	req.Namespace = tk.Namespace
 	req.ServiceId = ci.Meta.Id
 	req.Path = e.UniquePath()
-	perm, err := a.client.Permission().CheckPermission(r.Request.Context(), req)
+	perm, err := a.client.Policy().CheckPermission(r.Request.Context(), req)
 	if err != nil {
 		return exception.NewPermissionDeny(err.Error())
 	}

@@ -3,21 +3,21 @@ package rest
 import (
 	"context"
 
-	"github.com/infraboard/mcenter/apps/permission"
+	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcube/client/rest"
 )
 
-type PermissionService interface {
+type PolicyService interface {
 	// 权限校验
-	CheckPermission(context.Context, *permission.CheckPermissionRequest) (*role.Permission, error)
+	CheckPermission(context.Context, *policy.CheckPermissionRequest) (*role.Permission, error)
 }
 
-type permissionImpl struct {
+type policyImpl struct {
 	client *rest.RESTClient
 }
 
-func (i *permissionImpl) CheckPermission(ctx context.Context, req *permission.CheckPermissionRequest) (*role.Permission, error) {
+func (i *policyImpl) CheckPermission(ctx context.Context, req *policy.CheckPermissionRequest) (*role.Permission, error) {
 	// ins := token.NewDefaultToken()
 	// resp := (ins)
 

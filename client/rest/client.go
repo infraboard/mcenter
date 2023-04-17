@@ -33,6 +33,6 @@ func (c *ClientSet) Token() TokenService {
 	return &tokenImpl{client: c.c}
 }
 
-func (c *ClientSet) Permission() PermissionService {
-	return &permissionImpl{client: c.c}
+func (c *ClientSet) Policy() PolicyService {
+	return &policyImpl{client: c.c}
 }

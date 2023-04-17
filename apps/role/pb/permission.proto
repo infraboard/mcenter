@@ -26,7 +26,7 @@ message Permission {
     // @gotags: bson:",inline" json:"spec"
     Spec spec = 4;
     // 范围, 角色范围限制, 由策略引擎动态补充
-    // @gotags: bson:"-" json:"scope,omitempty"
+    // @gotags: bson:"-" json:"scope"
     string scope = 5;
 }
 

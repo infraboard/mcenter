@@ -8,6 +8,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 
+	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
@@ -28,6 +29,7 @@ type impl struct {
 	user      user.Service
 	role      role.Service
 	namespace namespace.Service
+	endpoint  endpoint.Service
 }
 
 func (i *impl) Config() error {
@@ -41,6 +43,7 @@ func (i *impl) Config() error {
 	i.user = app.GetInternalApp(user.AppName).(user.Service)
 	i.role = app.GetInternalApp(role.AppName).(role.Service)
 	i.namespace = app.GetInternalApp(namespace.AppName).(namespace.Service)
+	i.endpoint = app.GetInternalApp(endpoint.AppName).(endpoint.Service)
 	return nil
 }
 

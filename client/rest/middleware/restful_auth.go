@@ -11,7 +11,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
-	"github.com/infraboard/mcenter/apps/permission"
+	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
@@ -131,12 +131,12 @@ func (a *httpAuther) ValidatePermissionByPRBAC(ctx context.Context, tk *token.To
 		return err
 	}
 
-	req := permission.NewCheckPermissionRequest()
+	req := policy.NewCheckPermissionRequest()
 	req.Username = tk.Username
 	req.Namespace = tk.Namespace
 	req.ServiceId = svr.Meta.Id
 	req.Path = e.UniquePath()
-	_, err = a.client.Permission().CheckPermission(ctx, req)
+	_, err = a.client.Policy().CheckPermission(ctx, req)
 	if err != nil {
 		return exception.NewPermissionDeny(err.Error())
 	}

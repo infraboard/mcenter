@@ -14,9 +14,6 @@ message Role {
     // 角色描述信息
     // @gotags: bson:",inline" json:"spec"
     CreateRoleRequest spec = 2;
-    // 范围, 角色范围限制, 由策略引擎动态补充
-    // @gotags: bson:"-" json:"scope,omitempty"
-    string scope = 3;
     // 角色的权限
     // @gotags: bson:"-" json:"permissions,omitempty"
     repeated Permission permissions = 4;

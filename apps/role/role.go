@@ -114,9 +114,8 @@ func (r *Role) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		*resource.Meta
 		*CreateRoleRequest
-		Scope       string        `json:"scope,omitempty"`
 		Permissions []*Permission `json:"permissions"`
-	}{r.Meta, r.Spec, r.Scope, r.Permissions})
+	}{r.Meta, r.Spec, r.Permissions})
 }
 
 func (r *Role) FullNameHash() string {
@@ -177,8 +176,6 @@ func (s *RoleSet) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error
 		}
 
 		if ok {
-			// 补充权限访问范围
-			p.Scope = s.Items[i].Scope
 			return p, ok, nil
 		}
 	}

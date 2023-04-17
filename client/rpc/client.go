@@ -14,7 +14,7 @@ import (
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/notify"
-	"github.com/infraboard/mcenter/apps/permission"
+	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
@@ -125,8 +125,8 @@ func (c *ClientSet) Role() role.RPCClient {
 }
 
 // Permission服务的SDK
-func (c *ClientSet) Permission() permission.RPCClient {
-	return permission.NewRPCClient(c.conn)
+func (c *ClientSet) Policy() policy.RPCClient {
+	return policy.NewRPCClient(c.conn)
 }
 
 // Endpoint服务的SDK

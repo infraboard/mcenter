@@ -3,8 +3,12 @@ syntax = "proto3";
 package infraboard.mcenter.policy;
 option go_package = "github.com/infraboard/mcenter/apps/policy";
 
-import "apps/policy/pb/policy.proto";
 import "github.com/infraboard/mcube/pb/page/page.proto";
+import "apps/policy/pb/permission.proto";
+import "apps/policy/pb/policy.proto";
+import "apps/role/pb/permission.proto";
+
+
 
 // RPC 策略服务
 service RPC {
@@ -16,6 +20,9 @@ service RPC {
 	rpc DescribePolicy(DescribePolicyRequest) returns(Policy);
     // 删除策略
 	rpc DeletePolicy(DeletePolicyRequest) returns(Policy);
+
+    // 策略鉴权
+    rpc CheckPermission(CheckPermissionRequest) returns(role.Permission);
 }
 
 // QueryPolicyRequest 获取子账号列表

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package infraboard.mcenter.policy;
+option go_package = "github.com/infraboard/mcenter/apps/policy";
+
+import "github.com/infraboard/mcube/pb/page/page.proto";
+
+// CheckPermissionRequest todo
+message CheckPermissionRequest {
+    // @gotags: json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+    // @gotags: json:"domain"
+    string domain = 2;
+    // @gotags: json:"namespace"
+    string namespace = 3;
+    // @gotags: json:"group"
+    string group = 4;
+    // @gotags: json:"service_id"
+    string service_id = 5;
+    // @gotags: json:"path"
+    string path = 6;
+    // @gotags: json:"username"
+    string username = 7;
+}

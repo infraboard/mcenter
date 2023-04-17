@@ -8,6 +8,7 @@ package policy
 
 import (
 	context "context"
+	role "github.com/infraboard/mcenter/apps/role"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,10 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RPC_CreatePolicy_FullMethodName   = "/infraboard.mcenter.policy.RPC/CreatePolicy"
-	RPC_QueryPolicy_FullMethodName    = "/infraboard.mcenter.policy.RPC/QueryPolicy"
-	RPC_DescribePolicy_FullMethodName = "/infraboard.mcenter.policy.RPC/DescribePolicy"
-	RPC_DeletePolicy_FullMethodName   = "/infraboard.mcenter.policy.RPC/DeletePolicy"
+	RPC_CreatePolicy_FullMethodName    = "/infraboard.mcenter.policy.RPC/CreatePolicy"
+	RPC_QueryPolicy_FullMethodName     = "/infraboard.mcenter.policy.RPC/QueryPolicy"
+	RPC_DescribePolicy_FullMethodName  = "/infraboard.mcenter.policy.RPC/DescribePolicy"
+	RPC_DeletePolicy_FullMethodName    = "/infraboard.mcenter.policy.RPC/DeletePolicy"
+	RPC_CheckPermission_FullMethodName = "/infraboard.mcenter.policy.RPC/CheckPermission"
 )
 
 // RPCClient is the client API for RPC service.
@@ -37,6 +39,8 @@ type RPCClient interface {
 	DescribePolicy(ctx context.Context, in *DescribePolicyRequest, opts ...grpc.CallOption) (*Policy, error)
 	// 删除策略
 	DeletePolicy(ctx context.Context, in *DeletePolicyRequest, opts ...grpc.CallOption) (*Policy, error)
+	// 策略鉴权
+	CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*role.Permission, error)
 }
 
 type rPCClient struct {
@@ -83,6 +87,15 @@ func (c *rPCClient) DeletePolicy(ctx context.Context, in *DeletePolicyRequest, o
 	return out, nil
 }
 
+func (c *rPCClient) CheckPermission(ctx context.Context, in *CheckPermissionRequest, opts ...grpc.CallOption) (*role.Permission, error) {
+	out := new(role.Permission)
+	err := c.cc.Invoke(ctx, RPC_CheckPermission_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RPCServer is the server API for RPC service.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
@@ -95,6 +108,8 @@ type RPCServer interface {
 	DescribePolicy(context.Context, *DescribePolicyRequest) (*Policy, error)
 	// 删除策略
 	DeletePolicy(context.Context, *DeletePolicyRequest) (*Policy, error)
+	// 策略鉴权
+	CheckPermission(context.Context, *CheckPermissionRequest) (*role.Permission, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -113,6 +128,9 @@ func (UnimplementedRPCServer) DescribePolicy(context.Context, *DescribePolicyReq
 }
 func (UnimplementedRPCServer) DeletePolicy(context.Context, *DeletePolicyRequest) (*Policy, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeletePolicy not implemented")
+}
+func (UnimplementedRPCServer) CheckPermission(context.Context, *CheckPermissionRequest) (*role.Permission, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckPermission not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -199,6 +217,24 @@ func _RPC_DeletePolicy_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RPC_CheckPermission_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckPermissionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).CheckPermission(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RPC_CheckPermission_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).CheckPermission(ctx, req.(*CheckPermissionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -221,6 +257,10 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeletePolicy",
 			Handler:    _RPC_DeletePolicy_Handler,
+		},
+		{
+			MethodName: "CheckPermission",
+			Handler:    _RPC_CheckPermission_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

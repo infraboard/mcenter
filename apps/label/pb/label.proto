@@ -21,13 +21,13 @@ message Selector {
     map<string,string> match_lablels = 1;
 	// matchExpressions is a list of label selector requirements. The requirements are ANDed.
     // @gotags: bson:"match_lablels" json:"match_expressions"
-    repeated SelectorRequirement match_expressions = 2;
+    repeated LabelRequirement match_expressions = 2;
 }
 
 
 // A label selector requirement is a selector that contains values, a key, and an operator that
 // relates the key and values.
-message SelectorRequirement {
+message LabelRequirement {
     // key is the label key that the selector applies to.
     // @gotags: bson:"match_lablels" json:"match_lablels"
     string key = 1;
@@ -46,6 +46,4 @@ message SelectorRequirement {
 enum OPERATOR  {
     IN = 0;
     NOT_IN = 1;
-    EXIST  = 2;
-    NOT_EXIST = 3;
 }
