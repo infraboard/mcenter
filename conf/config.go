@@ -11,6 +11,7 @@ import (
 	"github.com/infraboard/mcube/cache/redis"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo"
 )
 
 var (
@@ -187,6 +188,9 @@ func (m *mongodb) getClient() (*mongo.Client, error) {
 	}
 	opts.SetHosts(m.Endpoints)
 	opts.SetConnectTimeout(5 * time.Second)
+	opts.Monitor = otelmongo.NewMonitor(
+		otelmongo.WithCommandAttributeDisabled(true),
+	)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second*5))
 	defer cancel()

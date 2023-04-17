@@ -11,10 +11,12 @@ import (
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/emicklei/go-restful/otelrestful"
 
 	"github.com/infraboard/mcenter/conf"
 	"github.com/infraboard/mcenter/protocol/auth"
 	"github.com/infraboard/mcenter/swagger"
+	"github.com/infraboard/mcenter/version"
 )
 
 // NewHTTPService 构建函数
@@ -24,6 +26,11 @@ func NewHTTPService() *HTTPService {
 	// You need to download the Swagger HTML5 assets and change the FilePath location in the config below.
 	// Open http://localhost:8080/apidocs/?url=http://localhost:8080/apidocs.json
 	// http.Handle("/apidocs/", http.StripPrefix("/apidocs/", http.FileServer(http.Dir("/Users/emicklei/Projects/swagger-ui/dist"))))
+
+	// create the Otel filter
+	filter := otelrestful.OTelFilter(version.ServiceName)
+	// use it
+	restful.DefaultContainer.Filter(filter)
 
 	// Optionally, you may need to enable CORS for the UI to work.
 	cors := restful.CrossOriginResourceSharing{

@@ -8,8 +8,6 @@ import "apps/policy/pb/permission.proto";
 import "apps/policy/pb/policy.proto";
 import "apps/role/pb/permission.proto";
 
-
-
 // RPC 策略服务
 service RPC {
     // 创建策略

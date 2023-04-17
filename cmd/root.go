@@ -9,6 +9,7 @@ import (
 	"github.com/infraboard/mcenter/cmd/initial"
 	"github.com/infraboard/mcenter/cmd/start"
 	"github.com/infraboard/mcenter/conf"
+	"github.com/infraboard/mcenter/tracer"
 	"github.com/infraboard/mcenter/version"
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/cache"
@@ -55,6 +56,10 @@ func initail() {
 
 	// 初始化全局app
 	err = app.InitAllApp()
+	cobra.CheckErr(err)
+
+	// 初始化Tracer
+	err = tracer.InitTracer()
 	cobra.CheckErr(err)
 }
 

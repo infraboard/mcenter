@@ -19,6 +19,7 @@ import (
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 )
 
@@ -39,6 +40,9 @@ func NewClient(conf *Config) (*ClientSet, error) {
 		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
 		// 将异常转化为 API Exception
 		grpc.WithChainUnaryInterceptor(NewExceptionUnaryClientInterceptor().UnaryClientInterceptor),
+		// Grpc Trace
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
+		grpc.WithStreamInterceptor(otelgrpc.StreamClientInterceptor()),
 	)
 
 	if err != nil {

@@ -9,6 +9,7 @@ import (
 	"github.com/infraboard/mcube/grpc/middleware/recovery"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/conf"
@@ -22,6 +23,7 @@ func NewGRPCService() *GRPCService {
 	rc := recovery.NewInterceptor(recovery.NewZapRecoveryHandler())
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
 		rc.UnaryServerInterceptor(),
+		otelgrpc.UnaryServerInterceptor(),
 		auth.GrpcAuthUnaryServerInterceptor(appImpl),
 	))
 

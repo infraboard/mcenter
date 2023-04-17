@@ -24,6 +24,13 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.542
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms v1.0.561
 	go.mongodb.org/mongo-driver v1.11.4
+	go.opentelemetry.io/contrib/instrumentation/github.com/emicklei/go-restful/otelrestful v0.40.0
+	go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo v0.40.0
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.40.0
+	go.opentelemetry.io/otel v1.14.0
+	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.14.0
+	go.opentelemetry.io/otel/sdk v1.14.0
+	go.opentelemetry.io/otel/trace v1.14.0
 	golang.org/x/crypto v0.8.0
 	golang.org/x/oauth2 v0.4.0
 	google.golang.org/grpc v1.54.0
@@ -40,6 +47,8 @@ require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.9.0 // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.4 // indirect
+	github.com/go-logr/logr v1.2.3 // indirect
+	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
@@ -76,6 +85,7 @@ require (
 	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
+	go.opentelemetry.io/otel/metric v0.37.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
