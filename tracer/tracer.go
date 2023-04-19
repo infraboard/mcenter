@@ -19,7 +19,7 @@ import (
 var Tracer oteltrace.Tracer
 
 func InitTracer() error {
-	ep := os.Getenv("GAEGER_ENDPINT")
+	ep := os.Getenv("JAEGER_ENDPINT")
 
 	var (
 		exporter sdktrace.SpanExporter
