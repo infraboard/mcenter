@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/infraboard/mcenter/conf"
+	"github.com/infraboard/mcenter/tracer"
 	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/cache/memory"
@@ -22,6 +23,8 @@ func DevelopmentSetup() {
 	if err != nil {
 		panic(err)
 	}
+
+	tracer.InitTracer()
 
 	// 初始化缓存
 	ins := memory.NewCache(conf.C().Cache.Memory)

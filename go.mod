@@ -14,7 +14,7 @@ require (
 	github.com/go-playground/validator/v10 v10.12.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.13
-	github.com/infraboard/mcube v1.9.15
+	github.com/infraboard/mcube v1.9.16-0.20230420013042-05c9faf3002f
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.10
 	github.com/mssola/user_agent v0.5.3
 	github.com/rs/xid v1.4.0
@@ -45,6 +45,7 @@ require (
 	github.com/bytedance/sonic v1.8.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/gin v1.9.0 // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.4 // indirect
@@ -86,6 +87,8 @@ require (
 	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
+	go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace v0.40.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.40.0 // indirect
 	go.opentelemetry.io/otel/metric v0.37.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect

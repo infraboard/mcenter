@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcenter/test/tools"
 )
 
 var (
@@ -78,10 +78,11 @@ func TestDeleteProjectHook(t *testing.T) {
 }
 
 func init() {
-	zap.DevelopmentSetup()
+	tools.DevelopmentSetup()
 	conf, err := gitlab.LoadConfigFromEnv()
 	if err != nil {
 		panic(err)
 	}
+
 	v4 = gitlab.NewGitlabV4(conf)
 }
