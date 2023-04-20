@@ -6,7 +6,7 @@ import (
 
 const (
 	// ServiceName 服务名称
-	ServiceName = "mcenter"
+	ServiceName = "mcenter-api"
 )
 
 var (

@@ -46,6 +46,9 @@ func InitTracer() error {
 
 // newResource returns a resource describing this application.
 func newResource() *resource.Resource {
+	// 因为需要手动设置ServiceName和版本, 不使用default的自动探测
+	// resource.Default()
+
 	r, _ := resource.New(
 		context.Background(),
 		resource.WithFromEnv(),
