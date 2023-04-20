@@ -46,6 +46,17 @@ opts.Monitor = otelmongo.NewMonitor(
 )
 ```
 
+http client: [net/http](https://github.com/open-telemetry/opentelemetry-go-contrib/blob/main/instrumentation/net/http/httptrace/otelhttptrace/example/client/client.go)
+```go
+client := http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)}
+
+ctx, span := tr.Start(ctx, "say hello", trace.WithAttributes(semconv.PeerService("ExampleService")))
+defer span.End()
+
+ctx = httptrace.WithClientTrace(ctx, otelhttptrace.NewClientTrace(ctx))
+req, _ := http.NewRequestWithContext(ctx, "GET", *url, nil)
+```
+
 代码中埋点
 ```go
 _, span := tracer.Start(req.Request.Context(), "getUser", oteltrace.WithAttributes(attribute.String("id", uid)))
