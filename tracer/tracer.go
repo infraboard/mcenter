@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/infraboard/mcenter/version"
-	"github.com/infraboard/mcube/logger/zap"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/jaeger"
 	stdout "go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
@@ -47,21 +46,14 @@ func InitTracer() error {
 
 // newResource returns a resource describing this application.
 func newResource() *resource.Resource {
-	resources, err := resource.New(
+	r, _ := resource.New(
 		context.Background(),
-		resource.WithSchemaURL(semconv.SchemaURL), // shema url
-		resource.WithAttributes( // specify resource attributes
+		resource.WithFromEnv(),
+		resource.WithTelemetrySDK(),
+		resource.WithAttributes(
 			semconv.ServiceNameKey.String(version.ServiceName),
-			semconv.ServiceVersionKey.String(version.Short())),
-		resource.WithFromEnv(),   // pull attributes from OTEL_RESOURCE_ATTRIBUTES and OTEL_SERVICE_NAME environment variables
-		resource.WithProcess(),   // This option configures a set of Detectors that discover process information
-		resource.WithOS(),        // This option configures a set of Detectors that discover OS information
-		resource.WithContainer(), // This option configures a set of Detectors that discover container information
-		resource.WithHost(),      // This option configures a set of Detectors that discover host information
+			semconv.ServiceVersionKey.String(version.Short()),
+		),
 	)
-	if err != nil {
-		zap.L().Errorf(err.Error())
-	}
-
-	return resources
+	return r
 }
