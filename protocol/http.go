@@ -27,11 +27,7 @@ func NewHTTPService() *HTTPService {
 	// Open http://localhost:8080/apidocs/?url=http://localhost:8080/apidocs.json
 	// http.Handle("/apidocs/", http.StripPrefix("/apidocs/", http.FileServer(http.Dir("/Users/emicklei/Projects/swagger-ui/dist"))))
 
-	// create the Otel filter
-	filter := otelrestful.OTelFilter(version.ServiceName)
-	restful.DefaultContainer.Filter(filter)
-
-	// Optionally, you may need to enable CORS for the UI to work.
+	// CORS中间件
 	cors := restful.CrossOriginResourceSharing{
 		AllowedHeaders: []string{"*"},
 		AllowedDomains: []string{"*"},
@@ -40,6 +36,9 @@ func NewHTTPService() *HTTPService {
 		Container:      r,
 	}
 	r.Filter(cors.Filter)
+	// trace中间件
+	filter := otelrestful.OTelFilter(version.ServiceName)
+	restful.DefaultContainer.Filter(filter)
 	// 添加鉴权中间件
 	r.Filter(auth.NewHttpAuther().GoRestfulAuthFunc)
 
