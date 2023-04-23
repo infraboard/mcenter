@@ -20,19 +20,21 @@ var (
 
 func newConfig() *Config {
 	return &Config{
-		App:   newDefaultAPP(),
-		Log:   newDefaultLog(),
-		Cache: newDefaultCache(),
-		Mongo: newDefaultMongoDB(),
+		App:    newDefaultAPP(),
+		Log:    newDefaultLog(),
+		Cache:  newDefaultCache(),
+		Mongo:  newDefaultMongoDB(),
+		Jaeger: newJaeger(),
 	}
 }
 
 // Config 应用配置
 type Config struct {
-	App   *app     `toml:"app"`
-	Log   *log     `toml:"log"`
-	Mongo *mongodb `toml:"mongodb"`
-	Cache *_cache  `toml:"cache"`
+	App    *app     `toml:"app"`
+	Log    *log     `toml:"log"`
+	Mongo  *mongodb `toml:"mongodb"`
+	Cache  *_cache  `toml:"cache"`
+	Jaeger *jaeger  `toml:"jaeger"`
 }
 
 type app struct {
@@ -220,4 +222,12 @@ type _cache struct {
 	Type   string         `toml:"type" json:"type" yaml:"type" env:"MCENTER_CACHE_TYPE"`
 	Memory *memory.Config `toml:"memory" json:"memory" yaml:"memory"`
 	Redis  *redis.Config  `toml:"redis" json:"redis" yaml:"redis"`
+}
+
+func newJaeger() *jaeger {
+	return &jaeger{}
+}
+
+type jaeger struct {
+	Endpoint string `toml:"endpoint" json:"endpoint" yaml:"endpoint" env:"JAEGER_ENDPOINT"`
 }
