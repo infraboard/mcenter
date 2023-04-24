@@ -30,41 +30,45 @@ type Feishu struct {
 // 发送飞书卡片消息
 // 参考: https://github.com/larksuite/oapi-sdk-go/blob/c4a7ad4662a99731b9d2509f26b0d2de26e1676e/sample/api/im.go
 func (f *Feishu) SendMessage(ctx context.Context, req *im.SendMessageRequest) error {
-	// 设置卡片格式消息
-	div := larkcard.NewMessageCardDiv().
-		Text(
-			larkcard.NewMessageCardLarkMd().Content(req.Content).Build(),
-		).
-		Build()
+	if req.ContentType == "" {
+		req.ContentType = larkim.MsgTypeInteractive
+		// 设置卡片格式消息
+		div := larkcard.NewMessageCardDiv().
+			Text(
+				larkcard.NewMessageCardLarkMd().Content(req.Content).Build(),
+			).
+			Build()
 
-	// 卡片备注
-	note := larkcard.NewMessageCardNote().
-		Elements(
-			[]larkcard.MessageCardNoteElement{
-				larkcard.NewMessageCardLarkMd().Content("该消息由用户中心(mcenter)提供").Build(),
-			}).
-		Build()
+		// 卡片备注
+		note := larkcard.NewMessageCardNote().
+			Elements(
+				[]larkcard.MessageCardNoteElement{
+					larkcard.NewMessageCardLarkMd().Content("该消息由用户中心(mcenter)提供").Build(),
+				}).
+			Build()
 
-	// 卡片头
-	header := larkcard.NewMessageCardHeader().
-		Template(larkcard.TemplateTurquoise).
-		Title(larkcard.NewMessageCardPlainText().Content(req.Title).Build()).
-		Build()
+		// 卡片头
+		header := larkcard.NewMessageCardHeader().
+			Template(larkcard.TemplateTurquoise).
+			Title(larkcard.NewMessageCardPlainText().Content(req.Title).Build()).
+			Build()
 
-	// 组装卡片消息
-	content, err := larkcard.NewMessageCard().
-		Elements([]larkcard.MessageCardElement{div, note}).
-		Header(header).String()
-	if err != nil {
-		return err
+		// 组装卡片消息
+		content, err := larkcard.NewMessageCard().
+			Elements([]larkcard.MessageCardElement{div, note}).
+			Header(header).String()
+		if err != nil {
+			return err
+		}
+		req.Content = content
 	}
 
 	sendReq := larkim.NewCreateMessageReqBuilder().
 		ReceiveIdType(larkim.ReceiveIdTypeUserId).
 		Body(larkim.NewCreateMessageReqBodyBuilder().
-			MsgType(larkim.MsgTypeInteractive).
+			MsgType(req.ContentType).
 			ReceiveId(req.Uid).
-			Content(content).
+			Content(req.Content).
 			Build()).
 		Build()
 

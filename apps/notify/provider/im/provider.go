@@ -18,8 +18,10 @@ func NewSendMessageRequest(title, content string, uid string) *SendMessageReques
 type SendMessageRequest struct {
 	// 飞书用户Id
 	Uid string `json:"users" validate:"required"`
-	// 告警时标题
+	// 消息标题
 	Title string `json:"title" validate:"required"`
-	// 告警内容
+	// 消息内容
 	Content string `json:"content"`
+	// 消息格式, 可以为空
+	ContentType string `json:"content_type"`
 }

@@ -58,6 +58,7 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 		case notify.NOTIFY_TYPE_IM:
 			// 补充IM Id
 			sendReq := im.NewSendMessageRequest(req.Title, req.Content, u.Spec.GetFeishuUserId())
+			sendReq.ContentType = req.ContentType
 			resp := s.SendIM(ctx, u.Spec.Domain, sendReq)
 			resp.User = u.Spec.Username
 			r.AddResponse(resp)

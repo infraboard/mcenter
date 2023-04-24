@@ -36,10 +36,13 @@ message SendNotifyRequest {
     // 用户
     // @gotags: json:"users" bson:"users" validate:"required"
     repeated string users = 4;
-    // 告警时标题
+    // 消息标题
     // @gotags: json:"title" bson:"title" validate:"required"
     string title = 5;
-    // 告警内容
+    // 消息内容格式, 格式如果不填由 由具体渠道自行适配
+    // @gotags: json:"content_type" bson:"content_type"
+    string content_type = 10;
+    // 消息内容
     // @gotags: json:"content" bson:"content"
     string content = 6;
 	// 用户的 session 内容，腾讯 server 回包中会原样返回

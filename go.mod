@@ -4,25 +4,25 @@ go 1.20
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.6
-	github.com/BurntSushi/toml v1.1.0
-	github.com/caarlos0/env/v6 v6.9.2
+	github.com/BurntSushi/toml v1.2.1
+	github.com/caarlos0/env/v6 v6.10.1
 	github.com/emicklei/go-restful-openapi/v2 v2.9.1
 	github.com/emicklei/go-restful/v3 v3.10.2
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
 	github.com/go-ldap/ldap/v3 v3.4.4
-	github.com/go-openapi/spec v0.20.6
+	github.com/go-openapi/spec v0.20.9
 	github.com/go-playground/validator/v10 v10.12.0
 	github.com/google/go-github/v45 v45.2.0
-	github.com/imdario/mergo v0.3.13
+	github.com/imdario/mergo v0.3.15
 	github.com/infraboard/mcube v1.9.16-0.20230420013042-05c9faf3002f
-	github.com/larksuite/oapi-sdk-go/v3 v3.0.10
-	github.com/mssola/user_agent v0.5.3
-	github.com/rs/xid v1.4.0
+	github.com/larksuite/oapi-sdk-go/v3 v3.0.20
+	github.com/mssola/user_agent v0.6.0
+	github.com/rs/xid v1.5.0
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.2
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.561
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.542
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms v1.0.561
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.645
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.645
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms v1.0.645
 	go.mongodb.org/mongo-driver v1.11.4
 	go.opentelemetry.io/contrib/instrumentation/github.com/emicklei/go-restful/otelrestful v0.40.0
 	go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo v0.40.0
@@ -32,7 +32,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.14.0
 	go.opentelemetry.io/otel/trace v1.14.0
 	golang.org/x/crypto v0.8.0
-	golang.org/x/oauth2 v0.4.0
+	golang.org/x/oauth2 v0.7.0
 	google.golang.org/grpc v1.54.0
 	google.golang.org/protobuf v1.30.0
 	sigs.k8s.io/yaml v1.3.0
