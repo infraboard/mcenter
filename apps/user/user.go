@@ -95,6 +95,9 @@ func NewCreateUserRequest() *CreateUserRequest {
 	return &CreateUserRequest{
 		UseFullNamedUid: true,
 		Labels:          map[string]string{},
+		Feishu:          NewFeishu(),
+		Dingding:        NewDingDing(),
+		Wechatwork:      NewWechatWork(),
 	}
 }
 
@@ -331,6 +334,14 @@ func SpliteUserAndDomain(username string) (string, string) {
 // NewProfile todo
 func NewFeishu() *Feishu {
 	return &Feishu{}
+}
+
+func NewDingDing() *DingDing {
+	return &DingDing{}
+}
+
+func NewWechatWork() *WechatWork {
+	return &WechatWork{}
 }
 
 func NewFeishuAccessToken() *FeishuAccessToken {
