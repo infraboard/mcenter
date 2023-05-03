@@ -26,6 +26,15 @@ func TestCreateDomain(t *testing.T) {
 	t.Log(ins)
 }
 
+func TestDescribeDomain(t *testing.T) {
+	req := domain.NewDescribeDomainRequestByName(domain.DEFAULT_DOMAIN)
+	ins, err := impl.DescribeDomain(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ins)
+}
+
 func TestPatchUpdateDomain(t *testing.T) {
 	conf := domain.NewDefaultLDAPConfig()
 	conf.Url = "ldap://127.0.0.1:389"
