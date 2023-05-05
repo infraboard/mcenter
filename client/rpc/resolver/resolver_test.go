@@ -20,8 +20,8 @@ func TestResolver(t *testing.T) {
 	// 连接到服务
 	conn, err := grpc.DialContext(
 		ctx,
-		// Dial to "mcenter://maudit"
-		fmt.Sprintf("%s://%s", resolver.Scheme, "maudit"),
+		// Dial to "mcenter://mpaas"
+		fmt.Sprintf("%s://%s", resolver.Scheme, "mpaas"),
 		// 认证
 		grpc.WithPerRPCCredentials(rpc.NewAuthenticationFromEnv()),
 		// 不开启TLS
