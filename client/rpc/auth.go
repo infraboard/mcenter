@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	"os"
 
 	"github.com/infraboard/mcenter/apps/service"
 )
@@ -12,6 +13,13 @@ func NewAuthentication(clientId, clientSecret string) *Authentication {
 		clientID:     clientId,
 		clientSecret: clientSecret,
 	}
+}
+
+func NewAuthenticationFromEnv() *Authentication {
+	return NewAuthentication(
+		os.Getenv("MCENTER_CLINET_ID"),
+		os.Getenv("MCENTER_CLIENT_SECRET"),
+	)
 }
 
 // Authentication todo
