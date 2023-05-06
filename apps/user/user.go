@@ -180,6 +180,7 @@ func NewPatchUserRequest(userId string) *UpdateUserRequest {
 		UserId:      userId,
 		UpdateMode:  pb_request.UpdateMode_PATCH,
 		Profile:     NewProfile(),
+		Feishu:      NewFeishu(),
 		FeishuToken: NewFeishuAccessToken(),
 	}
 }
@@ -302,7 +303,26 @@ func (i *User) Update(req *UpdateUserRequest) {
 	i.Meta.UpdateAt = time.Now().UnixMicro()
 	i.Profile = req.Profile
 	i.Spec.Description = req.Description
+	i.Spec.Feishu = req.Feishu
+	i.Spec.Dingding = req.Dingding
+	i.Spec.Wechatwork = req.Wechatwork
 	i.FeishuToken = req.FeishuToken
+}
+
+// 初始化一些空值, 兼容之前的数据
+func (i *User) SetupDefault() {
+	if i.FeishuToken == nil {
+		i.FeishuToken = NewFeishuAccessToken()
+	}
+	if i.Spec.Feishu == nil {
+		i.Spec.Feishu = NewFeishu()
+	}
+	if i.Spec.Dingding == nil {
+		i.Spec.Dingding = NewDingDing()
+	}
+	if i.Spec.Wechatwork == nil {
+		i.Spec.Wechatwork = NewWechatWork()
+	}
 }
 
 func (i *User) Patch(req *UpdateUserRequest) error {
@@ -312,10 +332,33 @@ func (i *User) Patch(req *UpdateUserRequest) error {
 		return err
 	}
 
-	if i.FeishuToken == nil {
-		i.FeishuToken = NewFeishuAccessToken()
+	// 合并配置信息
+	if req.Feishu != nil {
+		err = mergo.MergeWithOverwrite(i.Spec.Feishu, req.Feishu)
+		if err != nil {
+			return err
+		}
 	}
-	return mergo.MergeWithOverwrite(i.FeishuToken, req.FeishuToken)
+	if req.Dingding != nil {
+		err = mergo.MergeWithOverwrite(i.Spec.Dingding, req.Dingding)
+		if err != nil {
+			return err
+		}
+	}
+	if req.Wechatwork != nil {
+		err = mergo.MergeWithOverwrite(i.Spec.Wechatwork, req.Wechatwork)
+		if err != nil {
+			return err
+		}
+	}
+	if req.FeishuToken != nil {
+		err = mergo.MergeWithOverwrite(i.FeishuToken, req.FeishuToken)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func SpliteUserAndDomain(username string) (string, string) {

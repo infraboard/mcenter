@@ -81,6 +81,7 @@ func (s *service) DescribeUser(ctx context.Context, req *user.DescribeUserReques
 		return nil, exception.NewInternalServerError("user %s error, %s", req, err)
 	}
 
+	ins.SetupDefault()
 	return ins, nil
 }
 

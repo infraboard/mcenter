@@ -46,6 +46,7 @@ func TestQueryUser(t *testing.T) {
 func TestPatchUser(t *testing.T) {
 	req := user.NewPatchUserRequest("admin@default")
 	req.Profile.Phone = os.Getenv("TEST_CALL_NUMBER")
+	req.Feishu.UserId = "xxx"
 	r, err := impl.UpdateUser(ctx, req)
 	if err != nil {
 		t.Fatal(err)
