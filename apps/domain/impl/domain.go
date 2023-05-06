@@ -63,7 +63,7 @@ func (s *service) DescribeDomain(ctx context.Context, req *domain.DescribeDomain
 	case domain.DESCRIBE_BY_ID:
 		filter["_id"] = req.Id
 	case domain.DESCRIBE_BY_NAME:
-		filter["spec.name"] = req.Name
+		filter["name"] = req.Name
 	}
 
 	d := domain.NewDefaultDomain()
