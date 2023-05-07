@@ -13,7 +13,7 @@ func TestQueryDoamin(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(ins)
+	t.Log(ins.ToJson())
 }
 
 func TestCreateDomain(t *testing.T) {
@@ -23,7 +23,16 @@ func TestCreateDomain(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(ins)
+	t.Log(ins.ToJson())
+}
+
+func TestDescribeDomain(t *testing.T) {
+	req := domain.NewDescribeDomainRequestByName(domain.DEFAULT_DOMAIN)
+	ins, err := impl.DescribeDomain(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ins.ToJson())
 }
 
 func TestDescribeDomain(t *testing.T) {
@@ -55,5 +64,5 @@ func TestPatchUpdateDomain(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(ins)
+	t.Log(ins.ToJson())
 }

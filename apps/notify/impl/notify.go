@@ -184,6 +184,10 @@ func (s *service) SendIM(ctx context.Context, dom string, req *im.SendMessageReq
 		resp.SendError(fmt.Errorf("get user domain error, %s", err))
 		return resp
 	}
+	if d.Spec.FeishuSetting == nil {
+		resp.SendError(fmt.Errorf("domain feishu setting is nil"))
+		return resp
+	}
 	notifyer := feishu.NewFeishuNotifyer(d.Spec.FeishuSetting)
 
 	err = notifyer.SendMessage(ctx, req)

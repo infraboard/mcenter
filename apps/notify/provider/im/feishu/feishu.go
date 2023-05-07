@@ -53,8 +53,15 @@ func (f *Feishu) SendMessage(ctx context.Context, req *im.SendMessageRequest) er
 			Title(larkcard.NewMessageCardPlainText().Content(req.Title).Build()).
 			Build()
 
+		// 卡片配置
+		config := larkcard.NewMessageCardConfig().
+			EnableForward(true).
+			UpdateMulti(true).
+			Build()
+
 		// 组装卡片消息
 		content, err := larkcard.NewMessageCard().
+			Config(config).
 			Elements([]larkcard.MessageCardElement{div, note}).
 			Header(header).String()
 		if err != nil {

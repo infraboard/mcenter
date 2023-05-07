@@ -114,4 +114,13 @@ message UpdateUserRequest {
     // 钉钉token
     // @gotags: bson:"dingding_token" json:"dingding_token"
     DingDingAccessToken dingding_token = 6;
+    // 用户飞书相关信息
+    // @gotags: json:"feishu" bson:"feishu"
+    Feishu feishu = 8;
+    // 用户钉钉相关信息
+    // @gotags: json:"dingding" bson:"dingding"
+    DingDing dingding = 9;
+    // 用户企业微信相关信息
+    // @gotags: json:"wechatwork" bson:"wechatwork"
+    WechatWork wechatwork = 10;
 }

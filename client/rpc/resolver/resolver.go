@@ -30,6 +30,10 @@ const (
 // target, and send updates to the ClientConn.
 
 // McenterResolverBuilder is a ResolverBuilder.
+// 注意通过环境变量读取reslover配置相关信息
+// MCENTER_CLINET_ID
+// MCENTER_CLIENT_SECRET
+// MCENTER_GRPC_ADDRESS
 type McenterResolverBuilder struct{}
 
 func (*McenterResolverBuilder) Build(
@@ -38,8 +42,12 @@ func (*McenterResolverBuilder) Build(
 	opts resolver.BuildOptions) (
 	resolver.Resolver, error) {
 
-	if rpc.C() == nil {
-		return nil, fmt.Errorf("mcenter client not loaded, load client first")
+	// 加载mcenter client, 如果没有加载则从环境变量中加载
+	if !rpc.HasLoaded() {
+		err := rpc.LoadClientFromEnv()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	r := &mcenterResolver{
@@ -84,18 +92,6 @@ func (m *mcenterResolver) ResolveNow(o resolver.ResolveNowOptions) {
 	m.cc.UpdateState(resolver.State{Addresses: addrs})
 }
 
-// 构建mcenter实例查询参数
-func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
-	searchReq := instance.NewSearchRequest()
-	searchReq.ServiceName = m.target.URL.Host
-
-	qs := m.target.URL.Query()
-	searchReq.Page.PageSize = 500
-	searchReq.Region = qs.Get("region")
-	searchReq.Environment = qs.Get("environment")
-	return searchReq
-}
-
 // 查询名称对应的实例
 func (m *mcenterResolver) search() ([]resolver.Address, error) {
 	req := m.buildSerchReq()
@@ -138,6 +134,18 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 	m.log.Infof("search service [%s] address: %s", req.ServiceName, strings.Join(addrString, ","))
 
 	return addrs, nil
+}
+
+// 构建mcenter实例查询参数
+func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
+	searchReq := instance.NewSearchRequest()
+	searchReq.ServiceName = m.target.URL.Host
+
+	qs := m.target.URL.Query()
+	searchReq.Page.PageSize = 500
+	searchReq.Region = qs.Get("region")
+	searchReq.Environment = qs.Get("environment")
+	return searchReq
 }
 
 func (m *mcenterResolver) Close() {
