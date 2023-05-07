@@ -113,10 +113,8 @@ docker run -d --name jaeger \
   -p 14268:14268 \
   -p 14269:14269 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.44
+  jaegertracing/all-in-one:1.45
 ```
-
-
 
 ## 参考
 
@@ -124,4 +122,4 @@ docker run -d --name jaeger \
 + [opentelemetry 文档](https://opentelemetry.io/docs/)
 + [opentelemetry SDK](https://opentelemetry.io/docs/instrumentation/)
 + [opentelemetry 中间件](https://opentelemetry.io/ecosystem/registry)
-+ [jaeger 官方文档](https://www.jaegertracing.io/docs/1.44/)
++ [jaeger 官方文档](https://www.jaegertracing.io/docs/1.45/)
