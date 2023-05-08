@@ -116,6 +116,8 @@ docker run -d --name jaeger \
   jaegertracing/all-in-one:1.45
 ```
 
+访问: http://localhost:16686 查看UI界面
+
 ## 参考
 
 + [opentelemetry 官网](https://opentelemetry.io/)

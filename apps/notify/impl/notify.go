@@ -27,7 +27,7 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 	r := notify.NewRecord(req)
 	mailSendReq := mail.NewSendMailRequest(req.Title, req.Content)
 	for i := range req.Users {
-		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(req.Users[i]))
+		u, err := s.user.DescribeUser(ctx, user.NewDescriptUserRequestWithId(req.Users[i]))
 		if err != nil {
 			return nil, fmt.Errorf("get user error, %s", err)
 		}

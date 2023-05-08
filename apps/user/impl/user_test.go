@@ -43,6 +43,15 @@ func TestQueryUser(t *testing.T) {
 	t.Log(r.ToJson())
 }
 
+func TestDescribeUser(t *testing.T) {
+	req := user.NewDescriptUserRequestWithId("admin@default")
+	r, err := impl.DescribeUser(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r.ToJson())
+}
+
 func TestPatchUser(t *testing.T) {
 	req := user.NewPatchUserRequest("admin@default")
 	req.Profile.Phone = os.Getenv("TEST_CALL_NUMBER")

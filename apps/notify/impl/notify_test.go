@@ -14,7 +14,7 @@ func TestSendNotify(t *testing.T) {
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
 	req.NotifyTye = notify.NOTIFY_TYPE_IM
-	req.AddUser("admin")
+	req.AddUser("admin@default")
 	req.Title = "test"
 	req.Content = "test content2"
 	set, err := impl.SendNotify(ctx, req)
