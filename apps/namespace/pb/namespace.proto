@@ -3,7 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.namespace;
 option go_package = "github.com/infraboard/mcenter/apps/namespace";
 
-import "github.com/infraboard/mcube/pb/resource/meta.proto";
+import "mcube/pb/resource/meta.proto";
 
 enum Visible {
     // 默认空间是私有的

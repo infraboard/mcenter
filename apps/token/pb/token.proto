@@ -3,7 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.token;
 option go_package = "github.com/infraboard/mcenter/apps/token";
 
-import "apps/user/pb/user.proto";
+import "mcenter/apps/user/pb/user.proto";
 
 // 授权类型
 enum GRANT_TYPE {

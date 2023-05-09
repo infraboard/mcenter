@@ -3,9 +3,9 @@ syntax = "proto3";
 package infraboard.mcenter.policy;
 option go_package = "github.com/infraboard/mcenter/apps/policy";
 
-import "github.com/infraboard/mcube/pb/resource/meta.proto";
-import "apps/role/pb/role.proto";
-import "apps/label/pb/label.proto";
+import "mcube/pb/resource/meta.proto";
+import "mcenter/apps/role/pb/role.proto";
+import "mcenter/apps/label/pb/label.proto";
 
 // Policy 权限策略
 message Policy {

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v3.21.6
-// source: apps/domain/pb/rpc.proto
+// source: mcenter/apps/domain/pb/rpc.proto
 
 package domain
 
@@ -146,5 +146,5 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "apps/domain/pb/rpc.proto",
+	Metadata: "mcenter/apps/domain/pb/rpc.proto",
 }

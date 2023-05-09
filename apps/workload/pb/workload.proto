@@ -3,7 +3,6 @@ syntax = "proto3";
 package infraboard.mcenter.workload;
 option go_package = "github.com/infraboard/mcenter/apps/workload";
 
-
 message WorkLoad {
     // 用户
     // @gotags: json:"user" validate:"required"

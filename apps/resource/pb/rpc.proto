@@ -3,8 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.resource;
 option go_package = "github.com/infraboard/mcenter/apps/resource";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-import "apps/resource/pb/resource.proto";
+import "mcube/pb/page/page.proto";
+import "mcenter/apps/resource/pb/resource.proto";
 
 // RPC endpoint管理
 service RPC {

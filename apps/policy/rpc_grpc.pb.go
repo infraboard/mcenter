@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v3.21.6
-// source: apps/policy/pb/rpc.proto
+// source: mcenter/apps/policy/pb/rpc.proto
 
 package policy
 
@@ -264,5 +264,5 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "apps/policy/pb/rpc.proto",
+	Metadata: "mcenter/apps/policy/pb/rpc.proto",
 }

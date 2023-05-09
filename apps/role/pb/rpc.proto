@@ -3,9 +3,9 @@ syntax = "proto3";
 package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-import "apps/role/pb/role.proto";
-import "apps/role/pb/permission.proto";
+import "mcube/pb/page/page.proto";
+import "mcenter/apps/role/pb/role.proto";
+import "mcenter/apps/role/pb/permission.proto";
 
 // RPC 角色RPC服务
 service RPC {

@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.30.0
 // 	protoc        v3.21.6
-// source: apps/role/pb/permission.proto
+// source: mcenter/apps/role/pb/permission.proto
 
 package role
 
@@ -54,11 +54,11 @@ func (x EffectType) String() string {
 }
 
 func (EffectType) Descriptor() protoreflect.EnumDescriptor {
-	return file_apps_role_pb_permission_proto_enumTypes[0].Descriptor()
+	return file_mcenter_apps_role_pb_permission_proto_enumTypes[0].Descriptor()
 }
 
 func (EffectType) Type() protoreflect.EnumType {
-	return &file_apps_role_pb_permission_proto_enumTypes[0]
+	return &file_mcenter_apps_role_pb_permission_proto_enumTypes[0]
 }
 
 func (x EffectType) Number() protoreflect.EnumNumber {
@@ -67,7 +67,7 @@ func (x EffectType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use EffectType.Descriptor instead.
 func (EffectType) EnumDescriptor() ([]byte, []int) {
-	return file_apps_role_pb_permission_proto_rawDescGZIP(), []int{0}
+	return file_mcenter_apps_role_pb_permission_proto_rawDescGZIP(), []int{0}
 }
 
 // Permission 权限
@@ -96,7 +96,7 @@ type Permission struct {
 func (x *Permission) Reset() {
 	*x = Permission{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_role_pb_permission_proto_msgTypes[0]
+		mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -109,7 +109,7 @@ func (x *Permission) String() string {
 func (*Permission) ProtoMessage() {}
 
 func (x *Permission) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_role_pb_permission_proto_msgTypes[0]
+	mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -122,7 +122,7 @@ func (x *Permission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Permission.ProtoReflect.Descriptor instead.
 func (*Permission) Descriptor() ([]byte, []int) {
-	return file_apps_role_pb_permission_proto_rawDescGZIP(), []int{0}
+	return file_mcenter_apps_role_pb_permission_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Permission) GetId() string {
@@ -194,7 +194,7 @@ type Spec struct {
 func (x *Spec) Reset() {
 	*x = Spec{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_role_pb_permission_proto_msgTypes[1]
+		mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -207,7 +207,7 @@ func (x *Spec) String() string {
 func (*Spec) ProtoMessage() {}
 
 func (x *Spec) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_role_pb_permission_proto_msgTypes[1]
+	mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -220,7 +220,7 @@ func (x *Spec) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Spec.ProtoReflect.Descriptor instead.
 func (*Spec) Descriptor() ([]byte, []int) {
-	return file_apps_role_pb_permission_proto_rawDescGZIP(), []int{1}
+	return file_mcenter_apps_role_pb_permission_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Spec) GetCreateBy() string {
@@ -294,7 +294,7 @@ type PermissionSet struct {
 func (x *PermissionSet) Reset() {
 	*x = PermissionSet{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_role_pb_permission_proto_msgTypes[2]
+		mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -307,7 +307,7 @@ func (x *PermissionSet) String() string {
 func (*PermissionSet) ProtoMessage() {}
 
 func (x *PermissionSet) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_role_pb_permission_proto_msgTypes[2]
+	mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -320,7 +320,7 @@ func (x *PermissionSet) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PermissionSet.ProtoReflect.Descriptor instead.
 func (*PermissionSet) Descriptor() ([]byte, []int) {
-	return file_apps_role_pb_permission_proto_rawDescGZIP(), []int{2}
+	return file_mcenter_apps_role_pb_permission_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *PermissionSet) GetTotal() int64 {
@@ -354,7 +354,7 @@ type AddPermissionToRoleRequest struct {
 func (x *AddPermissionToRoleRequest) Reset() {
 	*x = AddPermissionToRoleRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_role_pb_permission_proto_msgTypes[3]
+		mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -367,7 +367,7 @@ func (x *AddPermissionToRoleRequest) String() string {
 func (*AddPermissionToRoleRequest) ProtoMessage() {}
 
 func (x *AddPermissionToRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_role_pb_permission_proto_msgTypes[3]
+	mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -380,7 +380,7 @@ func (x *AddPermissionToRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddPermissionToRoleRequest.ProtoReflect.Descriptor instead.
 func (*AddPermissionToRoleRequest) Descriptor() ([]byte, []int) {
-	return file_apps_role_pb_permission_proto_rawDescGZIP(), []int{3}
+	return file_mcenter_apps_role_pb_permission_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *AddPermissionToRoleRequest) GetCreateBy() string {
@@ -420,7 +420,7 @@ type RemovePermissionFromRoleRequest struct {
 func (x *RemovePermissionFromRoleRequest) Reset() {
 	*x = RemovePermissionFromRoleRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_role_pb_permission_proto_msgTypes[4]
+		mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -433,7 +433,7 @@ func (x *RemovePermissionFromRoleRequest) String() string {
 func (*RemovePermissionFromRoleRequest) ProtoMessage() {}
 
 func (x *RemovePermissionFromRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_role_pb_permission_proto_msgTypes[4]
+	mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -446,7 +446,7 @@ func (x *RemovePermissionFromRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemovePermissionFromRoleRequest.ProtoReflect.Descriptor instead.
 func (*RemovePermissionFromRoleRequest) Descriptor() ([]byte, []int) {
-	return file_apps_role_pb_permission_proto_rawDescGZIP(), []int{4}
+	return file_mcenter_apps_role_pb_permission_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *RemovePermissionFromRoleRequest) GetRoleId() string {
@@ -492,7 +492,7 @@ type UpdatePermissionRequest struct {
 func (x *UpdatePermissionRequest) Reset() {
 	*x = UpdatePermissionRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_role_pb_permission_proto_msgTypes[5]
+		mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -505,7 +505,7 @@ func (x *UpdatePermissionRequest) String() string {
 func (*UpdatePermissionRequest) ProtoMessage() {}
 
 func (x *UpdatePermissionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_role_pb_permission_proto_msgTypes[5]
+	mi := &file_mcenter_apps_role_pb_permission_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -518,7 +518,7 @@ func (x *UpdatePermissionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePermissionRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePermissionRequest) Descriptor() ([]byte, []int) {
-	return file_apps_role_pb_permission_proto_rawDescGZIP(), []int{5}
+	return file_mcenter_apps_role_pb_permission_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *UpdatePermissionRequest) GetId() string {
@@ -549,13 +549,14 @@ func (x *UpdatePermissionRequest) GetLabelValues() []string {
 	return nil
 }
 
-var File_apps_role_pb_permission_proto protoreflect.FileDescriptor
+var File_mcenter_apps_role_pb_permission_proto protoreflect.FileDescriptor
 
-var file_apps_role_pb_permission_proto_rawDesc = []byte{
-	0x0a, 0x1d, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x72, 0x6f, 0x6c, 0x65, 0x2f, 0x70, 0x62, 0x2f, 0x70,
-	0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12,
-	0x17, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e,
-	0x74, 0x65, 0x72, 0x2e, 0x72, 0x6f, 0x6c, 0x65, 0x1a, 0x19, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x6c,
+var file_mcenter_apps_role_pb_permission_proto_rawDesc = []byte{
+	0x0a, 0x25, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x72,
+	0x6f, 0x6c, 0x65, 0x2f, 0x70, 0x62, 0x2f, 0x70, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f,
+	0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x17, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f,
+	0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x72, 0x6f, 0x6c, 0x65,
+	0x1a, 0x21, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x6c,
 	0x61, 0x62, 0x65, 0x6c, 0x2f, 0x70, 0x62, 0x2f, 0x6c, 0x61, 0x62, 0x65, 0x6c, 0x2e, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x22, 0xc7, 0x01, 0x0a, 0x0a, 0x50, 0x65, 0x72, 0x6d, 0x69, 0x73, 0x73, 0x69,
 	0x6f, 0x6e, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02,
@@ -628,20 +629,20 @@ var file_apps_role_pb_permission_proto_rawDesc = []byte{
 }
 
 var (
-	file_apps_role_pb_permission_proto_rawDescOnce sync.Once
-	file_apps_role_pb_permission_proto_rawDescData = file_apps_role_pb_permission_proto_rawDesc
+	file_mcenter_apps_role_pb_permission_proto_rawDescOnce sync.Once
+	file_mcenter_apps_role_pb_permission_proto_rawDescData = file_mcenter_apps_role_pb_permission_proto_rawDesc
 )
 
-func file_apps_role_pb_permission_proto_rawDescGZIP() []byte {
-	file_apps_role_pb_permission_proto_rawDescOnce.Do(func() {
-		file_apps_role_pb_permission_proto_rawDescData = protoimpl.X.CompressGZIP(file_apps_role_pb_permission_proto_rawDescData)
+func file_mcenter_apps_role_pb_permission_proto_rawDescGZIP() []byte {
+	file_mcenter_apps_role_pb_permission_proto_rawDescOnce.Do(func() {
+		file_mcenter_apps_role_pb_permission_proto_rawDescData = protoimpl.X.CompressGZIP(file_mcenter_apps_role_pb_permission_proto_rawDescData)
 	})
-	return file_apps_role_pb_permission_proto_rawDescData
+	return file_mcenter_apps_role_pb_permission_proto_rawDescData
 }
 
-var file_apps_role_pb_permission_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_apps_role_pb_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_apps_role_pb_permission_proto_goTypes = []interface{}{
+var file_mcenter_apps_role_pb_permission_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_mcenter_apps_role_pb_permission_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_mcenter_apps_role_pb_permission_proto_goTypes = []interface{}{
 	(EffectType)(0),                         // 0: infraboard.mcenter.role.EffectType
 	(*Permission)(nil),                      // 1: infraboard.mcenter.role.Permission
 	(*Spec)(nil),                            // 2: infraboard.mcenter.role.Spec
@@ -651,7 +652,7 @@ var file_apps_role_pb_permission_proto_goTypes = []interface{}{
 	(*UpdatePermissionRequest)(nil),         // 6: infraboard.mcenter.role.UpdatePermissionRequest
 	(*label.LabelRequirement)(nil),          // 7: infraboard.mcenter.label.LabelRequirement
 }
-var file_apps_role_pb_permission_proto_depIdxs = []int32{
+var file_mcenter_apps_role_pb_permission_proto_depIdxs = []int32{
 	2, // 0: infraboard.mcenter.role.Permission.spec:type_name -> infraboard.mcenter.role.Spec
 	7, // 1: infraboard.mcenter.role.Permission.scope:type_name -> infraboard.mcenter.label.LabelRequirement
 	0, // 2: infraboard.mcenter.role.Spec.effect:type_name -> infraboard.mcenter.role.EffectType
@@ -664,13 +665,13 @@ var file_apps_role_pb_permission_proto_depIdxs = []int32{
 	0, // [0:5] is the sub-list for field type_name
 }
 
-func init() { file_apps_role_pb_permission_proto_init() }
-func file_apps_role_pb_permission_proto_init() {
-	if File_apps_role_pb_permission_proto != nil {
+func init() { file_mcenter_apps_role_pb_permission_proto_init() }
+func file_mcenter_apps_role_pb_permission_proto_init() {
+	if File_mcenter_apps_role_pb_permission_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_apps_role_pb_permission_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_role_pb_permission_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Permission); i {
 			case 0:
 				return &v.state
@@ -682,7 +683,7 @@ func file_apps_role_pb_permission_proto_init() {
 				return nil
 			}
 		}
-		file_apps_role_pb_permission_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_role_pb_permission_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Spec); i {
 			case 0:
 				return &v.state
@@ -694,7 +695,7 @@ func file_apps_role_pb_permission_proto_init() {
 				return nil
 			}
 		}
-		file_apps_role_pb_permission_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_role_pb_permission_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*PermissionSet); i {
 			case 0:
 				return &v.state
@@ -706,7 +707,7 @@ func file_apps_role_pb_permission_proto_init() {
 				return nil
 			}
 		}
-		file_apps_role_pb_permission_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_role_pb_permission_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddPermissionToRoleRequest); i {
 			case 0:
 				return &v.state
@@ -718,7 +719,7 @@ func file_apps_role_pb_permission_proto_init() {
 				return nil
 			}
 		}
-		file_apps_role_pb_permission_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_role_pb_permission_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RemovePermissionFromRoleRequest); i {
 			case 0:
 				return &v.state
@@ -730,7 +731,7 @@ func file_apps_role_pb_permission_proto_init() {
 				return nil
 			}
 		}
-		file_apps_role_pb_permission_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_role_pb_permission_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UpdatePermissionRequest); i {
 			case 0:
 				return &v.state
@@ -747,19 +748,19 @@ func file_apps_role_pb_permission_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_apps_role_pb_permission_proto_rawDesc,
+			RawDescriptor: file_mcenter_apps_role_pb_permission_proto_rawDesc,
 			NumEnums:      1,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_apps_role_pb_permission_proto_goTypes,
-		DependencyIndexes: file_apps_role_pb_permission_proto_depIdxs,
-		EnumInfos:         file_apps_role_pb_permission_proto_enumTypes,
-		MessageInfos:      file_apps_role_pb_permission_proto_msgTypes,
+		GoTypes:           file_mcenter_apps_role_pb_permission_proto_goTypes,
+		DependencyIndexes: file_mcenter_apps_role_pb_permission_proto_depIdxs,
+		EnumInfos:         file_mcenter_apps_role_pb_permission_proto_enumTypes,
+		MessageInfos:      file_mcenter_apps_role_pb_permission_proto_msgTypes,
 	}.Build()
-	File_apps_role_pb_permission_proto = out.File
-	file_apps_role_pb_permission_proto_rawDesc = nil
-	file_apps_role_pb_permission_proto_goTypes = nil
-	file_apps_role_pb_permission_proto_depIdxs = nil
+	File_mcenter_apps_role_pb_permission_proto = out.File
+	file_mcenter_apps_role_pb_permission_proto_rawDesc = nil
+	file_mcenter_apps_role_pb_permission_proto_goTypes = nil
+	file_mcenter_apps_role_pb_permission_proto_depIdxs = nil
 }

@@ -3,7 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.policy;
 option go_package = "github.com/infraboard/mcenter/apps/policy";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
+import "mcube/pb/page/page.proto";
 
 // CheckPermissionRequest todo
 message CheckPermissionRequest {

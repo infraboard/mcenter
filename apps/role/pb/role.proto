@@ -3,8 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
-import "github.com/infraboard/mcube/pb/resource/meta.proto";
-import "apps/role/pb/permission.proto";
+import "mcube/pb/resource/meta.proto";
+import "mcenter/apps/role/pb/permission.proto";
 
 // Role is rbac's role
 message Role {

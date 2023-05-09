@@ -3,9 +3,9 @@ syntax = "proto3";
 package infraboard.mcenter.token;
 option go_package = "github.com/infraboard/mcenter/apps/token";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-import "apps/user/pb/user.proto";
-import "apps/token/pb/token.proto";
+import "mcube/pb/page/page.proto";
+import "mcenter/apps/user/pb/user.proto";
+import "mcenter/apps/token/pb/token.proto";
 
 // Token服务
 service RPC {

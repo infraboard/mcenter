@@ -3,7 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
-import "apps/label/pb/label.proto";
+import "mcenter/apps/label/pb/label.proto";
 
 // EffectType 授权效力包括两种：允许（Allow）和拒绝（Deny）
 enum EffectType {

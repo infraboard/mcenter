@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v3.21.6
-// source: apps/token/pb/rpc.proto
+// source: mcenter/apps/token/pb/rpc.proto
 
 package token
 
@@ -107,5 +107,5 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "apps/token/pb/rpc.proto",
+	Metadata: "mcenter/apps/token/pb/rpc.proto",
 }

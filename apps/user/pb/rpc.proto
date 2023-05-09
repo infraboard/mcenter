@@ -3,9 +3,9 @@ syntax = "proto3";
 package infraboard.mcenter.user;
 option go_package = "github.com/infraboard/mcenter/apps/user";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-import "github.com/infraboard/mcube/pb/request/request.proto";
-import "apps/user/pb/user.proto";
+import "mcube/pb/page/page.proto";
+import "mcube/pb/request/request.proto";
+import "mcenter/apps/user/pb/user.proto";
 
 // Service 用户服务
 service RPC {

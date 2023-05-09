@@ -3,7 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.user;
 option go_package = "github.com/infraboard/mcenter/apps/user";
 
-import "github.com/infraboard/mcube/pb/resource/meta.proto";
+import "mcube/pb/resource/meta.proto";
 
 message Password {
     // hash过后的密码

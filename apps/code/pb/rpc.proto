@@ -3,8 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.code;
 option go_package = "github.com/infraboard/mcenter/apps/code";
 
-import "apps/code/pb/code.proto";
-import "apps/token/pb/token.proto";
+import "mcenter/apps/code/pb/code.proto";
+import "mcenter/apps/token/pb/token.proto";
 
 // RPC 验证码服务
 service RPC {

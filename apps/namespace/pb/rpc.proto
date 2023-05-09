@@ -3,8 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.namespace;
 option go_package = "github.com/infraboard/mcenter/apps/namespace";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-import "apps/namespace/pb/namespace.proto";
+import "mcube/pb/page/page.proto";
+import "mcenter/apps/namespace/pb/namespace.proto";
 
 // Service todo
 service RPC {

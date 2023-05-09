@@ -3,8 +3,8 @@ syntax = "proto3";
 package infraboard.mcenter.notify;
 option go_package = "github.com/infraboard/mcenter/apps/notify";
 
-import "github.com/infraboard/mcube/pb/page/page.proto";
-import "apps/notify/pb/notify.proto";
+import "mcube/pb/page/page.proto";
+import "mcenter/apps/notify/pb/notify.proto";
 
 // 通知服务
 service RPC {

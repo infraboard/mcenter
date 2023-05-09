@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.30.0
 // 	protoc        v3.21.6
-// source: apps/token/pb/token.proto
+// source: mcenter/apps/token/pb/token.proto
 
 package token
 
@@ -86,11 +86,11 @@ func (x GRANT_TYPE) String() string {
 }
 
 func (GRANT_TYPE) Descriptor() protoreflect.EnumDescriptor {
-	return file_apps_token_pb_token_proto_enumTypes[0].Descriptor()
+	return file_mcenter_apps_token_pb_token_proto_enumTypes[0].Descriptor()
 }
 
 func (GRANT_TYPE) Type() protoreflect.EnumType {
-	return &file_apps_token_pb_token_proto_enumTypes[0]
+	return &file_mcenter_apps_token_pb_token_proto_enumTypes[0]
 }
 
 func (x GRANT_TYPE) Number() protoreflect.EnumNumber {
@@ -99,7 +99,7 @@ func (x GRANT_TYPE) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use GRANT_TYPE.Descriptor instead.
 func (GRANT_TYPE) EnumDescriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{0}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{0}
 }
 
 // 令牌类型
@@ -139,11 +139,11 @@ func (x TOKEN_TYPE) String() string {
 }
 
 func (TOKEN_TYPE) Descriptor() protoreflect.EnumDescriptor {
-	return file_apps_token_pb_token_proto_enumTypes[1].Descriptor()
+	return file_mcenter_apps_token_pb_token_proto_enumTypes[1].Descriptor()
 }
 
 func (TOKEN_TYPE) Type() protoreflect.EnumType {
-	return &file_apps_token_pb_token_proto_enumTypes[1]
+	return &file_mcenter_apps_token_pb_token_proto_enumTypes[1]
 }
 
 func (x TOKEN_TYPE) Number() protoreflect.EnumNumber {
@@ -152,7 +152,7 @@ func (x TOKEN_TYPE) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TOKEN_TYPE.Descriptor instead.
 func (TOKEN_TYPE) EnumDescriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{1}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{1}
 }
 
 // 冻结类型
@@ -192,11 +192,11 @@ func (x BLOCK_TYPE) String() string {
 }
 
 func (BLOCK_TYPE) Descriptor() protoreflect.EnumDescriptor {
-	return file_apps_token_pb_token_proto_enumTypes[2].Descriptor()
+	return file_mcenter_apps_token_pb_token_proto_enumTypes[2].Descriptor()
 }
 
 func (BLOCK_TYPE) Type() protoreflect.EnumType {
-	return &file_apps_token_pb_token_proto_enumTypes[2]
+	return &file_mcenter_apps_token_pb_token_proto_enumTypes[2]
 }
 
 func (x BLOCK_TYPE) Number() protoreflect.EnumNumber {
@@ -205,7 +205,7 @@ func (x BLOCK_TYPE) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use BLOCK_TYPE.Descriptor instead.
 func (BLOCK_TYPE) EnumDescriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{2}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{2}
 }
 
 type PLATFORM int32
@@ -240,11 +240,11 @@ func (x PLATFORM) String() string {
 }
 
 func (PLATFORM) Descriptor() protoreflect.EnumDescriptor {
-	return file_apps_token_pb_token_proto_enumTypes[3].Descriptor()
+	return file_mcenter_apps_token_pb_token_proto_enumTypes[3].Descriptor()
 }
 
 func (PLATFORM) Type() protoreflect.EnumType {
-	return &file_apps_token_pb_token_proto_enumTypes[3]
+	return &file_mcenter_apps_token_pb_token_proto_enumTypes[3]
 }
 
 func (x PLATFORM) Number() protoreflect.EnumNumber {
@@ -253,7 +253,7 @@ func (x PLATFORM) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PLATFORM.Descriptor instead.
 func (PLATFORM) EnumDescriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{3}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{3}
 }
 
 type Token struct {
@@ -323,7 +323,7 @@ type Token struct {
 func (x *Token) Reset() {
 	*x = Token{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_token_pb_token_proto_msgTypes[0]
+		mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -336,7 +336,7 @@ func (x *Token) String() string {
 func (*Token) ProtoMessage() {}
 
 func (x *Token) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_token_pb_token_proto_msgTypes[0]
+	mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -349,7 +349,7 @@ func (x *Token) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Token.ProtoReflect.Descriptor instead.
 func (*Token) Descriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{0}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Token) GetPlatform() PLATFORM {
@@ -507,7 +507,7 @@ type Status struct {
 func (x *Status) Reset() {
 	*x = Status{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_token_pb_token_proto_msgTypes[1]
+		mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -520,7 +520,7 @@ func (x *Status) String() string {
 func (*Status) ProtoMessage() {}
 
 func (x *Status) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_token_pb_token_proto_msgTypes[1]
+	mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -533,7 +533,7 @@ func (x *Status) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Status.ProtoReflect.Descriptor instead.
 func (*Status) Descriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{1}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Status) GetIsBlock() bool {
@@ -580,7 +580,7 @@ type Location struct {
 func (x *Location) Reset() {
 	*x = Location{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_token_pb_token_proto_msgTypes[2]
+		mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -593,7 +593,7 @@ func (x *Location) String() string {
 func (*Location) ProtoMessage() {}
 
 func (x *Location) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_token_pb_token_proto_msgTypes[2]
+	mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -606,7 +606,7 @@ func (x *Location) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Location.ProtoReflect.Descriptor instead.
 func (*Location) Descriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{2}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Location) GetIpLocation() *IPLocation {
@@ -655,7 +655,7 @@ type IPLocation struct {
 func (x *IPLocation) Reset() {
 	*x = IPLocation{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_token_pb_token_proto_msgTypes[3]
+		mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -668,7 +668,7 @@ func (x *IPLocation) String() string {
 func (*IPLocation) ProtoMessage() {}
 
 func (x *IPLocation) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_token_pb_token_proto_msgTypes[3]
+	mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -681,7 +681,7 @@ func (x *IPLocation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IPLocation.ProtoReflect.Descriptor instead.
 func (*IPLocation) Descriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{3}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *IPLocation) GetRemoteIp() string {
@@ -762,7 +762,7 @@ type UserAgent struct {
 func (x *UserAgent) Reset() {
 	*x = UserAgent{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_token_pb_token_proto_msgTypes[4]
+		mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -775,7 +775,7 @@ func (x *UserAgent) String() string {
 func (*UserAgent) ProtoMessage() {}
 
 func (x *UserAgent) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_token_pb_token_proto_msgTypes[4]
+	mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -788,7 +788,7 @@ func (x *UserAgent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserAgent.ProtoReflect.Descriptor instead.
 func (*UserAgent) Descriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{4}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UserAgent) GetOs() string {
@@ -849,7 +849,7 @@ type TokenSet struct {
 func (x *TokenSet) Reset() {
 	*x = TokenSet{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_token_pb_token_proto_msgTypes[5]
+		mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -862,7 +862,7 @@ func (x *TokenSet) String() string {
 func (*TokenSet) ProtoMessage() {}
 
 func (x *TokenSet) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_token_pb_token_proto_msgTypes[5]
+	mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -875,7 +875,7 @@ func (x *TokenSet) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TokenSet.ProtoReflect.Descriptor instead.
 func (*TokenSet) Descriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{5}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *TokenSet) GetTotal() int64 {
@@ -947,7 +947,7 @@ type IssueTokenRequest struct {
 func (x *IssueTokenRequest) Reset() {
 	*x = IssueTokenRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_apps_token_pb_token_proto_msgTypes[6]
+		mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -960,7 +960,7 @@ func (x *IssueTokenRequest) String() string {
 func (*IssueTokenRequest) ProtoMessage() {}
 
 func (x *IssueTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_apps_token_pb_token_proto_msgTypes[6]
+	mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -973,7 +973,7 @@ func (x *IssueTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IssueTokenRequest.ProtoReflect.Descriptor instead.
 func (*IssueTokenRequest) Descriptor() ([]byte, []int) {
-	return file_apps_token_pb_token_proto_rawDescGZIP(), []int{6}
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *IssueTokenRequest) GetDryRun() bool {
@@ -1081,13 +1081,14 @@ func (x *IssueTokenRequest) GetLocation() *Location {
 	return nil
 }
 
-var File_apps_token_pb_token_proto protoreflect.FileDescriptor
+var File_mcenter_apps_token_pb_token_proto protoreflect.FileDescriptor
 
-var file_apps_token_pb_token_proto_rawDesc = []byte{
-	0x0a, 0x19, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2f, 0x70, 0x62, 0x2f,
-	0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x18, 0x69, 0x6e, 0x66,
-	0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e,
-	0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x1a, 0x17, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x75, 0x73, 0x65, 0x72,
+var file_mcenter_apps_token_pb_token_proto_rawDesc = []byte{
+	0x0a, 0x21, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x74,
+	0x6f, 0x6b, 0x65, 0x6e, 0x2f, 0x70, 0x62, 0x2f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x12, 0x18, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e,
+	0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x1a, 0x1f, 0x6d,
+	0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x70, 0x73, 0x2f, 0x75, 0x73, 0x65, 0x72,
 	0x2f, 0x70, 0x62, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x85,
 	0x07, 0x0a, 0x05, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x3e, 0x0a, 0x08, 0x70, 0x6c, 0x61, 0x74,
 	0x66, 0x6f, 0x72, 0x6d, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x22, 0x2e, 0x69, 0x6e, 0x66,
@@ -1258,20 +1259,20 @@ var file_apps_token_pb_token_proto_rawDesc = []byte{
 }
 
 var (
-	file_apps_token_pb_token_proto_rawDescOnce sync.Once
-	file_apps_token_pb_token_proto_rawDescData = file_apps_token_pb_token_proto_rawDesc
+	file_mcenter_apps_token_pb_token_proto_rawDescOnce sync.Once
+	file_mcenter_apps_token_pb_token_proto_rawDescData = file_mcenter_apps_token_pb_token_proto_rawDesc
 )
 
-func file_apps_token_pb_token_proto_rawDescGZIP() []byte {
-	file_apps_token_pb_token_proto_rawDescOnce.Do(func() {
-		file_apps_token_pb_token_proto_rawDescData = protoimpl.X.CompressGZIP(file_apps_token_pb_token_proto_rawDescData)
+func file_mcenter_apps_token_pb_token_proto_rawDescGZIP() []byte {
+	file_mcenter_apps_token_pb_token_proto_rawDescOnce.Do(func() {
+		file_mcenter_apps_token_pb_token_proto_rawDescData = protoimpl.X.CompressGZIP(file_mcenter_apps_token_pb_token_proto_rawDescData)
 	})
-	return file_apps_token_pb_token_proto_rawDescData
+	return file_mcenter_apps_token_pb_token_proto_rawDescData
 }
 
-var file_apps_token_pb_token_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_apps_token_pb_token_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
-var file_apps_token_pb_token_proto_goTypes = []interface{}{
+var file_mcenter_apps_token_pb_token_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_mcenter_apps_token_pb_token_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_mcenter_apps_token_pb_token_proto_goTypes = []interface{}{
 	(GRANT_TYPE)(0),           // 0: infraboard.mcenter.token.GRANT_TYPE
 	(TOKEN_TYPE)(0),           // 1: infraboard.mcenter.token.TOKEN_TYPE
 	(BLOCK_TYPE)(0),           // 2: infraboard.mcenter.token.BLOCK_TYPE
@@ -1286,7 +1287,7 @@ var file_apps_token_pb_token_proto_goTypes = []interface{}{
 	nil,                       // 11: infraboard.mcenter.token.Token.MetaEntry
 	(user.TYPE)(0),            // 12: infraboard.mcenter.user.TYPE
 }
-var file_apps_token_pb_token_proto_depIdxs = []int32{
+var file_mcenter_apps_token_pb_token_proto_depIdxs = []int32{
 	3,  // 0: infraboard.mcenter.token.Token.platform:type_name -> infraboard.mcenter.token.PLATFORM
 	12, // 1: infraboard.mcenter.token.Token.user_type:type_name -> infraboard.mcenter.user.TYPE
 	0,  // 2: infraboard.mcenter.token.Token.grant_type:type_name -> infraboard.mcenter.token.GRANT_TYPE
@@ -1308,13 +1309,13 @@ var file_apps_token_pb_token_proto_depIdxs = []int32{
 	0,  // [0:14] is the sub-list for field type_name
 }
 
-func init() { file_apps_token_pb_token_proto_init() }
-func file_apps_token_pb_token_proto_init() {
-	if File_apps_token_pb_token_proto != nil {
+func init() { file_mcenter_apps_token_pb_token_proto_init() }
+func file_mcenter_apps_token_pb_token_proto_init() {
+	if File_mcenter_apps_token_pb_token_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_apps_token_pb_token_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_token_pb_token_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Token); i {
 			case 0:
 				return &v.state
@@ -1326,7 +1327,7 @@ func file_apps_token_pb_token_proto_init() {
 				return nil
 			}
 		}
-		file_apps_token_pb_token_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_token_pb_token_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Status); i {
 			case 0:
 				return &v.state
@@ -1338,7 +1339,7 @@ func file_apps_token_pb_token_proto_init() {
 				return nil
 			}
 		}
-		file_apps_token_pb_token_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_token_pb_token_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Location); i {
 			case 0:
 				return &v.state
@@ -1350,7 +1351,7 @@ func file_apps_token_pb_token_proto_init() {
 				return nil
 			}
 		}
-		file_apps_token_pb_token_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_token_pb_token_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*IPLocation); i {
 			case 0:
 				return &v.state
@@ -1362,7 +1363,7 @@ func file_apps_token_pb_token_proto_init() {
 				return nil
 			}
 		}
-		file_apps_token_pb_token_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_token_pb_token_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UserAgent); i {
 			case 0:
 				return &v.state
@@ -1374,7 +1375,7 @@ func file_apps_token_pb_token_proto_init() {
 				return nil
 			}
 		}
-		file_apps_token_pb_token_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_token_pb_token_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TokenSet); i {
 			case 0:
 				return &v.state
@@ -1386,7 +1387,7 @@ func file_apps_token_pb_token_proto_init() {
 				return nil
 			}
 		}
-		file_apps_token_pb_token_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_mcenter_apps_token_pb_token_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*IssueTokenRequest); i {
 			case 0:
 				return &v.state
@@ -1403,19 +1404,19 @@ func file_apps_token_pb_token_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_apps_token_pb_token_proto_rawDesc,
+			RawDescriptor: file_mcenter_apps_token_pb_token_proto_rawDesc,
 			NumEnums:      4,
 			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_apps_token_pb_token_proto_goTypes,
-		DependencyIndexes: file_apps_token_pb_token_proto_depIdxs,
-		EnumInfos:         file_apps_token_pb_token_proto_enumTypes,
-		MessageInfos:      file_apps_token_pb_token_proto_msgTypes,
+		GoTypes:           file_mcenter_apps_token_pb_token_proto_goTypes,
+		DependencyIndexes: file_mcenter_apps_token_pb_token_proto_depIdxs,
+		EnumInfos:         file_mcenter_apps_token_pb_token_proto_enumTypes,
+		MessageInfos:      file_mcenter_apps_token_pb_token_proto_msgTypes,
 	}.Build()
-	File_apps_token_pb_token_proto = out.File
-	file_apps_token_pb_token_proto_rawDesc = nil
-	file_apps_token_pb_token_proto_goTypes = nil
-	file_apps_token_pb_token_proto_depIdxs = nil
+	File_mcenter_apps_token_pb_token_proto = out.File
+	file_mcenter_apps_token_pb_token_proto_rawDesc = nil
+	file_mcenter_apps_token_pb_token_proto_goTypes = nil
+	file_mcenter_apps_token_pb_token_proto_depIdxs = nil
 }

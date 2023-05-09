@@ -3,11 +3,11 @@ syntax = "proto3";
 package infraboard.mcenter.domain;
 option go_package = "github.com/infraboard/mcenter/apps/domain";
 
-import "github.com/infraboard/mcube/pb/resource/meta.proto";
-import "apps/domain/pb/ldap.proto";
-import "apps/domain/pb/feishu.proto";
-import "apps/domain/pb/dingding.proto";
-import "apps/domain/pb/wechat_work.proto";
+import "mcube/pb/resource/meta.proto";
+import "mcenter/apps/domain/pb/ldap.proto";
+import "mcenter/apps/domain/pb/feishu.proto";
+import "mcenter/apps/domain/pb/dingding.proto";
+import "mcenter/apps/domain/pb/wechat_work.proto";
 
 message DomainSet {
     // 总数量
