@@ -62,7 +62,7 @@ func (i *issuer) validate(ctx context.Context, username, code string) (*user.Use
 
 	// 同步飞书用户
 	// 判断用户是否在数据库存在, 如果不存在需要同步到本地数据库
-	lu, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(fu.Name))
+	lu, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestByName(fu.Name))
 	if err != nil {
 		if exception.IsNotFoundError(err) {
 			i.log.Debugf("sync user: %s(%s) to db", fu.Name, dom.Spec.Name)

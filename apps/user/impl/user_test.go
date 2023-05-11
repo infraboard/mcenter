@@ -44,7 +44,16 @@ func TestQueryUser(t *testing.T) {
 }
 
 func TestDescribeUser(t *testing.T) {
-	req := user.NewDescriptUserRequestWithId("admin@default")
+	req := user.NewDescriptUserRequestById("admin@default")
+	r, err := impl.DescribeUser(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r.ToJson())
+}
+
+func TestDescribeUserByFeishuUserId(t *testing.T) {
+	req := user.NewDescriptUserRequestByFeishuUserId(os.Getenv("FEISHU_USER_ID"))
 	r, err := impl.DescribeUser(ctx, req)
 	if err != nil {
 		t.Fatal(err)

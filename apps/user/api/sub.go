@@ -181,7 +181,7 @@ func (h *primary) QueryUser(r *restful.Request, w *restful.Response) {
 }
 
 func (h *primary) DescribeUser(r *restful.Request, w *restful.Response) {
-	req := user.NewDescriptUserRequestWithId(r.PathParameter("id"))
+	req := user.NewDescriptUserRequestById(r.PathParameter("id"))
 	ins, err := h.service.DescribeUser(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)

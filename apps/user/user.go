@@ -149,16 +149,24 @@ func NewQueryUserRequest() *QueryUserRequest {
 	}
 }
 
-// NewDescriptUserRequestWithId 查询详情请求
-func NewDescriptUserRequestWithId(id string) *DescribeUserRequest {
+// NewDescriptUserRequestById 查询详情请求
+func NewDescriptUserRequestById(id string) *DescribeUserRequest {
 	return &DescribeUserRequest{
 		DescribeBy: DESCRIBE_BY_USER_ID,
 		Id:         id,
 	}
 }
 
-// NewDescriptUserRequestWithId 查询详情请求
-func NewDescriptUserRequestWithName(username string) *DescribeUserRequest {
+// NewDescriptUserRequestByFeishuUserId 查询详情请求
+func NewDescriptUserRequestByFeishuUserId(id string) *DescribeUserRequest {
+	return &DescribeUserRequest{
+		DescribeBy: DESCRIBE_BY_FEISHU_USER_ID,
+		Id:         id,
+	}
+}
+
+// NewDescriptUserRequestByName 查询详情请求
+func NewDescriptUserRequestByName(username string) *DescribeUserRequest {
 	return &DescribeUserRequest{
 		DescribeBy: DESCRIBE_BY_USER_NAME,
 		Username:   username,

@@ -42,7 +42,7 @@ func (i *issuer) validate(ctx context.Context, username, pass string) (*user.Use
 	}
 
 	// 检测用户的密码是否正确
-	u, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(username))
+	u, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestByName(username))
 	if err != nil {
 		return nil, err
 	}

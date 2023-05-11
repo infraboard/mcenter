@@ -272,4 +272,6 @@ enum DESCRIBE_BY {
     USER_ID = 0;
     // 通过Username查询用户
     USER_NAME = 1;
+    // 通过飞书UserId查询用户
+    FEISHU_USER_ID = 2;
 }

@@ -42,7 +42,7 @@ func (i *issuer) validate(ctx context.Context, accessToken string) (*user.User, 
 		return nil, err
 	}
 
-	u, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestWithId(tk.UserId))
+	u, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestById(tk.UserId))
 	if err != nil {
 		return nil, err
 	}

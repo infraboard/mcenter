@@ -66,6 +66,8 @@ func (s *service) DescribeUser(ctx context.Context, req *user.DescribeUserReques
 	switch req.DescribeBy {
 	case user.DESCRIBE_BY_USER_ID:
 		filter["_id"] = req.Id
+	case user.DESCRIBE_BY_FEISHU_USER_ID:
+		filter["feishu.user_id"] = req.Id
 	case user.DESCRIBE_BY_USER_NAME:
 		filter["username"] = req.Username
 	default:
@@ -87,7 +89,7 @@ func (s *service) DescribeUser(ctx context.Context, req *user.DescribeUserReques
 
 // 修改用户信息
 func (s *service) UpdateUser(ctx context.Context, req *user.UpdateUserRequest) (*user.User, error) {
-	ins, err := s.DescribeUser(ctx, user.NewDescriptUserRequestWithId(req.UserId))
+	ins, err := s.DescribeUser(ctx, user.NewDescriptUserRequestById(req.UserId))
 	if err != nil {
 		return nil, err
 	}

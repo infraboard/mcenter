@@ -189,7 +189,7 @@ func (c *checker) IPProtectCheck(ctx context.Context, req *token.IssueTokenReque
 
 func (c *checker) getOrDefaultSecuritySettingWithUser(ctx context.Context, username string) *domain.SecuritySetting {
 	ss := domain.NewDefaultSecuritySetting()
-	u, err := c.user.DescribeUser(ctx, user.NewDescriptUserRequestWithName(username))
+	u, err := c.user.DescribeUser(ctx, user.NewDescriptUserRequestByName(username))
 	if err != nil {
 		c.log.Errorf("get user error, %s, use default setting to check", err)
 		return ss
