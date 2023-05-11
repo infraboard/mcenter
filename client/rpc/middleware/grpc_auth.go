@@ -54,7 +54,7 @@ func (a *grpcAuther) Auth(
 	clientId, clientSecret := a.GetClientCredentialsFromMeta(md)
 
 	// 校验调用的客户端凭证是否有效
-	if err := a.validateServiceCredential(clientId, clientSecret); err != nil {
+	if err := a.validateServiceCredential(ctx, clientId, clientSecret); err != nil {
 		return nil, err
 	}
 
@@ -92,13 +92,13 @@ func (a *grpcAuther) GetClientCredentialsFromMeta(md metadata.MD) (
 	return
 }
 
-func (a *grpcAuther) validateServiceCredential(clientId, clientSecret string) error {
+func (a *grpcAuther) validateServiceCredential(ctx context.Context, clientId, clientSecret string) error {
 	if clientId == "" && clientSecret == "" {
 		return status.Errorf(codes.Unauthenticated, "client_id or client_secret is \"\"")
 	}
 
 	vsReq := service.NewValidateCredentialRequest(clientId, clientSecret)
-	_, err := a.service.ValidateCredential(context.Background(), vsReq)
+	_, err := a.service.ValidateCredential(ctx, vsReq)
 	if err != nil {
 		return status.Errorf(codes.Unauthenticated, "service auth error, %s", err)
 	}
