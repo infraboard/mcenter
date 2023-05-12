@@ -31,6 +31,7 @@ func TestResolver(t *testing.T) {
 		// 直到建立连接
 		grpc.WithBlock(),
 	)
+
 	if err != nil {
 		t.Fatalf("did not connect: %v", err)
 	}
