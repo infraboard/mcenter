@@ -86,11 +86,14 @@ func NewInstance(req *RegistryRequest, app *service.Service) (*Instance, error) 
 	}
 
 	ins.Id = ins.FullNameHash()
+	ins.Config.Weight = req.Weight
 	return ins, nil
 }
 
 func NewDefaultConfig() *Config {
 	return &Config{
+		Enabled:   true,
+		Weight:    1,
 		Heartbeat: &HeartbeatConfig{},
 	}
 }

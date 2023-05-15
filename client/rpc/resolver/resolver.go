@@ -126,7 +126,7 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 			Addr:       s.RegistryInfo.Address,
 			Attributes: attr,
 		}
-		wrr.SetWeight(&addr, s.RegistryInfo.Weight)
+		wrr.SetWeight(&addr, s.Config.Weight)
 		addrs[i] = addr
 
 		addrString = append(addrString, s.RegistryInfo.Address)

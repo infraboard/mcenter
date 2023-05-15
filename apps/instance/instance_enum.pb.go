@@ -99,6 +99,51 @@ func (t *PROVIDER) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+// ParseSTAGEFromString Parse STAGE from string
+func ParseSTAGEFromString(str string) (STAGE, error) {
+	key := strings.Trim(string(str), `"`)
+	v, ok := STAGE_value[strings.ToUpper(key)]
+	if !ok {
+		return 0, fmt.Errorf("unknown STAGE: %s", str)
+	}
+
+	return STAGE(v), nil
+}
+
+// Equal type compare
+func (t STAGE) Equal(target STAGE) bool {
+	return t == target
+}
+
+// IsIn todo
+func (t STAGE) IsIn(targets ...STAGE) bool {
+	for _, target := range targets {
+		if t.Equal(target) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// MarshalJSON todo
+func (t STAGE) MarshalJSON() ([]byte, error) {
+	b := bytes.NewBufferString(`"`)
+	b.WriteString(strings.ToUpper(t.String()))
+	b.WriteString(`"`)
+	return b.Bytes(), nil
+}
+
+// UnmarshalJSON todo
+func (t *STAGE) UnmarshalJSON(b []byte) error {
+	ins, err := ParseSTAGEFromString(string(b))
+	if err != nil {
+		return err
+	}
+	*t = ins
+	return nil
+}
+
 // ParseCommandTypeFromString Parse CommandType from string
 func ParseCommandTypeFromString(str string) (CommandType, error) {
 	key := strings.Trim(string(str), `"`)

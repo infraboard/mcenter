@@ -44,9 +44,20 @@ message Instance {
 }
 
 message Config {
+    // 是否启用该实例
+    bool enabled = 1;
+    // 配置更新时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 2;
+    // 配置更新人
+    // @gotags: bson:"update_by" json:"update_by"
+    int64 update_by = 3;
+    // 实例权重, 初始值通过注册设置, 注册后可以动态调整
+    // @gotags: bson:"weight" json:"weight" toml:"weight" validate:"required"
+    uint32 weight = 4;
     // 心跳设置
     // @gotags: bson:"heart_beat" json:"heart_beat"
-    HeartbeatConfig heartbeat = 1;
+    HeartbeatConfig heartbeat = 5;
 }
 
 message HeartbeatConfig {
@@ -144,10 +155,15 @@ message Status {
     int64 online = 1;
     // 服务状态
     // @gotags: bson:"stage" json:"stage"
-    string stage = 2;
+    STAGE stage = 2;
     // 状态更新时间
     // @gotags: bson:"update_at" json:"update_at"
     int64 update_at = 3;
+}
+
+enum STAGE {
+    // 实例正常运行
+    ALIVE = 0;
 }
 
 message HeartbeatRequest {
