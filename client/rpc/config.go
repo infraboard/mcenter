@@ -49,13 +49,13 @@ func NewDefaultResolver() *Resolver {
 
 type Resolver struct {
 	// 实例所属地域, 默认default
-	Region string `json:"region" toml:"region" yaml:"region" env:"MCENTER_REGION" validate:"required"`
+	Region string `json:"region" toml:"region" yaml:"region" env:"MCENTER_INSTANCE_REGION" validate:"required"`
 	// 实例所属环境, 默认default
-	Environment string `json:"environment" toml:"environment" yaml:"environment" env:"MCENTER_ENV" validate:"required"`
+	Environment string `json:"environment" toml:"environment" yaml:"environment" env:"MCENTER_INSTANCE_ENV" validate:"required"`
 	// 实例所属分组,默认default
-	Group string `json:"group" toml:"group" yaml:"group" env:"MCENTER_GROUP" validate:"required"`
+	Group string `json:"group" toml:"group" yaml:"group" env:"MCENTER_INSTANCE_GROUP" validate:"required"`
 	// 实例标签, 可以根据标签快速过滤实例, 格式k=v,k=v
-	Labels string `json:"labels" toml:"labels" yaml:"labels" env:"MCENTER_LABELS"`
+	Labels string `json:"labels" toml:"labels" yaml:"labels" env:"MCENTER_INSTANCE_LABELS"`
 }
 
 func (r *Resolver) ToQueryString() string {

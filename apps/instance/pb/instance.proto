@@ -80,40 +80,37 @@ message InstanceSet {
 
 message RegistryRequest {
     // 提供注册提供方
-    // @gotags: bson:"provider" json:"provider" toml:"provider" yaml:"provider" env:"MCENTER_PROVIDER"
+    // @gotags: bson:"provider" json:"provider" toml:"provider" yaml:"provider" env:"MCENTER_INSTANCE_PROVIDER"
     PROVIDER provider = 1;
     // 实例所属地域, 默认default
-    // @gotags: bson:"region" json:"region" toml:"region" yaml:"region" env:"MCENTER_REGION" validate:"required"
+    // @gotags: bson:"region" json:"region" toml:"region" yaml:"region" env:"MCENTER_INSTANCE_REGION" validate:"required"
     string region = 2;
     // 实例所属环境, 默认default
-    // @gotags: bson:"environment" json:"environment" toml:"environment" yaml:"environment" env:"MCENTER_ENV" validate:"required"
+    // @gotags: bson:"environment" json:"environment" toml:"environment" yaml:"environment" env:"MCENTER_INSTANCE_ENV" validate:"required"
     string environment = 3;
     // 实例所属分组,默认default
-    // @gotags: bson:"group" json:"group" toml:"group" yaml:"group" env:"MCENTER_GROUP" validate:"required"
+    // @gotags: bson:"group" json:"group" toml:"group" yaml:"group" env:"MCENTER_INSTANCE_GROUP" validate:"required"
     string group = 4;
     // 实例名称, 如果不传, 则会随机生成
-    // @gotags: bson:"name" json:"name" toml:"name" yaml:"name" env:"MCENTER_NAME"
+    // @gotags: bson:"name" json:"name" toml:"name" yaml:"name" env:"MCENTER_INSTANCE_NAME"
     string name = 5;
     // 注册的对外的访问的协议
-    // @gotags: bson:"protocal" json:"protocal" toml:"protocal" yaml:"protocal" env:"MCENTER_PROTOCAL"
+    // @gotags: bson:"protocal" json:"protocal" toml:"protocal" yaml:"protocal" env:"MCENTER_INSTANCE_PROTOCAL"
     PROTOCAL protocal = 6;
     // 实例权重
-    // @gotags: bson:"weight" json:"weight" toml:"weight" yaml:"weight" env:"MCENTER_WEIGHT" validate:"required"
+    // @gotags: bson:"weight" json:"weight" toml:"weight" yaml:"weight" env:"MCENTER_INSTANCE_WEIGHT" validate:"required"
     uint32 weight = 12;
     // 实例地址
-    // @gotags: bson:"address" json:"address" toml:"address" yaml:"address" env:"MCENTER_ADDRESS" validate:"required"
+    // @gotags: bson:"address" json:"address" toml:"address" yaml:"address" env:"MCENTER_INSTANCE_ADDRESS" validate:"required"
     string address = 7;
-    // 该地址是否对外暴露, 如果暴露, 会被注册到网关
-    // @gotags: bson:"export" json:"export" toml:"export" yaml:"export" env:"MCENTER_EXPORT"
-    bool export = 8;
     // 实例健康检查配置
     // @gotags: bson:"health_check" json:"health_check" toml:"health_check" yaml:"health_check"
     HealthCheck health_check = 13;
     // 实例标签, 可以根据标签快速过滤实例
-    // @gotags: bson:"labels" json:"labels" toml:"labels" yaml:"labels" env:"MCENTER_LABELS"
+    // @gotags: bson:"labels" json:"labels" toml:"labels" yaml:"labels" env:"MCENTER_INSTANCE_LABELS"
     map<string,string> labels = 9;
     // 实例元数据
-    // @gotags: bson:"meta" json:"meta" toml:"meta" yaml:"meta" env:"MCENTER_META"
+    // @gotags: bson:"meta" json:"meta" toml:"meta" yaml:"meta" env:"MCENTER_INSTANCE_META"
     map<string,string> meta = 11;
     // 实例构建信息
     // @gotags: bson:"build" json:"build" toml:"build" yaml:"build"
