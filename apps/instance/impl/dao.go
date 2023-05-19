@@ -65,9 +65,13 @@ func (r *searchRequest) FindFilter() bson.M {
 	if r.Environment != "" {
 		filter["registry_info.environment"] = r.Environment
 	}
+	if r.Cluster != "" {
+		filter["registry_info.cluster"] = r.Cluster
+	}
 	if r.Group != "" {
 		filter["registry_info.group"] = r.Group
 	}
+
 	return filter
 }
 

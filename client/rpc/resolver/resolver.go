@@ -145,6 +145,9 @@ func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
 	searchReq.Page.PageSize = 500
 	searchReq.Region = qs.Get("region")
 	searchReq.Environment = qs.Get("environment")
+	searchReq.Cluster = qs.Get("cluster")
+	searchReq.Labels = instance.ParseStrLable(qs.Get("labels"))
+
 	return searchReq
 }
 

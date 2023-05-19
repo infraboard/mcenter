@@ -41,9 +41,10 @@ func (c *Config) Credentials() *Authentication {
 
 func NewDefaultResolver() *Resolver {
 	return &Resolver{
-		Region:      instance.DefaultRegion,
-		Environment: instance.DefaultEnvironment,
-		Group:       instance.DefaultGroup,
+		Region:      instance.DEFAULT_REGION,
+		Environment: instance.DEFAULT_ENV,
+		Cluster:     instance.DEFAULT_CLUSTER,
+		Group:       instance.DEFAULT_GROUP,
 	}
 }
 
@@ -52,6 +53,8 @@ type Resolver struct {
 	Region string `json:"region" toml:"region" yaml:"region" env:"MCENTER_INSTANCE_REGION" validate:"required"`
 	// 实例所属环境, 默认default
 	Environment string `json:"environment" toml:"environment" yaml:"environment" env:"MCENTER_INSTANCE_ENV" validate:"required"`
+	// 实例所属集群,默认default
+	Cluster string `json:"cluster" toml:"cluster" yaml:"cluster" env:"MCENTER_INSTANCE_CLUSTER" validate:"required"`
 	// 实例所属分组,默认default
 	Group string `json:"group" toml:"group" yaml:"group" env:"MCENTER_INSTANCE_GROUP" validate:"required"`
 	// 实例标签, 可以根据标签快速过滤实例, 格式k=v,k=v
@@ -62,6 +65,7 @@ func (r *Resolver) ToQueryString() string {
 	m := make(url.Values)
 	m.Add("region", r.Region)
 	m.Add("environment", r.Environment)
+	m.Add("cluster", r.Cluster)
 	m.Add("group", r.Group)
 	m.Add("labels", r.Labels)
 	return m.Encode()

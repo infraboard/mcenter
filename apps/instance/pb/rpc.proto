@@ -49,6 +49,9 @@ message SearchRequest {
     // 实例所属环境, 默认default
     // @gotags: bson:"environment" json:"environment"
     string environment = 6;
+    // 实例所属集群,默认default
+    // @gotags: bson:"cluster" json:"cluster"
+    string cluster = 9;
     // 实例所属分组,默认default
     // @gotags: bson:"group" json:"group"
     string group = 7;

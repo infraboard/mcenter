@@ -5,6 +5,7 @@ import (
 	"hash/fnv"
 	"net/http"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -18,9 +19,11 @@ const (
 )
 
 const (
-	DefaultRegion      = "default"
-	DefaultEnvironment = "default"
-	DefaultGroup       = "default"
+	DEFAULT_PROVIDER = "default"
+	DEFAULT_REGION   = "default"
+	DEFAULT_ENV      = "default"
+	DEFAULT_CLUSTER  = "default"
+	DEFAULT_GROUP    = "default"
 )
 
 var (
@@ -40,7 +43,9 @@ func NewSearchRequestFromHttp(r *http.Request) *SearchRequest {
 	req.ServiceName = qs.Get("service_name")
 	req.Region = qs.Get("region")
 	req.Environment = qs.Get("env")
+	req.Cluster = qs.Get("cluster")
 	req.Group = qs.Get("group")
+	req.Labels = ParseStrLable(qs.Get("labels"))
 	return req
 }
 
@@ -127,9 +132,10 @@ func NewHeartbeatRequest(id string) *HeartbeatRequest {
 
 func NewRegistryRequest() *RegistryRequest {
 	return &RegistryRequest{
-		Region:      DefaultRegion,
-		Environment: DefaultEnvironment,
-		Group:       DefaultGroup,
+		Region:      DEFAULT_REGION,
+		Environment: DEFAULT_ENV,
+		Cluster:     DEFAULT_CLUSTER,
+		Group:       DEFAULT_GROUP,
 		Labels:      map[string]string{},
 		Meta:        map[string]string{},
 		Build:       &Build{},
@@ -195,4 +201,22 @@ func NewUnregistryRequest(instanceId string) *UnregistryRequest {
 	return &UnregistryRequest{
 		InstanceId: instanceId,
 	}
+}
+
+// k=v,k=v
+func ParseStrLable(str string) map[string]string {
+	m := map[string]string{}
+	str = strings.TrimSpace(str)
+	if str != "" {
+		kvs := strings.Split(str, ",")
+		for i := range kvs {
+			kv := kvs[i]
+			item := strings.Split(kv, "=")
+			key := item[0]
+			if len(item) > 1 {
+				m[key] = strings.Join(item[1:], "")
+			}
+		}
+	}
+	return m
 }

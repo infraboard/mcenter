@@ -88,6 +88,9 @@ message RegistryRequest {
     // 实例所属环境, 默认default
     // @gotags: bson:"environment" json:"environment" toml:"environment" yaml:"environment" env:"MCENTER_INSTANCE_ENV" validate:"required"
     string environment = 3;
+    // 实例所属集群, 默认default
+    // @gotags: bson:"cluster" json:"cluster" toml:"cluster" yaml:"cluster" env:"MCENTER_INSTANCE_CLUSTER" validate:"required"
+    string cluster = 14;
     // 实例所属分组,默认default
     // @gotags: bson:"group" json:"group" toml:"group" yaml:"group" env:"MCENTER_INSTANCE_GROUP" validate:"required"
     string group = 4;
