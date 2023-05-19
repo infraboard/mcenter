@@ -12,6 +12,7 @@ import (
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/tools/pretty"
 )
 
 const (
@@ -58,6 +59,10 @@ func NewSearchRequest() *SearchRequest {
 
 func (req *RegistryRequest) Validate() error {
 	return validate.Struct(req)
+}
+
+func (req *SearchRequest) ToJSON() string {
+	return pretty.ToJSON(req)
 }
 
 func NewDefaultInstance() *Instance {

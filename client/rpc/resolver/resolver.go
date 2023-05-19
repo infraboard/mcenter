@@ -131,7 +131,8 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 
 		addrString = append(addrString, s.RegistryInfo.Address)
 	}
-	m.log.Infof("search service [%s] address: %s", req.ServiceName, strings.Join(addrString, ","))
+
+	m.log.Infof("search service params: %s,  address: %s", req.ToJSON(), strings.Join(addrString, ","))
 
 	return addrs, nil
 }
