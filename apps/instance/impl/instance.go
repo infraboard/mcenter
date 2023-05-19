@@ -52,6 +52,8 @@ func (i *impl) UnRegistryInstance(ctx context.Context, req *instance.UnregistryR
 
 func (i *impl) Search(ctx context.Context, r *instance.SearchRequest) (
 	*instance.InstanceSet, error) {
+	// 确定服务实例搜索的范围
+
 	req := newSerchRequest(r)
 	set, err := i.search(ctx, req)
 	if err != nil {

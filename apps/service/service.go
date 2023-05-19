@@ -9,6 +9,7 @@ import (
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
 	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/pb/resource"
+	"google.golang.org/grpc/metadata"
 )
 
 func (s *ServiceSet) Len() int {
@@ -72,6 +73,12 @@ func (s *Service) GetRepositorySshUrl() string {
 	}
 
 	return ""
+}
+
+func (s *Service) InjectGrpcClientMeta(md metadata.MD) {
+	md.Append(GRPC_CLIENT_DOMAIN_KEY, s.Spec.Domain)
+	md.Append(GRPC_CLIENT_NAMESPACE_KEY, s.Spec.Namespace)
+	md.Append(GRPC_CLIENT_NAME_KEY, s.Spec.Name)
 }
 
 func (s *Service) ToJson() string {
