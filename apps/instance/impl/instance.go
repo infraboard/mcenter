@@ -20,7 +20,7 @@ func (i *impl) RegistryInstance(ctx context.Context, req *instance.RegistryReque
 
 	ins, err := instance.NewInstance(req, app)
 	if err != nil {
-		return nil, exception.NewBadRequest("validate create instance error, %s", err)
+		return nil, exception.NewBadRequest("validate registry instance error, %s", err)
 	}
 
 	if err := i.upsert(ctx, ins); err != nil {
