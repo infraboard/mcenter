@@ -180,7 +180,7 @@ func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionR
 	}
 
 	// 查询用户需要鉴权的功能
-	fn := endpoint.NewDescribeEndpointRequestWithID(endpoint.GenHashID(req.ServiceId, req.UniquePath()))
+	fn := endpoint.NewDescribeEndpointRequestWithID(endpoint.GenHashID(req.ServiceId, req.Path))
 	ep, err := s.endpoint.DescribeEndpoint(ctx, fn)
 	if err != nil {
 		return nil, err

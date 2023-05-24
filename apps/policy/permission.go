@@ -25,7 +25,3 @@ func (req *CheckPermissionRequest) Validate() error {
 
 	return nil
 }
-
-func (req *CheckPermissionRequest) UniquePath() string {
-	return fmt.Sprintf("%s.%s", req.Method, req.Path)
-}
