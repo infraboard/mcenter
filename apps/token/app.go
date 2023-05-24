@@ -226,9 +226,9 @@ func NewValidateTokenRequest(accessToken string) *ValidateTokenRequest {
 func MakeBearer(lenth int) string {
 	charlist := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	t := make([]string, lenth)
-	rand.Seed(time.Now().UnixNano() + int64(lenth) + rand.Int63n(10000))
+	r := rand.New(rand.NewSource(time.Now().UnixNano() + int64(lenth) + rand.Int63n(10000)))
 	for i := 0; i < lenth; i++ {
-		rn := rand.Intn(len(charlist))
+		rn := r.Intn(len(charlist))
 		w := charlist[rn : rn+1]
 		t = append(t, w)
 	}
