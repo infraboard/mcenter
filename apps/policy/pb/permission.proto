@@ -7,18 +7,25 @@ import "mcube/pb/page/page.proto";
 
 // CheckPermissionRequest todo
 message CheckPermissionRequest {
+    // 分页参数
     // @gotags: json:"page"
     infraboard.mcube.page.PageRequest page = 1;
+    // 那个域
     // @gotags: json:"domain"
     string domain = 2;
+    // 那个空间
     // @gotags: json:"namespace"
     string namespace = 3;
-    // @gotags: json:"group"
-    string group = 4;
+    // 服务Id
     // @gotags: json:"service_id"
     string service_id = 5;
+    // 访问方法, 比如HTTP Method
+    // @gotags: json:"method"
+    string method = 8;
+    // 访问路径, 比如HTTP Path
     // @gotags: json:"path"
     string path = 6;
+    // 用户名
     // @gotags: json:"username"
     string username = 7;
 }
