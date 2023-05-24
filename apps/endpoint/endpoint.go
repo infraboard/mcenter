@@ -13,10 +13,6 @@ import (
 	"github.com/infraboard/mcube/types/ftime"
 )
 
-const (
-	AppName = "endpoint"
-)
-
 // NewDefaultEndpoint todo
 func NewDefaultEndpoint() *Endpoint {
 	return &Endpoint{}

@@ -82,6 +82,7 @@ func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryReque
 
 	// 生成该服务的Endpoint
 	endpoints := req.Endpoints(svr.Meta.Id)
+	s.log.Debugf("registry endpoints: %s", endpoints)
 
 	// 更新已有的记录
 	news := make([]interface{}, 0, len(endpoints))
