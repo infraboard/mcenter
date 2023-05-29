@@ -27,6 +27,8 @@ enum GRANT_TYPE {
     FEISHU = 8;
     // 飞书授权
     DINGDING = 9;
+    // 转发给其他认证服务做认证
+    FORWARD_AUTH = 10;
 }
 
 // 令牌类型
