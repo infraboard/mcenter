@@ -14,7 +14,7 @@ require (
 	github.com/go-playground/validator/v10 v10.13.0
 	github.com/google/go-github/v45 v45.2.0
 	github.com/imdario/mergo v0.3.15
-	github.com/infraboard/mcube v1.9.16-0.20230512085059-2a770e7f72b3
+	github.com/infraboard/mcube v1.9.16-0.20230531075907-e754a9a376b9
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.20
 	github.com/mssola/user_agent v0.6.0
 	github.com/rs/xid v1.5.0
@@ -99,7 +99,7 @@ require (
 	golang.org/x/term v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
+	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
