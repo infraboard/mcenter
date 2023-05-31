@@ -71,10 +71,10 @@ message Token {
     // 颁发时间
     // @gotags: bson:"issue_at" json:"issue_at"
     int64 issue_at = 4;
-    // 访问令牌过期时间
+    // 访问令牌过期时间, 单位秒
     // @gotags: bson:"access_expired_at" json:"access_expired_at"
     int64 access_expired_at = 5;
-    // 刷新令牌过期时间
+    // 刷新令牌过期时间, 单位秒
     // @gotags: bson:"refresh_expired_at" json:"refresh_expired_at"
     int64 refresh_expired_at = 6;
     // 用户类型
