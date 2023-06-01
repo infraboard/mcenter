@@ -130,7 +130,7 @@ func NewToken(req *IssueTokenRequest) *Token {
 	tk := &Token{
 		AccessToken:      MakeBearer(24),
 		RefreshToken:     MakeBearer(32),
-		IssueAt:          time.Now().UnixMilli(),
+		IssueAt:          time.Now().Unix(),
 		AccessExpiredAt:  req.ExpiredAt,
 		RefreshExpiredAt: req.ExpiredAt * 4,
 		GrantType:        req.GrantType,
