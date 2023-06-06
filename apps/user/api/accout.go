@@ -3,9 +3,9 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/restful/response"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -17,11 +17,12 @@ import (
 type sub struct {
 	service user.Service
 	log     logger.Logger
+	ioc.IocObjectImpl
 }
 
-func (h *sub) Config() error {
+func (h *sub) Init() error {
 	h.log = zap.L().Named(user.AppName)
-	h.service = app.GetInternalApp(user.AppName).(user.Service)
+	h.service = ioc.GetController(user.AppName).(user.Service)
 	return nil
 }
 
@@ -63,5 +64,5 @@ func (h *sub) UpdatePassword(r *restful.Request, w *restful.Response) {
 }
 
 func init() {
-	app.RegistryRESTfulApp(&sub{})
+	ioc.RegistryApi(&sub{})
 }

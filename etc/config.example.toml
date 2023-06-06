@@ -2,11 +2,11 @@
 name = "mcenter"
 key  = "this is your app key"
 
-[app.http]
+[ioc.http]
 host = "127.0.0.1"
 port = "8010"
 
-[app.grpc]
+[ioc.grpc]
 host = "127.0.0.1"
 port = "18010"
 

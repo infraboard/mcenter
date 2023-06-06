@@ -3,7 +3,7 @@ package impl
 import (
 	"context"
 
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/x/bsonx"
@@ -21,9 +21,10 @@ var (
 type service struct {
 	col *mongo.Collection
 	domain.UnimplementedRPCServer
+	ioc.IocObjectImpl
 }
 
-func (s *service) Config() error {
+func (s *service) Init() error {
 	db, err := conf.C().Mongo.GetDB()
 	if err != nil {
 		return err
@@ -61,6 +62,5 @@ func (s *service) Registry(server *grpc.Server) {
 }
 
 func init() {
-	app.RegistryInternalApp(svr)
-	app.RegistryGrpcApp(svr)
+	ioc.RegistryController(svr)
 }

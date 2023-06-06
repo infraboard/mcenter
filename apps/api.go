@@ -5,7 +5,6 @@ import (
 	_ "github.com/infraboard/mcenter/apps/code/api"
 	_ "github.com/infraboard/mcenter/apps/domain/api"
 	_ "github.com/infraboard/mcenter/apps/endpoint/api"
-	_ "github.com/infraboard/mcenter/apps/health/api"
 	_ "github.com/infraboard/mcenter/apps/instance/api"
 	_ "github.com/infraboard/mcenter/apps/resource/api"
 	_ "github.com/infraboard/mcenter/apps/service/api"

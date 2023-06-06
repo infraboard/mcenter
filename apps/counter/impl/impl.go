@@ -10,7 +10,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/counter"
 	"github.com/infraboard/mcenter/conf"
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 )
 
 var (
@@ -20,9 +20,10 @@ var (
 
 type service struct {
 	col *mongo.Collection
+	ioc.IocObjectImpl
 }
 
-func (s *service) Config() error {
+func (s *service) Init() error {
 	db, err := conf.C().Mongo.GetDB()
 	if err != nil {
 		return err
@@ -56,5 +57,5 @@ func (s *service) Name() string {
 }
 
 func init() {
-	app.RegistryInternalApp(svr)
+	ioc.RegistryController(svr)
 }

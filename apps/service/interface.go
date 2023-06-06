@@ -57,14 +57,14 @@ func NewService(req *CreateServiceRequest) (*Service, error) {
 		return nil, err
 	}
 
-	app := &Service{
+	svc := &Service{
 		Meta:       resource.NewMeta(),
 		Spec:       req,
 		Credential: NewRandomCredential(),
 		Security:   NewRandomSecurity(),
 	}
-	app.Meta.Id = app.FullNameHash()
-	return app, nil
+	svc.Meta.Id = svc.FullNameHash()
+	return svc, nil
 }
 
 func NewRandomCredential() *Credential {

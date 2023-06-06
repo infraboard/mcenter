@@ -70,7 +70,7 @@ func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryReque
 	}
 
 	// 查询该服务
-	svr, err := s.app.DescribeService(ctx, service.NewDescribeServiceRequestByClientId(req.ClientId))
+	svr, err := s.svc.DescribeService(ctx, service.NewDescribeServiceRequestByClientId(req.ClientId))
 	if err != nil {
 		return nil, err
 	}

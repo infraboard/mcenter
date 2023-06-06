@@ -8,8 +8,8 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -26,8 +26,8 @@ type issuer struct {
 }
 
 func (i *issuer) Init() error {
-	i.user = app.GetInternalApp(user.AppName).(user.Service)
-	i.domain = app.GetInternalApp(domain.AppName).(domain.Service)
+	i.user = ioc.GetController(user.AppName).(user.Service)
+	i.domain = ioc.GetController(domain.AppName).(domain.Service)
 	i.log = zap.L().Named("issuer.password")
 	return nil
 }

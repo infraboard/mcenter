@@ -8,10 +8,10 @@ import (
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/token"
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/restful/response"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -19,8 +19,8 @@ import (
 func NewHttpAuther() *httpAuther {
 	return &httpAuther{
 		log:              zap.L().Named("auther.http"),
-		tk:               app.GetInternalApp(token.AppName).(token.Service),
-		code:             app.GetInternalApp(code.AppName).(code.Service),
+		tk:               ioc.GetController(token.AppName).(token.Service),
+		code:             ioc.GetController(code.AppName).(code.Service),
 		cache:            cache.C(),
 		codeCheckSilence: 30 * time.Minute,
 	}

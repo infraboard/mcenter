@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/cache"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -24,11 +24,11 @@ func NewChecker() (Checker, error) {
 	}
 
 	return &checker{
-		domain:    app.GetInternalApp(domain.AppName).(domain.Service),
-		user:      app.GetInternalApp(user.AppName).(user.Service),
-		token:     app.GetInternalApp(token.AppName).(token.Service),
+		domain:    ioc.GetController(domain.AppName).(domain.Service),
+		user:      ioc.GetController(user.AppName).(user.Service),
+		token:     ioc.GetController(token.AppName).(token.Service),
 		cache:     c,
-		ip2Regoin: app.GetInternalApp(ip2region.AppName).(ip2region.Service),
+		ip2Regoin: ioc.GetController(ip2region.AppName).(ip2region.Service),
 		log:       zap.L().Named("Login Security"),
 	}, nil
 }

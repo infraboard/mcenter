@@ -3,8 +3,8 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/http/restful/response"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -19,11 +19,12 @@ var (
 type oath2Handler struct {
 	service token.Service
 	log     logger.Logger
+	ioc.IocObjectImpl
 }
 
-func (h *oath2Handler) Config() error {
+func (h *oath2Handler) Init() error {
 	h.log = zap.L().Named(token.AppName)
-	h.service = app.GetInternalApp(token.AppName).(token.Service)
+	h.service = ioc.GetController(token.AppName).(token.Service)
 	return nil
 }
 
@@ -129,5 +130,5 @@ func (u *oath2Handler) WechatWorkOauth2Auth(r *restful.Request, w *restful.Respo
 }
 
 func init() {
-	app.RegistryRESTfulApp(oauth2)
+	ioc.RegistryApi(oauth2)
 }

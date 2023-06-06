@@ -3,7 +3,7 @@ package impl_test
 import (
 	"context"
 
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 
 	// 注册所有服务
 	"github.com/infraboard/mcenter/apps/service"
@@ -17,5 +17,5 @@ var (
 
 func init() {
 	tools.DevelopmentSetup()
-	impl = app.GetInternalApp(service.AppName).(service.MetaService)
+	impl = ioc.GetController(service.AppName).(service.MetaService)
 }

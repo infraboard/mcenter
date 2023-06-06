@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -31,6 +31,7 @@ var (
 type service struct {
 	col *mongo.Collection
 	token.UnimplementedRPCServer
+	ioc.IocObjectImpl
 	log logger.Logger
 
 	policy  policy.Service
@@ -39,7 +40,7 @@ type service struct {
 	code    code.Service
 }
 
-func (s *service) Config() error {
+func (s *service) Init() error {
 	db, err := conf.C().Mongo.GetDB()
 	if err != nil {
 		return err
@@ -64,9 +65,9 @@ func (s *service) Config() error {
 	s.col = dc
 
 	s.log = zap.L().Named(s.Name())
-	s.code = app.GetInternalApp(code.AppName).(code.Service)
-	s.ns = app.GetInternalApp(namespace.AppName).(namespace.Service)
-	s.policy = app.GetInternalApp(policy.AppName).(policy.Service)
+	s.code = ioc.GetController(code.AppName).(code.Service)
+	s.ns = ioc.GetController(namespace.AppName).(namespace.Service)
+	s.policy = ioc.GetController(policy.AppName).(policy.Service)
 
 	s.checker, err = security.NewChecker()
 	if err != nil {
@@ -90,6 +91,5 @@ func (s *service) Registry(server *grpc.Server) {
 }
 
 func init() {
-	app.RegistryInternalApp(svr)
-	app.RegistryGrpcApp(svr)
+	ioc.RegistryController(svr)
 }

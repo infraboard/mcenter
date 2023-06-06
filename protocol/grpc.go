@@ -5,8 +5,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/grpc/middleware/recovery"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
@@ -19,7 +19,7 @@ import (
 // NewGRPCService todo
 func NewGRPCService() *GRPCService {
 	log := zap.L().Named("GRPC Service")
-	appImpl := app.GetGrpcApp(service.AppName).(service.MetaService)
+	appImpl := ioc.GetController(service.AppName).(service.MetaService)
 	rc := recovery.NewInterceptor(recovery.NewZapRecoveryHandler())
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
 		rc.UnaryServerInterceptor(),
@@ -44,7 +44,7 @@ type GRPCService struct {
 // Start 启动GRPC服务
 func (s *GRPCService) Start() {
 	// 装载所有GRPC服务
-	app.LoadGrpcApp(s.svr)
+	ioc.LoadGrpcController(s.svr)
 
 	// 启动HTTP服务
 	lis, err := net.Listen("tcp", s.c.App.GRPC.Addr())

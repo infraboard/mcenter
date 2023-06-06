@@ -3,11 +3,10 @@ package impl_test
 import (
 	"context"
 
-	"github.com/infraboard/mcube/app"
-
 	// 注册所有服务
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/test/tools"
+	"github.com/infraboard/mcube/ioc"
 )
 
 var (
@@ -17,5 +16,5 @@ var (
 
 func init() {
 	tools.DevelopmentSetup()
-	impl = app.GetInternalApp(notify.AppName).(notify.Service)
+	impl = ioc.GetController(notify.AppName).(notify.Service)
 }

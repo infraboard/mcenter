@@ -67,17 +67,17 @@ func (req *SearchRequest) ToJSON() string {
 
 func NewDefaultInstance() *Instance {
 	req := NewRegistryRequest()
-	app := service.NewDefaultService()
+	svc := service.NewDefaultService()
 	return &Instance{
-		Namespace:    app.Spec.Namespace,
-		ServiceName:  app.Spec.Name,
+		Namespace:    svc.Spec.Namespace,
+		ServiceName:  svc.Spec.Name,
 		RegistryInfo: req,
 		Status:       NewDefaultStatus(),
 		Config:       NewDefaultConfig(),
 	}
 }
 
-func NewInstance(req *RegistryRequest, app *service.Service) (*Instance, error) {
+func NewInstance(req *RegistryRequest, svc *service.Service) (*Instance, error) {
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
@@ -87,9 +87,9 @@ func NewInstance(req *RegistryRequest, app *service.Service) (*Instance, error) 
 	}
 
 	ins := &Instance{
-		Domain:       app.Spec.Domain,
-		Namespace:    app.Spec.Namespace,
-		ServiceName:  app.Spec.Name,
+		Domain:       svc.Spec.Domain,
+		Namespace:    svc.Spec.Namespace,
+		ServiceName:  svc.Spec.Name,
 		RegistryInfo: req,
 		Status:       NewDefaultStatus(),
 		Config:       NewDefaultConfig(),

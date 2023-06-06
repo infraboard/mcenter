@@ -56,7 +56,7 @@ make init
 │   │   │    └── impl.go           # 领域模块内的 rpc 服务注册 ，向系统层注册rpc服务
 │   │   ├──  pb                    # protobuf 定义
 │   │   │     └── book.proto       # book proto 定义文件
-│   │   ├── app.go                 # book app 只定义扩展
+│   │   ├── ioc.go                 # book app 只定义扩展
 │   │   ├── book.pb.go             # protobuf 生成的文件
 │   │   └── book_grpc.pb.go        # pb/book.proto 生成方法定义
 ├── version                        # 程序版本信息

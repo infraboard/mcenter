@@ -5,7 +5,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/test/tools"
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 )
 
 var (
@@ -15,5 +15,5 @@ var (
 
 func init() {
 	tools.DevelopmentSetup()
-	impl = app.GetInternalApp(instance.AppName).(instance.Service)
+	impl = ioc.GetController(instance.AppName).(instance.Service)
 }

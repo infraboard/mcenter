@@ -12,7 +12,7 @@ import (
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/setting"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger/zap"
 
 	// 注册所有服务
@@ -91,12 +91,12 @@ func NewExecutorFromCLI() (*excutor, error) {
 
 func newExcutor() *excutor {
 	return &excutor{
-		domain:    app.GetInternalApp(domain.AppName).(domain.Service),
-		namespace: app.GetInternalApp(namespace.AppName).(namespace.Service),
-		role:      app.GetInternalApp(role.AppName).(role.Service),
-		user:      app.GetInternalApp(user.AppName).(user.Service),
-		service:   app.GetInternalApp(service.AppName).(service.MetaService),
-		system:    app.GetInternalApp(setting.AppName).(setting.Service),
+		domain:    ioc.GetController(domain.AppName).(domain.Service),
+		namespace: ioc.GetController(namespace.AppName).(namespace.Service),
+		role:      ioc.GetController(role.AppName).(role.Service),
+		user:      ioc.GetController(user.AppName).(user.Service),
+		service:   ioc.GetController(service.AppName).(service.MetaService),
+		system:    ioc.GetController(setting.AppName).(setting.Service),
 	}
 }
 
@@ -169,11 +169,11 @@ func (e *excutor) InitService(ctx context.Context) error {
 	apps.Add("cmdb", "资源中心")
 
 	for _, req := range apps.items {
-		app, err := e.service.CreateService(ctx, req)
+		svc, err := e.service.CreateService(ctx, req)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("初始化服务: %15s [成功]", app.Spec.Name)
+		fmt.Printf("初始化服务: %15s [成功]", svc.Spec.Name)
 		fmt.Println()
 	}
 

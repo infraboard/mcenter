@@ -1,7 +1,7 @@
 package impl
 
 import (
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,9 +18,10 @@ var (
 type service struct {
 	log logger.Logger
 	db  *mongo.Database
+	ioc.IocObjectImpl
 }
 
-func (s *service) Config() error {
+func (s *service) Init() error {
 	db, err := conf.C().Mongo.GetDB()
 	if err != nil {
 		return err
@@ -36,5 +37,5 @@ func (s *service) Name() string {
 }
 
 func init() {
-	app.RegistryInternalApp(svr)
+	ioc.RegistryController(svr)
 }

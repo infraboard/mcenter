@@ -13,7 +13,7 @@ func (i *impl) RegistryInstance(ctx context.Context, req *instance.RegistryReque
 	*instance.Instance, error) {
 	// 补充实例应用相关信息
 	clientId := rpc.GetClientId(ctx)
-	app, err := i.app.DescribeService(ctx, service.NewDescribeServiceRequestByClientId(clientId))
+	app, err := i.svc.DescribeService(ctx, service.NewDescribeServiceRequestByClientId(clientId))
 	if err != nil {
 		return nil, err
 	}

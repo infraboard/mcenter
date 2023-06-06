@@ -4,8 +4,8 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/http/restful/response"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -18,11 +18,12 @@ type providerHandler struct {
 	log logger.Logger
 
 	service service.MetaService
+	ioc.IocObjectImpl
 }
 
-func (h *providerHandler) Config() error {
+func (h *providerHandler) Init() error {
 	h.log = zap.L().Named(service.AppName)
-	h.service = app.GetInternalApp(service.AppName).(service.MetaService)
+	h.service = ioc.GetController(service.AppName).(service.MetaService)
 	return nil
 }
 
@@ -58,5 +59,5 @@ func (h *providerHandler) QueryGitlabProject(r *restful.Request, w *restful.Resp
 }
 
 func init() {
-	app.RegistryRESTfulApp(ph)
+	ioc.RegistryApi(ph)
 }

@@ -5,9 +5,9 @@ import (
 
 	"github.com/infraboard/mcenter/conf"
 	"github.com/infraboard/mcenter/tracer"
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/cache/memory"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger/zap"
 
 	// 注册所有服务
@@ -31,7 +31,7 @@ func DevelopmentSetup() {
 	cache.SetGlobal(ins)
 
 	// 初始化全局app
-	if err := app.InitAllApp(); err != nil {
+	if err := ioc.InitIocObject(); err != nil {
 		panic(err)
 	}
 }

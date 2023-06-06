@@ -4,7 +4,7 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -16,11 +16,12 @@ var (
 type handler struct {
 	service instance.Service
 	log     logger.Logger
+	ioc.IocObjectImpl
 }
 
-func (h *handler) Config() error {
+func (h *handler) Init() error {
 	h.log = zap.L().Named(instance.AppName)
-	h.service = app.GetInternalApp(instance.AppName).(instance.Service)
+	h.service = ioc.GetController(instance.AppName).(instance.Service)
 	return nil
 }
 
@@ -55,5 +56,5 @@ func (h *handler) Registry(ws *restful.WebService) {
 }
 
 func init() {
-	app.RegistryRESTfulApp(h)
+	ioc.RegistryApi(h)
 }

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/spf13/cobra"
 
 	"github.com/infraboard/mcube/logger"
@@ -76,11 +76,8 @@ type service struct {
 }
 
 func (s *service) start() error {
-	s.log.Infof("loaded grpc app: %s", app.LoadedGrpcApp())
-	s.log.Infof("loaded http app: %s", app.LoadedRESTfulApp())
-
-	s.log.Infof("loaded internal app: %s", app.LoadedInternalApp())
-
+	s.log.Infof("loaded controllers: %s", ioc.ListControllerObjectNames())
+	s.log.Infof("loaded apis: %s", ioc.ListApiObjectNames())
 	go s.grpc.Start()
 	return s.http.Start()
 }

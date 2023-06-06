@@ -3,8 +3,8 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/http/restful/response"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -20,11 +20,12 @@ var (
 type handler struct {
 	service policy.Service
 	log     logger.Logger
+	ioc.IocObjectImpl
 }
 
-func (h *handler) Config() error {
+func (h *handler) Init() error {
 	h.log = zap.L().Named(domain.AppName)
-	h.service = app.GetInternalApp(policy.AppName).(policy.Service)
+	h.service = ioc.GetController(policy.AppName).(policy.Service)
 	return nil
 }
 
@@ -65,5 +66,5 @@ func (h *handler) CheckPermission(r *restful.Request, w *restful.Response) {
 }
 
 func init() {
-	app.RegistryRESTfulApp(h)
+	ioc.RegistryApi(h)
 }

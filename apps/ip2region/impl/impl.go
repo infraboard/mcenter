@@ -3,7 +3,7 @@ package impl
 import (
 	"sync"
 
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -26,10 +26,11 @@ type service struct {
 	dbFileName string
 	dbReader   *ip2region.IPReader
 	sync.Mutex
+	ioc.IocObjectImpl
 }
 
-func (s *service) Config() error {
-	s.storage = app.GetInternalApp(storage.AppName).(storage.Service)
+func (s *service) Init() error {
+	s.storage = ioc.GetController(storage.AppName).(storage.Service)
 
 	s.log = zap.L().Named("IP2Region")
 	return nil
@@ -40,5 +41,5 @@ func (s *service) Name() string {
 }
 
 func init() {
-	app.RegistryInternalApp(svr)
+	ioc.RegistryController(svr)
 }

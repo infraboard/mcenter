@@ -3,7 +3,7 @@ package impl
 import (
 	"context"
 
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -27,9 +27,10 @@ type service struct {
 	domain domain.Service
 
 	user.UnimplementedRPCServer
+	ioc.IocObjectImpl
 }
 
-func (s *service) Config() error {
+func (s *service) Init() error {
 	db, err := conf.C().Mongo.GetDB()
 	if err != nil {
 		return err
@@ -57,7 +58,7 @@ func (s *service) Config() error {
 
 	s.col = uc
 	s.log = zap.L().Named(user.AppName)
-	s.domain = app.GetInternalApp(domain.AppName).(domain.Service)
+	s.domain = ioc.GetController(domain.AppName).(domain.Service)
 	return nil
 }
 
@@ -70,6 +71,5 @@ func (s *service) Registry(server *grpc.Server) {
 }
 
 func init() {
-	app.RegistryInternalApp(svr)
-	app.RegistryGrpcApp(svr)
+	ioc.RegistryController(svr)
 }

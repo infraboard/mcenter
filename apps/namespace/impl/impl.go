@@ -3,7 +3,7 @@ package impl
 import (
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/infraboard/mcube/app"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -24,13 +24,14 @@ type impl struct {
 	col *mongo.Collection
 	log logger.Logger
 	namespace.UnimplementedRPCServer
+	ioc.IocObjectImpl
 
 	counter counter.Service
 	role    role.Service
 	policy  policy.Service
 }
 
-func (i *impl) Config() error {
+func (i *impl) Init() error {
 	db, err := conf.C().Mongo.GetDB()
 	if err != nil {
 		return err
@@ -38,9 +39,9 @@ func (i *impl) Config() error {
 	i.col = db.Collection(i.Name())
 	i.log = zap.L().Named(i.Name())
 
-	i.role = app.GetInternalApp(role.AppName).(role.Service)
-	i.policy = app.GetInternalApp(policy.AppName).(policy.Service)
-	i.counter = app.GetInternalApp(counter.AppName).(counter.Service)
+	i.role = ioc.GetController(role.AppName).(role.Service)
+	i.policy = ioc.GetController(policy.AppName).(policy.Service)
+	i.counter = ioc.GetController(counter.AppName).(counter.Service)
 	return nil
 }
 
@@ -53,6 +54,5 @@ func (i *impl) Registry(server *grpc.Server) {
 }
 
 func init() {
-	app.RegistryInternalApp(svr)
-	app.RegistryGrpcApp(svr)
+	ioc.RegistryController(svr)
 }

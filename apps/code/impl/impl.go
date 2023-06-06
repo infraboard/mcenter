@@ -3,7 +3,6 @@ package impl
 import (
 	"context"
 
-	"github.com/infraboard/mcube/app"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -16,6 +15,7 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/conf"
+	"github.com/infraboard/mcube/ioc"
 )
 
 var (
@@ -27,6 +27,7 @@ type service struct {
 	col *mongo.Collection
 	log logger.Logger
 	code.UnimplementedRPCServer
+	ioc.IocObjectImpl
 
 	user    user.Service
 	token   token.Service
@@ -34,7 +35,7 @@ type service struct {
 	notify  notify.Service
 }
 
-func (s *service) Config() error {
+func (s *service) Init() error {
 	db, err := conf.C().Mongo.GetDB()
 	if err != nil {
 		return err
@@ -54,10 +55,10 @@ func (s *service) Config() error {
 
 	s.col = dc
 	s.log = zap.L().Named(s.Name())
-	s.user = app.GetInternalApp(user.AppName).(user.Service)
-	s.token = app.GetInternalApp(token.AppName).(token.Service)
-	s.setting = app.GetInternalApp(setting.AppName).(setting.Service)
-	s.notify = app.GetInternalApp(notify.AppName).(notify.Service)
+	s.user = ioc.GetController(user.AppName).(user.Service)
+	s.token = ioc.GetController(token.AppName).(token.Service)
+	s.setting = ioc.GetController(setting.AppName).(setting.Service)
+	s.notify = ioc.GetController(notify.AppName).(notify.Service)
 	return nil
 }
 
@@ -70,6 +71,5 @@ func (s *service) Registry(server *grpc.Server) {
 }
 
 func init() {
-	app.RegistryInternalApp(svr)
-	app.RegistryGrpcApp(svr)
+	ioc.RegistryController(svr)
 }
