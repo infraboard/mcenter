@@ -78,7 +78,7 @@ func (s *HTTPService) PathPrefix() string {
 }
 
 // Start 启动服务
-func (s *HTTPService) Start() error {
+func (s *HTTPService) Start() {
 	// 装置子服务路由
 	ioc.LoadGoRestfulApi(s.PathPrefix(), s.r)
 
@@ -92,10 +92,10 @@ func (s *HTTPService) Start() error {
 	if err := s.server.ListenAndServe(); err != nil {
 		if err == http.ErrServerClosed {
 			s.l.Info("service is stopped")
+		} else {
+			s.l.Errorf("start service error, %s", err.Error())
 		}
-		return fmt.Errorf("start service error, %s", err.Error())
 	}
-	return nil
 }
 
 // Stop 停止server

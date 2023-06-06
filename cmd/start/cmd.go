@@ -3,7 +3,6 @@ package start
 import (
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 
 	"github.com/infraboard/mcube/ioc"
@@ -19,11 +18,6 @@ import (
 	_ "github.com/infraboard/mcenter/apps"
 )
 
-var (
-	confType string
-	confFile string
-)
-
 // startCmd represents the start command
 var Cmd = &cobra.Command{
 	Use:   "start",
@@ -31,27 +25,14 @@ var Cmd = &cobra.Command{
 	Long:  "mcenter API服务",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		conf := conf.C()
-		// 启动服务
-		ch := make(chan os.Signal, 1)
-		defer close(ch)
-		signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP, syscall.SIGQUIT)
-
 		// 初始化服务
 		svr, err := newService(conf)
 		if err != nil {
 			return err
 		}
 
-		// 等待信号处理
-		go svr.waitSign(ch)
-
 		// 启动服务
-		if err := svr.start(); err != nil {
-			if !strings.Contains(err.Error(), "http: Server closed") {
-				return err
-			}
-		}
-
+		svr.start()
 		return nil
 	},
 }
@@ -75,11 +56,16 @@ type service struct {
 	log logger.Logger
 }
 
-func (s *service) start() error {
+func (s *service) start() {
 	s.log.Infof("loaded controllers: %s", ioc.ListControllerObjectNames())
 	s.log.Infof("loaded apis: %s", ioc.ListApiObjectNames())
 	go s.grpc.Start()
-	return s.http.Start()
+	go s.http.Start()
+
+	// 处理信号量
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP, syscall.SIGQUIT)
+	s.waitSign(ch)
 }
 
 func (s *service) waitSign(sign chan os.Signal) {
@@ -99,7 +85,7 @@ func (s *service) waitSign(sign chan os.Signal) {
 			} else {
 				s.log.Infof("http service stop complete")
 			}
-			return
+			os.Exit(0)
 		}
 	}
 }
