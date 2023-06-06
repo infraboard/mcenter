@@ -227,9 +227,9 @@ func (s *service) reuseToken(ctx context.Context, tk *token.Token) error {
 	}
 
 	// access token延长一个过期周期
-	tk.AccessExpiredAt = time.Now().Add(time.Duration(token.DEFAULT_ACCESS_TOKEN_EXPIRE_SECOND)*time.Second).Unix() * 1000
+	tk.AccessExpiredAt = time.Now().Add(time.Duration(token.DEFAULT_ACCESS_TOKEN_EXPIRE_SECOND) * time.Second).Unix()
 	// refresh token延长一个过期周期
-	tk.RefreshExpiredAt = time.Unix(tk.RefreshExpiredAt/1000, 0).Add(time.Duration(token.DEFAULT_REFRESH_TOKEN_EXPIRE_SECOND)*time.Second).Unix() * 1000
+	tk.RefreshExpiredAt = time.Unix(tk.RefreshExpiredAt, 0).Add(time.Duration(token.DEFAULT_REFRESH_TOKEN_EXPIRE_SECOND) * time.Second).Unix()
 	return s.save(ctx, tk)
 }
 

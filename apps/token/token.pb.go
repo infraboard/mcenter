@@ -277,10 +277,10 @@ type Token struct {
 	// 颁发时间
 	// @gotags: bson:"issue_at" json:"issue_at"
 	IssueAt int64 `protobuf:"varint,4,opt,name=issue_at,json=issueAt,proto3" json:"issue_at" bson:"issue_at"`
-	// 访问令牌过期时间
+	// 访问令牌过期时间, 单位秒
 	// @gotags: bson:"access_expired_at" json:"access_expired_at"
 	AccessExpiredAt int64 `protobuf:"varint,5,opt,name=access_expired_at,json=accessExpiredAt,proto3" json:"access_expired_at" bson:"access_expired_at"`
-	// 刷新令牌过期时间
+	// 刷新令牌过期时间, 单位秒
 	// @gotags: bson:"refresh_expired_at" json:"refresh_expired_at"
 	RefreshExpiredAt int64 `protobuf:"varint,6,opt,name=refresh_expired_at,json=refreshExpiredAt,proto3" json:"refresh_expired_at" bson:"refresh_expired_at"`
 	// 用户类型

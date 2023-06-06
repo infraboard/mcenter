@@ -86,7 +86,9 @@ func NewWechatAuthCodeIssueTokenRequest(authcode, state, domain string) *IssueTo
 
 // NewIssueTokenRequest 默认请求
 func NewIssueTokenRequest() *IssueTokenRequest {
-	return &IssueTokenRequest{}
+	return &IssueTokenRequest{
+		ExpiredAt: DEFAULT_ACCESS_TOKEN_EXPIRE_SECOND,
+	}
 }
 
 // AbnormalUserCheckKey todo
@@ -128,7 +130,7 @@ func NewToken(req *IssueTokenRequest) *Token {
 	tk := &Token{
 		AccessToken:      MakeBearer(24),
 		RefreshToken:     MakeBearer(32),
-		IssueAt:          time.Now().UnixMilli(),
+		IssueAt:          time.Now().Unix(),
 		AccessExpiredAt:  req.ExpiredAt,
 		RefreshExpiredAt: req.ExpiredAt * 4,
 		GrantType:        req.GrantType,
@@ -279,7 +281,7 @@ func (t *Token) CheckAccessIsExpired() bool {
 		return false
 	}
 
-	return time.Unix(t.AccessExpiredAt/1000, 0).Before(time.Now())
+	return time.Unix(t.AccessExpiredAt, 0).Before(time.Now())
 }
 
 // CheckRefreshIsExpired 检测刷新token是否过期
@@ -289,7 +291,7 @@ func (t *Token) CheckRefreshIsExpired() bool {
 		return false
 	}
 
-	return time.Unix(t.RefreshExpiredAt/1000, 0).Before(time.Now())
+	return time.Unix(t.RefreshExpiredAt, 0).Before(time.Now())
 }
 
 func (t *Token) JsonFormat() string {
