@@ -40,10 +40,14 @@ var Cmd = &cobra.Command{
 func newService(cnf *conf.Config) (*service, error) {
 	http := protocol.NewHTTPService()
 	grpc := protocol.NewGRPCService()
+	// 处理信号量
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP, syscall.SIGQUIT)
 	svr := &service{
 		http: http,
 		grpc: grpc,
 		log:  zap.L().Named("CLI"),
+		ch:   ch,
 	}
 
 	return svr, nil
@@ -54,6 +58,7 @@ type service struct {
 	grpc *protocol.GRPCService
 
 	log logger.Logger
+	ch  chan os.Signal
 }
 
 func (s *service) start() {
@@ -61,11 +66,7 @@ func (s *service) start() {
 	s.log.Infof("loaded apis: %s", ioc.ListApiObjectNames())
 	go s.grpc.Start()
 	go s.http.Start()
-
-	// 处理信号量
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP, syscall.SIGQUIT)
-	s.waitSign(ch)
+	s.waitSign(s.ch)
 }
 
 func (s *service) waitSign(sign chan os.Signal) {
