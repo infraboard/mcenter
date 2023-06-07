@@ -10,9 +10,9 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 )
 
-var (
-	ph = &providerHandler{}
-)
+func init() {
+	ioc.RegistryApi(&providerHandler{})
+}
 
 type providerHandler struct {
 	log logger.Logger
@@ -56,8 +56,4 @@ func (h *providerHandler) QueryGitlabProject(r *restful.Request, w *restful.Resp
 	}
 
 	response.Success(w, set)
-}
-
-func init() {
-	ioc.RegistryApi(ph)
 }

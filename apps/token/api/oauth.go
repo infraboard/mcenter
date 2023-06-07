@@ -12,9 +12,9 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 )
 
-var (
-	oauth2 = &oath2Handler{}
-)
+func init() {
+	ioc.RegistryApi(&oath2Handler{})
+}
 
 type oath2Handler struct {
 	service token.Service
@@ -67,7 +67,7 @@ func (h *oath2Handler) Registry(ws *restful.WebService) {
 		Returns(200, "OK", token.Token{}))
 }
 
-func (u *oath2Handler) FeishuOauth2Auth(r *restful.Request, w *restful.Response) {
+func (h *oath2Handler) FeishuOauth2Auth(r *restful.Request, w *restful.Response) {
 	req := token.NewFeishuAuthCodeIssueTokenRequest(
 		r.QueryParameter("code"),
 		r.QueryParameter("state"),
@@ -88,7 +88,7 @@ func (u *oath2Handler) FeishuOauth2Auth(r *restful.Request, w *restful.Response)
 	response.Success(w, tk)
 }
 
-func (u *oath2Handler) DingDingOauth2Auth(r *restful.Request, w *restful.Response) {
+func (h *oath2Handler) DingDingOauth2Auth(r *restful.Request, w *restful.Response) {
 	req := token.NewDingDingAuthCodeIssueTokenRequest(
 		r.QueryParameter("authCode"),
 		r.QueryParameter("state"),
@@ -108,7 +108,7 @@ func (u *oath2Handler) DingDingOauth2Auth(r *restful.Request, w *restful.Respons
 	response.Success(w, tk)
 }
 
-func (u *oath2Handler) WechatWorkOauth2Auth(r *restful.Request, w *restful.Response) {
+func (h *oath2Handler) WechatWorkOauth2Auth(r *restful.Request, w *restful.Response) {
 	req := token.NewDingDingAuthCodeIssueTokenRequest(
 		r.QueryParameter("authCode"),
 		r.QueryParameter("state"),
@@ -127,8 +127,4 @@ func (u *oath2Handler) WechatWorkOauth2Auth(r *restful.Request, w *restful.Respo
 
 	tk.SetCookie(w)
 	response.Success(w, tk)
-}
-
-func init() {
-	ioc.RegistryApi(oauth2)
 }

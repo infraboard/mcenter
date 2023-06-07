@@ -10,9 +10,9 @@ import (
 	"github.com/infraboard/mcenter/apps/setting"
 )
 
-var (
-	h = &handler{}
-)
+func init() {
+	ioc.RegistryApi(&handler{})
+}
 
 type handler struct {
 	service setting.Service
@@ -50,8 +50,4 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Reads(setting.Setting{}).
 		Writes((setting.Setting{})).
 		Returns(200, "OK", setting.Setting{}))
-}
-
-func init() {
-	ioc.RegistryApi(h)
 }

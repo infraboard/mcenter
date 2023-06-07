@@ -24,7 +24,7 @@ func (h *handler) CreateDomain(r *restful.Request, w *restful.Response) {
 	response.Success(w, set)
 }
 
-func (u *handler) DescribeDomain(r *restful.Request, w *restful.Response) {
+func (h *handler) DescribeDomain(r *restful.Request, w *restful.Response) {
 	req := domain.NewDescribeDomainRequestById(r.PathParameter("id"))
 	ins, err := h.service.DescribeDomain(r.Request.Context(), req)
 	if err != nil {
@@ -35,7 +35,7 @@ func (u *handler) DescribeDomain(r *restful.Request, w *restful.Response) {
 	response.Success(w, ins)
 }
 
-func (u *handler) PutDomain(r *restful.Request, w *restful.Response) {
+func (h *handler) PutDomain(r *restful.Request, w *restful.Response) {
 	req := domain.NewPutDomainRequest(r.PathParameter("id"))
 
 	if err := r.ReadEntity(req.Spec); err != nil {
@@ -51,7 +51,7 @@ func (u *handler) PutDomain(r *restful.Request, w *restful.Response) {
 	response.Success(w, set)
 }
 
-func (u *handler) PatchDomain(r *restful.Request, w *restful.Response) {
+func (h *handler) PatchDomain(r *restful.Request, w *restful.Response) {
 	req := domain.NewPatchDomainRequestById(r.PathParameter("id"))
 
 	if err := r.ReadEntity(req.Spec); err != nil {

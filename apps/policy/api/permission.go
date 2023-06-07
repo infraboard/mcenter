@@ -13,9 +13,9 @@ import (
 	"github.com/infraboard/mcenter/apps/role"
 )
 
-var (
-	h = &handler{}
-)
+func init() {
+	ioc.RegistryApi(&handler{})
+}
 
 type handler struct {
 	service policy.Service
@@ -63,8 +63,4 @@ func (h *handler) CheckPermission(r *restful.Request, w *restful.Response) {
 	}
 
 	response.Success(w, perm)
-}
-
-func init() {
-	ioc.RegistryApi(h)
 }

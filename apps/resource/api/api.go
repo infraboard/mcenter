@@ -10,9 +10,9 @@ import (
 	"github.com/infraboard/mcenter/apps/resource"
 )
 
-var (
-	h = &handler{}
-)
+func init() {
+	ioc.RegistryApi(&handler{})
+}
 
 type handler struct {
 	service resource.Service
@@ -44,8 +44,4 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Reads(resource.QueryResourceRequest{}).
 		Writes(resource.ResourceSet{}).
 		Returns(200, "OK", resource.ResourceSet{}))
-}
-
-func init() {
-	ioc.RegistryApi(h)
 }

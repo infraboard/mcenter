@@ -24,7 +24,7 @@ func (h *handler) UpdateSetting(r *restful.Request, w *restful.Response) {
 	response.Success(w, set)
 }
 
-func (u *handler) GetSetting(r *restful.Request, w *restful.Response) {
+func (h *handler) GetSetting(r *restful.Request, w *restful.Response) {
 	set, err := h.service.GetSetting(r.Request.Context())
 	if err != nil {
 		response.Failed(w, err)

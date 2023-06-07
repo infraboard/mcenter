@@ -10,9 +10,9 @@ import (
 	"github.com/infraboard/mcenter/apps/code"
 )
 
-var (
-	h = &handler{}
-)
+func init() {
+	ioc.RegistryApi(&handler{})
+}
 
 type handler struct {
 	service code.Service
@@ -42,8 +42,4 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(code.IssueCodeRequest{}).
 		Writes(code.Code{}))
-}
-
-func init() {
-	ioc.RegistryApi(h)
 }

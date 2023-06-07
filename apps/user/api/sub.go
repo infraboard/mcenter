@@ -13,8 +13,11 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 )
 
-// 主账号用户管理接口
+func init() {
+	ioc.RegistryApi(&primary{})
+}
 
+// 主账号用户管理接口
 type primary struct {
 	service user.Service
 	log     logger.Logger
@@ -190,8 +193,4 @@ func (h *primary) DescribeUser(r *restful.Request, w *restful.Response) {
 	}
 
 	response.Success(w, ins)
-}
-
-func init() {
-	ioc.RegistryApi(&primary{})
 }

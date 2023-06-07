@@ -10,9 +10,9 @@ import (
 	"github.com/infraboard/mcenter/apps/domain"
 )
 
-var (
-	h = &handler{}
-)
+func init() {
+	ioc.RegistryApi(&handler{})
+}
 
 type handler struct {
 	service domain.Service
@@ -62,8 +62,4 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Param(ws.PathParameter("id", "identifier of the domain").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(domain.CreateDomainRequest{}))
-}
-
-func init() {
-	ioc.RegistryApi(h)
 }

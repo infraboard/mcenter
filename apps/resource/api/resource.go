@@ -23,5 +23,4 @@ func (h *handler) QueryResources(r *restful.Request, w *restful.Response) {
 	}
 
 	response.Success(w, set)
-	return
 }

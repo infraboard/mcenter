@@ -12,8 +12,11 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 )
 
-// 主账号用户管理接口
+func init() {
+	ioc.RegistryApi(&sub{})
+}
 
+// 子账号用户管理接口
 type sub struct {
 	service user.Service
 	log     logger.Logger
@@ -61,8 +64,4 @@ func (h *sub) UpdatePassword(r *restful.Request, w *restful.Response) {
 	}
 
 	response.Success(w, set)
-}
-
-func init() {
-	ioc.RegistryApi(&sub{})
 }

@@ -9,9 +9,9 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 )
 
-var (
-	h = &handler{}
-)
+func init() {
+	ioc.RegistryApi(&handler{})
+}
 
 type handler struct {
 	service instance.Service
@@ -53,8 +53,4 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(instance.SearchRequest{}).
 		Writes(instance.InstanceSet{}))
-}
-
-func init() {
-	ioc.RegistryApi(h)
 }
