@@ -98,9 +98,9 @@ func (s *HTTPService) Start() {
 	if err := s.server.ListenAndServe(); err != nil {
 		if err == http.ErrServerClosed {
 			s.l.Info("service is stopped")
-		} else {
-			s.l.Errorf("start service error, %s", err.Error())
+			return
 		}
+		s.l.Errorf("start service error, %s", err.Error())
 	}
 }
 

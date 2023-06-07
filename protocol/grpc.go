@@ -57,10 +57,9 @@ func (s *GRPCService) Start() {
 	if err := s.svr.Serve(lis); err != nil {
 		if err == grpc.ErrServerStopped {
 			s.l.Info("service is stopped")
-		} else {
-			s.l.Error("start grpc service error, %s", err.Error())
+			return
 		}
-		return
+		s.l.Error("start grpc service error, %s", err.Error())
 	}
 }
 
