@@ -23,10 +23,8 @@ import (
 // NewHTTPService 构建函数
 func NewHTTPService() *HTTPService {
 	r := restful.DefaultContainer
-	// Optionally, you can install the Swagger Service which provides a nice Web UI on your REST API
-	// You need to download the Swagger HTML5 assets and change the FilePath location in the config below.
-	// Open http://localhost:8080/apidocs/?url=http://localhost:8080/apidocs.json
-	// http.Handle("/apidocs/", http.StripPrefix("/apidocs/", http.FileServer(http.Dir("/Users/emicklei/Projects/swagger-ui/dist"))))
+	restful.DefaultResponseContentType(restful.MIME_JSON)
+	restful.DefaultRequestContentType(restful.MIME_JSON)
 
 	// CORS中间件
 	cors := restful.CrossOriginResourceSharing{
@@ -83,9 +81,17 @@ func (s *HTTPService) Start() {
 	ioc.LoadGoRestfulApi(s.PathPrefix(), s.r)
 
 	// API Doc
+	// Optionally, you can install the Swagger Service which provides a nice Web UI on your REST API
+	// You need to download the Swagger HTML5 assets and change the FilePath location in the config below.
+	// Open http://localhost:8080/apidocs/?url=http://localhost:8080/apidocs.json
+	// http.Handle("/apidocs/", http.StripPrefix("/apidocs/", http.FileServer(http.Dir("/Users/emicklei/Projects/swagger-ui/dist"))))
 	s.r.Add(apidoc.APIDocs(s.apiDocPath, swagger.Docs))
+	s.l.Infof("Swagger API Doc访问地址: http://%s%s", s.c.App.HTTP.Addr(), s.apiDocPath)
+
 	// HealthCheck
-	s.r.Add(health.NewDefaultHealthChecker().WebService())
+	hc := health.NewDefaultHealthChecker()
+	s.r.Add(hc.WebService())
+	s.l.Infof("健康检查地址: http://%s%s", s.c.App.HTTP.Addr(), hc.HealthCheckPath)
 
 	// 启动 HTTP服务
 	s.l.Infof("HTTP服务启动成功, 监听地址: %s", s.server.Addr)
