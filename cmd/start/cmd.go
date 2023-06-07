@@ -23,17 +23,14 @@ var Cmd = &cobra.Command{
 	Use:   "start",
 	Short: "mcenter API服务",
 	Long:  "mcenter API服务",
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		conf := conf.C()
 		// 初始化服务
 		svr, err := newService(conf)
-		if err != nil {
-			return err
-		}
+		cobra.CheckErr(err)
 
 		// 启动服务
 		svr.start()
-		return nil
 	},
 }
 
