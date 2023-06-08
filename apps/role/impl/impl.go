@@ -13,10 +13,9 @@ import (
 	"github.com/infraboard/mcenter/conf"
 )
 
-var (
-	// Service 服务实例
-	svr = WrapImpl(&impl{})
-)
+func init() {
+	ioc.RegistryController(&impl{})
+}
 
 type impl struct {
 	role *mongo.Collection
@@ -46,9 +45,5 @@ func (i *impl) Name() string {
 }
 
 func (i *impl) Registry(server *grpc.Server) {
-	role.RegisterRPCServer(server, svr)
-}
-
-func init() {
-	ioc.RegistryController(svr)
+	role.RegisterRPCServer(server, i)
 }

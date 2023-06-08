@@ -15,10 +15,9 @@ import (
 	"github.com/infraboard/mcenter/conf"
 )
 
-var (
-	// Service 服务实例
-	svr = &service{}
-)
+func init() {
+	ioc.RegistryController(&service{})
+}
 
 type service struct {
 	col *mongo.Collection
@@ -50,9 +49,5 @@ func (s *service) Name() string {
 }
 
 func (s *service) Registry(server *grpc.Server) {
-	notify.RegisterRPCServer(server, svr)
-}
-
-func init() {
-	ioc.RegistryController(svr)
+	notify.RegisterRPCServer(server, s)
 }

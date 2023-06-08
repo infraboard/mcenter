@@ -16,10 +16,9 @@ import (
 	"github.com/infraboard/mcenter/conf"
 )
 
-var (
-	// Service 服务实例
-	svr = &service{}
-)
+func init() {
+	ioc.RegistryController(&service{})
+}
 
 type service struct {
 	log    logger.Logger
@@ -67,9 +66,5 @@ func (s *service) Name() string {
 }
 
 func (s *service) Registry(server *grpc.Server) {
-	user.RegisterRPCServer(server, svr)
-}
-
-func init() {
-	ioc.RegistryController(svr)
+	user.RegisterRPCServer(server, s)
 }

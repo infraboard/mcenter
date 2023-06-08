@@ -11,13 +11,12 @@ import (
 	"github.com/infraboard/mcenter/apps/storage"
 )
 
-var (
-	// Service 服务实例
-	svr = &service{
+func init() {
+	ioc.RegistryController(&service{
 		bucketName: "ip2region",
 		dbFileName: "ip2region.db",
-	}
-)
+	})
+}
 
 type service struct {
 	storage    storage.Service
@@ -38,8 +37,4 @@ func (s *service) Init() error {
 
 func (s *service) Name() string {
 	return ip2region.AppName
-}
-
-func init() {
-	ioc.RegistryController(svr)
 }

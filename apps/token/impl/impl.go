@@ -23,10 +23,9 @@ import (
 	_ "github.com/infraboard/mcenter/apps/token/provider/all"
 )
 
-var (
-	// Service 服务实例
-	svr = &service{}
-)
+func init() {
+	ioc.RegistryController(&service{})
+}
 
 type service struct {
 	col *mongo.Collection
@@ -87,9 +86,5 @@ func (s *service) Name() string {
 }
 
 func (s *service) Registry(server *grpc.Server) {
-	token.RegisterRPCServer(server, svr)
-}
-
-func init() {
-	ioc.RegistryController(svr)
+	token.RegisterRPCServer(server, s)
 }

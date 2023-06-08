@@ -10,10 +10,9 @@ import (
 	"github.com/infraboard/mcenter/conf"
 )
 
-var (
-	// Service 服务实例
-	svr = &service{}
-)
+func init() {
+	ioc.RegistryController(&service{})
+}
 
 type service struct {
 	log logger.Logger
@@ -34,8 +33,4 @@ func (s *service) Init() error {
 
 func (s *service) Name() string {
 	return storage.AppName
-}
-
-func init() {
-	ioc.RegistryController(svr)
 }

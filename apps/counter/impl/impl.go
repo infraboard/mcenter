@@ -13,10 +13,9 @@ import (
 	"github.com/infraboard/mcube/ioc"
 )
 
-var (
-	// Service 服务实例
-	svr = &service{}
-)
+func init() {
+	ioc.RegistryController(&service{})
+}
 
 type service struct {
 	col *mongo.Collection
@@ -54,8 +53,4 @@ func (s *service) GetNextSequenceValue(sequenceName string) (*counter.Count, err
 
 func (s *service) Name() string {
 	return counter.AppName
-}
-
-func init() {
-	ioc.RegistryController(svr)
 }

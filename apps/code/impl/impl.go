@@ -18,10 +18,9 @@ import (
 	"github.com/infraboard/mcube/ioc"
 )
 
-var (
-	// Service 服务实例
-	svr = &service{}
-)
+func init() {
+	ioc.RegistryController(&service{})
+}
 
 type service struct {
 	col *mongo.Collection
@@ -67,9 +66,5 @@ func (s *service) Name() string {
 }
 
 func (s *service) Registry(server *grpc.Server) {
-	code.RegisterRPCServer(server, svr)
-}
-
-func init() {
-	ioc.RegistryController(svr)
+	code.RegisterRPCServer(server, s)
 }
