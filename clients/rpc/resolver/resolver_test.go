@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/infraboard/mcenter/client/rpc"
+	"github.com/infraboard/mcenter/clients/rpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/infraboard/mcenter/client/rpc/resolver"
+	"github.com/infraboard/mcenter/clients/rpc/resolver"
 )
 
 func TestResolver(t *testing.T) {

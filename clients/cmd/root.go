@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/infraboard/mcenter/client/rest"
+	"github.com/infraboard/mcenter/clients/rest"
 	"github.com/infraboard/mcenter/version"
 	"github.com/spf13/cobra"
 )

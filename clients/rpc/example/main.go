@@ -1,18 +1,10 @@
-# mcenter客户端
-
-
-## RPC客户端
-
-用于内部服务调用
-
-```go
 package main
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mcenter/client/rpc"
+	"github.com/infraboard/mcenter/clients/rpc"
 )
 
 func main() {
@@ -34,14 +26,3 @@ func main() {
 	}
 	fmt.Println(ci)
 }
-```
-
-
-## REST客户端
-
-用于外部服务调用
-
-
-## CLI客户端
-
-作为工具用于集成, 比如放置于容器内使用

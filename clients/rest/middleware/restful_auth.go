@@ -15,7 +15,7 @@ import (
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcenter/client/rest"
+	"github.com/infraboard/mcenter/clients/rest"
 )
 
 // RestfulServerInterceptor go-restful认证中间件

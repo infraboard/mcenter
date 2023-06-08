@@ -5,7 +5,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/client/rpc"
+	"github.com/infraboard/mcenter/clients/rpc"
 	"github.com/infraboard/mcube/exception"
 )
 

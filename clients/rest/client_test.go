@@ -6,7 +6,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
-	"github.com/infraboard/mcenter/client/rest"
+	"github.com/infraboard/mcenter/clients/rest"
 	"github.com/infraboard/mcenter/test/tools"
 	"github.com/infraboard/mcube/logger/zap"
 )
