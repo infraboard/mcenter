@@ -4,6 +4,7 @@ import (
 	"context"
 	"sync"
 
+	"github.com/infraboard/mcube/grpc/middleware/exception"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
@@ -39,7 +40,7 @@ func NewClient(conf *Config) (*ClientSet, error) {
 		// gprc 支持的负载均衡策略: https://github.com/grpc/grpc/blob/master/doc/load-balancing.md
 		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
 		// 将异常转化为 API Exception
-		grpc.WithChainUnaryInterceptor(NewExceptionUnaryClientInterceptor().UnaryClientInterceptor),
+		grpc.WithChainUnaryInterceptor(exception.NewUnaryClientInterceptor()),
 		// Grpc Trace
 		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
 		grpc.WithStreamInterceptor(otelgrpc.StreamClientInterceptor()),
