@@ -66,6 +66,11 @@ type ClientSet struct {
 	lock sync.Mutex
 }
 
+// 关闭GRPC连接
+func (c *ClientSet) Close() error {
+	return c.conn.Close()
+}
+
 // 返回客户端服务信息
 func (c *ClientSet) ClientInfo(ctx context.Context) (*service.Service, error) {
 	c.lock.Lock()

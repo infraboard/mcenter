@@ -14,10 +14,6 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo"
 )
 
-var (
-	mgoclient *mongo.Client
-)
-
 func newConfig() *Config {
 	return &Config{
 		App:    newDefaultAPP(),
@@ -127,7 +123,9 @@ type mongodb struct {
 	Database       string   `toml:"database" env:"MONGO_DATABASE"`
 	AuthDB         string   `toml:"auth_db" env:"MONGO_AUTH_DB"`
 	K8sServiceName string   `toml:"k8s_service_name" env:"K8S_SERVICE_NAME"`
-	lock           sync.Mutex
+
+	client *mongo.Client
+	lock   sync.Mutex
 }
 
 // 当 Pod 运行在 Node 上，kubelet 会为每个活跃的 Service 添加一组环境变量。
@@ -151,28 +149,38 @@ func (m *mongodb) GetAuthDB() string {
 	return m.Database
 }
 
-// Client 获取一个全局的mongodb客户端连接
-func (m *mongodb) Client() (*mongo.Client, error) {
-	// 加载全局数据量单例
-	m.lock.Lock()
-	defer m.lock.Unlock()
-	if mgoclient == nil {
-		conn, err := m.getClient()
-		if err != nil {
-			return nil, err
-		}
-		mgoclient = conn
-	}
-
-	return mgoclient, nil
-}
-
 func (m *mongodb) GetDB() (*mongo.Database, error) {
 	conn, err := m.Client()
 	if err != nil {
 		return nil, err
 	}
 	return conn.Database(m.Database), nil
+}
+
+// 关闭数据库连接
+func (m *mongodb) Close(ctx context.Context) error {
+	if m.client == nil {
+		return nil
+	}
+
+	return m.client.Disconnect(ctx)
+}
+
+// Client 获取一个全局的mongodb客户端连接
+func (m *mongodb) Client() (*mongo.Client, error) {
+	// 加载全局数据量单例
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
+	if m.client == nil {
+		conn, err := m.getClient()
+		if err != nil {
+			return nil, err
+		}
+		m.client = conn
+	}
+
+	return m.client, nil
 }
 
 func (m *mongodb) getClient() (*mongo.Client, error) {
