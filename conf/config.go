@@ -7,8 +7,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/cache/memory"
 	"github.com/infraboard/mcube/cache/redis"
+	"github.com/infraboard/mcube/logger/zap"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo"
@@ -31,6 +33,16 @@ type Config struct {
 	Mongo  *mongodb `toml:"mongodb"`
 	Cache  *_cache  `toml:"cache"`
 	Jaeger *jaeger  `toml:"jaeger"`
+}
+
+// InitGlobal 注入全局变量
+func (c *Config) InitGlobal() error {
+	// 加载全局缓存
+	if err := c.Cache.LoadCache(); err != nil {
+		return fmt.Errorf("load cache error, %s", err)
+	}
+
+	return nil
 }
 
 type app struct {
@@ -230,6 +242,24 @@ type _cache struct {
 	Type   string         `toml:"type" json:"type" yaml:"type" env:"MCENTER_CACHE_TYPE"`
 	Memory *memory.Config `toml:"memory" json:"memory" yaml:"memory"`
 	Redis  *redis.Config  `toml:"redis" json:"redis" yaml:"redis"`
+}
+
+func (c *_cache) LoadCache() error {
+	// 设置全局缓存
+	switch c.Type {
+	case "memory", "":
+		ins := memory.NewCache(c.Memory)
+		cache.SetGlobal(ins)
+		zap.L().Info("use cache in local memory")
+	case "redis":
+		ins := redis.NewCache(c.Redis)
+		cache.SetGlobal(ins)
+		zap.L().Info("use redis to cache")
+	default:
+		return fmt.Errorf("unknown cache type: %s", c.Type)
+	}
+
+	return nil
 }
 
 func newJaeger() *jaeger {

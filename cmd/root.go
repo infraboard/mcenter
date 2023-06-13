@@ -11,9 +11,6 @@ import (
 	"github.com/infraboard/mcenter/conf"
 	"github.com/infraboard/mcenter/tracer"
 	"github.com/infraboard/mcenter/version"
-	"github.com/infraboard/mcube/cache"
-	"github.com/infraboard/mcube/cache/memory"
-	"github.com/infraboard/mcube/cache/redis"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger/zap"
 )
@@ -48,10 +45,6 @@ func initail() {
 
 	// 初始化全局日志配置
 	err = loadGlobalLogger()
-	cobra.CheckErr(err)
-
-	// 加载缓存
-	err = loadCache()
 	cobra.CheckErr(err)
 
 	// 初始化全局app
@@ -117,26 +110,6 @@ func loadGlobalLogger() error {
 		return err
 	}
 	zap.L().Named("INIT").Info(logInitMsg)
-	return nil
-}
-
-func loadCache() error {
-	l := zap.L().Named("INIT")
-	c := conf.C()
-	// 设置全局缓存
-	switch c.Cache.Type {
-	case "memory", "":
-		ins := memory.NewCache(c.Cache.Memory)
-		cache.SetGlobal(ins)
-		l.Info("use cache in local memory")
-	case "redis":
-		ins := redis.NewCache(c.Cache.Redis)
-		cache.SetGlobal(ins)
-		l.Info("use redis to cache")
-	default:
-		return fmt.Errorf("unknown cache type: %s", c.Cache.Type)
-	}
-
 	return nil
 }
 
