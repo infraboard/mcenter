@@ -62,7 +62,7 @@ func (a *grpcAuther) Auth(
 	// 注入服务认证后的信息
 	svc.InjectGrpcClientMeta(md)
 	newCtx := metadata.NewIncomingContext(ctx, md)
-	resp, err = handler(ctx, newCtx)
+	resp, err = handler(newCtx, req)
 
 	// 注入自定义异常
 	if err != nil {
