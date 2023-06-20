@@ -68,6 +68,17 @@ func (a *httpAuther) SetCodeCheckSilenceTime(t time.Duration) {
 
 // 是否开启权限的控制, 交给中间件使用方去觉得
 func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Response, next *restful.FilterChain) {
+	// 权限检查
+	if err := a.PermissionCheck(req, resp); err != nil {
+		response.Failed(resp, err)
+		return
+	}
+
+	// next flow
+	next.ProcessFilter(req, resp)
+}
+
+func (a *httpAuther) PermissionCheck(req *restful.Request, resp *restful.Response) error {
 	// 请求拦截
 	entry := endpoint.NewEntryFromRestRequest(req)
 
@@ -75,16 +86,14 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		// 访问令牌校验
 		tk, err := a.CheckAccessToken(req)
 		if err != nil {
-			response.Failed(resp, err)
-			return
+			return err
 		}
 
 		// 接口调用权限校验
 		if entry.PermissionEnable {
 			err := a.CheckPermission(req, tk, entry)
 			if err != nil {
-				response.Failed(resp, err)
-				return
+				return err
 			}
 		}
 
@@ -92,14 +101,12 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		if !a.IsCodeCheckSilence(tk.Username) && entry.CodeEnable {
 			_, err := a.CheckCode(req, tk)
 			if err != nil {
-				response.Failed(resp, err)
-				return
+				return err
 			}
 		}
 	}
 
-	// next flow
-	next.ProcessFilter(req, resp)
+	return nil
 }
 
 func (a *httpAuther) CheckAccessToken(req *restful.Request) (*token.Token, error) {
