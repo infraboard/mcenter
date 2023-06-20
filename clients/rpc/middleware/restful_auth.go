@@ -21,12 +21,12 @@ import (
 
 // RestfulServerInterceptor go-restful认证中间件
 func RestfulServerInterceptor() restful.FilterFunction {
-	return newhttpAuther().GoRestfulAuthFunc
+	return NewhttpAuther().GoRestfulAuthFunc
 }
 
 // 给服务端提供的RESTful接口的 认证与鉴权中间件
-func newhttpAuther() *httpAuther {
-	return &httpAuther{
+func NewhttpAuther() *HttpAuther {
+	return &HttpAuther{
 		log:              zap.L().Named("auther.http"),
 		client:           rpc.C(),
 		cache:            cache.C(),
@@ -44,7 +44,7 @@ const (
 	ACL_MODE PermissionMode = 2
 )
 
-type httpAuther struct {
+type HttpAuther struct {
 	log logger.Logger
 	// 基于rpc客户端进行封装
 	client *rpc.ClientSet
@@ -57,17 +57,17 @@ type httpAuther struct {
 }
 
 // 设置权限校验策略
-func (a *httpAuther) SetPermissionMode(m PermissionMode) {
+func (a *HttpAuther) SetPermissionMode(m PermissionMode) {
 	a.mode = m
 }
 
 // 设置静默时长
-func (a *httpAuther) SetCodeCheckSilenceTime(t time.Duration) {
+func (a *HttpAuther) SetCodeCheckSilenceTime(t time.Duration) {
 	a.codeCheckSilence = t
 }
 
 // 是否开启权限的控制, 交给中间件使用方去觉得
-func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Response, next *restful.FilterChain) {
+func (a *HttpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Response, next *restful.FilterChain) {
 	// 权限检查
 	if err := a.PermissionCheck(req, resp); err != nil {
 		response.Failed(resp, err)
@@ -78,28 +78,28 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 	next.ProcessFilter(req, resp)
 }
 
-func (a *httpAuther) PermissionCheck(req *restful.Request, resp *restful.Response) error {
+func (a *HttpAuther) PermissionCheck(req *restful.Request, resp *restful.Response) error {
 	// 请求拦截
 	entry := endpoint.NewEntryFromRestRequest(req)
 
 	if entry != nil && entry.AuthEnable {
 		// 访问令牌校验
-		tk, err := a.CheckAccessToken(req)
+		tk, err := a.checkAccessToken(req)
 		if err != nil {
 			return err
 		}
 
 		// 接口调用权限校验
 		if entry.PermissionEnable {
-			err := a.CheckPermission(req, tk, entry)
+			err := a.checkPermission(req, tk, entry)
 			if err != nil {
 				return err
 			}
 		}
 
 		// 验证码校验(双因子认证)
-		if !a.IsCodeCheckSilence(tk.Username) && entry.CodeEnable {
-			_, err := a.CheckCode(req, tk)
+		if !a.isCodeCheckSilence(tk.Username) && entry.CodeEnable {
+			_, err := a.checkCode(req, tk)
 			if err != nil {
 				return err
 			}
@@ -109,7 +109,7 @@ func (a *httpAuther) PermissionCheck(req *restful.Request, resp *restful.Respons
 	return nil
 }
 
-func (a *httpAuther) CheckAccessToken(req *restful.Request) (*token.Token, error) {
+func (a *HttpAuther) checkAccessToken(req *restful.Request) (*token.Token, error) {
 	// 获取用户Token, Token放在Heander Authorization
 	ak := token.GetAccessTokenFromHTTP(req.Request)
 
@@ -128,7 +128,7 @@ func (a *httpAuther) CheckAccessToken(req *restful.Request) (*token.Token, error
 	return tk, nil
 }
 
-func (a *httpAuther) CheckCode(req *restful.Request, tk *token.Token) (*code.Code, error) {
+func (a *HttpAuther) checkCode(req *restful.Request, tk *token.Token) (*code.Code, error) {
 	// 获取用户Code, Code放在Heander X-MCENTER-CODE
 	cdStr := code.GetCodeFromHTTP(req.Request)
 	if cdStr == "" {
@@ -144,22 +144,22 @@ func (a *httpAuther) CheckCode(req *restful.Request, tk *token.Token) (*code.Cod
 	// 保存返回的Code信息
 	req.SetAttribute(code.CODE_ATTRIBUTE_NAME, cd)
 	// 加入静默池中
-	a.SetCodeCheckSilence(cd)
+	a.setCodeCheckSilence(cd)
 	return cd, nil
 }
 
-func (a *httpAuther) SetCodeCheckSilence(c *code.Code) {
+func (a *HttpAuther) setCodeCheckSilence(c *code.Code) {
 	err := a.cache.PutWithTTL(c.Key(), c.Code, a.codeCheckSilence)
 	if err != nil {
 		a.log.Errorf("set code Silence to cache error, %s", err)
 	}
 }
 
-func (a *httpAuther) IsCodeCheckSilence(username string) bool {
+func (a *HttpAuther) isCodeCheckSilence(username string) bool {
 	return a.cache.IsExist(code.NewCodeKey(username))
 }
 
-func (a *httpAuther) CheckPermission(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+func (a *HttpAuther) checkPermission(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	if tk == nil {
 		return exception.NewUnauthorized("validate permission need token")
 	}
@@ -172,15 +172,15 @@ func (a *httpAuther) CheckPermission(req *restful.Request, tk *token.Token, e *e
 
 	switch a.mode {
 	case ACL_MODE:
-		return a.ValidatePermissionByACL(req, tk, e)
+		return a.validatePermissionByACL(req, tk, e)
 	case PRBAC_MODE:
-		return a.ValidatePermissionByPRBAC(req, tk, e)
+		return a.validatePermissionByPRBAC(req, tk, e)
 	default:
 		return fmt.Errorf("only support acl and prbac")
 	}
 }
 
-func (a *httpAuther) ValidatePermissionByACL(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+func (a *HttpAuther) validatePermissionByACL(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
 		a.log.Debugf("[%s] start check permission to keyauth ...", tk.Username)
@@ -193,7 +193,7 @@ func (a *httpAuther) ValidatePermissionByACL(req *restful.Request, tk *token.Tok
 	return nil
 }
 
-func (a *httpAuther) ValidatePermissionByPRBAC(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+func (a *HttpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	ci, err := a.client.ClientInfo(r.Request.Context())
 	if err != nil {
 		return err

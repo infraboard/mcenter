@@ -18,29 +18,29 @@ import (
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
 func GrpcAuthUnaryServerInterceptor(namespace string) grpc.UnaryServerInterceptor {
-	return newGrpcAuther(rpc.C().Service()).WithNamespace(namespace).Auth
+	return NewGrpcAuther(rpc.C().Service()).WithNamespace(namespace).Auth
 }
 
-func newGrpcAuther(svr service.RPCClient) *grpcAuther {
-	return &grpcAuther{
+func NewGrpcAuther(svr service.RPCClient) *GrpcAuther {
+	return &GrpcAuther{
 		log:     zap.L().Named("auther.grpc"),
 		service: svr,
 	}
 }
 
 // internal todo
-type grpcAuther struct {
+type GrpcAuther struct {
 	namespace string
 	log       logger.Logger
 	service   service.RPCClient
 }
 
-func (a *grpcAuther) WithNamespace(ns string) *grpcAuther {
+func (a *GrpcAuther) WithNamespace(ns string) *GrpcAuther {
 	a.namespace = ns
 	return a
 }
 
-func (a *grpcAuther) Auth(
+func (a *GrpcAuther) Auth(
 	ctx context.Context, req interface{},
 	info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler,
@@ -51,7 +51,7 @@ func (a *grpcAuther) Auth(
 		return nil, fmt.Errorf("ctx is not an grpc incoming context")
 	}
 
-	clientId, clientSecret := a.GetClientCredentialsFromMeta(md)
+	clientId, clientSecret := a.getClientCredentialsFromMeta(md)
 
 	// 校验调用的客户端凭证是否有效
 	svc, err := a.validateServiceCredential(ctx, clientId, clientSecret)
@@ -83,7 +83,7 @@ func (a *grpcAuther) Auth(
 	return resp, err
 }
 
-func (a *grpcAuther) GetClientCredentialsFromMeta(md metadata.MD) (
+func (a *GrpcAuther) getClientCredentialsFromMeta(md metadata.MD) (
 	clientId, clientSecret string) {
 	cids := md.Get(service.ClientHeaderKey)
 	sids := md.Get(service.ClientSecretKey)
@@ -96,7 +96,7 @@ func (a *grpcAuther) GetClientCredentialsFromMeta(md metadata.MD) (
 	return
 }
 
-func (a *grpcAuther) validateServiceCredential(ctx context.Context, clientId, clientSecret string) (*service.Service, error) {
+func (a *GrpcAuther) validateServiceCredential(ctx context.Context, clientId, clientSecret string) (*service.Service, error) {
 	if clientId == "" && clientSecret == "" {
 		return nil, status.Errorf(codes.Unauthenticated, "client_id or client_secret is \"\"")
 	}
