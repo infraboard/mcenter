@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/emicklei/go-restful/v3"
@@ -19,9 +20,25 @@ import (
 	"github.com/infraboard/mcenter/clients/rpc"
 )
 
+var (
+	httpAuther *HttpAuther
+	lock       sync.Mutex
+)
+
 // RestfulServerInterceptor go-restful认证中间件
 func RestfulServerInterceptor() restful.FilterFunction {
-	return NewhttpAuther().GoRestfulAuthFunc
+	return GetHttpAuther().GoRestfulAuthFunc
+}
+
+func GetHttpAuther() *HttpAuther {
+	lock.Lock()
+	defer lock.Unlock()
+
+	if httpAuther == nil {
+		httpAuther = NewhttpAuther()
+	}
+
+	return httpAuther
 }
 
 // 给服务端提供的RESTful接口的 认证与鉴权中间件
