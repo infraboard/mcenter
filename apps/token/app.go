@@ -281,7 +281,11 @@ func (t *Token) CheckAccessIsExpired() bool {
 		return false
 	}
 
-	return time.Unix(t.AccessExpiredAt, 0).Before(time.Now())
+	return t.AccessExpiredTime().Before(time.Now())
+}
+
+func (t *Token) AccessExpiredTime() time.Time {
+	return time.Unix(t.IssueAt, 0).Add(time.Duration(t.AccessExpiredAt) * time.Second)
 }
 
 // CheckRefreshIsExpired 检测刷新token是否过期
@@ -291,7 +295,11 @@ func (t *Token) CheckRefreshIsExpired() bool {
 		return false
 	}
 
-	return time.Unix(t.RefreshExpiredAt, 0).Before(time.Now())
+	return t.RefreshExpiredTime().Before(time.Now())
+}
+
+func (t *Token) RefreshExpiredTime() time.Time {
+	return time.Unix(t.IssueAt, 0).Add(time.Duration(t.RefreshExpiredAt) * time.Second)
 }
 
 func (t *Token) JsonFormat() string {

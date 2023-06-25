@@ -2,7 +2,6 @@ package impl
 
 import (
 	"context"
-	"time"
 
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/namespace"
@@ -227,9 +226,9 @@ func (s *service) reuseToken(ctx context.Context, tk *token.Token) error {
 	}
 
 	// access token延长一个过期周期
-	tk.AccessExpiredAt = time.Now().Add(time.Duration(token.DEFAULT_ACCESS_TOKEN_EXPIRE_SECOND) * time.Second).Unix()
+	tk.AccessExpiredAt += token.DEFAULT_ACCESS_TOKEN_EXPIRE_SECOND
 	// refresh token延长一个过期周期
-	tk.RefreshExpiredAt = time.Unix(tk.RefreshExpiredAt, 0).Add(time.Duration(token.DEFAULT_REFRESH_TOKEN_EXPIRE_SECOND) * time.Second).Unix()
+	tk.RefreshExpiredAt += token.DEFAULT_REFRESH_TOKEN_EXPIRE_SECOND
 	return s.save(ctx, tk)
 }
 
