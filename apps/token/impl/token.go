@@ -229,7 +229,7 @@ func (s *service) reuseToken(ctx context.Context, tk *token.Token) error {
 	tk.AccessExpiredAt += token.DEFAULT_ACCESS_TOKEN_EXPIRE_SECOND
 	// refresh token延长一个过期周期
 	tk.RefreshExpiredAt += token.DEFAULT_REFRESH_TOKEN_EXPIRE_SECOND
-	return s.save(ctx, tk)
+	return s.update(ctx, tk)
 }
 
 // 查询Token, 用于查询Token颁发记录, 也就是登陆日志
