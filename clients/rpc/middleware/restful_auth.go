@@ -86,7 +86,9 @@ func (a *HttpAuther) SetCodeCheckSilenceTime(t time.Duration) {
 // 是否开启权限的控制, 交给中间件使用方去觉得
 func (a *HttpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Response, next *restful.FilterChain) {
 	// 权限检查
-	if err := a.PermissionCheck(req, resp); err != nil {
+	// 请求拦截
+	entry := endpoint.NewEntryFromRestRequest(req)
+	if err := a.PermissionCheck(req, resp, entry); err != nil {
 		response.Failed(resp, err)
 		return
 	}
@@ -95,10 +97,7 @@ func (a *HttpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 	next.ProcessFilter(req, resp)
 }
 
-func (a *HttpAuther) PermissionCheck(req *restful.Request, resp *restful.Response) error {
-	// 请求拦截
-	entry := endpoint.NewEntryFromRestRequest(req)
-
+func (a *HttpAuther) PermissionCheck(req *restful.Request, resp *restful.Response, entry *endpoint.Entry) error {
 	if entry != nil && entry.AuthEnable {
 		// 访问令牌校验
 		tk, err := a.checkAccessToken(req)

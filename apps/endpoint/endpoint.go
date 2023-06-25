@@ -232,6 +232,21 @@ func (e *Entry) IsAllow(target fmt.Stringer) bool {
 	return false
 }
 
+func (e *Entry) SetAuthEnable(v bool) *Entry {
+	e.AuthEnable = v
+	return e
+}
+
+func (e *Entry) SetPermissionEnable(v bool) *Entry {
+	e.PermissionEnable = v
+	return e
+}
+
+func (e *Entry) SetCodeEnable(v bool) *Entry {
+	e.CodeEnable = v
+	return e
+}
+
 func NewEntryFromRestRequest(req *restful.Request) *Entry {
 	entry := NewDefaultEntry()
 
