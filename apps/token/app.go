@@ -211,7 +211,7 @@ func GetAccessTokenFromHTTP(r *http.Request) string {
 	ck, err := r.Cookie(ACCESS_TOKEN_COOKIE_KEY)
 	if err != nil {
 		zap.L().Warnf("get tk from cookie: %s error, %s", ACCESS_TOKEN_COOKIE_KEY, err)
-		return ""
+		return r.URL.Query().Get(ACCESS_TOKEN_QUERY_KEY)
 	}
 
 	return ck.Value
