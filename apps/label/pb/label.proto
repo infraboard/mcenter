@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package infraboard.mcenter.label;
+option go_package = "github.com/infraboard/mcenter/apps/label";
+
+message ItemKey {
+    // 标签的键
+    // @gotags: json:"key" bson:"key" validate:"required"
+    string key = 1;
+    // 是不是必须标签
+    // @gotags: json:"required" bson:"required"
+    bool required = 2;
+    // 标签的颜色
+    // @gotags: json:"color" bson:"color"
+    string color = 3;
+    // 标签生效的范围
+    // @gotags: json:"scope" bson:"scope"
+    SCOPE scope = 4;
+    // 标签的键
+    // @gotags: json:"domain" bson:"domain"
+    string domain = 5;
+    // 标签的键
+    // @gotags: json:"namespace" bson:"namespace"
+    string namespace = 6;
+    // 标签默认值
+    // @gotags: json:"default_value" bson:"default_value"
+    string default_value = 7;
+	// 值描述
+	// @gotags: bson:"value_desc" json:"value_desc"
+	string value_desc = 8;
+	// 枚举值的选项
+	// @gotags: bson:"enum_options" json:"enum_options,omitempty"
+	repeated EnumOption enum_options = 9;
+	// 基于Http枚举的配置
+	// @gotags: bson:"http_enum_config" json:"http_enum_config,omitempty"
+	HttpEnumConfig http_enum_config = 10;
+	// 值的样例
+	// @gotags: bson:"example" json:"example"
+	string example = 11;
+}
+
+enum SCOPE {
+    // 空间级别
+    NAMESPACE = 0;
+    // 域级别
+    DOMAIN = 5;
+    // 系统级别
+    STSTEM = 15;
+}
+
+// 值类型
+enum VALUE_TYPE {
+	// 文本
+	TEXT = 0;
+	// 布尔值, 只能是ture或者false
+	BOOLEAN = 1;
+	// 枚举
+	ENUM = 2;
+	// 基于url的远程选项拉去, 仅存储URL地址, 前端自己处理
+	HTTP_ENUM = 3;
+}
+
+message EnumOption {
+	// 选项的说明
+	// @gotags: bson:"label" json:"label"
+	string label = 1;
+	// 选项的值
+	// @gotags: bson:"value" json:"value" validate:"required"
+	string value = 2;
+	// 扩展属性
+	// @gotags: bson:"extensions" json:"extensions"
+	map<string, string> extensions = 15;
+}
+
+message HttpEnumConfig {
+	// 基于枚举的URL, 注意只支持Get方法
+	// @gotags: bson:"url" json:"url"
+	string url = 1;
+	// Enum Label映射的字段名
+	// @gotags: bson:"enum_label_name" json:"enum_label_name"
+	string enum_label_name = 2;
+	// Enum Value映射的字段名
+	// @gotags: bson:"enum_label_value" json:"enum_label_value"
+	string enum_label_value = 3;
+}
+
