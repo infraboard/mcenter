@@ -35,6 +35,9 @@ message CreateNamespaceRequest {
     // 空间负责人
     // @gotags: bson:"owner" json:"owner"
     string owner = 4;
+    // 空间负责人助理
+    // @gotags: bson:"assistants" json:"assistants"
+    repeated string assistants = 9;
     // 禁用项目, 该项目所有人暂时都无法访问
     // @gotags: bson:"enabled" json:"enabled"
     bool enabled = 5;
@@ -49,7 +52,7 @@ message CreateNamespaceRequest {
     VISIBLE visible = 8;
     // 扩展信息
     // @gotags: bson:"meta" json:"meta"
-    map<string,string> meta = 9;
+    map<string,string> meta = 15;
 }
 
 message NamespaceSet {

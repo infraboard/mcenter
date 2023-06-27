@@ -31,8 +31,17 @@ func NewDefaultNamespace() *Namespace {
 	}
 }
 
-func (n *Namespace) IsOwner(owner string) bool {
-	return n.Spec.Owner == owner
+func (n *Namespace) IsManager(username string) bool {
+	if n.Spec.Owner == username {
+		return true
+	}
+
+	for i := range n.Spec.Assistants {
+		if n.Spec.Assistants[i] == username {
+			return true
+		}
+	}
+	return false
 }
 
 func (n *Namespace) MarshalJSON() ([]byte, error) {

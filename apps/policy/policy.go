@@ -162,17 +162,15 @@ func (s *PolicySet) RoleNames() (rns []string) {
 	return
 }
 
-func (s *PolicySet) GetNamespace() (nss []string) {
-	nmap := map[string]struct{}{}
+func (s *PolicySet) HasNamespace(ns string) bool {
 	for i := range s.Items {
-		nmap[s.Items[i].Spec.Namespace] = struct{}{}
+		item := s.Items[i]
+		if item.Spec.Namespace == ns {
+			return true
+		}
 	}
 
-	for k := range nmap {
-		nss = append(nss, k)
-	}
-
-	return
+	return false
 }
 
 func (s *PolicySet) GetNamespaceWithPage(page *request.PageRequest) (nss []string, total int64) {

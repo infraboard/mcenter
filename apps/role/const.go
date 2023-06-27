@@ -55,7 +55,7 @@ func CreateVisitorRoleRequest(createBy string) *CreateRoleRequest {
 	return req
 }
 
-func OwnerAdminPermssion() *Permission {
+func NamespaceManagerPermssion() *Permission {
 	p := NewDeaultPermission()
 	p.Spec = &Spec{
 		Desc:         "拥有资源的所有操作权限",

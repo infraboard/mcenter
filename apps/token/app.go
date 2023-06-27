@@ -310,15 +310,15 @@ func (t *Token) JsonFormat() string {
 	return string(dj)
 }
 
-func (t *Token) HasNamespace(ns string) bool {
-	for _, v := range t.AvailableNamespace {
-		if v == ns {
-			return true
-		}
-	}
+// func (t *Token) HasNamespace(ns string) bool {
+// 	for _, v := range t.AvailableNamespace {
+// 		if v == ns {
+// 			return true
+// 		}
+// 	}
 
-	return false
-}
+// 	return false
+// }
 
 func NewDescribeTokenRequest(token string) *DescribeTokenRequest {
 	return &DescribeTokenRequest{

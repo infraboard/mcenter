@@ -166,14 +166,28 @@ func (s *service) ChangeNamespace(ctx context.Context, req *token.ChangeNamespac
 	if err != nil {
 		return nil, err
 	}
+	// 判断用户是不是空间管理员
+	tk.IsNamespaceManager = ns.IsManager(tk.UserId)
 
 	// 如果是私有空间 需要检查用户是否加入了该空间
-	if ns.Spec.Visible.Equal(namespace.VISIBLE_PRIVATE) {
-		// 既不是管理员, 也没有加入该空间，则没有该空间访问权限
-		if !tk.UserType.IsIn(user.TYPE_PRIMARY, user.TYPE_SUPPER) &&
-			!tk.HasNamespace(req.Namespace) {
+	if ns.Spec.Visible.Equal(namespace.VISIBLE_PRIVATE) &&
+		!tk.UserType.IsIn(user.TYPE_PRIMARY, user.TYPE_SUPPER) {
+		// 查询用户可以访问的空间
+		query := policy.NewQueryPolicyRequest()
+		query.Page = request.NewPageRequest(policy.MAX_USER_POLICY, 1)
+		query.Username = tk.Username
+		ps, err := s.policy.QueryPolicy(ctx, query)
+		if err != nil {
+			return nil, err
+		}
+		if ps.Total > policy.MAX_USER_POLICY {
+			s.log.Warnf("user policy large than max policy count %d, total: %d", policy.MAX_USER_POLICY, ps.Total)
+		}
+
+		if !ps.HasNamespace(req.Namespace) {
 			return nil, exception.NewPermissionDeny("your has no permission to access namespace %s", req.Namespace)
 		}
+
 	}
 
 	tk.Namespace = req.Namespace
@@ -275,18 +289,5 @@ func (s *service) DescribeToken(ctx context.Context, req *token.DescribeTokenReq
 	if err != nil {
 		return nil, exception.NewUnauthorized(err.Error())
 	}
-
-	// 查询用户可以访问的空间
-	query := policy.NewQueryPolicyRequest()
-	query.Page = request.NewPageRequest(policy.MAX_USER_POLICY, 1)
-	query.Username = tk.Username
-	ps, err := s.policy.QueryPolicy(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	if ps.Total > policy.MAX_USER_POLICY {
-		s.log.Warnf("user policy large than max policy count %d, total: %d", policy.MAX_USER_POLICY, ps.Total)
-	}
-	tk.AvailableNamespace = ps.GetNamespace()
 	return tk, nil
 }

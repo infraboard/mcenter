@@ -159,8 +159,8 @@ func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionR
 	if err != nil {
 		return nil, err
 	}
-	if ns.IsOwner(req.Username) {
-		return role.OwnerAdminPermssion(), nil
+	if ns.IsManager(req.Username) {
+		return role.NamespaceManagerPermssion(), nil
 	}
 
 	// 查询用户权限策略
