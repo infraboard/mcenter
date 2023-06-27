@@ -12,9 +12,9 @@ import (
 	"github.com/infraboard/mcube/pb/resource"
 	"go.mongodb.org/mongo-driver/bson"
 
-	label "github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/common/format"
+	label "github.com/infraboard/mcube/pb/label"
 )
 
 // use a single instance of Validate, it caches struct info

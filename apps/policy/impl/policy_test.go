@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
+	"github.com/infraboard/mcube/pb/label"
 )
 
 func TestCreatePolicy(t *testing.T) {
