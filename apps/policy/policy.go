@@ -242,40 +242,6 @@ func NewDeletePolicyRequestWithNamespace(domain, namespace string) *DeletePolicy
 	}
 }
 
-func ScopeToMap(scope string) map[string]string {
-	filter := map[string]string{}
-
-	if scope == "" {
-		return filter
-	}
-
-	items := strings.Split(scope, ";")
-	fmt.Println(items)
-	for _, item := range items {
-		kv := strings.Split(item, "=")
-		if len(kv) > 1 {
-			filter[kv[0]] = strings.Join(kv[1:], "")
-		}
-	}
-
-	return filter
-}
-
-func ScopeWithMongoFilter(scope, labelName string, filter bson.M) {
-	m := ScopeToMap(scope)
-	for k, v := range m {
-		// 如果value 为空或者* 表示不过滤
-		if v == "" || v == "*" {
-			continue
-		}
-		if strings.Contains(v, ",") {
-			filter[fmt.Sprintf("%s.%s", labelName, k)] = bson.M{"$in": strings.Split(v, ",")}
-		} else {
-			filter[fmt.Sprintf("%s.%s", labelName, k)] = v
-		}
-	}
-}
-
 func GetScopeFilterFromRequest(r *restful.Request) []*resource.LabelRequirement {
 	sc := r.Attribute(SCOPE_ATTRIBUTE_NAME)
 	if sc == nil {
@@ -283,3 +249,53 @@ func GetScopeFilterFromRequest(r *restful.Request) []*resource.LabelRequirement 
 	}
 	return sc.([]*resource.LabelRequirement)
 }
+
+func MakeMongoFilter(m bson.M, prefix string, labels []*resource.LabelRequirement) {
+	for i := range labels {
+		label := labels[i]
+		if label.IsMatchAll() {
+			continue
+		}
+
+		key := label.MakeLabelKey(prefix)
+		if len(label.Values) == 1 {
+			m[key] = label.Values[0]
+		} else {
+			m[key] = bson.M{"$in": label.Values}
+		}
+	}
+}
+
+// func ScopeToMap(scope string) map[string]string {
+// 	filter := map[string]string{}
+
+// 	if scope == "" {
+// 		return filter
+// 	}
+
+// 	items := strings.Split(scope, ";")
+// 	fmt.Println(items)
+// 	for _, item := range items {
+// 		kv := strings.Split(item, "=")
+// 		if len(kv) > 1 {
+// 			filter[kv[0]] = strings.Join(kv[1:], "")
+// 		}
+// 	}
+
+// 	return filter
+// }
+
+// func ScopeWithMongoFilter(scope, labelName string, filter bson.M) {
+// 	m := ScopeToMap(scope)
+// 	for k, v := range m {
+// 		// 如果value 为空或者* 表示不过滤
+// 		if v == "" || v == "*" {
+// 			continue
+// 		}
+// 		if strings.Contains(v, ",") {
+// 			filter[fmt.Sprintf("%s.%s", labelName, k)] = bson.M{"$in": strings.Split(v, ",")}
+// 		} else {
+// 			filter[fmt.Sprintf("%s.%s", labelName, k)] = v
+// 		}
+// 	}
+// }
