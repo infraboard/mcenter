@@ -5,13 +5,13 @@ option go_package = "github.com/infraboard/mcenter/apps/policy";
 
 import "mcube/pb/resource/meta.proto";
 import "mcenter/apps/role/pb/role.proto";
-import "mcube/pb/label/label.proto";
+import "mcube/pb/resource/label.proto";
 
 // Policy 权限策略
 message Policy {
     // 元信息
     // @gotags: bson:",inline" json:"meta"
-    infraboard.mcube.resource.Meta meta = 1;
+    mcube.resource.Meta meta = 1;
     // 策略定义
     // @gotags: bson:",inline" json:"spec"
     CreatePolicyRequest spec = 2;
@@ -39,7 +39,7 @@ message CreatePolicyRequest {
     string role_id = 5;
     // 该角色的生效范围
     // @gotags: bson:"scope" json:"scope"
-    repeated mcube.label.LabelRequirement scope = 6;
+    repeated mcube.resource.LabelRequirement scope = 6;
     // 策略过期时间
     // @gotags: bson:"expired_time" json:"expired_time"
     int64 expired_time = 7;

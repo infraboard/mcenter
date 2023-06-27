@@ -7,6 +7,7 @@ import (
 	"hash/fnv"
 	"strings"
 
+	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/pb/resource"
@@ -14,7 +15,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/common/format"
-	label "github.com/infraboard/mcube/pb/label"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -72,7 +72,7 @@ func (u *Policy) MarshalJSON() ([]byte, error) {
 func NewCreatePolicyRequest() *CreatePolicyRequest {
 	return &CreatePolicyRequest{
 		Enabled: true,
-		Scope:   []*label.LabelRequirement{},
+		Scope:   []*resource.LabelRequirement{},
 		Extra:   map[string]string{},
 	}
 }
@@ -82,7 +82,7 @@ func (req *CreatePolicyRequest) Validate() error {
 	return validate.Struct(req)
 }
 
-func (req *CreatePolicyRequest) AddScope(item *label.LabelRequirement) {
+func (req *CreatePolicyRequest) AddScope(item *resource.LabelRequirement) {
 	req.Scope = append(req.Scope, item)
 }
 
@@ -274,4 +274,12 @@ func ScopeWithMongoFilter(scope, labelName string, filter bson.M) {
 			filter[fmt.Sprintf("%s.%s", labelName, k)] = v
 		}
 	}
+}
+
+func GetScopeFilterFromRequest(r *restful.Request) []*resource.LabelRequirement {
+	sc := r.Attribute(SCOPE_ATTRIBUTE_NAME)
+	if sc == nil {
+		return nil
+	}
+	return sc.([]*resource.LabelRequirement)
 }

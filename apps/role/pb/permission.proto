@@ -3,7 +3,7 @@ syntax = "proto3";
 package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
-import "mcube/pb/label/label.proto";
+import "mcube/pb/resource/label.proto";
 
 // EffectType 授权效力包括两种：允许（Allow）和拒绝（Deny）
 enum EffectType {
@@ -29,7 +29,7 @@ message Permission {
     Spec spec = 4;
     // 范围限制, 由策略引擎动态补充
     // @gotags: bson:"-" json:"scope"
-    repeated mcube.label.LabelRequirement scope = 6;
+    repeated mcube.resource.LabelRequirement scope = 6;
 }
 
 message Spec {
