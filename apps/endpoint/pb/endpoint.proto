@@ -45,10 +45,13 @@ message Entry {
     // 验证码校验(开启双因子认证需要) (code 校验)
     // @gotags: bson:"code_enable" json:"code_enable"
     bool code_enable = 13;
-    // 是否校验用户权限
+    // 权限验证的模式, 支持ACL/PRBAC, 默认PRBAC
+    // @gotags: bson:"permission_mode" json:"permission_mode"
+    string permission_mode = 14;
+    // PRBAC模式下 开启权限校验
     // @gotags: bson:"permission_enable" json:"permission_enable"
     bool permission_enable = 7;
-    // 允许的通过的身份标识符, 比如角色, 用户类型之类
+    // ACL模式下, 允许的通过的身份标识符, 比如角色, 用户类型之类
     // @gotags: bson:"allow" json:"allow"
     repeated string allow = 12;
     // 是否开启操作审计, 开启后这次操作将被记录

@@ -206,10 +206,14 @@ func (e *Entry) LoadMeta(meta map[string]interface{}) {
 		if v, ok := meta[label.Code]; ok {
 			e.CodeEnable, _ = v.(bool)
 		}
+		if v, ok := meta[label.PERMISSION_MODE]; ok {
+			e.PermissionMode, _ = v.(string)
+		}
 
 		if v, ok := meta[label.Action]; ok {
-			e.Labels["action"], _ = v.(string)
+			e.Labels[label.Action], _ = v.(string)
 		}
+
 	}
 }
 

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -48,34 +48,17 @@ func NewhttpAuther() *HttpAuther {
 		client:           rpc.C(),
 		cache:            cache.C(),
 		codeCheckSilence: 30 * time.Minute,
-		mode:             PRBAC_MODE,
 	}
 }
-
-type PermissionMode int
-
-const (
-	// PRBAC_MODE 基于策略的权限校验
-	PRBAC_MODE PermissionMode = 1
-	// ACL_MODE 基于用户类型的权限校验
-	ACL_MODE PermissionMode = 2
-)
 
 type HttpAuther struct {
 	log logger.Logger
 	// 基于rpc客户端进行封装
 	client *rpc.ClientSet
-	// 鉴权模式
-	mode PermissionMode
 	// 缓存
 	cache cache.Cache
 	// 校验码检查静默时长, 默认值30分钟, 30分钟之内只检查一次
 	codeCheckSilence time.Duration
-}
-
-// 设置权限校验策略
-func (a *HttpAuther) SetPermissionMode(m PermissionMode) {
-	a.mode = m
 }
 
 // 设置静默时长
@@ -85,8 +68,7 @@ func (a *HttpAuther) SetCodeCheckSilenceTime(t time.Duration) {
 
 // 是否开启权限的控制, 交给中间件使用方去觉得
 func (a *HttpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Response, next *restful.FilterChain) {
-	// 权限检查
-	// 请求拦截
+	// 请求拦截, 权限检查
 	entry := endpoint.NewEntryFromRestRequest(req)
 	if err := a.PermissionCheck(req, resp, entry); err != nil {
 		response.Failed(resp, err)
@@ -186,20 +168,18 @@ func (a *HttpAuther) checkPermission(req *restful.Request, tk *token.Token, e *e
 		return nil
 	}
 
-	switch a.mode {
-	case ACL_MODE:
+	switch strings.ToUpper(e.PermissionMode) {
+	case "ACL":
 		return a.validatePermissionByACL(req, tk, e)
-	case PRBAC_MODE:
-		return a.validatePermissionByPRBAC(req, tk, e)
 	default:
-		return fmt.Errorf("only support acl and prbac")
+		return a.validatePermissionByPRBAC(req, tk, e)
 	}
 }
 
 func (a *HttpAuther) validatePermissionByACL(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
-		a.log.Debugf("[%s] start check permission to keyauth ...", tk.Username)
+		a.log.Debugf("[%s] start check permission to mcenter ...", tk.Username)
 		if !e.IsAllow(tk.UserType) {
 			return exception.NewPermissionDeny("no permission, allow: %s, but current: %s", e.Allow, tk.UserType)
 		}
