@@ -9,7 +9,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
+	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcenter/apps/token"
 )
 
 func (i *impl) save(ctx context.Context, ins *service.Service) error {
@@ -56,6 +58,8 @@ func (r *queryRequest) FindOptions() *options.FindOptions {
 
 func (r *queryRequest) FindFilter() bson.M {
 	filter := bson.M{}
+	token.MakeMongoFilter(filter, r.Scope)
+	policy.MakeMongoFilter(filter, "labels", r.Filters)
 
 	if len(r.RepositorySshUrls) > 0 {
 		filter["code_repository.ssh_url"] = bson.M{"$in": r.RepositorySshUrls}
@@ -98,6 +102,7 @@ func (i *impl) query(ctx context.Context, req *queryRequest) (*service.ServiceSe
 
 func (i *impl) get(ctx context.Context, req *service.DescribeServiceRequest) (*service.Service, error) {
 	filter := bson.M{}
+
 	switch req.DescribeBy {
 	case service.DescribeBy_SERVICE_ID:
 		filter["_id"] = req.Id

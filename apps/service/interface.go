@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
 	"github.com/imdario/mergo"
 	request "github.com/infraboard/mcube/http/request"
@@ -119,10 +120,11 @@ func NewQueryServiceRequest() *QueryServiceRequest {
 	}
 }
 
-func NewQueryServiceRequestFromHTTP(r *http.Request) *QueryServiceRequest {
-	return &QueryServiceRequest{
-		Page: request.NewPageRequestFromHTTP(r),
-	}
+func NewQueryServiceRequestFromHTTP(r *restful.Request) *QueryServiceRequest {
+	req := NewQueryServiceRequest()
+	req.Page = request.NewPageRequestFromHTTP(r.Request)
+	req.Scope = token.GetTokenFromRequest(r).GenScope()
+	return req
 }
 
 func NewDeleteServiceRequestWithID(id string) *DeleteServiceRequest {

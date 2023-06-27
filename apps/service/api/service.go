@@ -48,7 +48,6 @@ func (h *serviceHandler) Registry(ws *restful.WebService) {
 	ws.Route(ws.GET("/").To(h.QueryService).
 		Doc("查询服务列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Metadata("action", "list").
 		Reads(service.QueryServiceRequest{}).
 		Writes(service.ServiceSet{}).
 		Returns(200, "OK", service.ServiceSet{}))
@@ -102,7 +101,7 @@ func (h *serviceHandler) CreateService(r *restful.Request, w *restful.Response) 
 }
 
 func (h *serviceHandler) QueryService(r *restful.Request, w *restful.Response) {
-	req := service.NewQueryServiceRequestFromHTTP(r.Request)
+	req := service.NewQueryServiceRequestFromHTTP(r)
 	set, err := h.service.QueryService(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
