@@ -162,13 +162,18 @@ func (s *service) ChangeNamespace(ctx context.Context, req *token.ChangeNamespac
 		return nil, err
 	}
 
-	_, err = s.ns.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(tk.Domain, req.Namespace))
+	ns, err := s.ns.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(tk.Domain, req.Namespace))
 	if err != nil {
 		return nil, err
 	}
 
-	if !tk.UserType.IsIn(user.TYPE_PRIMARY, user.TYPE_SUPPER) && !tk.HasNamespace(req.Namespace) {
-		return nil, exception.NewPermissionDeny("your has no permission to access namespace %s", req.Namespace)
+	// 如果是私有空间 需要检查用户是否加入了该空间
+	if ns.Spec.Visible.Equal(namespace.VISIBLE_PRIVATE) {
+		// 既不是管理员, 也没有加入该空间，则没有该空间访问权限
+		if !tk.UserType.IsIn(user.TYPE_PRIMARY, user.TYPE_SUPPER) &&
+			!tk.HasNamespace(req.Namespace) {
+			return nil, exception.NewPermissionDeny("your has no permission to access namespace %s", req.Namespace)
+		}
 	}
 
 	tk.Namespace = req.Namespace

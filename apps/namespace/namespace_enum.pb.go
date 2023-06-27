@@ -9,24 +9,24 @@ import (
 	"strings"
 )
 
-// ParseVisibleFromString Parse Visible from string
-func ParseVisibleFromString(str string) (Visible, error) {
+// ParseVISIBLEFromString Parse VISIBLE from string
+func ParseVISIBLEFromString(str string) (VISIBLE, error) {
 	key := strings.Trim(string(str), `"`)
-	v, ok := Visible_value[strings.ToUpper(key)]
+	v, ok := VISIBLE_value[strings.ToUpper(key)]
 	if !ok {
-		return 0, fmt.Errorf("unknown Visible: %s", str)
+		return 0, fmt.Errorf("unknown VISIBLE: %s", str)
 	}
 
-	return Visible(v), nil
+	return VISIBLE(v), nil
 }
 
 // Equal type compare
-func (t Visible) Equal(target Visible) bool {
+func (t VISIBLE) Equal(target VISIBLE) bool {
 	return t == target
 }
 
 // IsIn todo
-func (t Visible) IsIn(targets ...Visible) bool {
+func (t VISIBLE) IsIn(targets ...VISIBLE) bool {
 	for _, target := range targets {
 		if t.Equal(target) {
 			return true
@@ -37,7 +37,7 @@ func (t Visible) IsIn(targets ...Visible) bool {
 }
 
 // MarshalJSON todo
-func (t Visible) MarshalJSON() ([]byte, error) {
+func (t VISIBLE) MarshalJSON() ([]byte, error) {
 	b := bytes.NewBufferString(`"`)
 	b.WriteString(strings.ToUpper(t.String()))
 	b.WriteString(`"`)
@@ -45,8 +45,8 @@ func (t Visible) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON todo
-func (t *Visible) UnmarshalJSON(b []byte) error {
-	ins, err := ParseVisibleFromString(string(b))
+func (t *VISIBLE) UnmarshalJSON(b []byte) error {
+	ins, err := ParseVISIBLEFromString(string(b))
 	if err != nil {
 		return err
 	}

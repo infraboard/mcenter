@@ -5,10 +5,10 @@ option go_package = "github.com/infraboard/mcenter/apps/namespace";
 
 import "mcube/pb/resource/meta.proto";
 
-enum Visible {
-    // 默认空间是私有的
+enum VISIBLE {
+    // 默认空间是私有的, 只对加入该空间的用户可见
     PRIVATE = 0;
-	// PUBLIC  公开的空间, 对所有人可见
+	// PUBLIC  公开的空间, 对所有人可见, 所有人均可访问该空间
 	PUBLIC = 1;
 }
 
@@ -46,7 +46,7 @@ message CreateNamespaceRequest {
     string description = 7;
     // 空间可见性, 默认是私有空间
     // @gotags: bson:"visible" json:"visible"
-    Visible visible = 8;
+    VISIBLE visible = 8;
     // 扩展信息
     // @gotags: bson:"meta" json:"meta"
     map<string,string> meta = 9;

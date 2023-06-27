@@ -131,6 +131,8 @@ func (e *excutor) InitNamespace(ctx context.Context) error {
 	req := namespace.NewCreateNamespaceRequest()
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Name = namespace.DEFAULT_NAMESPACE
+	req.Visible = namespace.VISIBLE_PUBLIC
+	req.Description = "公共空间"
 	req.Owner = e.username
 	ns, err := e.namespace.CreateNamespace(ctx, req)
 	if err != nil {

@@ -21,51 +21,51 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Visible int32
+type VISIBLE int32
 
 const (
-	// 默认空间是私有的
-	Visible_PRIVATE Visible = 0
-	// PUBLIC  公开的空间, 对所有人可见
-	Visible_PUBLIC Visible = 1
+	// 默认空间是私有的, 只对加入该空间的用户可见
+	VISIBLE_PRIVATE VISIBLE = 0
+	// PUBLIC  公开的空间, 对所有人可见, 所有人均可访问该空间
+	VISIBLE_PUBLIC VISIBLE = 1
 )
 
-// Enum value maps for Visible.
+// Enum value maps for VISIBLE.
 var (
-	Visible_name = map[int32]string{
+	VISIBLE_name = map[int32]string{
 		0: "PRIVATE",
 		1: "PUBLIC",
 	}
-	Visible_value = map[string]int32{
+	VISIBLE_value = map[string]int32{
 		"PRIVATE": 0,
 		"PUBLIC":  1,
 	}
 )
 
-func (x Visible) Enum() *Visible {
-	p := new(Visible)
+func (x VISIBLE) Enum() *VISIBLE {
+	p := new(VISIBLE)
 	*p = x
 	return p
 }
 
-func (x Visible) String() string {
+func (x VISIBLE) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (Visible) Descriptor() protoreflect.EnumDescriptor {
+func (VISIBLE) Descriptor() protoreflect.EnumDescriptor {
 	return file_mcenter_apps_namespace_pb_namespace_proto_enumTypes[0].Descriptor()
 }
 
-func (Visible) Type() protoreflect.EnumType {
+func (VISIBLE) Type() protoreflect.EnumType {
 	return &file_mcenter_apps_namespace_pb_namespace_proto_enumTypes[0]
 }
 
-func (x Visible) Number() protoreflect.EnumNumber {
+func (x VISIBLE) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Visible.Descriptor instead.
-func (Visible) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use VISIBLE.Descriptor instead.
+func (VISIBLE) EnumDescriptor() ([]byte, []int) {
 	return file_mcenter_apps_namespace_pb_namespace_proto_rawDescGZIP(), []int{0}
 }
 
@@ -157,7 +157,7 @@ type CreateNamespaceRequest struct {
 	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description" bson:"description"`
 	// 空间可见性, 默认是私有空间
 	// @gotags: bson:"visible" json:"visible"
-	Visible Visible `protobuf:"varint,8,opt,name=visible,proto3,enum=infraboard.mcenter.namespace.Visible" json:"visible" bson:"visible"`
+	Visible VISIBLE `protobuf:"varint,8,opt,name=visible,proto3,enum=infraboard.mcenter.namespace.VISIBLE" json:"visible" bson:"visible"`
 	// 扩展信息
 	// @gotags: bson:"meta" json:"meta"
 	Meta map[string]string `protobuf:"bytes,9,rep,name=meta,proto3" json:"meta" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3" bson:"meta"`
@@ -244,11 +244,11 @@ func (x *CreateNamespaceRequest) GetDescription() string {
 	return ""
 }
 
-func (x *CreateNamespaceRequest) GetVisible() Visible {
+func (x *CreateNamespaceRequest) GetVisible() VISIBLE {
 	if x != nil {
 		return x.Visible
 	}
-	return Visible_PRIVATE
+	return VISIBLE_PRIVATE
 }
 
 func (x *CreateNamespaceRequest) GetMeta() map[string]string {
@@ -351,7 +351,7 @@ var file_mcenter_apps_namespace_pb_namespace_proto_rawDesc = []byte{
 	0x74, 0x69, 0x6f, 0x6e, 0x12, 0x3f, 0x0a, 0x07, 0x76, 0x69, 0x73, 0x69, 0x62, 0x6c, 0x65, 0x18,
 	0x08, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x25, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61,
 	0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x6e, 0x61, 0x6d, 0x65, 0x73,
-	0x70, 0x61, 0x63, 0x65, 0x2e, 0x56, 0x69, 0x73, 0x69, 0x62, 0x6c, 0x65, 0x52, 0x07, 0x76, 0x69,
+	0x70, 0x61, 0x63, 0x65, 0x2e, 0x56, 0x49, 0x53, 0x49, 0x42, 0x4c, 0x45, 0x52, 0x07, 0x76, 0x69,
 	0x73, 0x69, 0x62, 0x6c, 0x65, 0x12, 0x52, 0x0a, 0x04, 0x6d, 0x65, 0x74, 0x61, 0x18, 0x09, 0x20,
 	0x03, 0x28, 0x0b, 0x32, 0x3e, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64,
 	0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x6e, 0x61, 0x6d, 0x65, 0x73, 0x70, 0x61,
@@ -367,8 +367,8 @@ var file_mcenter_apps_namespace_pb_namespace_proto_rawDesc = []byte{
 	0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x27, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62,
 	0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x6e, 0x61, 0x6d,
 	0x65, 0x73, 0x70, 0x61, 0x63, 0x65, 0x2e, 0x4e, 0x61, 0x6d, 0x65, 0x73, 0x70, 0x61, 0x63, 0x65,
-	0x52, 0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x2a, 0x22, 0x0a, 0x07, 0x56, 0x69, 0x73, 0x69, 0x62,
-	0x6c, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x50, 0x52, 0x49, 0x56, 0x41, 0x54, 0x45, 0x10, 0x00, 0x12,
+	0x52, 0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x2a, 0x22, 0x0a, 0x07, 0x56, 0x49, 0x53, 0x49, 0x42,
+	0x4c, 0x45, 0x12, 0x0b, 0x0a, 0x07, 0x50, 0x52, 0x49, 0x56, 0x41, 0x54, 0x45, 0x10, 0x00, 0x12,
 	0x0a, 0x0a, 0x06, 0x50, 0x55, 0x42, 0x4c, 0x49, 0x43, 0x10, 0x01, 0x42, 0x2e, 0x5a, 0x2c, 0x67,
 	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62,
 	0x6f, 0x61, 0x72, 0x64, 0x2f, 0x6d, 0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x70,
@@ -391,7 +391,7 @@ func file_mcenter_apps_namespace_pb_namespace_proto_rawDescGZIP() []byte {
 var file_mcenter_apps_namespace_pb_namespace_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_mcenter_apps_namespace_pb_namespace_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_mcenter_apps_namespace_pb_namespace_proto_goTypes = []interface{}{
-	(Visible)(0),                   // 0: infraboard.mcenter.namespace.Visible
+	(VISIBLE)(0),                   // 0: infraboard.mcenter.namespace.VISIBLE
 	(*Namespace)(nil),              // 1: infraboard.mcenter.namespace.Namespace
 	(*CreateNamespaceRequest)(nil), // 2: infraboard.mcenter.namespace.CreateNamespaceRequest
 	(*NamespaceSet)(nil),           // 3: infraboard.mcenter.namespace.NamespaceSet
@@ -401,7 +401,7 @@ var file_mcenter_apps_namespace_pb_namespace_proto_goTypes = []interface{}{
 var file_mcenter_apps_namespace_pb_namespace_proto_depIdxs = []int32{
 	5, // 0: infraboard.mcenter.namespace.Namespace.meta:type_name -> infraboard.mcube.resource.Meta
 	2, // 1: infraboard.mcenter.namespace.Namespace.spec:type_name -> infraboard.mcenter.namespace.CreateNamespaceRequest
-	0, // 2: infraboard.mcenter.namespace.CreateNamespaceRequest.visible:type_name -> infraboard.mcenter.namespace.Visible
+	0, // 2: infraboard.mcenter.namespace.CreateNamespaceRequest.visible:type_name -> infraboard.mcenter.namespace.VISIBLE
 	4, // 3: infraboard.mcenter.namespace.CreateNamespaceRequest.meta:type_name -> infraboard.mcenter.namespace.CreateNamespaceRequest.MetaEntry
 	1, // 4: infraboard.mcenter.namespace.NamespaceSet.items:type_name -> infraboard.mcenter.namespace.Namespace
 	5, // [5:5] is the sub-list for method output_type
