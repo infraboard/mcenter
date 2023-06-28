@@ -181,6 +181,17 @@ func TransferRoutesToEntry(routes []restful.Route) (entries []*Entry) {
 	return
 }
 
+// 获取PRBAC鉴权模式的条目
+func GetPRBACEntry(entries []*Entry) (es []*Entry) {
+	for i := range entries {
+		item := entries[i]
+		if item.PermissionMode == label.PERMISSION_MODE_PRBAC.Value() {
+			es = append(es, item)
+		}
+	}
+	return
+}
+
 func NewDefaultEntry() *Entry {
 	return &Entry{
 		Allow:     []string{},

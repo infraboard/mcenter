@@ -93,7 +93,7 @@ func (a *httpAuther) CheckAccessToken(req *restful.Request) (*token.Token, error
 func (a *httpAuther) CheckPermission(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
-		a.log.Debugf("[%s] start check permission to keyauth ...", tk.Username)
+		a.log.Debugf("[%s] start check permission to mcenter ...", tk.Username)
 		if !e.IsAllow(tk.UserType) {
 			return exception.NewPermissionDeny("no permission, allow: %s, but current: %s", e.Allow, tk.UserType)
 		}

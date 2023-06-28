@@ -5,13 +5,3 @@ const (
 	GRPC_CLIENT_NAMESPACE_KEY = "client_namespace"
 	GRPC_CLIENT_NAME_KEY      = "client_name"
 )
-
-type ClientCtx struct {
-	Domain    string
-	Namespace string
-	Name      string
-}
-
-func GetClientCtx() {
-
-}

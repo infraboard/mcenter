@@ -3,6 +3,7 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -40,6 +41,8 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.IssueCode).
 		Doc("颁发验证码").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Reads(code.IssueCodeRequest{}).
 		Writes(code.Code{}))
 }

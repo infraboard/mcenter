@@ -3,6 +3,7 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -45,6 +46,9 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.GET("/").To(h.QueryEndpoints).
 		Doc("查询服务功能列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, label.AllowAll()).
 		Reads(endpoint.QueryEndpointRequest{}).
 		Writes(endpoint.EndpointSet{}).
 		Returns(200, "OK", endpoint.NewEndpointSet()))
@@ -53,6 +57,9 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Doc("查询服务功能详情").
 		Param(ws.PathParameter("id", "identifier of the service").DataType("integer").DefaultValue("1")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, label.AllowAll()).
 		Writes(endpoint.Endpoint{}).
 		Returns(200, "OK", endpoint.Endpoint{}).
 		Returns(404, "Not Found", nil))

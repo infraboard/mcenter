@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/emicklei/go-restful/v3"
+	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/swagger"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/ioc/apidoc"
@@ -93,6 +94,9 @@ func (s *HTTPService) Start() {
 	s.r.Add(hc.WebService())
 	s.l.Infof("健康检查地址: http://%s%s", s.c.App.HTTP.Addr(), hc.HealthCheckPath)
 
+	// 注册路由条目
+	s.RegistryEndpoint()
+
 	// 启动 HTTP服务
 	s.l.Infof("HTTP服务启动成功, 监听地址: %s", s.server.Addr)
 	if err := s.server.ListenAndServe(); err != nil {
@@ -101,6 +105,27 @@ func (s *HTTPService) Start() {
 			return
 		}
 		s.l.Errorf("start service error, %s", err.Error())
+	}
+}
+
+// 注册服务权限条目
+func (s *HTTPService) RegistryEndpoint() {
+	s.l.Info("start registry endpoints ...")
+
+	entries := []*endpoint.Entry{}
+	wss := s.r.RegisteredWebServices()
+	for i := range wss {
+		es := endpoint.TransferRoutesToEntry(wss[i].Routes())
+		entries = append(entries, endpoint.GetPRBACEntry(es)...)
+	}
+
+	req := endpoint.NewRegistryRequest(version.Short(), entries)
+	controller := ioc.GetController(endpoint.AppName).(endpoint.Service)
+	_, err := controller.RegistryEndpoint(context.Background(), req)
+	if err != nil {
+		s.l.Warnf("registry endpoints error, %s", err)
+	} else {
+		s.l.Debug("service endpoints registry success")
 	}
 }
 

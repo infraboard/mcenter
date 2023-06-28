@@ -3,11 +3,13 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
 	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/apps/user"
 )
 
 func init() {
@@ -40,6 +42,9 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.CreateDomain).
 		Doc("创建域").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER)).
 		Reads(domain.CreateDomainRequest{}).
 		Writes(domain.Domain{}))
 
@@ -47,6 +52,9 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Doc("查询域").
 		Param(ws.PathParameter("id", "identifier of the domain").DataType("integer").DefaultValue("1")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER)).
 		Writes(domain.Domain{}).
 		Returns(200, "OK", domain.Domain{}).
 		Returns(404, "Not Found", nil))
@@ -55,11 +63,17 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Doc("更新域").
 		Param(ws.PathParameter("id", "identifier of the domain").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER)).
 		Reads(domain.CreateDomainRequest{}))
 
 	ws.Route(ws.PATCH("/{id}").To(h.PatchDomain).
 		Doc("更新域").
 		Param(ws.PathParameter("id", "identifier of the domain").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER)).
 		Reads(domain.CreateDomainRequest{}))
 }
