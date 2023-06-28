@@ -3,6 +3,8 @@ package label
 import (
 	context "context"
 
+	"github.com/emicklei/go-restful/v3"
+	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcube/http/request"
 )
 
@@ -59,4 +61,11 @@ func NewQueryLabelRequest() *QueryLabelRequest {
 	return &QueryLabelRequest{
 		Page: request.NewDefaultPageRequest(),
 	}
+}
+
+func NewQueryLabelRequestFromHTTP(r *restful.Request) *QueryLabelRequest {
+	req := NewQueryLabelRequest()
+	req.Page = request.NewPageRequestFromHTTP(r.Request)
+	req.Scope = token.GetTokenFromRequest(r).GenScope()
+	return req
 }
