@@ -3,25 +3,45 @@ syntax = "proto3";
 package infraboard.mcenter.label;
 option go_package = "github.com/infraboard/mcenter/apps/label";
 
-message ItemKey {
-    // 标签的键
+import "mcube/pb/resource/meta.proto";
+
+message LabelSet {
+    // 总数量
+    // @gotags: json:"total"
+    int64 total = 1;
+    // 列表
+    // @gotags: json:"items"
+    repeated Label items = 2;
+}
+
+message Label {
+    // 元信息
+    // @gotags: bson:",inline" json:"meta"
+    mcube.resource.Meta meta = 1;
+    // 空间定义
+    // @gotags: bson:",inline" json:"spec"
+    CreateLabelRequest spec = 2;
+}
+
+message CreateLabelRequest {
+    // 标签的键, 标签的Key不允许修改
     // @gotags: json:"key" bson:"key" validate:"required"
     string key = 1;
-    // 是不是必须标签
-    // @gotags: json:"required" bson:"required"
-    bool required = 2;
-    // 标签的颜色
-    // @gotags: json:"color" bson:"color"
-    string color = 3;
-    // 标签生效的范围
-    // @gotags: json:"scope" bson:"scope"
-    SCOPE scope = 4;
     // 标签的键
     // @gotags: json:"domain" bson:"domain"
-    string domain = 5;
+    string domain = 2;
     // 标签的键
     // @gotags: json:"namespace" bson:"namespace"
-    string namespace = 6;
+    string namespace = 3;
+    // 是不是必须标签, 如果是必须标签 资源创建时必须添加该标签
+    // @gotags: json:"required" bson:"required"
+    bool required = 4;
+    // 标签的颜色
+    // @gotags: json:"color" bson:"color"
+    string color = 5;
+    // 标签生效的范围
+    // @gotags: json:"scope" bson:"scope"
+    SCOPE scope = 6;
     // 标签默认值
     // @gotags: json:"default_value" bson:"default_value"
     string default_value = 7;

@@ -16,7 +16,7 @@ enum VISIBLE {
 message Namespace {
     // 元信息
     // @gotags: bson:",inline" json:"meta"
-    infraboard.mcube.resource.Meta meta = 1;
+    mcube.resource.Meta meta = 1;
     // 空间定义
     // @gotags: bson:",inline" json:"spec"
     CreateNamespaceRequest spec = 2;
