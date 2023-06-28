@@ -45,7 +45,6 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.GET("/").To(h.QueryEndpoints).
 		Doc("查询服务功能列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Metadata("action", "list").
 		Reads(endpoint.QueryEndpointRequest{}).
 		Writes(endpoint.EndpointSet{}).
 		Returns(200, "OK", endpoint.NewEndpointSet()))

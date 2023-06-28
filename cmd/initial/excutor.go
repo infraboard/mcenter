@@ -141,6 +141,16 @@ func (e *excutor) InitNamespace(ctx context.Context) error {
 
 	fmt.Printf("初始化空间: %15s [成功]", ns.Spec.Name)
 	fmt.Println()
+
+	req.Name = namespace.SYSTEM_NAMESPACE
+	req.Visible = namespace.VISIBLE_PRIVATE
+	req.Description = "系统空间"
+	ns, err = e.namespace.CreateNamespace(ctx, req)
+	if err != nil {
+		return fmt.Errorf("初始化空间失败: %s", err)
+	}
+	fmt.Printf("初始化空间: %15s [成功]", ns.Spec.Name)
+	fmt.Println()
 	return nil
 }
 

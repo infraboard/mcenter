@@ -9,8 +9,10 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/common/format"
+	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	resource "github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mpaas/common/hash"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -18,9 +20,20 @@ var (
 	validate = validator.New()
 )
 
-const (
-	DEFAULT_NAMESPACE = "default"
-)
+// NewNamespace todo
+func New(req *CreateNamespaceRequest) (*Namespace, error) {
+	if err := req.Validate(); err != nil {
+		return nil, exception.NewBadRequest(err.Error())
+	}
+
+	ins := &Namespace{
+		Meta: resource.NewMeta(),
+		Spec: req,
+	}
+
+	ins.Meta.Id = hash.FnvHash(req.Domain, req.Name)
+	return ins, nil
+}
 
 // NewDefaultNamespace todo
 func NewDefaultNamespace() *Namespace {

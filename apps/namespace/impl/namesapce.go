@@ -6,7 +6,6 @@ import (
 
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/pb/resource"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/infraboard/mcenter/apps/namespace"
@@ -15,7 +14,7 @@ import (
 
 func (s *impl) CreateNamespace(ctx context.Context, req *namespace.CreateNamespaceRequest) (
 	*namespace.Namespace, error) {
-	ins, err := s.newNamespace(ctx, req)
+	ins, err := namespace.New(req)
 	if err != nil {
 		return nil, err
 	}
@@ -125,18 +124,4 @@ func (s *impl) DeleteNamespace(ctx context.Context, req *namespace.DeleteNamespa
 	}
 
 	return ns, nil
-}
-
-// NewNamespace todo
-func (s *impl) newNamespace(ctx context.Context, req *namespace.CreateNamespaceRequest) (*namespace.Namespace, error) {
-	if err := req.Validate(); err != nil {
-		return nil, exception.NewBadRequest(err.Error())
-	}
-
-	ins := &namespace.Namespace{
-		Meta: resource.NewMeta(),
-		Spec: req,
-	}
-
-	return ins, nil
 }

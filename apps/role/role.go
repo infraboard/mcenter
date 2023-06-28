@@ -3,7 +3,6 @@ package role
 import (
 	"encoding/json"
 	"fmt"
-	"hash/fnv"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -12,6 +11,7 @@ import (
 	request "github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mpaas/common/hash"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -81,7 +81,7 @@ func New(req *CreateRoleRequest) (*Role, error) {
 		Spec:        req,
 		Permissions: []*Permission{},
 	}
-	r.Meta.Id = r.FullNameHash()
+	r.Meta.Id = hash.FnvHash(r.FullName())
 	return r, nil
 }
 
@@ -96,8 +96,8 @@ func NewDefaultRole() *Role {
 // NewCreateRoleRequest 实例化请求
 func NewCreateRoleRequest() *CreateRoleRequest {
 	return &CreateRoleRequest{
-		Meta:  map[string]string{},
-		Specs: []*Spec{},
+		Lables: map[string]string{},
+		Specs:  []*Spec{},
 	}
 }
 
@@ -116,12 +116,6 @@ func (r *Role) MarshalJSON() ([]byte, error) {
 		*CreateRoleRequest
 		Permissions []*Permission `json:"permissions"`
 	}{r.Meta, r.Spec, r.Permissions})
-}
-
-func (r *Role) FullNameHash() string {
-	hash := fnv.New32a()
-	hash.Write([]byte(r.FullName()))
-	return fmt.Sprintf("%x", hash.Sum32())
 }
 
 func (r *Role) FullName() string {

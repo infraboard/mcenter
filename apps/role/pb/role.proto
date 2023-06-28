@@ -31,30 +31,30 @@ message CreateRoleRequest {
     // 所属域
     // @gotags: bson:"domain" json:"domain"
     string domain = 1;
+    // 所属域
+    // @gotags: bson:"namespace" json:"namespace"
+    string namespace = 2;
     // 创建者ID
     // @gotags: bson:"create_by" json:"create_by"
-    string create_by = 2; 
+    string create_by = 3; 
     // 只读角色, 只读角色不能修改, 可以删除
     // @gotags: bson:"read_only" json:"read_only"
-    bool read_only = 3;
+    bool read_only = 4;
     // 角色名称
     // @gotags: bson:"name" json:"name" validate:"required,lte=30"
-    string name = 4;
+    string name = 5;
     // 角色描述
     // @gotags: bson:"description" json:"description" validate:"lte=400"
-    string description =5;
+    string description =6;
     // 权限定义
     // @gotags: bson:"-" json:"specs,omitempty"
-    repeated Spec specs = 6;
+    repeated Spec specs = 7;
     // 是否启用
     // @gotags: bson:"enabled" json:"enabled"
-    bool enabled = 7;
-    // 是否全局的角色, 系统管理使用
-    // @gotags: bson:"global" json:"global"
-    bool global = 8;
+    bool enabled = 8;
     // 角色关联的其他信息，比如展示的视图
-    // @gotags: bson:"meta" json:"meta" validate:"lte=400"
-    map<string,string> meta =15;                 
+    // @gotags: bson:"lables" json:"lables" validate:"lte=400"
+    map<string,string> lables =15;                 
 }
 
 // DeleteRoleRequest role删除

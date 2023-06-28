@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/role"
 )
 
@@ -11,7 +12,7 @@ func TestCreateRole(t *testing.T) {
 	req := role.NewCreateRoleRequest()
 	req.CreateBy = "admin"
 	req.Domain = domain.DEFAULT_DOMAIN
-	req.Global = true
+	req.Namespace = namespace.SYSTEM_NAMESPACE
 	req.Name = "developer"
 	req.Description = "服务"
 	req.Specs = []*role.Spec{

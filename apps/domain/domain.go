@@ -14,6 +14,7 @@ import (
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
 	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mpaas/common/hash"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -38,6 +39,8 @@ func New(req *CreateDomainRequest) (*Domain, error) {
 		Spec: req,
 	}
 
+	// 采用公司名称Hash作为Id
+	d.Meta.Id = hash.FnvHash(req.Name)
 	return d, nil
 }
 

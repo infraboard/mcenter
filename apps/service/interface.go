@@ -3,7 +3,6 @@ package service
 import (
 	context "context"
 	"fmt"
-	"hash/fnv"
 	"net/http"
 	"time"
 
@@ -13,6 +12,7 @@ import (
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
 	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mpaas/common/hash"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/infraboard/mcenter/apps/domain"
@@ -64,7 +64,7 @@ func NewService(req *CreateServiceRequest) (*Service, error) {
 		Credential: NewRandomCredential(),
 		Security:   NewRandomSecurity(),
 	}
-	svc.Meta.Id = svc.FullNameHash()
+	svc.Meta.Id = hash.FnvHash(svc.FullName())
 	return svc, nil
 }
 
@@ -131,12 +131,6 @@ func NewDeleteServiceRequestWithID(id string) *DeleteServiceRequest {
 	return &DeleteServiceRequest{
 		Id: id,
 	}
-}
-
-func (i *Service) FullNameHash() string {
-	hash := fnv.New32a()
-	hash.Write([]byte(i.FullName()))
-	return fmt.Sprintf("%x", hash.Sum32())
 }
 
 func (i *Service) FullName() string {
