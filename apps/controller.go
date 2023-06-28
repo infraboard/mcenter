@@ -12,6 +12,7 @@ import (
 	_ "github.com/infraboard/mcenter/apps/domain/impl"
 	_ "github.com/infraboard/mcenter/apps/endpoint/impl"
 	_ "github.com/infraboard/mcenter/apps/instance/impl"
+	_ "github.com/infraboard/mcenter/apps/label/impl"
 	_ "github.com/infraboard/mcenter/apps/namespace/impl"
 	_ "github.com/infraboard/mcenter/apps/notify/impl"
 	_ "github.com/infraboard/mcenter/apps/policy/impl"

@@ -19,24 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RPC_CreateLabel_FullMethodName = "/infraboard.mcenter.label.RPC/CreateLabel"
-	RPC_QueryLabel_FullMethodName  = "/infraboard.mcenter.label.RPC/QueryLabel"
-	RPC_UpdateLabel_FullMethodName = "/infraboard.mcenter.label.RPC/UpdateLabel"
-	RPC_DeleteLabel_FullMethodName = "/infraboard.mcenter.label.RPC/DeleteLabel"
+	RPC_QueryLabel_FullMethodName = "/infraboard.mcenter.label.RPC/QueryLabel"
 )
 
 // RPCClient is the client API for RPC service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RPCClient interface {
-	// 创建标签
-	CreateLabel(ctx context.Context, in *CreateLabelRequest, opts ...grpc.CallOption) (*Label, error)
 	// 查询标签列表
 	QueryLabel(ctx context.Context, in *QueryLabelRequest, opts ...grpc.CallOption) (*LabelSet, error)
-	// 修改标签
-	UpdateLabel(ctx context.Context, in *UpdateLabelRequest, opts ...grpc.CallOption) (*Label, error)
-	// 删除标签
-	DeleteLabel(ctx context.Context, in *DeleteLabelRequest, opts ...grpc.CallOption) (*Label, error)
 }
 
 type rPCClient struct {
@@ -45,15 +36,6 @@ type rPCClient struct {
 
 func NewRPCClient(cc grpc.ClientConnInterface) RPCClient {
 	return &rPCClient{cc}
-}
-
-func (c *rPCClient) CreateLabel(ctx context.Context, in *CreateLabelRequest, opts ...grpc.CallOption) (*Label, error) {
-	out := new(Label)
-	err := c.cc.Invoke(ctx, RPC_CreateLabel_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *rPCClient) QueryLabel(ctx context.Context, in *QueryLabelRequest, opts ...grpc.CallOption) (*LabelSet, error) {
@@ -65,36 +47,12 @@ func (c *rPCClient) QueryLabel(ctx context.Context, in *QueryLabelRequest, opts 
 	return out, nil
 }
 
-func (c *rPCClient) UpdateLabel(ctx context.Context, in *UpdateLabelRequest, opts ...grpc.CallOption) (*Label, error) {
-	out := new(Label)
-	err := c.cc.Invoke(ctx, RPC_UpdateLabel_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *rPCClient) DeleteLabel(ctx context.Context, in *DeleteLabelRequest, opts ...grpc.CallOption) (*Label, error) {
-	out := new(Label)
-	err := c.cc.Invoke(ctx, RPC_DeleteLabel_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // RPCServer is the server API for RPC service.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
-	// 创建标签
-	CreateLabel(context.Context, *CreateLabelRequest) (*Label, error)
 	// 查询标签列表
 	QueryLabel(context.Context, *QueryLabelRequest) (*LabelSet, error)
-	// 修改标签
-	UpdateLabel(context.Context, *UpdateLabelRequest) (*Label, error)
-	// 删除标签
-	DeleteLabel(context.Context, *DeleteLabelRequest) (*Label, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -102,17 +60,8 @@ type RPCServer interface {
 type UnimplementedRPCServer struct {
 }
 
-func (UnimplementedRPCServer) CreateLabel(context.Context, *CreateLabelRequest) (*Label, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateLabel not implemented")
-}
 func (UnimplementedRPCServer) QueryLabel(context.Context, *QueryLabelRequest) (*LabelSet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryLabel not implemented")
-}
-func (UnimplementedRPCServer) UpdateLabel(context.Context, *UpdateLabelRequest) (*Label, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateLabel not implemented")
-}
-func (UnimplementedRPCServer) DeleteLabel(context.Context, *DeleteLabelRequest) (*Label, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteLabel not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -125,24 +74,6 @@ type UnsafeRPCServer interface {
 
 func RegisterRPCServer(s grpc.ServiceRegistrar, srv RPCServer) {
 	s.RegisterService(&RPC_ServiceDesc, srv)
-}
-
-func _RPC_CreateLabel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateLabelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).CreateLabel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RPC_CreateLabel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).CreateLabel(ctx, req.(*CreateLabelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _RPC_QueryLabel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -163,42 +94,6 @@ func _RPC_QueryLabel_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RPC_UpdateLabel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateLabelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).UpdateLabel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RPC_UpdateLabel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).UpdateLabel(ctx, req.(*UpdateLabelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _RPC_DeleteLabel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteLabelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RPCServer).DeleteLabel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RPC_DeleteLabel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RPCServer).DeleteLabel(ctx, req.(*DeleteLabelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -207,20 +102,8 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*RPCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateLabel",
-			Handler:    _RPC_CreateLabel_Handler,
-		},
-		{
 			MethodName: "QueryLabel",
 			Handler:    _RPC_QueryLabel_Handler,
-		},
-		{
-			MethodName: "UpdateLabel",
-			Handler:    _RPC_UpdateLabel_Handler,
-		},
-		{
-			MethodName: "DeleteLabel",
-			Handler:    _RPC_DeleteLabel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

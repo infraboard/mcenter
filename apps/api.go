@@ -6,6 +6,7 @@ import (
 	_ "github.com/infraboard/mcenter/apps/domain/api"
 	_ "github.com/infraboard/mcenter/apps/endpoint/api"
 	_ "github.com/infraboard/mcenter/apps/instance/api"
+	_ "github.com/infraboard/mcenter/apps/label/api"
 	_ "github.com/infraboard/mcenter/apps/resource/api"
 	_ "github.com/infraboard/mcenter/apps/service/api"
 	_ "github.com/infraboard/mcenter/apps/setting/api"

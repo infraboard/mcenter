@@ -9,14 +9,8 @@ import "mcube/pb/request/request.proto";
 
 // 标签Key管理
 service RPC {
-    // 创建标签
-	rpc CreateLabel(CreateLabelRequest) returns(Label);
     // 查询标签列表
 	rpc QueryLabel(QueryLabelRequest) returns(LabelSet);
-    // 修改标签
-	rpc UpdateLabel(UpdateLabelRequest) returns(Label);
-    // 删除标签
-	rpc DeleteLabel(DeleteLabelRequest) returns(Label);
 }
 
 message QueryLabelRequest {
