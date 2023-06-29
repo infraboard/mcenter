@@ -62,11 +62,15 @@ func (h *tokenHandler) Registry(ws *restful.WebService) {
 	ws.Route(ws.PATCH("/").To(h.ChangeNamespace).
 		Doc("切换空间").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Reads(token.ChangeNamespaceRequest{}))
 
 	ws.Route(ws.GET("/").To(h.ValidateToken).
 		Doc("验证令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Reads(token.ValidateTokenRequest{}).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))

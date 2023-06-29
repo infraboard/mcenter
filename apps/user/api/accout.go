@@ -41,10 +41,11 @@ func (h *sub) Registry(ws *restful.WebService) {
 	tags := []string{"账号管理"}
 
 	ws.Route(ws.POST("/password").To(h.UpdatePassword).
-		Metadata(label.Auth, label.Enable).
-		Metadata(label.Allow, user.TYPE_SUB).
 		Doc("子账号修改自己密码").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_SUB)).
 		Reads(user.UpdatePasswordRequest{}).
 		Returns(0, "OK", &user.User{}))
 }
