@@ -5,6 +5,7 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcenter/apps/token"
+	http_label "github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/response"
 )
 
@@ -14,12 +15,19 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.CreateLabel).
 		Doc("创建标签").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(http_label.Resource, h.Name()).
+		Metadata(http_label.Action, http_label.Create.Value()).
+		Metadata(http_label.Auth, http_label.Enable).
+		Metadata(http_label.Permission, http_label.Enable).
 		Reads(label.CreateLabelRequest{}).
 		Writes(label.Label{}))
 
 	ws.Route(ws.GET("/").To(h.QueryLabel).
 		Doc("查询标签").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(http_label.Resource, h.Name()).
+		Metadata(http_label.Action, http_label.Create.Value()).
+		Metadata(http_label.Auth, http_label.Enable).
 		Reads(label.QueryLabelRequest{}).
 		Writes(label.LabelSet{}).
 		Returns(200, "OK", label.LabelSet{}))

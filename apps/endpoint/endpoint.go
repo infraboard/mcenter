@@ -221,6 +221,15 @@ func (e *Entry) LoadMeta(meta map[string]interface{}) {
 			e.PermissionMode, _ = v.(string)
 		}
 
+		// switch v := meta[label.Allow].(type) {
+		// case int:
+
+		// case []int:
+		// case string:
+		// case []string:
+
+		// }
+
 		if v, ok := meta[label.Action]; ok {
 			e.Labels[label.Action], _ = v.(string)
 		}
