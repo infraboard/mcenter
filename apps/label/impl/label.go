@@ -5,6 +5,8 @@ import (
 
 	"github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcube/exception"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // 创建标签
@@ -56,8 +58,36 @@ func (i *impl) UpdateLabel(ctx context.Context, in *label.UpdateLabelRequest) (
 	return nil, nil
 }
 
+// 查询标签列表
+func (i *impl) DescribeLabel(ctx context.Context, in *label.DescribeLabelRequest) (
+	*label.Label, error) {
+	if err := in.Validate(); err != nil {
+		return nil, exception.NewBadRequest(err.Error())
+	}
+
+	ins := label.NewDefaultLabel()
+	if err := i.col.FindOne(ctx, bson.M{"_id": in.Id}).Decode(ins); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, exception.NewNotFound("label %s not found", in.Id)
+		}
+
+		return nil, exception.NewInternalServerError("label config %s error, %s", in.Id, err)
+	}
+
+	return ins, nil
+}
+
 // 删除标签
 func (i *impl) DeleteLabel(ctx context.Context, in *label.DeleteLabelRequest) (
 	*label.Label, error) {
-	return nil, nil
+	req := label.NewDescribeLabelRequest(in.Id)
+	ins, err := i.DescribeLabel(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	_, err = i.col.DeleteOne(ctx, bson.M{"_id": ins.Meta.Id})
+	if err != nil {
+		return nil, exception.NewInternalServerError("delete label(%s) error, %s", in.Id, err)
+	}
+	return ins, nil
 }

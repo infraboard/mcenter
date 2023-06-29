@@ -6,6 +6,7 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/validator"
 )
 
 const (
@@ -68,4 +69,20 @@ func NewQueryLabelRequestFromHTTP(r *restful.Request) *QueryLabelRequest {
 	req.Page = request.NewPageRequestFromHTTP(r.Request)
 	req.Scope = token.GetTokenFromRequest(r).GenScope()
 	return req
+}
+
+func NewDescribeLabelRequest(id string) *DescribeLabelRequest {
+	return &DescribeLabelRequest{
+		Id: id,
+	}
+}
+
+func NewDeleteLabelRequest(id string) *DeleteLabelRequest {
+	return &DeleteLabelRequest{
+		Id: id,
+	}
+}
+
+func (r *DescribeLabelRequest) Validate() error {
+	return validator.Validate(r)
 }

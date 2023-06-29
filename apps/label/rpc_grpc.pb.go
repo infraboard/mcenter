@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	RPC_QueryLabel_FullMethodName = "/infraboard.mcenter.label.RPC/QueryLabel"
+	RPC_QueryLabel_FullMethodName    = "/infraboard.mcenter.label.RPC/QueryLabel"
+	RPC_DescribeLabel_FullMethodName = "/infraboard.mcenter.label.RPC/DescribeLabel"
 )
 
 // RPCClient is the client API for RPC service.
@@ -28,6 +29,8 @@ const (
 type RPCClient interface {
 	// 查询标签列表
 	QueryLabel(ctx context.Context, in *QueryLabelRequest, opts ...grpc.CallOption) (*LabelSet, error)
+	// 查询标签列表
+	DescribeLabel(ctx context.Context, in *DescribeLabelRequest, opts ...grpc.CallOption) (*Label, error)
 }
 
 type rPCClient struct {
@@ -47,12 +50,23 @@ func (c *rPCClient) QueryLabel(ctx context.Context, in *QueryLabelRequest, opts 
 	return out, nil
 }
 
+func (c *rPCClient) DescribeLabel(ctx context.Context, in *DescribeLabelRequest, opts ...grpc.CallOption) (*Label, error) {
+	out := new(Label)
+	err := c.cc.Invoke(ctx, RPC_DescribeLabel_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RPCServer is the server API for RPC service.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
 	// 查询标签列表
 	QueryLabel(context.Context, *QueryLabelRequest) (*LabelSet, error)
+	// 查询标签列表
+	DescribeLabel(context.Context, *DescribeLabelRequest) (*Label, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -62,6 +76,9 @@ type UnimplementedRPCServer struct {
 
 func (UnimplementedRPCServer) QueryLabel(context.Context, *QueryLabelRequest) (*LabelSet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryLabel not implemented")
+}
+func (UnimplementedRPCServer) DescribeLabel(context.Context, *DescribeLabelRequest) (*Label, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DescribeLabel not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -94,6 +111,24 @@ func _RPC_QueryLabel_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RPC_DescribeLabel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DescribeLabelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).DescribeLabel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RPC_DescribeLabel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).DescribeLabel(ctx, req.(*DescribeLabelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -104,6 +139,10 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "QueryLabel",
 			Handler:    _RPC_QueryLabel_Handler,
+		},
+		{
+			MethodName: "DescribeLabel",
+			Handler:    _RPC_DescribeLabel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

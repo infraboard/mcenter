@@ -11,6 +11,7 @@ import (
 	"github.com/infraboard/mcube/cache/memory"
 	"github.com/infraboard/mcube/cache/redis"
 	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/validator"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo"
@@ -40,6 +41,10 @@ func (c *Config) InitGlobal() error {
 	// 加载全局缓存
 	if err := c.Cache.LoadCache(); err != nil {
 		return fmt.Errorf("load cache error, %s", err)
+	}
+
+	if err := validator.Init(); err != nil {
+		return nil
 	}
 
 	return nil

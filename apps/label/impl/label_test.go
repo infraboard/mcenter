@@ -36,3 +36,12 @@ func TestQueryLabel(t *testing.T) {
 	}
 	t.Log(r.ToJSON())
 }
+
+func TestDeleteLabel(t *testing.T) {
+	req := label.NewDeleteLabelRequest("aeea340b076aa5cf")
+	r, err := impl.DeleteLabel(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r.ToJSON())
+}

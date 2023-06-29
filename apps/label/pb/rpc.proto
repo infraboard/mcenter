@@ -12,6 +12,8 @@ import "mcube/pb/resource/meta.proto";
 service RPC {
     // 查询标签列表
 	rpc QueryLabel(QueryLabelRequest) returns(LabelSet);
+    // 查询标签列表
+	rpc DescribeLabel(DescribeLabelRequest) returns(Label);
 }
 
 message QueryLabelRequest {
@@ -39,7 +41,13 @@ message UpdateLabelRequest {
 }
 
 message DeleteLabelRequest {
-    // 构建配置Id
+    // 标签Id
+    // @gotags: json:"id"
+    string id = 1;
+}
+
+message DescribeLabelRequest {
+    // 标签Id
     // @gotags: json:"id"
     string id = 1;
 }
