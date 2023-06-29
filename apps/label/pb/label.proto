@@ -4,6 +4,7 @@ package infraboard.mcenter.label;
 option go_package = "github.com/infraboard/mcenter/apps/label";
 
 import "mcube/pb/resource/meta.proto";
+import "mcube/pb/resource/visiable.proto";
 
 message LabelSet {
     // 总数量
@@ -66,9 +67,12 @@ message CreateLabelRequest {
     // 创建人
 	// @gotags: bson:"create_by" json:"create_by"
 	string create_by = 14;
+    // 角色可见性
+    // @gotags: bson:"visiable" json:"visiable"
+    mcube.resource.VISIABLE visiable = 15;
 	// 扩展属性
 	// @gotags: bson:"extensions" json:"extensions"
-	map<string, string> extensions = 15;
+	map<string, string> extensions = 25;
 }
 
 message RequiredCondition {

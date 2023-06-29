@@ -4,6 +4,7 @@ package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
 import "mcube/pb/page/page.proto";
+import "mcube/pb/resource/meta.proto";
 import "mcenter/apps/role/pb/role.proto";
 import "mcenter/apps/role/pb/permission.proto";
 
@@ -33,14 +34,18 @@ message QueryPermissionRequest {
 
 // QueryRoleRequest 列表查询
 message QueryRoleRequest {
+    // 资源范围
+    // @gotags: json:"scope"
+    mcube.resource.Scope scope = 1;
     // @gotags: json:"page"
-    infraboard.mcube.page.PageRequest page = 1;
+    mcube.page.PageRequest page = 2;
     // @gotags: json:"domain"
     string domain = 3;
+    // @gotags: json:"namespace"
+    string namespace = 4;
     // @gotags: json:"with_permission"
-    bool with_permission = 4;
+    bool with_permission = 5;
 }
-
 
 // DescribeRoleRequest role详情
 message DescribeRoleRequest {

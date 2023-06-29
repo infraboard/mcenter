@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcenter/apps/token"
 )
 
 func newDescribeRoleRequest(req *role.DescribeRoleRequest) (*describeRoleRequest, error) {
@@ -72,6 +73,7 @@ func (r *queryRoleRequest) FindOptions() *options.FindOptions {
 
 func (r *queryRoleRequest) FindFilter() bson.M {
 	filter := bson.M{}
+	token.MakeMongoFilter(filter, r.Scope)
 
 	return filter
 }

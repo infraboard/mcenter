@@ -4,6 +4,7 @@ import (
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcube/http/label"
+	resource "github.com/infraboard/mcube/pb/resource"
 )
 
 const (
@@ -23,6 +24,7 @@ func CreateAdminRoleRequest(createBy string) *CreateRoleRequest {
 	req.CreateBy = createBy
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.SYSTEM_NAMESPACE
+	req.Visiable = resource.VISIABLE_GLOBAL
 	req.Name = ADMIN_ROLE_NAME
 	req.Description = "管理员"
 	req.Specs = []*Spec{
@@ -42,6 +44,7 @@ func CreateVisitorRoleRequest(createBy string) *CreateRoleRequest {
 	req.CreateBy = createBy
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.SYSTEM_NAMESPACE
+	req.Visiable = resource.VISIABLE_GLOBAL
 	req.Name = VISITOR_ROLE_NAME
 	req.Description = "访客"
 	req.Specs = []*Spec{

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/label"
+	"github.com/infraboard/mcube/pb/resource"
 )
 
 func TestCreateLabel(t *testing.T) {
@@ -12,6 +13,7 @@ func TestCreateLabel(t *testing.T) {
 	req.Key = "环境"
 	req.Required = true
 	req.ValueType = label.VALUE_TYPE_ENUM
+	req.Visiable = resource.VISIABLE_GLOBAL
 	req.DefaultValue = "开发"
 	req.AddEnumOption(
 		label.NewEnumOption("生产"),

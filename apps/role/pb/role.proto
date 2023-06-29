@@ -4,13 +4,14 @@ package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
 import "mcube/pb/resource/meta.proto";
+import "mcube/pb/resource/visiable.proto";
 import "mcenter/apps/role/pb/permission.proto";
 
 // Role is rbac's role
 message Role {
     // 元信息
     // @gotags: bson:",inline" json:"meta"
-    infraboard.mcube.resource.Meta meta = 1;
+    mcube.resource.Meta meta = 1;
     // 角色描述信息
     // @gotags: bson:",inline" json:"spec"
     CreateRoleRequest spec = 2;
@@ -52,6 +53,9 @@ message CreateRoleRequest {
     // 是否启用
     // @gotags: bson:"enabled" json:"enabled"
     bool enabled = 8;
+    // 角色可见性
+    // @gotags: bson:"visiable" json:"visiable"
+    mcube.resource.VISIABLE visiable = 9;
     // 角色关联的其他信息，比如展示的视图
     // @gotags: bson:"lables" json:"lables" validate:"lte=400"
     map<string,string> lables =15;                 
