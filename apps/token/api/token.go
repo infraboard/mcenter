@@ -3,12 +3,14 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
 	"github.com/infraboard/mcenter/apps/token"
+	"github.com/infraboard/mcenter/apps/user"
 )
 
 func init() {
@@ -41,6 +43,8 @@ func (h *tokenHandler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.IssueToken).
 		Doc("颁发令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Reads(token.IssueTokenRequest{}).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))
@@ -48,6 +52,9 @@ func (h *tokenHandler) Registry(ws *restful.WebService) {
 	ws.Route(ws.DELETE("/").To(h.RevolkToken).
 		Doc("撤销令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_PRIMARY)).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}).
 		Returns(404, "Not Found", nil))

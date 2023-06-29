@@ -3,6 +3,7 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
@@ -39,30 +40,40 @@ func (h *oath2Handler) Version() string {
 func (h *oath2Handler) Registry(ws *restful.WebService) {
 	tags := []string{"第三方登陆"}
 
+	code := ws.QueryParameter("code", "oauth2 auth code").DataType("string").Required(true)
+	stat := ws.QueryParameter("state", "oauth2 state").DataType("string").Required(false)
+	dom := ws.QueryParameter("domain", "auth domain").DataType("string").DefaultValue(domain.DEFAULT_DOMAIN)
+
 	ws.Route(ws.GET("/feishu").To(h.FeishuOauth2Auth).
 		Doc("飞书登陆").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Param(ws.QueryParameter("code", "oauth2 auth code").DataType("string").Required(true)).
-		Param(ws.QueryParameter("state", "oauth2 state").DataType("string").Required(false)).
-		Param(ws.QueryParameter("domain", "auth domain").DataType("string").DefaultValue(domain.DEFAULT_DOMAIN)).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Param(code).
+		Param(stat).
+		Param(dom).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))
 
 	ws.Route(ws.GET("/dingding").To(h.DingDingOauth2Auth).
 		Doc("钉钉登陆").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Param(ws.QueryParameter("code", "oauth2 auth code").DataType("string").Required(true)).
-		Param(ws.QueryParameter("state", "oauth2 state").DataType("string").Required(false)).
-		Param(ws.QueryParameter("domain", "auth domain").DataType("string").DefaultValue(domain.DEFAULT_DOMAIN)).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Param(code).
+		Param(stat).
+		Param(dom).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))
 
 	ws.Route(ws.GET("/wechat_work").To(h.WechatWorkOauth2Auth).
 		Doc("企业微信登陆").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Param(ws.QueryParameter("code", "oauth2 auth code").DataType("string").Required(true)).
-		Param(ws.QueryParameter("state", "oauth2 state").DataType("string").Required(false)).
-		Param(ws.QueryParameter("domain", "auth domain").DataType("string").DefaultValue(domain.DEFAULT_DOMAIN)).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Param(code).
+		Param(stat).
+		Param(dom).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))
 }
