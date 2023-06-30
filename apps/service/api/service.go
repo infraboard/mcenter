@@ -3,6 +3,7 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
@@ -42,12 +43,20 @@ func (h *serviceHandler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.CreateService).
 		Doc("创建服务").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.Create.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Enable).
 		Reads(service.CreateServiceRequest{}).
 		Writes(service.Service{}))
 
 	ws.Route(ws.GET("/").To(h.QueryService).
 		Doc("查询服务列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.List.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Disable).
 		Reads(service.QueryServiceRequest{}).
 		Writes(service.ServiceSet{}).
 		Returns(200, "OK", service.ServiceSet{}))
@@ -56,6 +65,10 @@ func (h *serviceHandler) Registry(ws *restful.WebService) {
 		Doc("查询服务详情").
 		Param(ws.PathParameter("id", "identifier of the service").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.Get.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Disable).
 		Writes(service.Service{}).
 		Returns(200, "OK", service.Service{}).
 		Returns(404, "Not Found", nil))
@@ -64,17 +77,29 @@ func (h *serviceHandler) Registry(ws *restful.WebService) {
 		Doc("更新服务").
 		Param(ws.PathParameter("id", "identifier of the service").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.Update.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Enable).
 		Reads(service.CreateServiceRequest{}))
 
 	ws.Route(ws.PATCH("/{id}").To(h.PatchService).
 		Doc("更新服务").
 		Param(ws.PathParameter("id", "identifier of the service").DataType("string")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.Update.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Enable).
 		Reads(service.CreateServiceRequest{}))
 
 	ws.Route(ws.DELETE("/{id}").To(h.DeleteService).
 		Doc("删除服务").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.Delete.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Enable).
 		Param(ws.PathParameter("id", "identifier of the service").DataType("string")))
 }
 

@@ -4,6 +4,7 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
@@ -41,7 +42,10 @@ func (h *providerHandler) Registry(ws *restful.WebService) {
 	ws.Route(ws.GET("/gitlab/projects").To(h.QueryGitlabProject).
 		Doc("查询Gitlab项目列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Metadata("action", "list").
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.List.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Disable).
 		Reads(service.QueryServiceRequest{}).
 		Writes(service.ServiceSet{}).
 		Returns(200, "OK", service.ServiceSet{}))

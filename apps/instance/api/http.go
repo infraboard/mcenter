@@ -48,12 +48,16 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.RegistryInstance).
 		Doc("实例注册").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Reads(instance.UnregistryRequest{}).
 		Writes(instance.Instance{}))
 
 	ws.Route(ws.DELETE("/{instance_id}").To(h.UnRegistryInstance).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Doc("实例注销").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Reads(instance.SearchRequest{}).
-		Writes(instance.InstanceSet{}))
+		Reads(instance.UnregistryRequest{}).
+		Writes(instance.Instance{}))
 }

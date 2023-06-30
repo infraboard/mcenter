@@ -3,6 +3,7 @@ package api
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -40,7 +41,10 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.GET("/").To(h.QueryResources).
 		Doc("查询服务资源列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
-		Metadata("action", "list").
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.List.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Disable).
 		Reads(resource.QueryResourceRequest{}).
 		Writes(resource.ResourceSet{}).
 		Returns(200, "OK", resource.ResourceSet{}))
