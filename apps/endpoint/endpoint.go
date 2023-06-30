@@ -5,6 +5,7 @@ import (
 	"hash/fnv"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
@@ -80,8 +81,9 @@ var (
 // NewRegistryRequest 注册请求
 func NewRegistryRequest(version string, entries []*Entry) *RegistryRequest {
 	return &RegistryRequest{
-		Version: version,
-		Entries: entries,
+		Version:   version,
+		Entries:   entries,
+		Extension: map[string]string{},
 	}
 }
 
@@ -104,15 +106,17 @@ func (req *RegistryRequest) Validate() error {
 // Endpoints 功能列表
 func (req *RegistryRequest) Endpoints(serviceID string) []*Endpoint {
 	eps := make([]*Endpoint, 0, len(req.Entries))
+	now := time.Now().Unix()
 	for i := range req.Entries {
 		ep := &Endpoint{
 			Id:        GenHashID(serviceID, req.Entries[i].Path),
-			CreateAt:  ftime.Now().Timestamp(),
-			UpdateAt:  ftime.Now().Timestamp(),
+			CreateAt:  now,
+			UpdateAt:  now,
 			ServiceId: serviceID,
 			Version:   req.Version,
 			Entry:     req.Entries[i],
 		}
+		ep.Entry.SetExtensionFromMap(req.Extension)
 		eps = append(eps, ep)
 	}
 	return eps
@@ -266,6 +270,18 @@ func (e *Entry) AddAllow(allows ...string) *Entry {
 
 func (e *Entry) SetPermissionEnable(v bool) *Entry {
 	e.PermissionEnable = v
+	return e
+}
+
+func (e *Entry) SetLabel(key, value string) *Entry {
+	e.Labels[key] = value
+	return e
+}
+
+func (e *Entry) SetExtensionFromMap(m map[string]string) *Entry {
+	for k, v := range m {
+		e.Extension[k] = v
+	}
 	return e
 }
 

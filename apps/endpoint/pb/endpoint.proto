@@ -65,7 +65,7 @@ message Entry {
     map<string, string> labels = 8;
     // 扩展属性
     // @gotags: bson:"extension" json:"extension"
-    map<string, string> extension = 11;        
+    map<string, string> extension = 11;  
 }
 
 message EndpointSet {
@@ -85,8 +85,11 @@ message RegistryRequest {
     // @gotags: json:"version" validate:"required,lte=32"
     string version = 2;
     // 服务的功能
-     // @gotags: json:"entries"
+    // @gotags: json:"entries"
     repeated Entry entries = 3;
+    // 扩展属性
+    // @gotags: bson:"extension" json:"extension"
+    map<string, string> extension = 15;  
 }
 
 // RegistryReponse todo
