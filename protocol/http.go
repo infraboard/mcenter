@@ -120,6 +120,7 @@ func (s *HTTPService) RegistryEndpoint() {
 	}
 
 	req := endpoint.NewRegistryRequest(version.Short(), entries)
+	req.ServiceId = version.ServiceName
 	controller := ioc.GetController(endpoint.AppName).(endpoint.Service)
 	_, err := controller.RegistryEndpoint(context.Background(), req)
 	if err != nil {

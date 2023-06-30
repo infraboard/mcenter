@@ -194,9 +194,10 @@ func GetPRBACEntry(entries []*Entry) (es []*Entry) {
 
 func NewDefaultEntry() *Entry {
 	return &Entry{
-		Allow:     []string{},
-		Labels:    map[string]string{},
-		Extension: map[string]string{},
+		Allow:          []string{},
+		Labels:         map[string]string{},
+		Extension:      map[string]string{},
+		PermissionMode: label.PERMISSION_MODE_PRBAC.Value(),
 	}
 }
 
@@ -221,19 +222,16 @@ func (e *Entry) LoadMeta(meta map[string]interface{}) {
 			e.PermissionMode, _ = v.(string)
 		}
 
-		// switch v := meta[label.Allow].(type) {
-		// case int:
-
-		// case []int:
-		// case string:
-		// case []string:
-
-		// }
+		switch v := meta[label.Allow].(type) {
+		case string:
+			e.AddAllow(v)
+		case []string:
+			e.AddAllow(v...)
+		}
 
 		if v, ok := meta[label.Action]; ok {
 			e.Labels[label.Action], _ = v.(string)
 		}
-
 	}
 }
 
@@ -258,6 +256,11 @@ func (e *Entry) IsAllow(target fmt.Stringer) bool {
 
 func (e *Entry) SetAuthEnable(v bool) *Entry {
 	e.AuthEnable = v
+	return e
+}
+
+func (e *Entry) AddAllow(allows ...string) *Entry {
+	e.Allow = append(e.Allow, allows...)
 	return e
 }
 

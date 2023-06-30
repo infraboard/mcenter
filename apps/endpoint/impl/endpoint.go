@@ -9,7 +9,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/version"
 )
 
 func (s *impl) DescribeEndpoint(ctx context.Context, req *endpoint.DescribeEndpointRequest) (
@@ -64,30 +63,19 @@ func (s *impl) QueryEndpoints(ctx context.Context, req *endpoint.QueryEndpointRe
 // Client 信息可以通过参数传递进来(HTTP协议时)
 // GRPC客户端时 也可以通过ctx传递进来
 func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryRequest) (*endpoint.RegistryResponse, error) {
-	if req.ClientId == "" {
-		req.ClientId, req.ClientSecret = service.GetClientCredential(ctx)
-	}
-
 	if err := req.Validate(); err != nil {
 		return nil, exception.NewBadRequest(err.Error())
 	}
 
-	// 查询该服务, 默认表示mcenter服务自己
-	servceId := version.ServiceName
-	if req.ClientId != "" {
-		svr, err := s.svc.DescribeService(ctx, service.NewDescribeServiceRequestByClientId(req.ClientId))
-		if err != nil {
-			return nil, err
-		}
-		s.log.Debugf("service %s registry endpoints", svr.Spec.Name)
-		if err := svr.Credential.Validate(req.ClientSecret); err != nil {
-			return nil, err
-		}
-		servceId = svr.Meta.Id
+	// 获取认证后的client 服务相关信息
+	svc, err := service.GetServiceFromCtx(ctx)
+	if err != nil {
+		return nil, err
 	}
+	req.ServiceId = svc.Meta.Id
 
 	// 生成该服务的Endpoint
-	endpoints := req.Endpoints(servceId)
+	endpoints := req.Endpoints(req.ServiceId)
 	s.log.Debugf("registry endpoints: %s", endpoints)
 
 	// 更新已有的记录

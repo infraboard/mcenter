@@ -78,14 +78,15 @@ message EndpointSet {
 
 // RegistryRequest 服务注册请求
 message RegistryRequest {
-    // @gotags: json:"client_id" validate:"required"
-    string client_id = 1;
-    // @gotags: json:"client_secret" validate:"required"
-    string client_secret = 2;
+    // 服务的Id
+    // @gotags: json:"service_id"
+    string service_id = 1;
+    // 服务的版本
     // @gotags: json:"version" validate:"required,lte=32"
-    string version = 3;
+    string version = 2;
+    // 服务的功能
      // @gotags: json:"entries"
-    repeated Entry entries = 4;
+    repeated Entry entries = 3;
 }
 
 // RegistryReponse todo

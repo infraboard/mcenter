@@ -76,9 +76,7 @@ func (s *Service) GetRepositorySshUrl() string {
 }
 
 func (s *Service) InjectGrpcClientMeta(md metadata.MD) {
-	md.Append(GRPC_CLIENT_DOMAIN_KEY, s.Spec.Domain)
-	md.Append(GRPC_CLIENT_NAMESPACE_KEY, s.Spec.Namespace)
-	md.Append(GRPC_CLIENT_NAME_KEY, s.Spec.Name)
+	md.Append(GRPC_CLIENT_SERVICE_JSON, s.ToJson())
 }
 
 func (s *Service) ToJson() string {

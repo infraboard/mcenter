@@ -134,7 +134,7 @@ func NewDeleteServiceRequestWithID(id string) *DeleteServiceRequest {
 }
 
 func (i *Service) FullName() string {
-	return fmt.Sprintf("%s.%s", i.Spec.Namespace, i.Spec.Name)
+	return fmt.Sprintf("%s.%s.%s", i.Spec.Domain, i.Spec.Namespace, i.Spec.Name)
 }
 
 func (i *Service) Update(req *UpdateServiceRequest) {

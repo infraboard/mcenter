@@ -44,8 +44,7 @@ func TestEndpointRegistry(t *testing.T) {
 			Labels:           map[string]string{"action": "create"},
 		},
 	})
-	req.ClientId = os.Getenv("MCENTER_CLINET_ID")
-	req.ClientSecret = os.Getenv("MCENTER_CLIENT_SECRET")
+	req.ServiceId = os.Getenv("MCENTER_CLINET_ID")
 	resp, err := c.Endpoint().RegistryEndpoint(ctx, req)
 	if err != nil {
 		t.Fatal(err)
