@@ -12,7 +12,7 @@ import (
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
 	"github.com/infraboard/mcube/pb/resource"
-	"github.com/infraboard/mpaas/common/hash"
+	"github.com/infraboard/mcube/tools/hash"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/infraboard/mcenter/apps/domain"

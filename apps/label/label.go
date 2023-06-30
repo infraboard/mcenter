@@ -6,8 +6,8 @@ import (
 
 	"github.com/infraboard/mcenter/common/validate"
 	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mcube/tools/hash"
 	"github.com/infraboard/mcube/tools/pretty"
-	"github.com/infraboard/mpaas/common/hash"
 )
 
 func NewLabelSet() *LabelSet {

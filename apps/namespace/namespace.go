@@ -12,7 +12,7 @@ import (
 	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	resource "github.com/infraboard/mcube/pb/resource"
-	"github.com/infraboard/mpaas/common/hash"
+	"github.com/infraboard/mcube/tools/hash"
 )
 
 // use a single instance of Validate, it caches struct info
