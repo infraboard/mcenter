@@ -63,16 +63,18 @@ func (s *impl) QueryEndpoints(ctx context.Context, req *endpoint.QueryEndpointRe
 // Client 信息可以通过参数传递进来(HTTP协议时)
 // GRPC客户端时 也可以通过ctx传递进来
 func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryRequest) (*endpoint.RegistryResponse, error) {
-	if err := req.Validate(); err != nil {
-		return nil, exception.NewBadRequest(err.Error())
-	}
-
 	// 获取认证后的client 服务相关信息
 	svc, err := service.GetServiceFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
-	req.ServiceId = svc.Meta.Id
+	if svc.Meta != nil && svc.Meta.Id != "" {
+		req.ServiceId = svc.Meta.Id
+	}
+
+	if err := req.Validate(); err != nil {
+		return nil, exception.NewBadRequest(err.Error())
+	}
 
 	// 生成该服务的Endpoint
 	endpoints := req.Endpoints(req.ServiceId)

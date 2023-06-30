@@ -4,6 +4,7 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/instance"
+	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -39,6 +40,8 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.GET("/").To(h.SearchInstance).
 		Doc("搜索实例").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Reads(instance.RegistryRequest{}).
 		Writes(instance.Instance{}))
 
@@ -48,7 +51,7 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Reads(instance.UnregistryRequest{}).
 		Writes(instance.Instance{}))
 
-	ws.Route(ws.DELETE("/{instance_id}").To(h.RegistryInstance).
+	ws.Route(ws.DELETE("/{instance_id}").To(h.UnRegistryInstance).
 		Doc("实例注销").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Reads(instance.SearchRequest{}).

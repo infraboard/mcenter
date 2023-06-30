@@ -40,6 +40,8 @@ func (h *handler) Registry(ws *restful.WebService) {
 	ws.Route(ws.POST("/").To(h.RegistryEndpoint).
 		Doc("注册服务功能列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Disable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Reads(endpoint.RegistryRequest{}).
 		Writes(endpoint.EndpointSet{}))
 
