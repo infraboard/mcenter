@@ -14,7 +14,7 @@ const (
 func GetServiceFromCtx(ctx context.Context) (*Service, error) {
 	ins := NewDefaultService()
 
-	// 重上下文中获取认证信息
+	// 重上下文中获取认证信息, 如果没有返回默认服务信息
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return ins, nil
