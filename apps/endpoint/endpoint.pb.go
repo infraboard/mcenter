@@ -354,8 +354,8 @@ type RegistryRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// 服务的Id
-	// @gotags: json:"service_id"
-	ServiceId string `protobuf:"bytes,1,opt,name=service_id,json=serviceId,proto3" json:"service_id"`
+	// @gotags: json:"service_id" validate:"required"
+	ServiceId string `protobuf:"bytes,1,opt,name=service_id,json=serviceId,proto3" json:"service_id" validate:"required"`
 	// 服务的版本
 	// @gotags: json:"version" validate:"required,lte=32"
 	Version string `protobuf:"bytes,2,opt,name=version,proto3" json:"version" validate:"required,lte=32"`

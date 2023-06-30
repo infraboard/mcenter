@@ -79,7 +79,7 @@ message EndpointSet {
 // RegistryRequest 服务注册请求
 message RegistryRequest {
     // 服务的Id
-    // @gotags: json:"service_id"
+    // @gotags: json:"service_id" validate:"required"
     string service_id = 1;
     // 服务的版本
     // @gotags: json:"version" validate:"required,lte=32"

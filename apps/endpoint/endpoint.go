@@ -122,6 +122,13 @@ func (req *RegistryRequest) Endpoints(serviceID string) []*Endpoint {
 	return eps
 }
 
+func (req *RegistryRequest) SetExtension(key, value string) {
+	if req.Extension == nil {
+		req.Extension = make(map[string]string)
+	}
+	req.Extension[key] = value
+}
+
 // NewRegistryResponse todo
 func NewRegistryResponse(message string) *RegistryResponse {
 	return &RegistryResponse{Message: message}
@@ -279,6 +286,10 @@ func (e *Entry) SetLabel(key, value string) *Entry {
 }
 
 func (e *Entry) SetExtensionFromMap(m map[string]string) *Entry {
+	if e.Extension == nil {
+		e.Extension = map[string]string{}
+	}
+
 	for k, v := range m {
 		e.Extension[k] = v
 	}

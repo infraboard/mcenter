@@ -92,6 +92,17 @@ func (s *Service) MarshalJSON() ([]byte, error) {
 	}{s.Meta, s.Spec, s.Credential, s.Security})
 }
 
+func (s *Service) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(
+		data,
+		&struct {
+			*resource.Meta
+			*CreateServiceRequest
+			Credential *Credential `json:"status"`
+			Security   *Security   `json:"security"`
+		}{s.Meta, s.Spec, s.Credential, s.Security})
+}
+
 func NewImageRepository() *ImageRepository {
 	return &ImageRepository{
 		Version: "latest",

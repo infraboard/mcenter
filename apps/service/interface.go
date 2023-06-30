@@ -13,6 +13,7 @@ import (
 	pb_request "github.com/infraboard/mcube/pb/request"
 	"github.com/infraboard/mcube/pb/resource"
 	"github.com/infraboard/mcube/tools/hash"
+	"github.com/infraboard/mcube/tools/pretty"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/infraboard/mcenter/apps/domain"
@@ -104,7 +105,10 @@ func (s *ServiceSet) Add(item *Service) {
 
 func NewDefaultService() *Service {
 	return &Service{
-		Spec: NewCreateServiceRequest(),
+		Meta:       &resource.Meta{},
+		Credential: &Credential{},
+		Spec:       NewCreateServiceRequest(),
+		Security:   &Security{},
 	}
 }
 
@@ -135,6 +139,10 @@ func NewDeleteServiceRequestWithID(id string) *DeleteServiceRequest {
 
 func (i *Service) FullName() string {
 	return fmt.Sprintf("%s.%s.%s", i.Spec.Domain, i.Spec.Namespace, i.Spec.Name)
+}
+
+func (i *Service) ToJSON() string {
+	return pretty.ToJSON(i)
 }
 
 func (i *Service) Update(req *UpdateServiceRequest) {

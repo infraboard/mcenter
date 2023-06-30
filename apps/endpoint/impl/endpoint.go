@@ -70,8 +70,8 @@ func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryReque
 	}
 	if svc.Meta != nil && svc.Meta.Id != "" {
 		req.ServiceId = svc.Meta.Id
-		req.Extension["domain"] = svc.Spec.Domain
-		req.Extension["namespace"] = svc.Spec.Namespace
+		req.SetExtension("domain", svc.Spec.Domain)
+		req.SetExtension("namespace", svc.Spec.Namespace)
 	}
 
 	if err := req.Validate(); err != nil {
