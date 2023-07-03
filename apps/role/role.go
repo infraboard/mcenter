@@ -3,8 +3,8 @@ package role
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 
+	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/common/format"
@@ -20,8 +20,8 @@ var (
 )
 
 // NewQueryRoleRequestFromHTTP 列表查询请求
-func NewQueryRoleRequestFromHTTP(r *http.Request) *QueryRoleRequest {
-	page := request.NewPageRequestFromHTTP(r)
+func NewQueryRoleRequestFromHTTP(r *restful.Request) *QueryRoleRequest {
+	page := request.NewPageRequestFromHTTP(r.Request)
 
 	req := NewQueryRoleRequest()
 	req.Page = page

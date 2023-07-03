@@ -1,13 +1,16 @@
 package auth
 
 import (
-	"context"
+	"strings"
 	"time"
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
+	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
+	"github.com/infraboard/mcenter/apps/user"
+	"github.com/infraboard/mcenter/version"
 	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/restful/response"
@@ -21,6 +24,7 @@ func NewHttpAuther() *httpAuther {
 		log:              zap.L().Named("auther.http"),
 		tk:               ioc.GetController(token.AppName).(token.Service),
 		code:             ioc.GetController(code.AppName).(code.Service),
+		policy:           ioc.GetController(policy.AppName).(policy.Service),
 		cache:            cache.C(),
 		codeCheckSilence: 30 * time.Minute,
 	}
@@ -31,6 +35,7 @@ type httpAuther struct {
 	tk               token.Service
 	code             code.Service
 	cache            cache.Cache
+	policy           policy.Service
 	codeCheckSilence time.Duration
 }
 
@@ -52,7 +57,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		}
 
 		// 接口调用权限校验
-		err = a.CheckPermission(req.Request.Context(), tk, entry)
+		err = a.CheckPermission(req, tk, entry)
 		if err != nil {
 			response.Failed(resp, err)
 			return
@@ -90,7 +95,26 @@ func (a *httpAuther) CheckAccessToken(req *restful.Request) (*token.Token, error
 	return tk, nil
 }
 
-func (a *httpAuther) CheckPermission(ctx context.Context, tk *token.Token, e *endpoint.Entry) error {
+func (a *httpAuther) CheckPermission(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+	if tk == nil {
+		return exception.NewUnauthorized("validate permission need token")
+	}
+
+	// 如果是超级管理员不做权限校验, 直接放行
+	if tk.UserType.IsIn(user.TYPE_SUPPER) {
+		a.log.Debugf("[%s] supper admin skip permission check!", tk.Username)
+		return nil
+	}
+
+	switch strings.ToUpper(e.PermissionMode) {
+	case "ACL":
+		return a.validatePermissionByACL(req, tk, e)
+	default:
+		return a.validatePermissionByPRBAC(req, tk, e)
+	}
+}
+
+func (a *httpAuther) validatePermissionByACL(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
 		a.log.Debugf("[%s] start check permission to mcenter ...", tk.Username)
@@ -99,6 +123,23 @@ func (a *httpAuther) CheckPermission(ctx context.Context, tk *token.Token, e *en
 		}
 		a.log.Debugf("[%s] permission check passed", tk.Username)
 	}
+	return nil
+}
+
+func (a *httpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+	req := policy.NewCheckPermissionRequest()
+	req.Username = tk.Username
+	req.Namespace = tk.Namespace
+	req.ServiceId = version.ServiceName
+	req.Path = e.UniquePath()
+	perm, err := a.policy.CheckPermission(r.Request.Context(), req)
+	if err != nil {
+		return exception.NewPermissionDeny(err.Error())
+	}
+	a.log.Debugf("[%s] permission check passed", tk.Username)
+
+	// 保存访问访问信息
+	r.SetAttribute(policy.SCOPE_ATTRIBUTE_NAME, perm.Scope)
 	return nil
 }
 
