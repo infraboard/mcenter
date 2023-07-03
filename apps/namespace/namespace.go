@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 
+	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/common/format"
@@ -108,11 +108,10 @@ func NewDescriptNamespaceRequest(domain, name string) *DescriptNamespaceRequest 
 }
 
 // NewQueryNamespaceRequestFromHTTP 列表查询请求
-func NewQueryNamespaceRequestFromHTTP(r *http.Request) *QueryNamespaceRequest {
-	qs := r.URL.Query()
+func NewQueryNamespaceRequestFromHTTP(r *restful.Request) *QueryNamespaceRequest {
 	return &QueryNamespaceRequest{
-		Page: request.NewPageRequestFromHTTP(r),
-		Name: []string{qs.Get("name")},
+		Page: request.NewPageRequestFromHTTP(r.Request),
+		Name: []string{r.QueryParameter("name")},
 	}
 }
 
