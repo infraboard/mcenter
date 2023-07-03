@@ -110,8 +110,9 @@ func (h *primary) CreateUser(r *restful.Request, w *restful.Response) {
 		return
 	}
 
-	tk := r.Attribute(token.TOKEN_ATTRIBUTE_NAME).(*token.Token)
+	tk := token.GetTokenFromRequest(r)
 	req.Domain = tk.Domain
+	req.CreateBy = tk.UserId
 
 	set, err := h.service.CreateUser(r.Request.Context(), req)
 	if err != nil {
