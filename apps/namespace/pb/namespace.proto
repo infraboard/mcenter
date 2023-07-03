@@ -51,8 +51,11 @@ message CreateNamespaceRequest {
     // @gotags: bson:"visible" json:"visible"
     VISIBLE visible = 8;
     // 扩展信息
-    // @gotags: bson:"meta" json:"meta"
-    map<string,string> meta = 15;
+    // @gotags: bson:"extension" json:"extension"
+    map<string,string> extension = 14;
+    // 空间标签
+    // @gotags: bson:"labels" json:"labels"
+    map<string,string> labels = 15;
 }
 
 message NamespaceSet {

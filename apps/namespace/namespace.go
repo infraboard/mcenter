@@ -70,11 +70,24 @@ func (n *Namespace) ToJson() string {
 
 // NewCreateNamespaceRequest todo
 func NewCreateNamespaceRequest() *CreateNamespaceRequest {
-	return &CreateNamespaceRequest{}
+	return &CreateNamespaceRequest{
+		Assistants: []string{},
+		Enabled:    true,
+		Extension:  map[string]string{},
+		Labels:     map[string]string{},
+	}
 }
 
 func (req *CreateNamespaceRequest) UpdateOwner(tk *token.Token) {
-	req.Owner = tk.Username
+	if tk == nil {
+		return
+	}
+
+	// 默认Owner是自己
+	if req.Owner != "" {
+		req.Owner = tk.Username
+	}
+
 	req.Domain = tk.Domain
 }
 

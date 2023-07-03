@@ -52,12 +52,6 @@ func (h *handler) CreateRole(r *restful.Request, w *restful.Response) {
 
 func (h *handler) QueryRole(r *restful.Request, w *restful.Response) {
 	req := role.NewQueryRoleRequestFromHTTP(r)
-
-	if err := r.ReadEntity(req); err != nil {
-		response.Failed(w, err)
-		return
-	}
-
 	set, err := h.service.QueryRole(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)

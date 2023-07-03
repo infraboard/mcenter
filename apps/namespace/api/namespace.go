@@ -4,6 +4,7 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/namespace"
+	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/response"
@@ -35,11 +36,11 @@ func (h *handler) Registry(ws *restful.WebService) {
 
 func (h *handler) CreateNamespace(r *restful.Request, w *restful.Response) {
 	req := namespace.NewCreateNamespaceRequest()
-
 	if err := r.ReadEntity(req); err != nil {
 		response.Failed(w, err)
 		return
 	}
+	req.UpdateOwner(token.GetTokenFromRequest(r))
 
 	set, err := h.service.CreateNamespace(r.Request.Context(), req)
 	if err != nil {
@@ -52,11 +53,6 @@ func (h *handler) CreateNamespace(r *restful.Request, w *restful.Response) {
 
 func (h *handler) QueryNamespace(r *restful.Request, w *restful.Response) {
 	req := namespace.NewQueryNamespaceRequestFromHTTP(r)
-	if err := r.ReadEntity(req); err != nil {
-		response.Failed(w, err)
-		return
-	}
-
 	set, err := h.service.QueryNamespace(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
