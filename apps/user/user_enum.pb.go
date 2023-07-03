@@ -144,24 +144,24 @@ func (t *Gender) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// ParseCREATE_BYFromString Parse CREATE_BY from string
-func ParseCREATE_BYFromString(str string) (CREATE_BY, error) {
+// ParseCREATE_FROMFromString Parse CREATE_FROM from string
+func ParseCREATE_FROMFromString(str string) (CREATE_FROM, error) {
 	key := strings.Trim(string(str), `"`)
-	v, ok := CREATE_BY_value[strings.ToUpper(key)]
+	v, ok := CREATE_FROM_value[strings.ToUpper(key)]
 	if !ok {
-		return 0, fmt.Errorf("unknown CREATE_BY: %s", str)
+		return 0, fmt.Errorf("unknown CREATE_FROM: %s", str)
 	}
 
-	return CREATE_BY(v), nil
+	return CREATE_FROM(v), nil
 }
 
 // Equal type compare
-func (t CREATE_BY) Equal(target CREATE_BY) bool {
+func (t CREATE_FROM) Equal(target CREATE_FROM) bool {
 	return t == target
 }
 
 // IsIn todo
-func (t CREATE_BY) IsIn(targets ...CREATE_BY) bool {
+func (t CREATE_FROM) IsIn(targets ...CREATE_FROM) bool {
 	for _, target := range targets {
 		if t.Equal(target) {
 			return true
@@ -172,7 +172,7 @@ func (t CREATE_BY) IsIn(targets ...CREATE_BY) bool {
 }
 
 // MarshalJSON todo
-func (t CREATE_BY) MarshalJSON() ([]byte, error) {
+func (t CREATE_FROM) MarshalJSON() ([]byte, error) {
 	b := bytes.NewBufferString(`"`)
 	b.WriteString(strings.ToUpper(t.String()))
 	b.WriteString(`"`)
@@ -180,8 +180,8 @@ func (t CREATE_BY) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON todo
-func (t *CREATE_BY) UnmarshalJSON(b []byte) error {
-	ins, err := ParseCREATE_BYFromString(string(b))
+func (t *CREATE_FROM) UnmarshalJSON(b []byte) error {
+	ins, err := ParseCREATE_FROMFromString(string(b))
 	if err != nil {
 		return err
 	}

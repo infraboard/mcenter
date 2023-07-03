@@ -105,7 +105,6 @@ func (h *primary) Registry(ws *restful.WebService) {
 
 func (h *primary) CreateUser(r *restful.Request, w *restful.Response) {
 	req := user.NewCreateUserRequest()
-
 	if err := r.ReadEntity(req); err != nil {
 		response.Failed(w, err)
 		return

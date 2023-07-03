@@ -142,9 +142,9 @@ message Profile {
     string province = 10;                
 }
 
-enum CREATE_BY {
+enum CREATE_FROM {
     // 管理员创建
-    ADMIN = 0;
+    PRIMARY_ACCOUNT = 0;
     // 自己注册
     SELF = 1;
 }
@@ -157,9 +157,12 @@ message CreateUserRequest {
     // 用户类型
     // @gotags: json:"type" bson:"type"
     TYPE type = 2;
+    // 创建来源
+    // @gotags: json:"create_from" bson:"create_from"
+    CREATE_FROM create_from = 3;
     // 创建类型
     // @gotags: json:"create_by" bson:"create_by"
-    CREATE_BY create_by = 3;
+    string create_by = 13;
     // 域信息
     // @gotags: json:"domain" bson:"domain" validate:"required"
     string domain = 4;

@@ -105,7 +105,7 @@ func NewLDAPCreateUserRequest(domain, username, password, descriptoin string) *C
 	return &CreateUserRequest{
 		Provider:    PROVIDER_LDAP,
 		Type:        TYPE_SUB,
-		CreateBy:    CREATE_BY_ADMIN,
+		CreateFrom:  CREATE_FROM_PRIMARY_ACCOUNT,
 		Domain:      domain,
 		Username:    username,
 		Password:    password,
@@ -117,7 +117,7 @@ func NewFeishuCreateUserRequest(domain, username, password, descriptoin string) 
 	return &CreateUserRequest{
 		Provider:    PROVIDER_FEISHU,
 		Type:        TYPE_SUB,
-		CreateBy:    CREATE_BY_ADMIN,
+		CreateFrom:  CREATE_FROM_PRIMARY_ACCOUNT,
 		Domain:      domain,
 		Username:    username,
 		Password:    password,

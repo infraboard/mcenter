@@ -63,7 +63,7 @@ func (u *User) ToCreateUserRequest(domain, password, descriptoin string) *user.C
 	req := &user.CreateUserRequest{
 		Provider:    user.PROVIDER_DINGDING,
 		Type:        user.TYPE_SUB,
-		CreateBy:    user.CREATE_BY_ADMIN,
+		CreateFrom:  user.CREATE_FROM_PRIMARY_ACCOUNT,
 		Domain:      domain,
 		Username:    u.Username(),
 		Password:    password,

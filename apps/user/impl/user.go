@@ -17,7 +17,7 @@ func (s *service) CreateUser(ctx context.Context, req *user.CreateUserRequest) (
 	}
 
 	// 如果是管理员创建的账号需要用户自己重置密码
-	if req.CreateBy.IsIn(user.CREATE_BY_ADMIN) {
+	if req.CreateFrom.IsIn(user.CREATE_FROM_PRIMARY_ACCOUNT) {
 		u.Password.SetNeedReset("admin created user need reset when first login")
 	}
 
