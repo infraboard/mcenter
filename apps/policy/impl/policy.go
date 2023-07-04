@@ -128,8 +128,7 @@ func (s *impl) DescribePolicy(ctx context.Context, req *policy.DescribePolicyReq
 }
 
 func (s *impl) DeletePolicy(ctx context.Context, req *policy.DeletePolicyRequest) (*policy.Policy, error) {
-	descReq := policy.NewDescriptPolicyRequest()
-	descReq.Id = req.Id
+	descReq := policy.NewDescriptPolicyRequest(req.Id)
 	p, err := s.DescribePolicy(ctx, descReq)
 	if err != nil {
 		return nil, err

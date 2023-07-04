@@ -7,6 +7,7 @@ import "mcube/pb/page/page.proto";
 import "mcenter/apps/policy/pb/permission.proto";
 import "mcenter/apps/policy/pb/policy.proto";
 import "mcenter/apps/role/pb/permission.proto";
+import "mcube/pb/resource/meta.proto";
 
 // RPC 策略服务
 service RPC {
@@ -59,16 +60,9 @@ message DescribePolicyRequest {
 
 // DeletePolicyRequest todo
 message DeletePolicyRequest {
+    // 资源范围
+    // @gotags: json:"scope"
+    mcube.resource.Scope scope = 1;
     // @gotags: json:"id"
-	string id = 1;
-    // @gotags: json:"username"
-    string username = 2;
-    // @gotags: json:"role_id"
-    string role_id = 3;
-    // @gotags: json:"namespace"
-    string namespace = 4;
-    // @gotags: json:"type"
-    optional bool read_only = 5;
-    // @gotags: json:"domain"
-    string domain = 6;  
+	string id = 2;
 }

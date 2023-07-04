@@ -225,13 +225,17 @@ func (req *QueryPolicyRequest) Validate() error {
 }
 
 // NewDescriptPolicyRequest new实例
-func NewDescriptPolicyRequest() *DescribePolicyRequest {
-	return &DescribePolicyRequest{}
+func NewDescriptPolicyRequest(id string) *DescribePolicyRequest {
+	return &DescribePolicyRequest{
+		Id: id,
+	}
 }
 
 // NewDeletePolicyRequestWithID todo
 func NewDeletePolicyRequestWithID(id string) *DeletePolicyRequest {
-	return &DeletePolicyRequest{Id: id}
+	return &DeletePolicyRequest{
+		Id: id,
+	}
 }
 
 // NewQueryPolicyRequest 列表查询请求
@@ -254,9 +258,11 @@ func NewQueryPolicyRequestFromHTTP(r *restful.Request) *QueryPolicyRequest {
 
 // NewDeletePolicyRequestWithNamespaceID todo
 func NewDeletePolicyRequestWithNamespace(domain, namespace string) *DeletePolicyRequest {
+	s := resource.NewScope()
+	s.Domain = domain
+	s.Namespace = namespace
 	return &DeletePolicyRequest{
-		Domain:    domain,
-		Namespace: namespace,
+		Scope: s,
 	}
 }
 

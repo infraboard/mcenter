@@ -60,6 +60,27 @@ func (h *policyHandler) Registry(ws *restful.WebService) {
 		Writes(policy.PolicySet{}).
 		Returns(200, "OK", policy.PolicySet{}).
 		Returns(404, "Not Found", nil))
+
+	ws.Route(ws.GET("/{id}").To(h.DescribePolicy).
+		Doc("查询策略详情").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.Get.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Disable).
+		Writes(policy.Policy{}).
+		Returns(200, "OK", policy.Policy{}).
+		Returns(404, "Not Found", nil))
+
+	ws.Route(ws.POST("/{id}").To(h.CreatePolicy).
+		Doc("删除策略").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.Delete.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Enable).
+		Reads(policy.DeletePolicyRequest{}).
+		Writes(policy.Policy{}))
 }
 
 func (h *policyHandler) CreatePolicy(r *restful.Request, w *restful.Response) {
@@ -87,5 +108,28 @@ func (h *policyHandler) QueryPolicy(r *restful.Request, w *restful.Response) {
 		return
 	}
 
+	response.Success(w, set)
+}
+
+func (h *policyHandler) DescribePolicy(r *restful.Request, w *restful.Response) {
+	req := policy.NewDescriptPolicyRequest(r.PathParameter("id"))
+	ins, err := h.service.DescribePolicy(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	response.Success(w, ins)
+}
+
+func (h *policyHandler) DeletePolicy(r *restful.Request, w *restful.Response) {
+	req := policy.NewDeletePolicyRequestWithID(r.PathParameter("id"))
+
+	req.Scope = token.GetTokenFromRequest(r).GenScope()
+	set, err := h.service.DeletePolicy(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
 	response.Success(w, set)
 }

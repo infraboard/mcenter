@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/infraboard/mcenter/apps/policy"
+	"github.com/infraboard/mcenter/apps/token"
 )
 
 func newDescribePolicyRequest(req *policy.DescribePolicyRequest) (*describePolicyRequest, error) {
@@ -91,20 +92,7 @@ type deletePolicyRequest struct {
 
 func (r *deletePolicyRequest) FindFilter() bson.M {
 	filter := bson.M{}
-	filter["domain"] = r.Domain
-
-	if r.Id != "" {
-		filter["_id"] = r.Id
-	}
-	if r.Username != "" {
-		filter["username"] = r.Username
-	}
-	if r.RoleId != "" {
-		filter["role_id"] = r.RoleId
-	}
-	if r.Namespace != "" {
-		filter["namespace"] = r.Namespace
-	}
-
+	token.MakeMongoFilter(filter, r.Scope)
+	filter["_id"] = r.Id
 	return filter
 }
