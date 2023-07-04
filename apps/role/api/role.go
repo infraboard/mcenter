@@ -4,6 +4,7 @@ import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/response"
 )
@@ -27,7 +28,7 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Metadata(label.Resource, h.Name()).
 		Metadata(label.Action, label.List.Value()).
 		Metadata(label.Auth, label.Enable).
-		Metadata(label.Permission, label.Enable).
+		Metadata(label.Permission, label.Disable).
 		Writes(role.Role{}).
 		Returns(200, "OK", role.Role{}).
 		Returns(404, "Not Found", nil))
@@ -35,12 +36,12 @@ func (h *handler) Registry(ws *restful.WebService) {
 
 func (h *handler) CreateRole(r *restful.Request, w *restful.Response) {
 	req := role.NewCreateRoleRequest()
-
 	if err := r.ReadEntity(req); err != nil {
 		response.Failed(w, err)
 		return
 	}
 
+	req.UpdateFromToken(token.GetTokenFromRequest(r))
 	set, err := h.service.CreateRole(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)

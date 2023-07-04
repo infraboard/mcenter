@@ -14,6 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/common/format"
 )
 
@@ -74,12 +75,22 @@ func NewCreatePolicyRequest() *CreatePolicyRequest {
 		Enabled: true,
 		Scope:   []*resource.LabelRequirement{},
 		Extra:   map[string]string{},
+		Labels:  map[string]string{},
 	}
 }
 
 // Validate 校验请求合法
 func (req *CreatePolicyRequest) Validate() error {
 	return validate.Struct(req)
+}
+
+func (req *CreatePolicyRequest) UpdateFromToken(tk *token.Token) {
+	if tk == nil {
+		return
+	}
+	req.CreateBy = tk.UserId
+	req.Domain = tk.Domain
+	req.Namespace = tk.Namespace
 }
 
 func (req *CreatePolicyRequest) AddScope(item *resource.LabelRequirement) {
@@ -230,6 +241,15 @@ func NewQueryPolicyRequest() *QueryPolicyRequest {
 		WithRole:      false,
 		WithNamespace: false,
 	}
+}
+
+// NewQueryRoleRequestFromHTTP 列表查询请求
+func NewQueryPolicyRequestFromHTTP(r *restful.Request) *QueryPolicyRequest {
+	page := request.NewPageRequestFromHTTP(r.Request)
+
+	req := NewQueryPolicyRequest()
+	req.Page = page
+	return req
 }
 
 // NewDeletePolicyRequestWithNamespaceID todo

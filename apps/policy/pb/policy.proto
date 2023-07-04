@@ -51,7 +51,10 @@ message CreatePolicyRequest {
     bool enabled = 9;  
     // 扩展属性
     // @gotags: bson:"extra" json:"extra"
-    map<string,string> extra = 15;        
+    map<string,string> extra = 14; 
+    // 标签
+    // @gotags: bson:"labels" json:"labels"
+    map<string,string> labels = 15;        
 }
 
 message PolicySet {

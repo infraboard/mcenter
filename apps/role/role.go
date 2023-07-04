@@ -7,6 +7,7 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/endpoint"
+	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/common/format"
 	request "github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/logger/zap"
@@ -25,6 +26,7 @@ func NewQueryRoleRequestFromHTTP(r *restful.Request) *QueryRoleRequest {
 
 	req := NewQueryRoleRequest()
 	req.Page = page
+	req.WithPermission = r.QueryParameter("with_permission") == "true"
 	return req
 }
 
@@ -104,6 +106,15 @@ func NewCreateRoleRequest() *CreateRoleRequest {
 // Validate 请求校验
 func (req *CreateRoleRequest) Validate() error {
 	return validate.Struct(req)
+}
+
+func (req *CreateRoleRequest) UpdateFromToken(tk *token.Token) {
+	if tk == nil {
+		return
+	}
+	req.CreateBy = tk.UserId
+	req.Domain = tk.Domain
+	req.Namespace = tk.Namespace
 }
 
 func (r *Role) ToJson() string {
