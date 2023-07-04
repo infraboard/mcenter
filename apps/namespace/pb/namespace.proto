@@ -30,7 +30,7 @@ message CreateNamespaceRequest {
     // @gotags: bson:"parent_id" json:"parent_id"
     string parent_id = 2;
     // 空间名称, 不允许修改
-    // @gotags: bson:"name" json:"name"
+    // @gotags: bson:"name" json:"name" validate:"required"
     string name = 3;
     // 空间负责人
     // @gotags: bson:"owner" json:"owner"

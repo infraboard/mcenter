@@ -193,6 +193,9 @@ message CreateUserRequest {
 }
 
 message Feishu {
+    // 是否启用飞书认证
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 4;
     // 用户在飞书应用内的唯一标识
     // @gotags: bson:"open_id" json:"open_id"
     string open_id = 1;
@@ -226,6 +229,9 @@ message FeishuAccessToken {
 }
 
 message DingDing {
+    // 是否启用钉钉认证
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 3;
     // 用户在飞书应用内的唯一标识
     // @gotags: bson:"open_id" json:"open_id"
     string open_id = 1;
@@ -253,6 +259,9 @@ message DingDingAccessToken  {
 }
 
 message WechatWork {
+    // 是否启用企业微信认证
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 3;
     // 用户在企业微信中的Id
     // @gotags: bson:"user_id" json:"user_id"
     string user_id = 1;

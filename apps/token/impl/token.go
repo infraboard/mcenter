@@ -55,6 +55,9 @@ func (s *service) IssueTokenNow(ctx context.Context, req *token.IssueTokenReques
 		return nil, err
 	}
 
+	// 设置Token默认值
+	tk.Namespace = namespace.DEFAULT_NAMESPACE
+
 	if !req.DryRun {
 		// 入库保存
 		if err := s.save(ctx, tk); err != nil {
@@ -114,6 +117,7 @@ func (s *service) AfterLoginSecurityCheck(ctx context.Context, verifyCode string
 }
 
 func (s *service) RestoreUserState(ctx context.Context, tk *token.Token) error {
+	// 查询上次登录的Token
 	qt := token.NewQueryTokenRequest()
 	qt.Page.PageSize = 1
 	qt.Platform = token.NewPlatform(token.PLATFORM_WEB)
@@ -127,8 +131,9 @@ func (s *service) RestoreUserState(ctx context.Context, tk *token.Token) error {
 	}
 
 	latestTK := set.Items[0]
-	tk.Namespace = latestTK.Namespace
-
+	if latestTK.Namespace != "" {
+		tk.Namespace = latestTK.Namespace
+	}
 	return nil
 }
 

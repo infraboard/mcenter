@@ -141,8 +141,8 @@ type CreateNamespaceRequest struct {
 	// @gotags: bson:"parent_id" json:"parent_id"
 	ParentId string `protobuf:"bytes,2,opt,name=parent_id,json=parentId,proto3" json:"parent_id" bson:"parent_id"`
 	// 空间名称, 不允许修改
-	// @gotags: bson:"name" json:"name"
-	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name" bson:"name"`
+	// @gotags: bson:"name" json:"name" validate:"required"
+	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name" bson:"name" validate:"required"`
 	// 空间负责人
 	// @gotags: bson:"owner" json:"owner"
 	Owner string `protobuf:"bytes,4,opt,name=owner,proto3" json:"owner" bson:"owner"`

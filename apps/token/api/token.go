@@ -78,7 +78,6 @@ func (h *tokenHandler) Registry(ws *restful.WebService) {
 
 func (h *tokenHandler) IssueToken(r *restful.Request, w *restful.Response) {
 	req := token.NewIssueTokenRequest()
-
 	if err := r.ReadEntity(req); err != nil {
 		response.Failed(w, err)
 		return
@@ -86,7 +85,6 @@ func (h *tokenHandler) IssueToken(r *restful.Request, w *restful.Response) {
 
 	// 补充用户的登录时的位置信息
 	req.Location = token.NewNewLocationFromHttp(r.Request)
-
 	tk, err := h.service.IssueToken(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
@@ -119,6 +117,9 @@ func (h *tokenHandler) ChangeNamespace(r *restful.Request, w *restful.Response) 
 		return
 	}
 
+	tk := token.GetAccessTokenFromHTTP(r.Request)
+	req.Token = tk
+
 	set, err := h.service.ChangeNamespace(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
@@ -128,7 +129,7 @@ func (h *tokenHandler) ChangeNamespace(r *restful.Request, w *restful.Response) 
 }
 
 func (h *tokenHandler) ValidateToken(r *restful.Request, w *restful.Response) {
-	tk := r.Request.Header.Get(token.VALIDATE_TOKEN_HEADER_KEY)
+	tk := token.GetAccessTokenFromHTTP(r.Request)
 	req := token.NewValidateTokenRequest(tk)
 
 	resp, err := h.service.ValidateToken(r.Request.Context(), req)
