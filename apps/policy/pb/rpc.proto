@@ -31,19 +31,16 @@ message QueryPolicyRequest {
     infraboard.mcube.page.PageRequest page = 1;
     // 策略所属域
     // @gotags: json:"domain"
-    string domain = 8;
-    // 用户名称
-    // @gotags: json:"username"
-    string username = 2;
-    // 用户角色
-    // @gotags: json:"role_id"
-    string role_id = 3;
+    string domain = 2;
     // 用户空间
     // @gotags: json:"namespace"
-    string namespace = 4;
-    // 组相关策略
-    // @gotags: json:"group"
-    string group = 9;  
+    string namespace = 3;
+    // 用户名称
+    // @gotags: json:"username"
+    string username = 4;
+    // 用户角色
+    // @gotags: json:"role_id"
+    string role_id = 5; 
     // 是否查询角色相关信息
     // @gotags: json:"with_role"
     bool with_role = 6;

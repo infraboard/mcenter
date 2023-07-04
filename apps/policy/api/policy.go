@@ -102,6 +102,7 @@ func (h *policyHandler) CreatePolicy(r *restful.Request, w *restful.Response) {
 
 func (h *policyHandler) QueryPolicy(r *restful.Request, w *restful.Response) {
 	req := policy.NewQueryPolicyRequestFromHTTP(r)
+
 	set, err := h.service.QueryPolicy(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)

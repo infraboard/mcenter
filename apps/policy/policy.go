@@ -250,9 +250,12 @@ func NewQueryPolicyRequest() *QueryPolicyRequest {
 // NewQueryRoleRequestFromHTTP 列表查询请求
 func NewQueryPolicyRequestFromHTTP(r *restful.Request) *QueryPolicyRequest {
 	page := request.NewPageRequestFromHTTP(r.Request)
-
 	req := NewQueryPolicyRequest()
 	req.Page = page
+
+	tk := token.GetTokenFromRequest(r)
+	req.Domain = tk.Domain
+	req.Namespace = tk.Namespace
 	return req
 }
 
