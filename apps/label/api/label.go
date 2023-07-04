@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcenter/apps/token"
 	http_label "github.com/infraboard/mcube/http/label"
-	"github.com/infraboard/mcube/http/response"
+	"github.com/infraboard/mcube/http/restful/response"
 )
 
 func (h *handler) Registry(ws *restful.WebService) {
@@ -26,8 +26,9 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Doc("查询标签").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(http_label.Resource, h.Name()).
-		Metadata(http_label.Action, http_label.Create.Value()).
+		Metadata(http_label.Action, http_label.List.Value()).
 		Metadata(http_label.Auth, http_label.Enable).
+		Metadata(http_label.Permission, http_label.Disable).
 		Reads(label.QueryLabelRequest{}).
 		Writes(label.LabelSet{}).
 		Returns(200, "OK", label.LabelSet{}))
@@ -35,7 +36,6 @@ func (h *handler) Registry(ws *restful.WebService) {
 
 func (h *handler) CreateLabel(r *restful.Request, w *restful.Response) {
 	req := label.NewCreateLabelRequest()
-
 	if err := r.ReadEntity(req); err != nil {
 		response.Failed(w, err)
 		return

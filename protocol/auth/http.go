@@ -17,6 +17,7 @@ import (
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	"go.opentelemetry.io/otel/trace"
 )
 
 func NewHttpAuther() *httpAuther {
@@ -73,6 +74,9 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		}
 	}
 
+	// 补充TraceId
+	span := trace.SpanFromContext(req.Request.Context())
+	resp.AddHeader(response.TraceHeaderKey, span.SpanContext().TraceID().String())
 	next.ProcessFilter(req, resp)
 }
 

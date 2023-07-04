@@ -11,6 +11,7 @@ import (
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
@@ -74,6 +75,10 @@ func (a *HttpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		response.Failed(resp, err)
 		return
 	}
+
+	// 补充TraceId
+	span := trace.SpanFromContext(req.Request.Context())
+	resp.AddHeader(response.TraceHeaderKey, span.SpanContext().TraceID().String())
 
 	// next flow
 	next.ProcessFilter(req, resp)

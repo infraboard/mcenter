@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	AppName = "labels"
+	AppName = "label"
 )
 
 type Service interface {
