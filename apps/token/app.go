@@ -284,6 +284,11 @@ func (t *Token) CheckAccessIsExpired() bool {
 	return t.AccessExpiredTime().Before(time.Now())
 }
 
+func (t *Token) Desense() *Token {
+	t.RefreshToken = ""
+	return t
+}
+
 func (t *Token) AccessExpiredTime() time.Time {
 	return time.Unix(t.IssueAt, 0).Add(time.Duration(t.AccessExpiredAt) * time.Second)
 }

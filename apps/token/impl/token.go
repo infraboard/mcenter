@@ -192,7 +192,6 @@ func (s *service) ChangeNamespace(ctx context.Context, req *token.ChangeNamespac
 		if !ps.HasNamespace(req.Namespace) {
 			return nil, exception.NewPermissionDeny("your has no permission to access namespace %s", req.Namespace)
 		}
-
 	}
 
 	tk.Namespace = req.Namespace
@@ -227,7 +226,7 @@ func (s *service) ValidateToken(ctx context.Context, req *token.ValidateTokenReq
 		}
 	}
 
-	return tk, nil
+	return tk.Desense(), nil
 }
 
 func (s *service) makeBlockExcption(bt token.BLOCK_TYPE, message string) exception.APIException {
