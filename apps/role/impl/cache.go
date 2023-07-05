@@ -7,7 +7,7 @@ import (
 	"github.com/infraboard/mcube/cache"
 )
 
-func WrapImpl(i *impl) *Decorator {
+func CacheWrapper(i *impl) *Decorator {
 	return &Decorator{i}
 }
 

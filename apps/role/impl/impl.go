@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryController(&impl{})
+	ioc.RegistryController(CacheWrapper(&impl{}))
 }
 
 type impl struct {
