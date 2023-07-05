@@ -87,7 +87,7 @@ func (i *impl) query(ctx context.Context, req *queryRequest) (*service.ServiceSe
 			return nil, exception.NewInternalServerError("decode book error, error is %s", err)
 		}
 
-		ServiceSet.Add(ins)
+		ServiceSet.Add(ins.Desense())
 	}
 
 	// count

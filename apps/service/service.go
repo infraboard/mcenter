@@ -79,6 +79,16 @@ func (s *Service) InjectGrpcClientMeta(md metadata.MD) {
 	md.Append(GRPC_CLIENT_SERVICE_JSON, s.ToJson())
 }
 
+func (s *Service) Desense() *Service {
+	if s.Credential != nil {
+		s.Credential.ClientSecret = ""
+	}
+	if s.Security != nil {
+		s.Security.EncryptKey = ""
+	}
+	return s
+}
+
 func (s *Service) ToJson() string {
 	return format.Prettify(s)
 }
@@ -87,7 +97,7 @@ func (s *Service) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		*resource.Meta
 		*CreateServiceRequest
-		Credential *Credential `json:"status"`
+		Credential *Credential `json:"credential"`
 		Security   *Security   `json:"security"`
 	}{s.Meta, s.Spec, s.Credential, s.Security})
 }
