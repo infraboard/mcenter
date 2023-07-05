@@ -115,6 +115,7 @@ func (h *serviceHandler) CreateService(r *restful.Request, w *restful.Response) 
 	tk := token.GetTokenFromRequest(r)
 	req.Domain = tk.Domain
 	req.Namespace = tk.Namespace
+	req.Owner = tk.UserId
 
 	set, err := h.service.CreateService(r.Request.Context(), req)
 	if err != nil {

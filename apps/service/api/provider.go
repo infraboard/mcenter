@@ -52,7 +52,7 @@ func (h *providerHandler) Registry(ws *restful.WebService) {
 }
 
 func (h *providerHandler) QueryGitlabProject(r *restful.Request, w *restful.Response) {
-	req := service.NewQueryGitlabProjectRequestFromHTTP(r.Request)
+	req := service.NewQueryGitlabProjectRequestFromHTTP(r)
 	set, err := h.service.QueryGitlabProject(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)

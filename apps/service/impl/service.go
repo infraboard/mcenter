@@ -126,6 +126,7 @@ func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabPr
 	if set.Len() > 0 {
 		gitSshUrls := set.GitSshUrls()
 		query := service.NewQueryServiceRequest()
+		query.Scope = in.Scope
 		query.RepositorySshUrls = gitSshUrls
 		query.Page.PageSize = uint64(len(gitSshUrls))
 		svcs, err = i.QueryService(ctx, query)

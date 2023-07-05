@@ -3,7 +3,6 @@ package service
 import (
 	context "context"
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/emicklei/go-restful/v3"
@@ -45,6 +44,7 @@ type MetaService interface {
 
 func NewCreateServiceRequest() *CreateServiceRequest {
 	return &CreateServiceRequest{
+
 		Domain:          domain.DEFAULT_DOMAIN,
 		Namespace:       namespace.DEFAULT_NAMESPACE,
 		Enabled:         true,
@@ -218,16 +218,15 @@ func GetClientCredential(ctx context.Context) (clientId, clientSecret string) {
 	return
 }
 
-func NewQueryGitlabProjectRequestFromHTTP(r *http.Request) *QueryGitlabProjectRequest {
+func NewQueryGitlabProjectRequestFromHTTP(r *restful.Request) *QueryGitlabProjectRequest {
 	conf := NewQueryGitlabProjectRequest()
-
-	qs := r.URL.Query()
+	conf.Scope = token.GetTokenFromRequest(r).GenScope()
+	qs := r.Request.URL.Query()
 	addr := qs.Get("address")
 	if addr != "" {
 		conf.Address = addr
 	}
-	conf.Token = r.Header.Get("GITLAB_PRIVATE_TOKEN")
-
+	conf.Token = r.HeaderParameter("GITLAB_PRIVATE_TOKEN")
 	return conf
 }
 
