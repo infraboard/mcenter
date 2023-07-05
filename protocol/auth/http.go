@@ -131,9 +131,15 @@ func (a *httpAuther) validatePermissionByACL(req *restful.Request, tk *token.Tok
 }
 
 func (a *httpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+	if !e.PermissionEnable {
+		a.log.Debugf("permission check disabled, skip permission check")
+		return nil
+	}
+
 	req := policy.NewCheckPermissionRequest()
-	req.Username = tk.Username
+	req.Domain = tk.Domain
 	req.Namespace = tk.Namespace
+	req.Username = tk.Username
 	req.ServiceId = version.ServiceName
 	req.Path = e.UniquePath()
 	perm, err := a.policy.CheckPermission(r.Request.Context(), req)

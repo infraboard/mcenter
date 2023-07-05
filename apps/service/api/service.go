@@ -56,7 +56,7 @@ func (h *serviceHandler) Registry(ws *restful.WebService) {
 		Metadata(label.Resource, h.Name()).
 		Metadata(label.Action, label.List.Value()).
 		Metadata(label.Auth, label.Enable).
-		Metadata(label.Permission, label.Disable).
+		Metadata(label.Permission, label.Enable).
 		Reads(service.QueryServiceRequest{}).
 		Writes(service.ServiceSet{}).
 		Returns(200, "OK", service.ServiceSet{}))

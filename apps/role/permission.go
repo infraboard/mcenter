@@ -11,6 +11,7 @@ import (
 	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/tools/pretty"
 )
 
 // NewAddPermissionToRoleRequest todo
@@ -202,6 +203,10 @@ func (req *QueryPermissionRequest) Validate() error {
 // Add todo
 func (s *PermissionSet) Add(items ...*Permission) {
 	s.Items = append(s.Items, items...)
+}
+
+func (s *PermissionSet) ToJSON() string {
+	return pretty.ToJSON(s)
 }
 
 // HasPermission 权限判断
