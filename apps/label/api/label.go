@@ -43,6 +43,7 @@ func (h *handler) CreateLabel(r *restful.Request, w *restful.Response) {
 
 	// 补充用户信息
 	tk := token.GetTokenFromRequest(r)
+	req.CreateBy = tk.UserId
 	req.Domain = tk.Domain
 	req.Namespace = tk.Namespace
 

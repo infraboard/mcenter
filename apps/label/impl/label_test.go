@@ -9,7 +9,7 @@ import (
 
 func TestCreateLabel(t *testing.T) {
 	req := label.NewCreateLabelRequest()
-	req.Scope = label.SCOPE_STSTEM
+	req.Visiable = resource.VISIABLE_GLOBAL
 	req.Key = "环境"
 	req.Required = true
 	req.ValueType = label.VALUE_TYPE_ENUM

@@ -43,9 +43,6 @@ message CreateLabelRequest {
     // 标签的颜色
     // @gotags: json:"color" bson:"color"
     string color = 6;
-    // 标签生效的范围
-    // @gotags: json:"scope" bson:"scope"
-    SCOPE scope = 7;
     // 值类型
     // @gotags: json:"value_type" bson:"value_type"
     VALUE_TYPE value_type = 8;
@@ -79,15 +76,6 @@ message RequiredCondition {
 	// 针对特定资源的必选, 默认针对所有资源
 	// @gotags: bson:"resources" json:"resources"
     repeated string resources = 1;
-}
-
-enum SCOPE {
-    // 空间级别
-    NAMESPACE = 0;
-    // 域级别
-    DOMAIN = 5;
-    // 系统级别
-    STSTEM = 15;
 }
 
 // 值类型

@@ -9,51 +9,6 @@ import (
 	"strings"
 )
 
-// ParseSCOPEFromString Parse SCOPE from string
-func ParseSCOPEFromString(str string) (SCOPE, error) {
-	key := strings.Trim(string(str), `"`)
-	v, ok := SCOPE_value[strings.ToUpper(key)]
-	if !ok {
-		return 0, fmt.Errorf("unknown SCOPE: %s", str)
-	}
-
-	return SCOPE(v), nil
-}
-
-// Equal type compare
-func (t SCOPE) Equal(target SCOPE) bool {
-	return t == target
-}
-
-// IsIn todo
-func (t SCOPE) IsIn(targets ...SCOPE) bool {
-	for _, target := range targets {
-		if t.Equal(target) {
-			return true
-		}
-	}
-
-	return false
-}
-
-// MarshalJSON todo
-func (t SCOPE) MarshalJSON() ([]byte, error) {
-	b := bytes.NewBufferString(`"`)
-	b.WriteString(strings.ToUpper(t.String()))
-	b.WriteString(`"`)
-	return b.Bytes(), nil
-}
-
-// UnmarshalJSON todo
-func (t *SCOPE) UnmarshalJSON(b []byte) error {
-	ins, err := ParseSCOPEFromString(string(b))
-	if err != nil {
-		return err
-	}
-	*t = ins
-	return nil
-}
-
 // ParseVALUE_TYPEFromString Parse VALUE_TYPE from string
 func ParseVALUE_TYPEFromString(str string) (VALUE_TYPE, error) {
 	key := strings.Trim(string(str), `"`)

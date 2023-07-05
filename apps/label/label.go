@@ -44,10 +44,10 @@ func (r *CreateLabelRequest) Validate() error {
 }
 
 func (r *CreateLabelRequest) UniqueKey() string {
-	switch r.Scope {
-	case SCOPE_STSTEM:
+	switch r.Visiable {
+	case resource.VISIABLE_GLOBAL:
 		return r.Key
-	case SCOPE_DOMAIN:
+	case resource.VISIABLE_DOMAIN:
 		return fmt.Sprintf("%s.%s", r.Domain, r.Key)
 	default:
 		return fmt.Sprintf("%s.%s.%s", r.Domain, r.Namespace, r.Key)
