@@ -17,10 +17,14 @@ func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionR
 	}
 
 	// 判断是否是空间所有者
-	ns, err := s.namespace.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(req.Domain, req.Namespace))
+	ns, err := s.namespace.DescribeNamespace(
+		ctx,
+		namespace.NewDescriptNamespaceRequest(req.Domain, req.Namespace),
+	)
 	if err != nil {
 		return nil, err
 	}
+	// 空间管理员直接给空间内所有权限
 	if ns.IsManager(req.Username) {
 		return role.NamespaceManagerPermssion(), nil
 	}
