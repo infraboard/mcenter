@@ -82,7 +82,7 @@ func New(req *CreateRoleRequest) (*Role, error) {
 	r := &Role{
 		Meta:        resource.NewMeta(),
 		Spec:        req,
-		Permissions: []*Permission{},
+		Permissions: []*PermissionSpec{},
 	}
 	r.Meta.Id = hash.FnvHash(r.FullName())
 	return r, nil
@@ -99,8 +99,9 @@ func NewDefaultRole() *Role {
 // NewCreateRoleRequest 实例化请求
 func NewCreateRoleRequest() *CreateRoleRequest {
 	return &CreateRoleRequest{
-		Lables: map[string]string{},
-		Specs:  []*Spec{},
+		Lables:  map[string]string{},
+		Specs:   []*PermissionSpec{},
+		Enabled: true,
 	}
 }
 
@@ -123,6 +124,10 @@ func (r *Role) ToJson() string {
 }
 
 func (r *Role) CheckScope(s *resource.Scope) error {
+	if s == nil {
+		return nil
+	}
+
 	if !(r.Spec.Domain == s.Domain && r.Spec.Namespace == s.Namespace) {
 		return exception.NewPermissionDeny("资源不属于当前空间")
 	}
@@ -133,7 +138,7 @@ func (r *Role) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		*resource.Meta
 		*CreateRoleRequest
-		Permissions []*Permission `json:"permissions"`
+		Permissions []*PermissionSpec `json:"permissions"`
 	}{r.Meta, r.Spec, r.Permissions})
 }
 
@@ -142,7 +147,7 @@ func (r *Role) FullName() string {
 }
 
 // HasPermission 权限判断
-func (r *Role) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error) {
+func (r *Role) HasPermission(ep *endpoint.Endpoint) (*PermissionSpec, bool, error) {
 	var (
 		rok, lok bool
 	)
@@ -152,9 +157,9 @@ func (r *Role) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error) {
 		rok = perm.MatchResource(ep.ServiceId, ep.Entry.Resource)
 		lok = perm.MatchLabel(ep.Entry.Labels)
 		zap.L().Debugf("resource match: service_id: %s[target: %s] resource: %s[target: %s], result: %v",
-			ep.ServiceId, perm.Spec.ServiceId, ep.Entry.Resource, perm.Spec.ResourceName, rok)
+			ep.ServiceId, perm.ServiceId, ep.Entry.Resource, perm.ResourceName, rok)
 		zap.L().Debugf("label match: %v from [key: %v, value: %v, result: %v",
-			ep.Entry.Labels, perm.Spec.LabelKey, perm.Spec.LabelValues, lok)
+			ep.Entry.Labels, perm.LabelKey, perm.LabelValues, lok)
 		if rok && lok {
 			return perm, true, nil
 		}
@@ -182,13 +187,16 @@ func (s *RoleSet) ToJson() string {
 // HasPermission todo
 func (s *RoleSet) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error) {
 	for i := range s.Items {
-		role := s.Items[i]
-		p, ok, err := role.HasPermission(ep)
+		r := s.Items[i]
+		spec, ok, err := r.HasPermission(ep)
 		if err != nil {
 			return nil, false, err
 		}
 
 		if ok {
+			p := NewDeaultPermission()
+			p.RoleId = r.Meta.Id
+			p.Spec = spec
 			return p, ok, nil
 		}
 	}
@@ -200,9 +208,9 @@ func (s *RoleSet) Permissions() *PermissionSet {
 	ps := NewPermissionSet()
 
 	for i := range s.Items {
-		ps.Add(s.Items[i].Permissions...)
+		r := s.Items[i]
+		ps.Add(NewPermission(r.Meta.Id, r.Permissions...)...)
 	}
-
 	return ps
 }
 

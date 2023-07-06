@@ -17,7 +17,7 @@ message Role {
     CreateRoleRequest spec = 2;
     // 角色的权限
     // @gotags: bson:"-" json:"permissions,omitempty"
-    repeated Permission permissions = 4;
+    repeated PermissionSpec permissions = 4;
 }
 
 message RoleSet {
@@ -49,7 +49,7 @@ message CreateRoleRequest {
     string description =6;
     // 权限定义
     // @gotags: bson:"-" json:"specs,omitempty"
-    repeated Spec specs = 7;
+    repeated PermissionSpec specs = 7;
     // 是否启用
     // @gotags: bson:"enabled" json:"enabled"
     bool enabled = 8;

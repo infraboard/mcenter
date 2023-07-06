@@ -17,7 +17,7 @@ import (
 // NewAddPermissionToRoleRequest todo
 func NewAddPermissionToRoleRequest() *AddPermissionToRoleRequest {
 	return &AddPermissionToRoleRequest{
-		Permissions: []*Spec{},
+		Permissions: []*PermissionSpec{},
 	}
 }
 
@@ -84,42 +84,46 @@ func NewDeaultPermission() *Permission {
 
 func NewSkipPermission(message string) *Permission {
 	return &Permission{
-		Spec: &Spec{
+		Spec: &PermissionSpec{
 			Effect: EffectType_ALLOW,
 			Desc:   message,
 		},
 	}
 }
 
-func NewPermission(roleId string, perms []*Spec) []*Permission {
+func NewPermission(roleId string, perms ...*PermissionSpec) []*Permission {
 	set := []*Permission{}
 	for i := range perms {
-		set = append(set, &Permission{
-			Id:       perms[i].HashID(roleId),
-			CreateAt: time.Now().Unix(),
-			RoleId:   roleId,
-			Spec:     perms[i],
-		})
+		set = append(set, NewPermissionFromSpec(roleId, perms[i]))
 	}
 	return set
 }
 
-func (req *Spec) HashID(roleId string) string {
+func NewPermissionFromSpec(roleId string, spec *PermissionSpec) *Permission {
+	return &Permission{
+		Id:       spec.HashID(roleId),
+		CreateAt: time.Now().Unix(),
+		RoleId:   roleId,
+		Spec:     spec,
+	}
+}
+
+func (req *PermissionSpec) HashID(roleId string) string {
 	h := fnv.New32a()
 
 	h.Write([]byte(roleId + req.Effect.String() + req.ServiceId + req.ResourceName))
 	return fmt.Sprintf("%x", h.Sum32())
 }
 
-// NewDefaultPermission todo
-func NewDefaultPermission() *Spec {
-	return &Spec{
+// NewDefaultPermissionSpec todo
+func NewDefaultPermissionSpec() *PermissionSpec {
+	return &PermissionSpec{
 		Effect: EffectType_ALLOW,
 	}
 }
 
 // Validate todo
-func (p *Spec) Validate() error {
+func (p *PermissionSpec) Validate() error {
 	if p.ServiceId == "" || p.ResourceName == "" || p.LabelKey == "" {
 		return fmt.Errorf("permisson required service_id, resource_name and label_key")
 	}
@@ -141,14 +145,14 @@ func (p *Permission) ToJson() string {
 }
 
 // MatchResource 检测资源是否匹配
-func (p *Permission) MatchResource(serviceID, resourceName string) bool {
+func (p *PermissionSpec) MatchResource(serviceID, resourceName string) bool {
 	// 服务匹配
-	if p.Spec.ServiceId != "*" && p.Spec.ServiceId != serviceID {
+	if p.ServiceId != "*" && p.ServiceId != serviceID {
 		return false
 	}
 
 	// 资源匹配
-	if p.Spec.ResourceName != "*" && p.Spec.ResourceName != resourceName {
+	if p.ResourceName != "*" && p.ResourceName != resourceName {
 		return false
 	}
 
@@ -156,16 +160,16 @@ func (p *Permission) MatchResource(serviceID, resourceName string) bool {
 }
 
 // MatchLabel 匹配Label
-func (p *Permission) MatchLabel(label map[string]string) bool {
+func (p *PermissionSpec) MatchLabel(label map[string]string) bool {
 	for k, v := range label {
 		// 匹配key
-		if p.Spec.LabelKey == "*" || p.Spec.LabelKey == k {
+		if p.LabelKey == "*" || p.LabelKey == k {
 			// 匹配value
 			if p.isMatchAllValue() {
 				return true
 			}
-			for i := range p.Spec.LabelValues {
-				if p.Spec.LabelValues[i] == v {
+			for i := range p.LabelValues {
+				if p.LabelValues[i] == v {
 					return true
 				}
 			}
@@ -175,13 +179,13 @@ func (p *Permission) MatchLabel(label map[string]string) bool {
 	return false
 }
 
-func (p *Permission) isMatchAllValue() bool {
-	if p.Spec.MatchAll {
+func (p *PermissionSpec) isMatchAllValue() bool {
+	if p.MatchAll {
 		return true
 	}
 
-	for i := range p.Spec.LabelValues {
-		if p.Spec.LabelValues[i] == "*" {
+	for i := range p.LabelValues {
+		if p.LabelValues[i] == "*" {
 			return true
 		}
 	}
@@ -209,6 +213,14 @@ func (s *PermissionSet) ToJSON() string {
 	return pretty.ToJSON(s)
 }
 
+func (s *PermissionSet) PermissionSpecs() (items []*PermissionSpec) {
+	for i := range s.Items {
+		item := s.Items[i]
+		items = append(items, item.Spec)
+	}
+	return
+}
+
 // HasPermission 权限判断
 func (s *PermissionSet) HasPermission(ep *endpoint.Endpoint) (*Permission, bool, error) {
 	var (
@@ -217,8 +229,8 @@ func (s *PermissionSet) HasPermission(ep *endpoint.Endpoint) (*Permission, bool,
 	for i := range s.Items {
 		perm := s.Items[i]
 
-		rok = perm.MatchResource(ep.ServiceId, ep.Entry.Resource)
-		lok = perm.MatchLabel(ep.Entry.Labels)
+		rok = perm.Spec.MatchResource(ep.ServiceId, ep.Entry.Resource)
+		lok = perm.Spec.MatchLabel(ep.Entry.Labels)
 		zap.L().Debugf("resource match: service_id: %s[target: %s] resource: %s[target: %s], result: %v",
 			ep.ServiceId, perm.Spec.ServiceId, ep.Entry.Resource, perm.Spec.ResourceName, rok)
 		zap.L().Debugf("label match: %v from [key: %v, value: %v, result: %v",

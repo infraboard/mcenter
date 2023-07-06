@@ -33,7 +33,7 @@ func (s *impl) CreateRole(ctx context.Context, req *role.CreateRoleRequest) (*ro
 	if err != nil {
 		return nil, err
 	}
-	r.Permissions = perms.Items
+	r.Permissions = perms.PermissionSpecs()
 	return r, nil
 }
 
@@ -65,7 +65,7 @@ func (s *impl) QueryRole(ctx context.Context, req *role.QueryRoleRequest) (*role
 			if err != nil {
 				return nil, err
 			}
-			ins.Permissions = ps.Items
+			ins.Permissions = ps.PermissionSpecs()
 		}
 		set.Add(ins)
 	}
@@ -103,8 +103,7 @@ func (s *impl) DescribeRole(ctx context.Context, req *role.DescribeRoleRequest) 
 	if err != nil {
 		return nil, err
 	}
-	ins.Permissions = ps.Items
-
+	ins.Permissions = ps.PermissionSpecs()
 	return ins, nil
 }
 

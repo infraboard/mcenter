@@ -27,13 +27,13 @@ message Permission {
     string role_id = 3;
     // 权限具体定义
     // @gotags: bson:",inline" json:"spec"
-    Spec spec = 4;
+    PermissionSpec spec = 4;
     // 范围限制, 由策略引擎动态补充
     // @gotags: bson:"-" json:"scope"
     repeated mcube.resource.LabelRequirement scope = 6;
 }
 
-message Spec {
+message PermissionSpec {
     // 创建人
     // @gotags: bson:"create_by" json:"create_by"
     string create_by = 1;
@@ -80,7 +80,7 @@ message AddPermissionToRoleRequest {
     string role_id = 3;
     // 添加的权限列表
     // @gotags: json:"permissions" validate:"required"
-    repeated Spec permissions = 4;
+    repeated PermissionSpec permissions = 4;
  }
 
  message RemovePermissionFromRoleRequest {

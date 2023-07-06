@@ -27,7 +27,7 @@ func CreateAdminRoleRequest(createBy string) *CreateRoleRequest {
 	req.Visiable = resource.VISIABLE_GLOBAL
 	req.Name = ADMIN_ROLE_NAME
 	req.Description = "管理员"
-	req.Specs = []*Spec{
+	req.Specs = []*PermissionSpec{
 		{
 			Desc:         "管理员具备读写权限",
 			Effect:       EffectType_ALLOW,
@@ -47,7 +47,7 @@ func CreateVisitorRoleRequest(createBy string) *CreateRoleRequest {
 	req.Visiable = resource.VISIABLE_GLOBAL
 	req.Name = VISITOR_ROLE_NAME
 	req.Description = "访客"
-	req.Specs = []*Spec{
+	req.Specs = []*PermissionSpec{
 		{
 			Desc:         "访客具备可读权限",
 			Effect:       EffectType_ALLOW,
@@ -61,7 +61,7 @@ func CreateVisitorRoleRequest(createBy string) *CreateRoleRequest {
 
 func NamespaceManagerPermssion() *Permission {
 	p := NewDeaultPermission()
-	p.Spec = &Spec{
+	p.Spec = &PermissionSpec{
 		Desc:         "拥有资源的所有操作权限",
 		Effect:       EffectType_ALLOW,
 		ServiceId:    "*",

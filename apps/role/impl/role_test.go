@@ -17,7 +17,7 @@ func TestCreateRole(t *testing.T) {
 	req.Visiable = resource.VISIABLE_GLOBAL
 	req.Name = "developer"
 	req.Description = "服务"
-	req.Specs = []*role.Spec{
+	req.Specs = []*role.PermissionSpec{
 		{
 			Desc:         "mpaas只读权限",
 			Effect:       role.EffectType_ALLOW,
