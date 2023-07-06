@@ -124,6 +124,9 @@ func (h *handler) AddPermissionToRole(r *restful.Request, w *restful.Response) {
 		return
 	}
 
+	tk := token.GetTokenFromRequest(r)
+	req.CreateBy = tk.UserId
+	req.Scope = tk.GenScope()
 	set, err := h.service.AddPermissionToRole(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
@@ -140,6 +143,8 @@ func (h *handler) RemovePermissionFromRole(r *restful.Request, w *restful.Respon
 		return
 	}
 
+	tk := token.GetTokenFromRequest(r)
+	req.Scope = tk.GenScope()
 	set, err := h.service.RemovePermissionFromRole(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
@@ -156,6 +161,8 @@ func (h *handler) UpdatePermission(r *restful.Request, w *restful.Response) {
 		return
 	}
 
+	tk := token.GetTokenFromRequest(r)
+	req.Scope = tk.GenScope()
 	set, err := h.service.UpdatePermission(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)

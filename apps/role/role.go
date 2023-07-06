@@ -9,6 +9,7 @@ import (
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/common/format"
+	"github.com/infraboard/mcube/exception"
 	request "github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/infraboard/mcube/pb/resource"
@@ -119,6 +120,13 @@ func (req *CreateRoleRequest) UpdateFromToken(tk *token.Token) {
 
 func (r *Role) ToJson() string {
 	return format.Prettify(r)
+}
+
+func (r *Role) CheckScope(s *resource.Scope) error {
+	if !(r.Spec.Domain == s.Domain && r.Spec.Namespace == s.Namespace) {
+		return exception.NewPermissionDeny("资源不属于当前空间")
+	}
+	return nil
 }
 
 func (r *Role) MarshalJSON() ([]byte, error) {

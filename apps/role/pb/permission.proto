@@ -4,6 +4,7 @@ package infraboard.mcenter.role;
 option go_package = "github.com/infraboard/mcenter/apps/role";
 
 import "mcube/pb/resource/label.proto";
+import "mcube/pb/resource/meta.proto";
 
 // EffectType 授权效力包括两种：允许（Allow）和拒绝（Deny）
 enum EffectType {
@@ -70,33 +71,47 @@ message PermissionSet {
 message AddPermissionToRoleRequest {
     // 创建者ID
      // @gotags: json:"create_by" validate:"required"
-     string create_by = 3; 
-     // @gotags: json:"role_id" validate:"required,lte=64"
-     string role_id = 1;
-     // @gotags: json:"permissions" validate:"required"
-     repeated Spec permissions = 2;
+     string create_by = 2; 
+    // 资源范围
+    // @gotags: json:"scope"
+    mcube.resource.Scope scope = 1;
+    // 角色Id
+    // @gotags: json:"role_id" validate:"required,lte=64"
+    string role_id = 3;
+    // 添加的权限列表
+    // @gotags: json:"permissions" validate:"required"
+    repeated Spec permissions = 4;
  }
 
  message RemovePermissionFromRoleRequest {
+    // 资源范围
+    // @gotags: json:"scope"
+    mcube.resource.Scope scope = 1;
     // @gotags: json:"role_id" validate:"required,lte=64"
-    string role_id = 1;
+    // 角色Id
+    string role_id = 2;
     // @gotags: json:"remove_all"
-    bool remove_all = 2;
+    // 移除所有权限
+    bool remove_all = 3;
+    // 需要移除的权限
     // @gotags: json:"permission_id"
-    repeated string permission_id = 3;
+    repeated string permission_id = 4;
 }
 
 message UpdatePermissionRequest {
+   // 资源范围
+    // @gotags: json:"scope"
+    mcube.resource.Scope scope = 1;
     // permission id
     // @gotags: json:"id" validate:"required,lte=64"
-    string id = 1;
+    string id = 2;
     // 维度
     // @gotags: json:"label_key"
-    string label_key = 2;
+    string label_key = 3;
     // 适配所有值
     // @gotags: json:"match_all"
-    bool match_all = 3;
+    bool match_all = 4;
     // 标识值
     // @gotags: json:"label_values"
-    repeated string label_values = 4;     
+    repeated string label_values = 5;     
 }

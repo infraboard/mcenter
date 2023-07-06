@@ -71,6 +71,9 @@ func (s *impl) AddPermissionToRole(ctx context.Context, req *role.AddPermissionT
 	if err != nil {
 		return nil, err
 	}
+	if err := ins.CheckScope(req.Scope); err != nil {
+		return nil, err
+	}
 
 	// 查询角色条目数是否超标
 	queryPerm := role.NewQueryPermissionRequest()
@@ -102,6 +105,14 @@ func (s *impl) RemovePermissionFromRole(ctx context.Context, req *role.RemovePer
 		return nil, exception.NewBadRequest("validate remove permission error, %s", err)
 	}
 
+	ins, err := s.DescribeRole(ctx, role.NewDescribeRoleRequestWithID(req.RoleId))
+	if err != nil {
+		return nil, err
+	}
+	if err := ins.CheckScope(req.Scope); err != nil {
+		return nil, err
+	}
+
 	delReq, err := newDeletePermissionRequest(req)
 	if err != nil {
 		return nil, err
@@ -130,10 +141,17 @@ func (s *impl) UpdatePermission(ctx context.Context, req *role.UpdatePermissionR
 		return nil, err
 	}
 
+	r, err := s.DescribeRole(ctx, role.NewDescribeRoleRequestWithID(ins.RoleId))
+	if err != nil {
+		return nil, err
+	}
+	if err := r.CheckScope(req.Scope); err != nil {
+		return nil, err
+	}
+
 	ins.Spec.LabelKey = req.LabelKey
 	ins.Spec.MatchAll = req.MatchAll
 	ins.Spec.LabelValues = req.LabelValues
-
 	_, err = s.perm.UpdateOne(ctx, bson.M{"_id": ins.Id}, bson.M{"$set": ins})
 	if err != nil {
 		return nil, exception.NewInternalServerError("update permission(%s) error, %s", ins.Id, err)
