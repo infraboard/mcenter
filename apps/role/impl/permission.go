@@ -62,7 +62,7 @@ func (s *impl) DescribePermission(ctx context.Context, req *role.DescribePermiss
 	return ins, nil
 }
 
-func (s *impl) AddPermissionToRole(ctx context.Context, req *role.AddPermissionToRoleRequest) (*role.PermissionSet, error) {
+func (s *impl) AddPermissionToRole(ctx context.Context, req *role.AddPermissionToRoleRequest) (*role.Role, error) {
 	if err := req.Validate(); err != nil {
 		return nil, exception.NewBadRequest("validate add permission error, %s", err)
 	}
@@ -95,12 +95,10 @@ func (s *impl) AddPermissionToRole(ctx context.Context, req *role.AddPermissionT
 			perms, err)
 	}
 
-	set := role.NewPermissionSet()
-	set.Items = perms
-	return set, nil
+	return s.DescribeRole(ctx, role.NewDescribeRoleRequestWithID(req.RoleId))
 }
 
-func (s *impl) RemovePermissionFromRole(ctx context.Context, req *role.RemovePermissionFromRoleRequest) (*role.PermissionSet, error) {
+func (s *impl) RemovePermissionFromRole(ctx context.Context, req *role.RemovePermissionFromRoleRequest) (*role.Role, error) {
 	if err := req.Validate(); err != nil {
 		return nil, exception.NewBadRequest("validate remove permission error, %s", err)
 	}
@@ -127,11 +125,10 @@ func (s *impl) RemovePermissionFromRole(ctx context.Context, req *role.RemovePer
 		return nil, exception.NewNotFound("permission(%s) not found", req.PermissionId)
 	}
 
-	set := role.NewPermissionSet()
-	return set, nil
+	return s.DescribeRole(ctx, role.NewDescribeRoleRequestWithID(req.RoleId))
 }
 
-func (s *impl) UpdatePermission(ctx context.Context, req *role.UpdatePermissionRequest) (*role.Permission, error) {
+func (s *impl) UpdatePermission(ctx context.Context, req *role.UpdatePermissionRequest) (*role.Role, error) {
 	if err := req.Validate(); err != nil {
 		return nil, exception.NewBadRequest("validate remove permission error, %s", err)
 	}
@@ -156,5 +153,5 @@ func (s *impl) UpdatePermission(ctx context.Context, req *role.UpdatePermissionR
 	if err != nil {
 		return nil, exception.NewInternalServerError("update permission(%s) error, %s", ins.Id, err)
 	}
-	return ins, nil
+	return s.DescribeRole(ctx, role.NewDescribeRoleRequestWithID(r.Meta.Id))
 }

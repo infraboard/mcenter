@@ -173,8 +173,8 @@ type CreateRoleRequest struct {
 	// @gotags: bson:"description" json:"description" validate:"lte=400"
 	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description" bson:"description" validate:"lte=400"`
 	// 权限定义
-	// @gotags: bson:"-" json:"specs,omitempty"
-	Specs []*PermissionSpec `protobuf:"bytes,7,rep,name=specs,proto3" json:"specs,omitempty" bson:"-"`
+	// @gotags: bson:"-" json:"permissions,omitempty"
+	Specs []*PermissionSpec `protobuf:"bytes,7,rep,name=specs,proto3" json:"permissions,omitempty" bson:"-"`
 	// 是否启用
 	// @gotags: bson:"enabled" json:"enabled"
 	Enabled bool `protobuf:"varint,8,opt,name=enabled,proto3" json:"enabled" bson:"enabled"`

@@ -29,12 +29,7 @@ func (s *impl) CreateRole(ctx context.Context, req *role.CreateRoleRequest) (*ro
 	addReq.CreateBy = req.CreateBy
 	addReq.Permissions = req.Specs
 	addReq.RoleId = r.Meta.Id
-	perms, err := s.AddPermissionToRole(ctx, addReq)
-	if err != nil {
-		return nil, err
-	}
-	r.Permissions = perms.PermissionSpecs()
-	return r, nil
+	return s.AddPermissionToRole(ctx, addReq)
 }
 
 func (s *impl) QueryRole(ctx context.Context, req *role.QueryRoleRequest) (*role.RoleSet, error) {

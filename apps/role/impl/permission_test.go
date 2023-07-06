@@ -13,5 +13,5 @@ func TestAddPermissionToRole(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r.ToJSON())
+	t.Log(r.ToJson())
 }

@@ -48,7 +48,7 @@ message CreateRoleRequest {
     // @gotags: bson:"description" json:"description" validate:"lte=400"
     string description =6;
     // 权限定义
-    // @gotags: bson:"-" json:"specs,omitempty"
+    // @gotags: bson:"-" json:"permissions,omitempty"
     repeated PermissionSpec specs = 7;
     // 是否启用
     // @gotags: bson:"enabled" json:"enabled"

@@ -53,7 +53,7 @@ func (d *Decorator) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest)
 }
 
 func (d *Decorator) AddPermissionToRole(ctx context.Context, req *role.AddPermissionToRoleRequest) (
-	*role.PermissionSet, error) {
+	*role.Role, error) {
 	ins, err := d.impl.AddPermissionToRole(ctx, req)
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (d *Decorator) AddPermissionToRole(ctx context.Context, req *role.AddPermis
 }
 
 func (d *Decorator) RemovePermissionFromRole(ctx context.Context, req *role.RemovePermissionFromRoleRequest) (
-	*role.PermissionSet, error) {
+	*role.Role, error) {
 	ins, err := d.impl.RemovePermissionFromRole(ctx, req)
 	if err != nil {
 		return nil, err
@@ -79,13 +79,13 @@ func (d *Decorator) RemovePermissionFromRole(ctx context.Context, req *role.Remo
 }
 
 func (d *Decorator) UpdatePermission(ctx context.Context, req *role.UpdatePermissionRequest) (
-	*role.Permission, error) {
+	*role.Role, error) {
 	ins, err := d.impl.UpdatePermission(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := cache.C().Delete(ins.RoleId); err != nil {
+	if err := cache.C().Delete(ins.Meta.Id); err != nil {
 		d.log.Infof("delete %s to cache error, %s", req.Id, err)
 	}
 	return ins, err

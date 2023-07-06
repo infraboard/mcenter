@@ -119,11 +119,12 @@ func (h *handler) DescribeRole(r *restful.Request, w *restful.Response) {
 
 func (h *handler) AddPermissionToRole(r *restful.Request, w *restful.Response) {
 	req := role.NewAddPermissionToRoleRequest()
-	if err := r.ReadEntity(req); err != nil {
+	if err := r.ReadEntity(&req.Permissions); err != nil {
 		response.Failed(w, err)
 		return
 	}
 
+	req.RoleId = r.PathParameter("id")
 	tk := token.GetTokenFromRequest(r)
 	req.CreateBy = tk.UserId
 	req.Scope = tk.GenScope()
