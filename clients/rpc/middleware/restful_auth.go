@@ -206,6 +206,8 @@ func (a *HttpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Tok
 	req.Username = tk.Username
 	req.ServiceId = ci.Meta.Id
 	req.Path = e.UniquePath()
+	a.log.Debugf("permission check request: %s", req.ToJSON())
+
 	perm, err := a.client.Policy().CheckPermission(r.Request.Context(), req)
 	if err != nil {
 		return exception.NewPermissionDeny(err.Error())

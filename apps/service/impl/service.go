@@ -109,7 +109,7 @@ func (i *impl) UpdateService(ctx context.Context, req *service.UpdateServiceRequ
 
 func (i *impl) QueryService(ctx context.Context, req *service.QueryServiceRequest) (
 	*service.ServiceSet, error) {
-	query := newQueryRequest(req)
+	query := newQueryRequest(req, i.log)
 	return i.query(ctx, query)
 }
 

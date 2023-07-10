@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	request "github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/tools/pretty"
 )
 
 // NewCheckPermissionrequest todo
@@ -24,4 +25,8 @@ func (req *CheckPermissionRequest) Validate() error {
 	}
 
 	return nil
+}
+
+func (req *CheckPermissionRequest) ToJSON() string {
+	return pretty.ToJSON(req)
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/logger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -31,14 +32,16 @@ func (i *impl) update(ctx context.Context, ins *service.Service) error {
 	return nil
 }
 
-func newQueryRequest(r *service.QueryServiceRequest) *queryRequest {
+func newQueryRequest(r *service.QueryServiceRequest, l logger.Logger) *queryRequest {
 	return &queryRequest{
 		r,
+		l,
 	}
 }
 
 type queryRequest struct {
 	*service.QueryServiceRequest
+	l logger.Logger
 }
 
 func (r *queryRequest) FindOptions() *options.FindOptions {
@@ -69,6 +72,7 @@ func (r *queryRequest) FindFilter() bson.M {
 		filter["name"] = bson.M{"$regex": r.Keywords, "$options": "im"}
 	}
 
+	r.l.Debugf("find filter: %s", filter)
 	return filter
 }
 

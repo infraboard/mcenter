@@ -17,6 +17,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
+	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
 	"github.com/infraboard/mcenter/apps/token"
 )
@@ -128,6 +129,7 @@ func NewQueryServiceRequestFromHTTP(r *restful.Request) *QueryServiceRequest {
 	req := NewQueryServiceRequest()
 	req.Page = request.NewPageRequestFromHTTP(r.Request)
 	req.Scope = token.GetTokenFromRequest(r).GenScope()
+	req.Filters = policy.GetScopeFilterFromRequest(r)
 	return req
 }
 
