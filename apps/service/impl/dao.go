@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/logger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -32,16 +31,14 @@ func (i *impl) update(ctx context.Context, ins *service.Service) error {
 	return nil
 }
 
-func newQueryRequest(r *service.QueryServiceRequest, l logger.Logger) *queryRequest {
+func newQueryRequest(r *service.QueryServiceRequest) *queryRequest {
 	return &queryRequest{
 		r,
-		l,
 	}
 }
 
 type queryRequest struct {
 	*service.QueryServiceRequest
-	l logger.Logger
 }
 
 func (r *queryRequest) FindOptions() *options.FindOptions {
@@ -71,12 +68,11 @@ func (r *queryRequest) FindFilter() bson.M {
 	if r.Keywords != "" {
 		filter["name"] = bson.M{"$regex": r.Keywords, "$options": "im"}
 	}
-
-	r.l.Debugf("find filter: %s", filter)
 	return filter
 }
 
 func (i *impl) query(ctx context.Context, req *queryRequest) (*service.ServiceSet, error) {
+	i.log.Debugf("find filter: %s", req.FindFilter())
 	resp, err := i.col.Find(ctx, req.FindFilter(), req.FindOptions())
 
 	if err != nil {
@@ -100,7 +96,6 @@ func (i *impl) query(ctx context.Context, req *queryRequest) (*service.ServiceSe
 		return nil, exception.NewInternalServerError("get Service count error, error is %s", err)
 	}
 	ServiceSet.Total = count
-
 	return ServiceSet, nil
 }
 
