@@ -307,23 +307,13 @@ func (t *Token) RefreshExpiredTime() time.Time {
 	return time.Unix(t.IssueAt, 0).Add(time.Duration(t.RefreshExpiredAt) * time.Second)
 }
 
-func (t *Token) JsonFormat() string {
+func (t *Token) Json() string {
 	dj, err := json.Marshal(t)
 	if err != nil {
 		panic(err)
 	}
 	return string(dj)
 }
-
-// func (t *Token) HasNamespace(ns string) bool {
-// 	for _, v := range t.AvailableNamespace {
-// 		if v == ns {
-// 			return true
-// 		}
-// 	}
-
-// 	return false
-// }
 
 func NewDescribeTokenRequest(token string) *DescribeTokenRequest {
 	return &DescribeTokenRequest{
