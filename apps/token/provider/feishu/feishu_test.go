@@ -1,7 +1,6 @@
 package feishu_test
 
 import (
-	"os"
 	"testing"
 
 	"github.com/caarlos0/env/v6"
@@ -33,7 +32,7 @@ func TestLogin(t *testing.T) {
 
 	// 登陆
 	client = feishu.NewFeishuClient(conf)
-	tk, err := client.Login(ctx, os.Getenv("AUTH_CODE"))
+	tk, err := client.Login(ctx, "e39m349b5001471d9d3207d56234c9a8")
 	if err != nil {
 		t.Fatal(err)
 	}

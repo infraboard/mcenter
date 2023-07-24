@@ -11,7 +11,9 @@
 </body>
 
 <script>
-var goto = "https://passport.feishu.cn/suite/passport/oauth/authorize?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE"
+var CLIENT_ID = 'cli_a28097ca5138d00c'
+var REDIRECT_URI = 'https://petstore.swagger.io'
+var goto = `https://passport.feishu.cn/suite/passport/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&state=STATE`
 var QRLoginObj = QRLogin({
     id:"login_container",
     goto: goto,
