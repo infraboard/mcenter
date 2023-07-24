@@ -10,7 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (s *service) CreateUser(ctx context.Context, req *user.CreateUserRequest) (*user.User, error) {
+func (s *service) CreateUser(ctx context.Context, req *user.CreateUserRequest) (
+	*user.User, error) {
 	u, err := user.New(req)
 	if err != nil {
 		return nil, err
@@ -30,7 +31,8 @@ func (s *service) CreateUser(ctx context.Context, req *user.CreateUserRequest) (
 }
 
 // 查询用户列表
-func (s *service) QueryUser(ctx context.Context, req *user.QueryUserRequest) (*user.UserSet, error) {
+func (s *service) QueryUser(ctx context.Context, req *user.QueryUserRequest) (
+	*user.UserSet, error) {
 	r := newQueryRequest(req)
 	resp, err := s.col.Find(ctx, r.FindFilter(), r.FindOptions())
 
@@ -61,7 +63,8 @@ func (s *service) QueryUser(ctx context.Context, req *user.QueryUserRequest) (*u
 }
 
 // 查询用户详情
-func (s *service) DescribeUser(ctx context.Context, req *user.DescribeUserRequest) (*user.User, error) {
+func (s *service) DescribeUser(ctx context.Context, req *user.DescribeUserRequest) (
+	*user.User, error) {
 	filter := bson.M{}
 	switch req.DescribeBy {
 	case user.DESCRIBE_BY_USER_ID:
@@ -88,7 +91,8 @@ func (s *service) DescribeUser(ctx context.Context, req *user.DescribeUserReques
 }
 
 // 修改用户信息
-func (s *service) UpdateUser(ctx context.Context, req *user.UpdateUserRequest) (*user.User, error) {
+func (s *service) UpdateUser(ctx context.Context, req *user.UpdateUserRequest) (
+	*user.User, error) {
 	ins, err := s.DescribeUser(ctx, user.NewDescriptUserRequestById(req.UserId))
 	if err != nil {
 		return nil, err
@@ -113,7 +117,8 @@ func (s *service) UpdateUser(ctx context.Context, req *user.UpdateUserRequest) (
 }
 
 // 删除用户
-func (s *service) DeleteUser(ctx context.Context, req *user.DeleteUserRequest) (*user.UserSet, error) {
+func (s *service) DeleteUser(ctx context.Context, req *user.DeleteUserRequest) (
+	*user.UserSet, error) {
 	// 判断这些要删除的用户是否存在
 	queryReq := user.NewQueryUserRequest()
 	queryReq.UserIds = req.UserIds
@@ -139,11 +144,13 @@ func (s *service) DeleteUser(ctx context.Context, req *user.DeleteUserRequest) (
 }
 
 // 修改用户密码, 用户需要知道原先密码
-func (s *service) UpdatePassword(ctx context.Context, req *user.UpdatePasswordRequest) (*user.Password, error) {
+func (s *service) UpdatePassword(ctx context.Context, req *user.UpdatePasswordRequest) (
+	*user.Password, error) {
 	return nil, nil
 }
 
 // 重置密码, 无需知道原先密码, 主账号执行
-func (s *service) ResetPassword(ctx context.Context, req *user.ResetPasswordRequest) (*user.Password, error) {
+func (s *service) ResetPassword(ctx context.Context, req *user.ResetPasswordRequest) (
+	*user.Password, error) {
 	return nil, nil
 }
