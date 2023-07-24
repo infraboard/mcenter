@@ -2,9 +2,12 @@ package impl
 
 import (
 	"context"
+	"time"
 
+	"github.com/imdario/mergo"
 	"github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/pb/request"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -55,7 +58,39 @@ func (i *impl) QueryLabel(ctx context.Context, in *label.QueryLabelRequest) (
 // 修改标签
 func (i *impl) UpdateLabel(ctx context.Context, in *label.UpdateLabelRequest) (
 	*label.Label, error) {
-	return nil, nil
+	req := label.NewDescribeLabelRequest(in.Id)
+	ins, err := i.DescribeLabel(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	switch in.UpdateMode {
+	case request.UpdateMode_PUT:
+		ins.Spec = in.Spec
+	case request.UpdateMode_PATCH:
+		if err := mergo.MergeWithOverwrite(ins.Spec, in.Spec); err != nil {
+			return nil, err
+		}
+		if err := ins.Spec.Validate(); err != nil {
+			return nil, err
+		}
+	default:
+		return nil, exception.NewBadRequest("unknown update mode: %s", in.UpdateMode)
+	}
+
+	// 校验更新后请求合法性
+	if err := ins.Spec.Validate(); err != nil {
+		return nil, err
+	}
+
+	ins.Meta.UpdateAt = time.Now().Unix()
+	ins.Meta.UpdateBy = in.UpdateBy
+	_, err = i.col.UpdateOne(ctx, bson.M{"_id": ins.Meta.Id}, bson.M{"$set": ins})
+	if err != nil {
+		return nil, exception.NewInternalServerError("update label(%s) error, %s", ins.Meta.Id, err)
+	}
+
+	return ins, nil
 }
 
 // 查询标签列表

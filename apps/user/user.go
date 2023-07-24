@@ -232,7 +232,7 @@ func (p *Password) CheckPasswordExpired(remindDays, expiredDays uint) error {
 	}
 
 	now := time.Now()
-	expiredAt := time.UnixMilli(p.UpdateAt).Add(time.Duration(expiredDays) * time.Hour * 24)
+	expiredAt := time.Unix(p.UpdateAt, 0).Add(time.Duration(expiredDays) * time.Hour * 24)
 
 	ex := now.Sub(expiredAt).Hours() / 24
 	if ex > 0 {

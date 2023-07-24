@@ -86,3 +86,9 @@ func NewDeleteLabelRequest(id string) *DeleteLabelRequest {
 func (r *DescribeLabelRequest) Validate() error {
 	return validator.Validate(r)
 }
+
+func NewUpdateLabelRequest() *UpdateLabelRequest {
+	return &UpdateLabelRequest{
+		Spec: NewCreateLabelRequest(),
+	}
+}
