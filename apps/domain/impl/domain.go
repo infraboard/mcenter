@@ -28,7 +28,7 @@ func (s *service) QueryDoamin(ctx context.Context, in *domain.QueryDomainRequest
 		if err := resp.Decode(ins); err != nil {
 			return nil, exception.NewInternalServerError("decode user error, error is %s", err)
 		}
-		ins.Desensitize()
+		ins.Desense()
 		set.Add(ins)
 	}
 

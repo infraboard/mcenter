@@ -55,8 +55,9 @@ func (d *Domain) ToJson() string {
 	return format.Prettify(d)
 }
 
-func (d *Domain) Desensitize() {
-
+func (d *Domain) Desense() {
+	d.Spec.FeishuSetting.AppSecret = "**"
+	d.Spec.LdapSetting.BindPassword = "**"
 }
 
 // NewCreateDomainRequest todo
@@ -171,10 +172,10 @@ func NewDescribeDomainRequestByName(name string) *DescribeDomainRequest {
 	}
 }
 
-// NewPutDomainRequest todo
-func NewPutDomainRequest(id string) *UpdateDomainRequest {
+// NewPutDomainRequestByName todo
+func NewPutDomainRequestByName(name string) *UpdateDomainRequest {
 	return &UpdateDomainRequest{
-		Id:         id,
+		Name:       name,
 		UpdateMode: pb_request.UpdateMode_PUT,
 		Spec:       &CreateDomainRequest{},
 	}

@@ -123,8 +123,9 @@ func NewDescriptNamespaceRequest(domain, name string) *DescriptNamespaceRequest 
 // NewQueryNamespaceRequestFromHTTP 列表查询请求
 func NewQueryNamespaceRequestFromHTTP(r *restful.Request) *QueryNamespaceRequest {
 	return &QueryNamespaceRequest{
-		Page: request.NewPageRequestFromHTTP(r.Request),
-		Name: []string{r.QueryParameter("name")},
+		Page:     request.NewPageRequestFromHTTP(r.Request),
+		Name:     []string{r.QueryParameter("name")},
+		Username: r.QueryParameter("username"),
 	}
 }
 

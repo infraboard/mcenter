@@ -48,13 +48,13 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Reads(domain.CreateDomainRequest{}).
 		Writes(domain.Domain{}))
 
-	ws.Route(ws.GET("/{id}").To(h.DescribeDomain).
+	ws.Route(ws.GET("/{name}").To(h.DescribeDomain).
 		Doc("查询域").
 		Param(ws.PathParameter("id", "identifier of the domain").DataType("integer").DefaultValue("1")).
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(label.Auth, label.Enable).
 		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
-		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER)).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER, user.TYPE_PRIMARY)).
 		Writes(domain.Domain{}).
 		Returns(200, "OK", domain.Domain{}).
 		Returns(404, "Not Found", nil))
@@ -65,7 +65,7 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(label.Auth, label.Enable).
 		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
-		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER)).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER, user.TYPE_PRIMARY)).
 		Reads(domain.CreateDomainRequest{}))
 
 	ws.Route(ws.PATCH("/{id}").To(h.PatchDomain).
@@ -74,6 +74,6 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(label.Auth, label.Enable).
 		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
-		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER)).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_SUPPER, user.TYPE_PRIMARY)).
 		Reads(domain.CreateDomainRequest{}))
 }
