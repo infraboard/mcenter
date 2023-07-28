@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/http/request"
 	"github.com/infraboard/mcube/logger/zap"
@@ -353,6 +354,12 @@ func (m *TokenSet) JsonFormat() string {
 		panic(err)
 	}
 	return string(dj)
+}
+
+func NewQueryTokenRequestFromHttp(r *restful.Request) *QueryTokenRequest {
+	req := NewQueryTokenRequest()
+	req.Page = request.NewPageRequestFromHTTP(r.Request)
+	return req
 }
 
 func NewQueryTokenRequest() *QueryTokenRequest {

@@ -11,6 +11,7 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/tools/sense"
 )
 
 func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
@@ -271,6 +272,8 @@ func (s *service) QueryToken(ctx context.Context, req *token.QueryTokenRequest) 
 		if err := resp.Decode(tk); err != nil {
 			return nil, exception.NewInternalServerError("decode token error, error is %s", err)
 		}
+		tk.Desense()
+		tk.AccessToken = sense.DeSense(tk.AccessToken)
 		tokenSet.Add(tk)
 	}
 

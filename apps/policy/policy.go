@@ -256,6 +256,8 @@ func NewQueryPolicyRequestFromHTTP(r *restful.Request) *QueryPolicyRequest {
 	tk := token.GetTokenFromRequest(r)
 	req.Domain = tk.Domain
 	req.Namespace = tk.Namespace
+	req.WithRole = r.QueryParameter("with_role") == "true"
+	req.WithNamespace = r.QueryParameter("with_namespace") == "true"
 	return req
 }
 

@@ -54,7 +54,7 @@ func (h *tokenHandler) Registry(ws *restful.WebService) {
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(label.Auth, label.Enable).
 		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
-		Metadata(label.Allow, user.TypeToString(user.TYPE_PRIMARY)).
+		Metadata(label.Allow, label.AllowAll()).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}).
 		Returns(404, "Not Found", nil))
@@ -66,7 +66,7 @@ func (h *tokenHandler) Registry(ws *restful.WebService) {
 		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Reads(token.ChangeNamespaceRequest{}))
 
-	ws.Route(ws.GET("/").To(h.ValidateToken).
+	ws.Route(ws.POST("/validate").To(h.ValidateToken).
 		Doc("验证令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(label.Auth, label.Disable).
@@ -74,6 +74,17 @@ func (h *tokenHandler) Registry(ws *restful.WebService) {
 		Reads(token.ValidateTokenRequest{}).
 		Writes(token.Token{}).
 		Returns(200, "OK", token.Token{}))
+
+	// 只有主账号才能查询
+	ws.Route(ws.GET("/").To(h.QueryToken).
+		Doc("令牌颁发记录").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, user.TypeToString(user.TYPE_PRIMARY)).
+		Reads(token.QueryTokenRequest{}).
+		Writes(token.TokenSet{}).
+		Returns(200, "OK", token.TokenSet{}))
 }
 
 func (h *tokenHandler) IssueToken(r *restful.Request, w *restful.Response) {
@@ -133,6 +144,17 @@ func (h *tokenHandler) ValidateToken(r *restful.Request, w *restful.Response) {
 	req := token.NewValidateTokenRequest(tk)
 
 	resp, err := h.service.ValidateToken(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+	response.Success(w, resp)
+}
+
+func (h *tokenHandler) QueryToken(r *restful.Request, w *restful.Response) {
+	req := token.NewQueryTokenRequestFromHttp(r)
+
+	resp, err := h.service.QueryToken(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
 		return
