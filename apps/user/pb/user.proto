@@ -82,9 +82,6 @@ message User {
     // 定义信息
     // @gotags: bson:",inline" json:"spec"
     CreateUserRequest spec = 2;
-    // Profile信息
-    // @gotags bson:"profile" json:"profile"
-    Profile profile = 3;
     // 密码相关信息
     // @gotags: bson:"password" json:"password"
     Password password = 4;
@@ -190,6 +187,9 @@ message CreateUserRequest {
     // 使用全名作为uid, 比如 admin@default, 默认使用uuid
     // @gotags: json:"use_full_named_uid" bson:"use_full_named_uid"
     bool use_full_named_uid = 12;
+    // Profile信息
+    // @gotags bson:"profile" json:"profile"
+    Profile profile = 14;
 }
 
 message Feishu {

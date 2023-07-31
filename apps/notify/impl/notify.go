@@ -34,20 +34,20 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 		switch req.NotifyTye {
 		case notify.NOTIFY_TYPE_MAIL:
 			// 添加邮件人
-			mailSendReq.AddTo(u.Profile.Email)
+			mailSendReq.AddTo(u.Spec.Profile.Email)
 		case notify.NOTIFY_TYPE_SMS:
 			// 添加电话号码
 			sendReq := sms.NewSendSMSRequest()
 			sendReq.TemplateId = req.SmsRequest.TemplateId
 			sendReq.TemplateParams = req.SmsRequest.TemplateParams
-			sendReq.AddPhone(u.Profile.Phone)
+			sendReq.AddPhone(u.Spec.Profile.Phone)
 			resp := s.SendSMS(ctx, sendReq)
 			resp.User = u.Spec.Username
 			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_VOICE:
 			// 添加电话号码
 			sendReq := voice.NewSendVoiceRequest(
-				u.Profile.Phone,
+				u.Spec.Profile.Phone,
 				req.VoiceRequest.TemplateId,
 				req.VoiceRequest.TemplateParams,
 			)

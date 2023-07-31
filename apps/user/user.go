@@ -39,7 +39,6 @@ func New(req *CreateUserRequest) (*User, error) {
 		Meta:     resource.NewMeta(),
 		Spec:     req,
 		Password: pass,
-		Profile:  &Profile{},
 		Status: &Status{
 			IsInitialized: false,
 			Locked:        false,
@@ -98,6 +97,7 @@ func NewCreateUserRequest() *CreateUserRequest {
 		Feishu:          NewFeishu(),
 		Dingding:        NewDingDing(),
 		Wechatwork:      NewWechatWork(),
+		Profile:         &Profile{},
 	}
 }
 
@@ -296,10 +296,9 @@ func (u *User) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
 		*resource.Meta
 		*CreateUserRequest
-		Profile  *Profile  `json:"profile"`
 		Password *Password `json:"password"`
 		Status   *Status   `json:"status"`
-	}{u.Meta, u.Spec, u.Profile, u.Password, u.Status})
+	}{u.Meta, u.Spec, u.Password, u.Status})
 }
 
 // Desensitize 关键数据脱敏
@@ -309,7 +308,7 @@ func (u *User) MakeFullNamedUid() {
 
 func (i *User) Update(req *UpdateUserRequest) {
 	i.Meta.UpdateAt = time.Now().UnixMicro()
-	i.Profile = req.Profile
+	i.Spec.Profile = req.Profile
 	i.Spec.Description = req.Description
 	i.Spec.Feishu = req.Feishu
 	i.Spec.Dingding = req.Dingding
@@ -335,7 +334,7 @@ func (i *User) SetupDefault() {
 
 func (i *User) Patch(req *UpdateUserRequest) error {
 	i.Meta.UpdateAt = time.Now().UnixMicro()
-	err := mergo.MergeWithOverwrite(i.Profile, req.Profile)
+	err := mergo.MergeWithOverwrite(i.Spec.Profile, req.Profile)
 	if err != nil {
 		return err
 	}
