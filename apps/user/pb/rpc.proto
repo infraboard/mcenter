@@ -123,4 +123,10 @@ message UpdateUserRequest {
     // 用户企业微信相关信息
     // @gotags: json:"wechatwork" bson:"wechatwork"
     WechatWork wechatwork = 10;
+    // 是否冻结
+    // @gotags: bson:"locked" json:"locked"
+    optional bool locked = 11;
+    // 冻结原因
+    // @gotags: bson:"locked_reson" json:"locked_reson"
+    string locked_reson = 12;
 }

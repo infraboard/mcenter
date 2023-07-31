@@ -193,6 +193,14 @@ func NewPatchUserRequest(userId string) *UpdateUserRequest {
 	}
 }
 
+func NewUpdateRequest() *UpdateUserRequest {
+	return &UpdateUserRequest{
+		Profile:     NewProfile(),
+		Feishu:      NewFeishu(),
+		FeishuToken: NewFeishuAccessToken(),
+	}
+}
+
 // NewProfile todo
 func NewProfile() *Profile {
 	return &Profile{}
@@ -314,6 +322,13 @@ func (i *User) Update(req *UpdateUserRequest) {
 	i.Spec.Dingding = req.Dingding
 	i.Spec.Wechatwork = req.Wechatwork
 	i.FeishuToken = req.FeishuToken
+	if req.Locked != nil {
+		if *req.Locked {
+			i.Status.Lock(req.LockedReson)
+		} else {
+			i.Status.Unlock()
+		}
+	}
 }
 
 // 初始化一些空值, 兼容之前的数据
@@ -365,6 +380,13 @@ func (i *User) Patch(req *UpdateUserRequest) error {
 		}
 	}
 
+	if req.Locked != nil {
+		if *req.Locked {
+			i.Status.Lock(req.LockedReson)
+		} else {
+			i.Status.Unlock()
+		}
+	}
 	return nil
 }
 
@@ -414,4 +436,15 @@ func NewDingDingAccessToken() *DingDingAccessToken {
 	return &DingDingAccessToken{
 		IssueAt: time.Now().Unix(),
 	}
+}
+
+func (s *Status) Lock(reason string) {
+	s.Locked = true
+	s.LockedReson = reason
+	s.LockedTime = time.Now().Unix()
+}
+
+func (s *Status) Unlock() {
+	s.Locked = false
+	s.UnlockTime = time.Now().Unix()
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/pb/request"
 
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
@@ -124,11 +125,13 @@ func (h *primary) CreateUser(r *restful.Request, w *restful.Response) {
 }
 
 func (h *primary) PutUser(r *restful.Request, w *restful.Response) {
-	req := user.NewPutUserRequest(r.PathParameter("id"))
-	if err := r.ReadEntity(req.Profile); err != nil {
+	req := user.NewUpdateRequest()
+	if err := r.ReadEntity(req); err != nil {
 		response.Failed(w, err)
 		return
 	}
+	req.UserId = r.PathParameter("id")
+	req.UpdateMode = request.UpdateMode_PUT
 
 	set, err := h.service.UpdateUser(r.Request.Context(), req)
 	if err != nil {
@@ -139,11 +142,13 @@ func (h *primary) PutUser(r *restful.Request, w *restful.Response) {
 }
 
 func (h *primary) PatchUser(r *restful.Request, w *restful.Response) {
-	req := user.NewPatchUserRequest(r.PathParameter("id"))
-	if err := r.ReadEntity(req.Profile); err != nil {
+	req := user.NewUpdateRequest()
+	if err := r.ReadEntity(req); err != nil {
 		response.Failed(w, err)
 		return
 	}
+	req.UserId = r.PathParameter("id")
+	req.UpdateMode = request.UpdateMode_PATCH
 
 	set, err := h.service.UpdateUser(r.Request.Context(), req)
 	if err != nil {
