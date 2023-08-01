@@ -146,11 +146,50 @@ func (s *service) DeleteUser(ctx context.Context, req *user.DeleteUserRequest) (
 // 修改用户密码, 用户需要知道原先密码
 func (s *service) UpdatePassword(ctx context.Context, req *user.UpdatePasswordRequest) (
 	*user.Password, error) {
-	return nil, nil
+	ins, err := s.DescribeUser(ctx, user.NewDescriptUserRequestById(req.UserId))
+	if err != nil {
+		return nil, err
+	}
+
+	err = ins.Password.CheckPassword(req.OldPass)
+	if err != nil {
+		return nil, err
+	}
+
+	pass, err := user.NewHashedPassword(req.NewPass)
+	if err != nil {
+		return nil, exception.NewBadRequest(err.Error())
+	}
+	pass.NeedReset = req.IsReset
+	pass.ResetReason = req.ResetReason
+	ins.Password = pass
+
+	err = s.update(ctx, ins)
+	if err != nil {
+		return nil, err
+	}
+	return pass, nil
 }
 
 // 重置密码, 无需知道原先密码, 主账号执行
 func (s *service) ResetPassword(ctx context.Context, req *user.ResetPasswordRequest) (
 	*user.Password, error) {
-	return nil, nil
+	ins, err := s.DescribeUser(ctx, user.NewDescriptUserRequestById(req.UserId))
+	if err != nil {
+		return nil, err
+	}
+
+	pass, err := user.NewHashedPassword(req.NewPass)
+	if err != nil {
+		return nil, exception.NewBadRequest(err.Error())
+	}
+	pass.NeedReset = req.IsReset
+	pass.ResetReason = req.ResetReason
+	ins.Password = pass
+
+	err = s.update(ctx, ins)
+	if err != nil {
+		return nil, err
+	}
+	return pass, nil
 }

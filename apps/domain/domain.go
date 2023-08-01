@@ -56,8 +56,8 @@ func (d *Domain) ToJson() string {
 }
 
 func (d *Domain) Desense() {
-	d.Spec.FeishuSetting.AppSecret = "**"
-	d.Spec.LdapSetting.BindPassword = "**"
+	d.Spec.FeishuSetting.DeSense()
+	d.Spec.LdapSetting.DeSense()
 }
 
 // NewCreateDomainRequest todo
