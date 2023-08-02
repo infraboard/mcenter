@@ -45,7 +45,7 @@ var (
 	//    - length = 24
 	//    - Includes symbols, numbers, lowercase and uppercase letters.
 	//    - Excludes similar and ambiguous characters
-	DefaultConfig = domain.PasswordSecurity{
+	DefaultConfig = domain.PasswordConfig{
 		Length:             LengthStrong,
 		IncludeNumber:      true,
 		IncludeLowerLetter: true,

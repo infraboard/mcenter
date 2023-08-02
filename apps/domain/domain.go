@@ -63,21 +63,15 @@ func (d *Domain) Desense() {
 // NewCreateDomainRequest todo
 func NewCreateDomainRequest() *CreateDomainRequest {
 	return &CreateDomainRequest{
-		SecuritySetting: NewDefaultSecuritySetting(),
-	}
-}
-
-// NewDefaultSecuritySetting todo
-func NewDefaultSecuritySetting() *SecuritySetting {
-	return &SecuritySetting{
-		PasswordSecurity: NewDefaulPasswordSecurity(),
-		LoginSecurity:    NewDefaultLoginSecurity(),
+		PasswordConfig: NewDefaulPasswordSecurity(),
+		LoginSecurity:  NewDefaultLoginSecurity(),
 	}
 }
 
 // NewDefaulPasswordSecurity todo
-func NewDefaulPasswordSecurity() *PasswordSecurity {
-	return &PasswordSecurity{
+func NewDefaulPasswordSecurity() *PasswordConfig {
+	return &PasswordConfig{
+		Enabled:                 true,
 		Length:                  8,
 		IncludeNumber:           true,
 		IncludeLowerLetter:      true,

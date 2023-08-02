@@ -64,9 +64,12 @@ message CreateDomainRequest {
     // 联系人
     // @gotags: bson:"contack" json:"contack"
     Contact contack = 12; 
-    // SecuritySetting 域安全设置
-    // @gotags: bson:"security_setting" json:"security_setting"
-    SecuritySetting security_setting = 13;
+    // 登录安全
+    // @gotags: bson:"login_security" json:"login_security"
+    LoginSecurity login_security = 19; 
+    // 密码安全
+    // @gotags: bson:"password_config" json:"password_config"
+    PasswordConfig password_config = 13;
     // LdapConfig 域关联的LDAP设置
     // @gotags: bson:"ldap_setting" json:"ldap_setting"
     LdapConfig ldap_setting  = 15;
@@ -97,18 +100,11 @@ message Contact {
     string email = 4;
 }
 
-// SecuritySetting 安全策略
-message SecuritySetting {
-    // 密码安全
-    // @gotags: bson:"password_security" json:"password_security"
-    PasswordSecurity password_security = 1;
-    // 登录安全
-    // @gotags: bson:"login_security" json:"login_security"
-    LoginSecurity login_security = 2;      
-}
-
 // PasswordSecurity 密码安全设置
-message PasswordSecurity {
+message PasswordConfig{
+    // 开启本地用户名密码认证
+    // @gotags: bson:"enabled" json:"enabled"
+    bool enabled = 12;
     // 密码长度
     // @gotags: bson:"length" json:"length" validate:"required,min=8,max=64"
     int32 length = 1;

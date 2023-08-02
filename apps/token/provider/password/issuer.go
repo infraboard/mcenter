@@ -59,7 +59,7 @@ func (i *issuer) validate(ctx context.Context, username, pass string) (*user.Use
 		if err != nil {
 			return nil, err
 		}
-		ps := d.Spec.SecuritySetting.PasswordSecurity
+		ps := d.Spec.PasswordConfig
 		expiredRemain, expiredDays = uint(ps.BeforeExpiredRemindDays), uint(ps.PasswordExpiredDays)
 	default:
 		// 主账号和管理员密码过期策略

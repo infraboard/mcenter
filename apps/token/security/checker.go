@@ -44,7 +44,7 @@ type checker struct {
 
 func (c *checker) MaxFailedRetryCheck(ctx context.Context, req *token.IssueTokenRequest) error {
 	ss := c.getOrDefaultSecuritySettingWithUser(ctx, req.Username)
-	if !ss.LoginSecurity.RetryLock {
+	if !ss.RetryLock {
 		c.log.Debugf("retry lock check disabled, don't check")
 		return nil
 	}
@@ -56,7 +56,7 @@ func (c *checker) MaxFailedRetryCheck(ctx context.Context, req *token.IssueToken
 		c.log.Errorf("get key %s from cache error, %s", req.AbnormalUserCheckKey(), err)
 	}
 
-	rc := ss.LoginSecurity.RetryLockConfig
+	rc := ss.RetryLockConfig
 	c.log.Debugf("retry times: %d, retry limite: %d", count, rc.RetryLimite)
 	if count+1 >= rc.RetryLimite {
 		return fmt.Errorf("登录失败次数过多, 请%d分钟后重试", rc.LockedMinite)
@@ -67,7 +67,7 @@ func (c *checker) MaxFailedRetryCheck(ctx context.Context, req *token.IssueToken
 
 func (c *checker) UpdateFailedRetry(ctx context.Context, req *token.IssueTokenRequest) error {
 	ss := c.getOrDefaultSecuritySettingWithUser(ctx, req.Username)
-	if !ss.LoginSecurity.RetryLock {
+	if !ss.RetryLock {
 		c.log.Debugf("retry lock check disabled, don't check")
 		return nil
 	}
@@ -86,7 +86,7 @@ func (c *checker) UpdateFailedRetry(ctx context.Context, req *token.IssueTokenRe
 		err := c.cache.PutWithTTL(
 			req.AbnormalUserCheckKey(),
 			count+1,
-			ss.LoginSecurity.RetryLockConfig.LockedMiniteDuration(),
+			ss.RetryLockConfig.LockedMiniteDuration(),
 		)
 		if err != nil {
 			c.log.Errorf("set key %s to cache error, %s", req.AbnormalUserCheckKey())
@@ -97,12 +97,12 @@ func (c *checker) UpdateFailedRetry(ctx context.Context, req *token.IssueTokenRe
 
 func (c *checker) OtherPlaceLoggedInChecK(ctx context.Context, tk *token.Token) error {
 	ss := c.getOrDefaultSecuritySettingWithDomain(ctx, tk.Domain)
-	if !ss.LoginSecurity.ExceptionLock {
+	if !ss.ExceptionLock {
 		c.log.Debugf("exception check disabled, don't check")
 		return nil
 	}
 
-	if !ss.LoginSecurity.ExceptionLockConfig.OtherPlaceLogin {
+	if !ss.ExceptionLockConfig.OtherPlaceLogin {
 		c.log.Debugf("other place login check disabled, don't check")
 		return nil
 	}
@@ -146,7 +146,7 @@ func (c *checker) OtherPlaceLoggedInChecK(ctx context.Context, tk *token.Token) 
 
 func (c *checker) NotLoginDaysChecK(ctx context.Context, tk *token.Token) error {
 	ss := c.getOrDefaultSecuritySettingWithUser(ctx, tk.Username)
-	if !ss.LoginSecurity.ExceptionLock {
+	if !ss.ExceptionLock {
 		c.log.Debugf("exception check disabled, don't check")
 		return nil
 	}
@@ -166,7 +166,7 @@ func (c *checker) NotLoginDaysChecK(ctx context.Context, tk *token.Token) error 
 
 	days := uint32(time.Since(time.UnixMilli(ltk.IssueAt)).Hours() / 24)
 	c.log.Debugf("user %d days not login", days)
-	maxDays := ss.LoginSecurity.ExceptionLockConfig.NotLoginDays
+	maxDays := ss.ExceptionLockConfig.NotLoginDays
 	if days > maxDays {
 		return fmt.Errorf("user not login days %d", days)
 	}
@@ -177,7 +177,7 @@ func (c *checker) NotLoginDaysChecK(ctx context.Context, tk *token.Token) error 
 
 func (c *checker) IPProtectCheck(ctx context.Context, req *token.IssueTokenRequest) error {
 	ss := c.getOrDefaultSecuritySettingWithUser(ctx, req.Username)
-	if !ss.LoginSecurity.IpLimite {
+	if !ss.IpLimite {
 		c.log.Debugf("ip limite check disabled, don't check")
 		return nil
 	}
@@ -187,8 +187,8 @@ func (c *checker) IPProtectCheck(ctx context.Context, req *token.IssueTokenReque
 	return nil
 }
 
-func (c *checker) getOrDefaultSecuritySettingWithUser(ctx context.Context, username string) *domain.SecuritySetting {
-	ss := domain.NewDefaultSecuritySetting()
+func (c *checker) getOrDefaultSecuritySettingWithUser(ctx context.Context, username string) *domain.LoginSecurity {
+	ss := domain.NewDefaultLoginSecurity()
 	u, err := c.user.DescribeUser(ctx, user.NewDescriptUserRequestByName(username))
 	if err != nil {
 		c.log.Errorf("get user error, %s, use default setting to check", err)
@@ -198,13 +198,13 @@ func (c *checker) getOrDefaultSecuritySettingWithUser(ctx context.Context, usern
 	return c.getOrDefaultSecuritySettingWithDomain(ctx, u.Spec.Domain)
 }
 
-func (c *checker) getOrDefaultSecuritySettingWithDomain(ctx context.Context, domainName string) *domain.SecuritySetting {
-	ss := domain.NewDefaultSecuritySetting()
+func (c *checker) getOrDefaultSecuritySettingWithDomain(ctx context.Context, domainName string) *domain.LoginSecurity {
+	ss := domain.NewDefaultLoginSecurity()
 	d, err := c.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestWithName(domainName))
 	if err != nil {
 		c.log.Errorf("get domain error, %s, use default setting to check", err)
 		return ss
 	}
 
-	return d.Spec.SecuritySetting
+	return d.Spec.LoginSecurity
 }

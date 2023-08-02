@@ -66,7 +66,7 @@ func (i *issuer) validate(ctx context.Context, username, code string) (*user.Use
 	if err != nil {
 		if exception.IsNotFoundError(err) {
 			i.log.Debugf("sync user: %s(%s) to db", fu.Name, dom.Spec.Name)
-			gen := password.New(dom.Spec.SecuritySetting.PasswordSecurity)
+			gen := password.New(dom.Spec.PasswordConfig)
 			randomPass, err := gen.Generate()
 			if err != nil {
 				return nil, err

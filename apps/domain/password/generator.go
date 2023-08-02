@@ -10,11 +10,11 @@ import (
 
 // Generator is what generates the password
 type Generator struct {
-	*domain.PasswordSecurity
+	*domain.PasswordConfig
 }
 
 // New returns a new generator
-func New(config *domain.PasswordSecurity) *Generator {
+func New(config *domain.PasswordConfig) *Generator {
 	if config == nil {
 		config = &DefaultConfig
 	}
@@ -35,10 +35,10 @@ func New(config *domain.PasswordSecurity) *Generator {
 		config.CharacterSet = BuildCharacterSet(config)
 	}
 
-	return &Generator{PasswordSecurity: config}
+	return &Generator{PasswordConfig: config}
 }
 
-func BuildCharacterSet(config *domain.PasswordSecurity) string {
+func BuildCharacterSet(config *domain.PasswordConfig) string {
 	var characterSet string
 	if config.IncludeLowerLetter {
 		characterSet += DefaultLetterSet
@@ -90,10 +90,10 @@ func NewWithDefault() *Generator {
 // config
 func (g Generator) Generate() (*string, error) {
 	var generated string
-	characterSet := strings.Split(g.PasswordSecurity.CharacterSet, "")
+	characterSet := strings.Split(g.PasswordConfig.CharacterSet, "")
 	max := big.NewInt(int64(len(characterSet)))
 
-	for i := 0; i < int(g.PasswordSecurity.Length); i++ {
+	for i := 0; i < int(g.PasswordConfig.Length); i++ {
 		val, err := rand.Int(rand.Reader, max)
 		if err != nil {
 			return nil, err
@@ -121,7 +121,7 @@ func (g Generator) GenerateMany(amount int) ([]string, error) {
 // GenerateWithLength generate one password with set length
 func (g Generator) GenerateWithLength(length int) (*string, error) {
 	var generated string
-	characterSet := strings.Split(g.PasswordSecurity.CharacterSet, "")
+	characterSet := strings.Split(g.PasswordConfig.CharacterSet, "")
 	max := big.NewInt(int64(len(characterSet)))
 	for i := 0; i < length; i++ {
 		val, err := rand.Int(rand.Reader, max)

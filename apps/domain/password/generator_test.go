@@ -13,7 +13,7 @@ import (
 
 func TestNew(t *testing.T) {
 	type args struct {
-		config *domain.PasswordSecurity
+		config *domain.PasswordConfig
 	}
 	tests := []struct {
 		name    string
@@ -33,11 +33,11 @@ func TestNew(t *testing.T) {
 		},
 		{
 			name: "set config",
-			args: args{&domain.PasswordSecurity{
+			args: args{&domain.PasswordConfig{
 				IncludeLowerLetter: true,
 			}},
 			want: func() *password.Generator {
-				cfg := domain.PasswordSecurity{IncludeLowerLetter: true}
+				cfg := domain.PasswordConfig{IncludeLowerLetter: true}
 				cfg.CharacterSet = "abcdefghijklmnopqrstuvwxyz"
 				cfg.Length = password.LengthStrong
 				return &password.Generator{&cfg}
@@ -81,7 +81,7 @@ func TestNewWithDefault(t *testing.T) {
 
 func Test_buildCharacterSet(t *testing.T) {
 	type args struct {
-		config *domain.PasswordSecurity
+		config *domain.PasswordConfig
 	}
 	tests := []struct {
 		name string
@@ -91,7 +91,7 @@ func Test_buildCharacterSet(t *testing.T) {
 		{
 			name: "exclude similar characters",
 			args: args{
-				config: &domain.PasswordSecurity{
+				config: &domain.PasswordConfig{
 					IncludeLowerLetter: true,
 					IncludeSymbols:     true,
 					IncludeNumber:      true,
@@ -104,7 +104,7 @@ func Test_buildCharacterSet(t *testing.T) {
 		{
 			name: "exclude numbers",
 			args: args{
-				config: &domain.PasswordSecurity{
+				config: &domain.PasswordConfig{
 					IncludeLowerLetter: true,
 					IncludeSymbols:     true,
 					IncludeNumber:      false,
@@ -117,7 +117,7 @@ func Test_buildCharacterSet(t *testing.T) {
 		{
 			name: "full list",
 			args: args{
-				config: &domain.PasswordSecurity{
+				config: &domain.PasswordConfig{
 					IncludeLowerLetter: true,
 					IncludeSymbols:     true,
 					IncludeNumber:      true,
@@ -139,7 +139,7 @@ func Test_buildCharacterSet(t *testing.T) {
 
 func TestGenerator_Generate(t *testing.T) {
 	type fields struct {
-		Config *domain.PasswordSecurity
+		Config *domain.PasswordConfig
 	}
 	tests := []struct {
 		name    string
@@ -175,7 +175,7 @@ func TestGenerator_Generate(t *testing.T) {
 
 func TestGenerator_GenerateMany(t *testing.T) {
 	type fields struct {
-		Config *domain.PasswordSecurity
+		Config *domain.PasswordConfig
 	}
 	type args struct {
 		amount int
@@ -239,7 +239,7 @@ func stringMatchesCharacters(str, characters string) error {
 
 func TestGenerator_GenerateWithLength(t *testing.T) {
 	type fields struct {
-		Config *domain.PasswordSecurity
+		Config *domain.PasswordConfig
 	}
 	type args struct {
 		length int
@@ -280,7 +280,7 @@ func TestGenerator_GenerateWithLength(t *testing.T) {
 
 func TestGenerator_GenerateManyWithLength(t *testing.T) {
 	type fields struct {
-		Config *domain.PasswordSecurity
+		Config *domain.PasswordConfig
 	}
 	type args struct {
 		amount int
