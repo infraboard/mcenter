@@ -94,15 +94,21 @@ message EnumOption {
 	// 选项的说明
 	// @gotags: bson:"label" json:"label"
 	string label = 1;
-	// 选项的值
-	// @gotags: bson:"value" json:"value" validate:"required"
-	string value = 2;
+	// 用户输入
+	// @gotags: bson:"input" json:"input" validate:"required"
+	string input = 2;
+	// 选项的值, 根据parent.input + children.input 自动生成
+	// @gotags: bson:"value" json:"value" 
+	string value = 3;
 	// 是否废弃
 	// @gotags: bson:"deprecate" json:"deprecate"
-	bool deprecate = 3;
+	bool deprecate = 4;
 	// 废弃说明
 	// @gotags: bson:"deprecate_desc" json:"deprecate_desc"
-	string deprecate_desc = 4;
+	string deprecate_desc = 5;
+	// 枚举的子选项
+	// @gotags: bson:"children" json:"children"
+	repeated EnumOption children = 6;
 	// 扩展属性
 	// @gotags: bson:"extensions" json:"extensions"
 	map<string, string> extensions = 15;

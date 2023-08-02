@@ -29,6 +29,9 @@ func (s *LabelSet) ToJSON() string {
 }
 
 func New(in *CreateLabelRequest) (*Label, error) {
+	// 填充Value
+	in.BuildValue()
+
 	if err := in.Validate(); err != nil {
 		return nil, err
 	}
@@ -41,6 +44,26 @@ func New(in *CreateLabelRequest) (*Label, error) {
 
 func (r *CreateLabelRequest) Validate() error {
 	return validate.Validate(r)
+}
+
+func (r *CreateLabelRequest) BuildValue() {
+	for i := range r.EnumOptions {
+		item := r.EnumOptions[i]
+		item.Value = item.Input
+		MakeEnumOption(item)
+	}
+}
+
+func MakeEnumOption(o *EnumOption) {
+	if !o.HasChildren() {
+		return
+	}
+
+	for i := range o.Children {
+		c := o.Children[i]
+		c.Value = fmt.Sprintf("%s-%s", o.Input, c.Input)
+		MakeEnumOption(c)
+	}
 }
 
 func (r *CreateLabelRequest) UniqueKey() string {

@@ -146,6 +146,8 @@ func NewQueryUserRequest() *QueryUserRequest {
 	return &QueryUserRequest{
 		Page:      request.NewPageRequest(20, 1),
 		SkipItems: false,
+		Labels:    map[string]string{},
+		UserIds:   []string{},
 	}
 }
 

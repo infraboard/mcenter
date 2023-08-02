@@ -38,20 +38,30 @@ func (r *CreateLabelRequest) AddEnumOption(opts ...*EnumOption) {
 
 func NewEnumOption(value string) *EnumOption {
 	return &EnumOption{
-		Label: value,
-		Value: value,
-	}
-}
-
-func NewRequiredCondition() *RequiredCondition {
-	return &RequiredCondition{
-		Resources: []string{},
+		Label:    value,
+		Input:    value,
+		Children: []*EnumOption{},
 	}
 }
 
 func (e *EnumOption) SetLabel(label string) *EnumOption {
 	e.Label = label
 	return e
+}
+
+func (e *EnumOption) HasChildren() bool {
+	return len(e.Children) > 0
+}
+
+func (r *EnumOption) AddChildren(opts ...*EnumOption) *EnumOption {
+	r.Children = append(r.Children, opts...)
+	return r
+}
+
+func NewRequiredCondition() *RequiredCondition {
+	return &RequiredCondition{
+		Resources: []string{},
+	}
 }
 
 func NewHttpEnumConfig() *HttpEnumConfig {

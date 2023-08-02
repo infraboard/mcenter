@@ -32,6 +32,9 @@ message QueryUserRequest {
     // 通过Id
     // @gotags: json:"user_ids"
     repeated string user_ids = 5;
+   // 根据标签过滤用户
+    // @gotags: json:"labels"
+    map<string,string> labels = 6;
     // 是否获取数据
     // @gotags: json:"skip_items"
     bool skip_items = 8;

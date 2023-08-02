@@ -94,6 +94,11 @@ func (r *queryRequest) FindFilter() bson.M {
 	if len(r.UserIds) > 0 {
 		filter["_id"] = bson.M{"$in": r.UserIds}
 	}
+	if r.Labels != nil {
+		for k, v := range r.Labels {
+			filter["labels."+k] = v
+		}
+	}
 
 	return filter
 }
