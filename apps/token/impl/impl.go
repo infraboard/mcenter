@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/code"
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
@@ -37,6 +38,7 @@ type service struct {
 	ns      namespace.Service
 	checker security.Checker
 	code    code.Service
+	domain  domain.Service
 }
 
 func (s *service) Init() error {
@@ -67,6 +69,7 @@ func (s *service) Init() error {
 	s.code = ioc.GetController(code.AppName).(code.Service)
 	s.ns = ioc.GetController(namespace.AppName).(namespace.Service)
 	s.policy = ioc.GetController(policy.AppName).(policy.Service)
+	s.domain = ioc.GetController(domain.AppName).(domain.Service)
 
 	s.checker, err = security.NewChecker()
 	if err != nil {

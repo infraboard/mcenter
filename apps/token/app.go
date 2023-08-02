@@ -139,6 +139,7 @@ func NewToken(req *IssueTokenRequest) *Token {
 		Description:      req.Description,
 		Status:           NewStatus(),
 		Location:         req.Location,
+		Meta:             map[string]string{},
 	}
 	switch req.GrantType {
 	case GRANT_TYPE_PRIVATE_TOKEN:

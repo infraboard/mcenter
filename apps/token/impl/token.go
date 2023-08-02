@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/infraboard/mcenter/apps/code"
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
@@ -38,7 +39,23 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 		return nil, err
 	}
 
+	// 补充Token其他元数据
+	err = s.FillMeta(ctx, tk)
+	if err != nil {
+		return nil, err
+	}
+
 	return tk, nil
+}
+
+func (s *service) FillMeta(ctx context.Context, ins *token.Token) error {
+	d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(ins.Domain))
+	if err != nil {
+		return err
+	}
+	ins.Meta["domain_logo_path"] = d.Spec.LogoPath
+	ins.Meta["domain_description"] = d.Spec.Description
+	return nil
 }
 
 func (s *service) IssueTokenNow(ctx context.Context, req *token.IssueTokenRequest) (*token.Token, error) {
