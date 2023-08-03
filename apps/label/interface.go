@@ -2,6 +2,7 @@ package label
 
 import (
 	context "context"
+	"strings"
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/token"
@@ -64,6 +65,10 @@ func NewRequiredCondition() *RequiredCondition {
 	}
 }
 
+func (r *RequiredCondition) AddResource(resource string) {
+	r.Resources = append(r.Resources, resource)
+}
+
 func NewHttpEnumConfig() *HttpEnumConfig {
 	return &HttpEnumConfig{}
 }
@@ -71,6 +76,7 @@ func NewHttpEnumConfig() *HttpEnumConfig {
 func NewQueryLabelRequest() *QueryLabelRequest {
 	return &QueryLabelRequest{
 		Page: request.NewDefaultPageRequest(),
+		Keys: []string{},
 	}
 }
 
@@ -78,7 +84,16 @@ func NewQueryLabelRequestFromHTTP(r *restful.Request) *QueryLabelRequest {
 	req := NewQueryLabelRequest()
 	req.Page = request.NewPageRequestFromHTTP(r.Request)
 	req.Scope = token.GetTokenFromRequest(r).GenScope()
+
+	keys := r.QueryParameter("keys")
+	if keys != "" {
+		req.Keys = strings.Split(keys, ",")
+	}
 	return req
+}
+
+func (r *QueryLabelRequest) AddKey(keys ...string) {
+	r.Keys = append(r.Keys, keys...)
 }
 
 func NewDescribeLabelRequest(id string) *DescribeLabelRequest {

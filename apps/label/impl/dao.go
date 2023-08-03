@@ -34,5 +34,8 @@ func (r *queryRequest) FindOptions() *options.FindOptions {
 func (r *queryRequest) FindFilter() bson.M {
 	filter := bson.M{}
 
+	if len(r.Keys) > 0 {
+		filter["key"] = bson.M{"$in": r.Keys}
+	}
 	return filter
 }

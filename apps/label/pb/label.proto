@@ -28,6 +28,9 @@ message CreateLabelRequest {
     // 标签的键, 标签的Key不允许修改
     // @gotags: json:"key" bson:"key" validate:"required"
     string key = 1;
+    // 标签的键的描述
+    // @gotags: json:"key_desc" bson:"key_desc" validate:"required"
+    string key_desc = 16;
     // 标签的键
     // @gotags: json:"domain" bson:"domain"
     string domain = 2;

@@ -23,6 +23,9 @@ message QueryLabelRequest {
     // 分页请求
     // @gotags: json:"page"
     mcube.page.PageRequest page = 2;
+    // key
+    // @gotags: json:"keys"
+    repeated string keys  = 3;
 }
 
 message UpdateLabelRequest {
