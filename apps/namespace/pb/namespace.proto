@@ -50,12 +50,34 @@ message CreateNamespaceRequest {
     // 空间可见性, 默认是私有空间
     // @gotags: bson:"visible" json:"visible"
     VISIBLE visible = 8;
+    // 空间的资源配额限制
+    // @gotags: bson:"resource_quota" json:"resource_quota"
+    ResourceQuotaSet resource_quota = 13;
     // 扩展信息
     // @gotags: bson:"extension" json:"extension"
     map<string,string> extension = 14;
     // 空间标签
     // @gotags: bson:"labels" json:"labels"
     map<string,string> labels = 15;
+}
+
+message ResourceQuotaSet {
+    // 资源列表
+    // @gotags: bson:"items" json:"items"
+    repeated ResourceQuota items = 1;
+}
+
+// 资源配额限制策略
+message ResourceQuota {
+    // 资源名称
+    // @gotags: bson:"resource_name" json:"resource_name"
+    string resource_name = 1;
+    // 软限制(水位线)
+    // @gotags: bson:"soft" json:"soft"
+    int64 soft = 2;
+    // 硬限制
+    // @gotags: bson:"hard" json:"hard"
+    int64 hard = 3;
 }
 
 message NamespaceSet {

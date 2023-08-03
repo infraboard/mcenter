@@ -71,10 +71,11 @@ func (n *Namespace) ToJson() string {
 // NewCreateNamespaceRequest todo
 func NewCreateNamespaceRequest() *CreateNamespaceRequest {
 	return &CreateNamespaceRequest{
-		Assistants: []string{},
-		Enabled:    true,
-		Extension:  map[string]string{},
-		Labels:     map[string]string{},
+		Assistants:    []string{},
+		Enabled:       true,
+		Extension:     map[string]string{},
+		Labels:        map[string]string{},
+		ResourceQuota: NewResourceQuotaSet(),
 	}
 }
 
@@ -164,4 +165,22 @@ func (req *DeleteNamespaceRequest) Validate() error {
 	}
 
 	return nil
+}
+
+func NewResourceQuotaSet() *ResourceQuotaSet {
+	return &ResourceQuotaSet{
+		Items: []*ResourceQuota{},
+	}
+}
+
+func (s *ResourceQuotaSet) Add(items ...*ResourceQuota) {
+	s.Items = append(s.Items, items...)
+}
+
+func NewResourceQuota(resource string, soft, hard int64) *ResourceQuota {
+	return &ResourceQuota{
+		ResourceName: resource,
+		Soft:         soft,
+		Hard:         hard,
+	}
 }
