@@ -68,9 +68,12 @@ type describeNamespaceRequest struct {
 func (r *describeNamespaceRequest) FindFilter() bson.M {
 	filter := bson.M{}
 
-	if r.Name != "" {
+	switch r.DescribeBy {
+	case namespace.DESCRIBE_BY_NAME:
 		filter["domain"] = r.Domain
 		filter["name"] = r.Name
+	default:
+		filter["_id"] = r.Id
 	}
 
 	return filter

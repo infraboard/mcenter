@@ -19,7 +19,7 @@ func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionR
 	// 判断是否是空间所有者
 	ns, err := s.namespace.DescribeNamespace(
 		ctx,
-		namespace.NewDescriptNamespaceRequest(req.Domain, req.Namespace),
+		namespace.NewDescriptNamespaceRequestByName(req.Domain, req.Namespace),
 	)
 	if err != nil {
 		return nil, err

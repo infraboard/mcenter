@@ -185,7 +185,7 @@ func (s *service) ChangeNamespace(ctx context.Context, req *token.ChangeNamespac
 		return nil, err
 	}
 
-	ns, err := s.ns.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(tk.Domain, req.Namespace))
+	ns, err := s.ns.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequestByName(tk.Domain, req.Namespace))
 	if err != nil {
 		return nil, err
 	}

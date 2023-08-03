@@ -32,6 +32,17 @@ func (h *handler) Registry(ws *restful.WebService) {
 		Writes(namespace.NamespaceSet{}).
 		Returns(200, "OK", namespace.NamespaceSet{}).
 		Returns(404, "Not Found", nil))
+
+	ws.Route(ws.GET("/{id}").To(h.DescribeNamespace).
+		Doc("查询空间详情").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.List.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Disable).
+		Writes(namespace.Namespace{}).
+		Returns(200, "OK", namespace.Namespace{}).
+		Returns(404, "Not Found", nil))
 }
 
 func (h *handler) CreateNamespace(r *restful.Request, w *restful.Response) {
@@ -54,6 +65,17 @@ func (h *handler) CreateNamespace(r *restful.Request, w *restful.Response) {
 func (h *handler) QueryNamespace(r *restful.Request, w *restful.Response) {
 	req := namespace.NewQueryNamespaceRequestFromHTTP(r)
 	set, err := h.service.QueryNamespace(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	response.Success(w, set)
+}
+
+func (h *handler) DescribeNamespace(r *restful.Request, w *restful.Response) {
+	req := namespace.NewDescriptNamespaceRequestById(r.PathParameter("id"))
+	set, err := h.service.DescribeNamespace(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
 		return

@@ -324,6 +324,7 @@ func (i *User) Update(req *UpdateUserRequest) {
 	i.Spec.Dingding = req.Dingding
 	i.Spec.Wechatwork = req.Wechatwork
 	i.FeishuToken = req.FeishuToken
+	i.Spec.Labels = req.Labels
 	if req.Locked != nil {
 		if *req.Locked {
 			i.Status.Lock(req.LockedReson)
@@ -377,6 +378,12 @@ func (i *User) Patch(req *UpdateUserRequest) error {
 	}
 	if req.FeishuToken != nil {
 		err = mergo.MergeWithOverwrite(i.FeishuToken, req.FeishuToken)
+		if err != nil {
+			return err
+		}
+	}
+	if req.Labels != nil {
+		err = mergo.MergeWithOverwrite(i.Spec.Labels, req.Labels)
 		if err != nil {
 			return err
 		}

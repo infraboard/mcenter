@@ -102,7 +102,7 @@ func (s *impl) DescribeNamespace(ctx context.Context, req *namespace.DescriptNam
 }
 
 func (s *impl) DeleteNamespace(ctx context.Context, req *namespace.DeleteNamespaceRequest) (*namespace.Namespace, error) {
-	ns, err := s.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(req.Domain, req.Name))
+	ns, err := s.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequestByName(req.Domain, req.Name))
 	if err != nil {
 		return nil, err
 	}

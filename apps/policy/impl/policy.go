@@ -47,7 +47,7 @@ func (i *impl) CheckDependence(ctx context.Context, p *policy.Policy) (*user.Use
 	}
 
 	if !p.IsAllNamespace() {
-		_, err = i.namespace.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(p.Spec.Domain, p.Spec.Namespace))
+		_, err = i.namespace.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequestByName(p.Spec.Domain, p.Spec.Namespace))
 		if err != nil {
 			return nil, fmt.Errorf("check namespace error, %s", err)
 		}
@@ -64,7 +64,7 @@ func (s *impl) QueryPolicy(ctx context.Context, req *policy.QueryPolicyRequest) 
 	}
 
 	if req.Namespace != "" {
-		_, err := s.namespace.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequest(req.Domain, req.Namespace))
+		_, err := s.namespace.DescribeNamespace(ctx, namespace.NewDescriptNamespaceRequestByName(req.Domain, req.Namespace))
 		if err != nil {
 			return nil, err
 		}

@@ -34,14 +34,27 @@ message QueryNamespaceRequest {
     string username  = 6;
 }
 
+enum DESCRIBE_BY {
+    // 通过名称来获取
+    NAME = 0;
+    // 通过Id
+    ID = 1;
+}
+
 // DescriptNamespaceRequest 查询应用详情
 message DescriptNamespaceRequest {
+    // 获取详情的方式
+    // @gotags: json:"describe_by"
+    DESCRIBE_BY describe_by =4;
     // 域
     // @gotags: json:"domain"
     string domain = 2;
     // 名称
     // @gotags: json:"name"
     string name = 1;
+    // 空间Id
+    // @gotags: json:"id"
+    string id = 3;
 }
 
 // DeleteNamespaceRequest todo

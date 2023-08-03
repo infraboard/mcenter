@@ -38,9 +38,7 @@ func New(req *CreateNamespaceRequest) (*Namespace, error) {
 // NewDefaultNamespace todo
 func NewDefaultNamespace() *Namespace {
 	return &Namespace{
-		Spec: &CreateNamespaceRequest{
-			Enabled: true,
-		},
+		Spec: NewCreateNamespaceRequest(),
 	}
 }
 
@@ -113,11 +111,20 @@ func (s *NamespaceSet) Add(item *Namespace) {
 	s.Items = append(s.Items, item)
 }
 
-// NewDescriptNamespaceRequest new实例
-func NewDescriptNamespaceRequest(domain, name string) *DescriptNamespaceRequest {
+// NewDescriptNamespaceRequestByName new实例
+func NewDescriptNamespaceRequestByName(domain, name string) *DescriptNamespaceRequest {
 	return &DescriptNamespaceRequest{
-		Domain: domain,
-		Name:   name,
+		DescribeBy: DESCRIBE_BY_NAME,
+		Domain:     domain,
+		Name:       name,
+	}
+}
+
+// NewDescriptNamespaceRequestById new实例
+func NewDescriptNamespaceRequestById(id string) *DescriptNamespaceRequest {
+	return &DescriptNamespaceRequest{
+		DescribeBy: DESCRIBE_BY_ID,
+		Id:         id,
 	}
 }
 
@@ -144,8 +151,15 @@ func (req *QueryNamespaceRequest) UpdateOwner(tk *token.Token) {
 
 // Validate 校验详情查询请求
 func (req *DescriptNamespaceRequest) Validate() error {
-	if req.Name == "" {
-		return errors.New("id  is required")
+	switch req.DescribeBy {
+	case DESCRIBE_BY_NAME:
+		if req.Name == "" || req.Domain == "" {
+			return errors.New("name and domain is required")
+		}
+	default:
+		if req.Id == "" {
+			return errors.New("id is required")
+		}
 	}
 
 	return nil

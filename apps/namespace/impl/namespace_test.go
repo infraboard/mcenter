@@ -29,8 +29,17 @@ func TestQueryNamespace(t *testing.T) {
 	t.Log(r)
 }
 
+func TestDescribeNamespaceById(t *testing.T) {
+	req := namespace.NewDescriptNamespaceRequestById("5fecb49ae23804e7")
+	r, err := impl.DescribeNamespace(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r)
+}
+
 func TestDescribeNamespace(t *testing.T) {
-	req := namespace.NewDescriptNamespaceRequest(domain.DEFAULT_DOMAIN, namespace.DEFAULT_NAMESPACE)
+	req := namespace.NewDescriptNamespaceRequestByName(domain.DEFAULT_DOMAIN, namespace.DEFAULT_NAMESPACE)
 	r, err := impl.DescribeNamespace(ctx, req)
 	if err != nil {
 		t.Fatal(err)
