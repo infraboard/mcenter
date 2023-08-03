@@ -55,6 +55,9 @@ message CreateLabelRequest {
 	// 值描述
 	// @gotags: bson:"value_desc" json:"value_desc"
 	string value_desc = 10;
+	// 是否是多选
+	// @gotags: bson:"multiple" json:"multiple"
+	bool multiple = 17;
 	// 枚举值的选项
 	// @gotags: bson:"enum_options" json:"enum_options,omitempty"
 	repeated EnumOption enum_options = 11;
@@ -110,7 +113,7 @@ message EnumOption {
 	// @gotags: bson:"deprecate_desc" json:"deprecate_desc"
 	string deprecate_desc = 5;
 	// 枚举的子选项
-	// @gotags: bson:"children" json:"children"
+	// @gotags: bson:"children" json:"children,omitempty"
 	repeated EnumOption children = 6;
 	// 扩展属性
 	// @gotags: bson:"extensions" json:"extensions"
