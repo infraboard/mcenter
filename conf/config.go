@@ -174,6 +174,14 @@ func (m *mongodb) GetDB() (*mongo.Database, error) {
 	return conn.Database(m.Database), nil
 }
 
+func (m *mongodb) StartSession() (mongo.Session, error) {
+	conn, err := m.Client()
+	if err != nil {
+		return nil, err
+	}
+	return conn.StartSession()
+}
+
 // 关闭数据库连接
 func (m *mongodb) Close(ctx context.Context) error {
 	if m.client == nil {
