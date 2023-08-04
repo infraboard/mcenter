@@ -46,7 +46,7 @@ func NewDefaultPolicy() *Policy {
 func (p *Policy) genID() {
 	h := fnv.New32a()
 	hashedStr := fmt.Sprintf("%s-%s-%s-%s",
-		p.Spec.Domain, p.Spec.Namespace, p.Spec.Username, p.Spec.RoleId)
+		p.Spec.Domain, p.Spec.Namespace, p.Spec.UserId, p.Spec.RoleId)
 
 	h.Write([]byte(hashedStr))
 	p.Meta.Id = fmt.Sprintf("%x", h.Sum32())
@@ -129,7 +129,7 @@ func (p *PolicySet) ToJson() string {
 func (s *PolicySet) Users() []string {
 	users := map[string]struct{}{}
 	for i := range s.Items {
-		users[s.Items[i].Spec.Username] = struct{}{}
+		users[s.Items[i].Spec.UserId] = struct{}{}
 	}
 
 	set := make([]string, 0, len(users))

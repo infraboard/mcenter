@@ -36,7 +36,7 @@ func (s *impl) CreatePolicy(ctx context.Context, req *policy.CreatePolicyRequest
 
 // CheckDependence todo
 func (i *impl) CheckDependence(ctx context.Context, p *policy.Policy) (*user.User, error) {
-	account, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestByName(p.Spec.Username))
+	account, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestById(p.Spec.UserId))
 	if err != nil {
 		return nil, fmt.Errorf("check user error, %s", err)
 	}

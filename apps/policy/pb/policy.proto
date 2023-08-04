@@ -31,9 +31,9 @@ message CreatePolicyRequest {
     // 范围
     // @gotags: bson:"namespace" json:"namespace" validate:"lte=120"
     string namespace = 3;
-    // 用户
-    // @gotags: bson:"username" json:"username" validate:"required,lte=120"
-    string username = 4;
+    // 用户Id
+    // @gotags: bson:"user_id" json:"user_id" validate:"required,lte=120"
+    string user_id = 4;
     // 角色Id
     // @gotags: bson:"role_id" json:"role_id" validate:"required,lte=40"
     string role_id = 5;

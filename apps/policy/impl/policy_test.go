@@ -11,7 +11,7 @@ import (
 
 func TestCreatePolicy(t *testing.T) {
 	req := policy.NewCreatePolicyRequest()
-	req.Username = "test"
+	req.UserId = "test@default"
 	req.RoleId = "bac61744"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
