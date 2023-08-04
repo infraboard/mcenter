@@ -245,3 +245,33 @@ message IssueTokenRequest {
     // @gotags: json:"location,omitempty"
     Location location = 14;
 }
+
+message IssueCodeRequest {
+    // 测试颁发
+    // @gotags: json:"dry_run"
+    bool dry_run = 1;
+    // 授权类型
+    // @gotags: json:"grant_type"
+    GRANT_TYPE grant_type = 2;
+    // 校验码过期时间
+    // @gotags: json:"expired_at"
+    int64 expired_at = 3;
+    // PASSWORD授权时, 用户名
+    // @gotags: json:"username,omitempty"
+    string username = 4;
+    // PASSWORD授权时, 用户密码
+    // @gotags: json:"password,omitempty"
+    string password = 5;
+    // PRIVATE_TOKEN授权时, 访问令牌
+    // @gotags: json:"access_token,omitempty"
+    string access_token = 6;
+    // AUTH_CODE授权时, Code
+    // @gotags: json:"auth_code"
+    string auth_code = 7;
+    // AUTH_CODE授权时, State
+    // @gotags: json:"state"
+    string state = 8;
+    // 校验码颁发给客户端信息
+    // @gotags: json:"location,omitempty"
+    Location location = 14;
+}

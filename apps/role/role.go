@@ -90,9 +90,10 @@ func New(req *CreateRoleRequest) (*Role, error) {
 
 // NewDefaultRole 默认实例
 func NewDefaultRole() *Role {
-	spec := NewCreateRoleRequest()
 	return &Role{
-		Spec: spec,
+		Meta:        resource.NewMeta(),
+		Spec:        NewCreateRoleRequest(),
+		Permissions: []*PermissionSpec{},
 	}
 }
 

@@ -4,22 +4,23 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mcenter/apps/code"
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/notify"
+	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcube/exception"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (s *service) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (
-	*code.IssueCodeResponse, error) {
+func (s *service) IssueCode(ctx context.Context, req *token.IssueCodeRequest) (
+	*token.IssueCodeResponse, error) {
 	// 获取验证码颁发器
-	issuer := provider.GetCodeIssuer(req.IssueBy)
+	issuer := provider.GetCodeIssuer(token.GRANT_TYPE(req.GrantType))
 
 	// 确保有provider
 	if issuer == nil {
-		return nil, exception.NewBadRequest("grant type %s not support", req.IssueBy)
+		return nil, exception.NewBadRequest("grant type %s not support", req.GrantType)
 	}
 
 	// 颁发验证码
@@ -40,20 +41,22 @@ func (s *service) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (
 		return nil, exception.NewInternalServerError("send verify code error, %s", err)
 	}
 
-	return code.NewIssueCodeResponse(msg), nil
+	return token.NewIssueCodeResponse(msg), nil
 }
 
-func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
-	// 根据系统配置, 给用户发送通知
-	system, err := s.setting.GetSetting(ctx)
+func (s *service) send(ctx context.Context, code *token.Code) (string, error) {
+
+	// 查询domain, 根据系统配置, 给用户发送通知
+	dom, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(code.Domain))
 	if err != nil {
-		return "", fmt.Errorf("query system setting error, %s", err)
+		return "", fmt.Errorf("get user domain error, %s", err)
 	}
+	conf := dom.Spec.CodeConfig
 
 	var message string
-	switch system.Code.NotifyType {
+	switch conf.NotifyType {
 	case notify.NOTIFY_TYPE_MAIL:
-		content := system.Code.RenderMailCentent(code.Code, code.ExpiredMinite)
+		content := conf.RenderMailCentent(code.Code, code.ExpiredMinite)
 		// 邮件通知
 		s.log.Debugf("mail to user %s", code.Username)
 		req := notify.NewSendMailRequest(
@@ -71,7 +74,7 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 		// 短信通知
 		s.log.Debugf("sms to user %s", code.Username)
 		req := notify.NewSendSMSRequest(
-			system.Code.SmsTemplateID,
+			conf.SmsTemplateId,
 			[]string{code.ExpiredMiniteString()},
 			code.Username,
 		)
@@ -82,19 +85,19 @@ func (s *service) send(ctx context.Context, code *code.Code) (string, error) {
 		message = fmt.Sprintf("验证码已通过短信发送到你的手机: %s, 请及时查收", record.Targets())
 		s.log.Debugf("send verify code to user: %s by sms ok", code.Username)
 	default:
-		return "", fmt.Errorf("unknown notify type %s", system.Code.NotifyType)
+		return "", fmt.Errorf("unknown notify type %s", conf.NotifyType)
 	}
 
 	return message, nil
 }
 
-func (s *service) VerifyCode(ctx context.Context, req *code.VerifyCodeRequest) (
-	*code.Code, error) {
+func (s *service) VerifyCode(ctx context.Context, req *token.VerifyCodeRequest) (
+	*token.Code, error) {
 	if err := req.Validate(); err != nil {
 		return nil, exception.NewBadRequest("validate check code request error, %s", err)
 	}
 
-	code := code.NewDefaultCode()
+	code := token.NewDefaultCode()
 	if err := s.col.FindOne(ctx, bson.M{"_id": req.HashID()}).Decode(code); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("verify code: %s  not found", req.Code)
@@ -109,7 +112,7 @@ func (s *service) VerifyCode(ctx context.Context, req *code.VerifyCodeRequest) (
 	}
 
 	// 没过去验证成功, 删除
-	if err := s.delete(ctx, code); err != nil {
+	if err := s.deleteCode(ctx, code); err != nil {
 		s.log.Errorf("delete check ok verify code error, %s", err)
 	}
 

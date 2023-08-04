@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/infraboard/mcenter/apps/notify"
 	sms_provider "github.com/infraboard/mcenter/apps/notify/provider/sms"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
@@ -13,13 +14,13 @@ import (
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20190711"
 )
 
-func NewSender(conf *Config) (sms_provider.SmsNotifyer, error) {
+func NewSender(conf *notify.TencentSmsConfig) (sms_provider.SmsNotifyer, error) {
 	if err := conf.Validate(); err != nil {
 		return nil, fmt.Errorf("validate tencent sms config error, %s", err)
 	}
 
 	credential := common.NewCredential(
-		conf.SecretID,
+		conf.SecretId,
 		conf.SecretKey,
 	)
 	cpf := profile.NewClientProfile()
@@ -37,7 +38,7 @@ func NewSender(conf *Config) (sms_provider.SmsNotifyer, error) {
 }
 
 type Sender struct {
-	conf *Config
+	conf *notify.TencentSmsConfig
 	sms  *sms.Client
 	log  logger.Logger
 }
@@ -56,7 +57,7 @@ func (s *Sender) Send(ctx context.Context, req *sms_provider.SendSMSRequest) err
 	request.PhoneNumberSet = common.StringPtrs(req.PhoneNumbers)
 	request.TemplateParamSet = common.StringPtrs(req.TemplateParams)
 	request.TemplateID = common.StringPtr(req.TemplateId)
-	request.SmsSdkAppid = common.StringPtr(s.conf.AppID)
+	request.SmsSdkAppid = common.StringPtr(s.conf.AppId)
 	request.Sign = common.StringPtr(s.conf.Sign)
 
 	response, err := s.sms.SendSmsWithContext(ctx, request)

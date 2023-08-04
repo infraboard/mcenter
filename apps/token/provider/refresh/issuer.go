@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcube/exception"
@@ -70,7 +69,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	return newTk, nil
 }
 
-func (i *issuer) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (*code.Code, error) {
+func (i *issuer) IssueCode(ctx context.Context, req *token.IssueCodeRequest) (*token.Code, error) {
 	return nil, fmt.Errorf("refresh not support issue code")
 }
 

@@ -123,3 +123,16 @@ func (r *queryRequest) FindFilter() bson.M {
 	}
 	return filter
 }
+
+func (s *service) deleteCode(ctx context.Context, ins *token.Code) error {
+	result, err := s.col.DeleteOne(ctx, bson.M{"_id": ins.Id})
+	if err != nil {
+		return exception.NewInternalServerError("delete verify code(%s) error, %s", ins.Code, err)
+	}
+
+	if result.DeletedCount == 0 {
+		return fmt.Errorf("delete verify code %s not found", ins.Code)
+	}
+
+	return nil
+}

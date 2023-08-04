@@ -13,7 +13,6 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
@@ -117,7 +116,7 @@ func (a *HttpAuther) checkAccessToken(req *restful.Request) (*token.Token, error
 	ak := token.GetAccessTokenFromHTTP(req.Request)
 
 	if ak == "" {
-		return nil, token.ErrUnauthorized
+		return nil, token.ErrTokenUnauthorized
 	}
 
 	// 调用GRPC 校验用户Token合法性
@@ -131,27 +130,27 @@ func (a *HttpAuther) checkAccessToken(req *restful.Request) (*token.Token, error
 	return tk, nil
 }
 
-func (a *HttpAuther) checkCode(req *restful.Request, tk *token.Token) (*code.Code, error) {
+func (a *HttpAuther) checkCode(req *restful.Request, tk *token.Token) (*token.Code, error) {
 	// 获取用户Code, Code放在Heander X-MCENTER-CODE
-	cdStr := code.GetCodeFromHTTP(req.Request)
+	cdStr := token.GetCodeFromHTTP(req.Request)
 	if cdStr == "" {
-		return nil, code.ErrUnauthorized
+		return nil, token.ErrCodeUnauthorized
 	}
 
 	// 调用GRPC 校验用户Code合法性
-	cd, err := a.client.Code().VerifyCode(req.Request.Context(), code.NewVerifyCodeRequest(tk.Username, cdStr))
+	cd, err := a.client.Token().VerifyCode(req.Request.Context(), token.NewVerifyCodeRequest(tk.Username, cdStr))
 	if err != nil {
 		return nil, err
 	}
 
 	// 保存返回的Code信息
-	req.SetAttribute(code.CODE_ATTRIBUTE_NAME, cd)
+	req.SetAttribute(token.CODE_ATTRIBUTE_NAME, cd)
 	// 加入静默池中
 	a.setCodeCheckSilence(cd)
 	return cd, nil
 }
 
-func (a *HttpAuther) setCodeCheckSilence(c *code.Code) {
+func (a *HttpAuther) setCodeCheckSilence(c *token.Code) {
 	err := a.cache.PutWithTTL(c.Key(), c.Code, a.codeCheckSilence)
 	if err != nil {
 		a.log.Errorf("set code Silence to cache error, %s", err)
@@ -159,7 +158,7 @@ func (a *HttpAuther) setCodeCheckSilence(c *code.Code) {
 }
 
 func (a *HttpAuther) isCodeCheckSilence(username string) bool {
-	return a.cache.IsExist(code.NewCodeKey(username))
+	return a.cache.IsExist(token.NewCodeKey(username))
 }
 
 func (a *HttpAuther) checkPermission(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {

@@ -10,7 +10,6 @@ import (
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/notify"
-	"github.com/infraboard/mcenter/apps/setting"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/conf"
 )
@@ -24,10 +23,9 @@ type service struct {
 	notify.UnimplementedRPCServer
 	ioc.IocObjectImpl
 
-	user    user.Service
-	log     logger.Logger
-	setting setting.Service
-	domain  domain.Service
+	user   user.Service
+	log    logger.Logger
+	domain domain.Service
 }
 
 func (s *service) Init() error {
@@ -38,7 +36,6 @@ func (s *service) Init() error {
 
 	s.col = db.Collection(s.Name())
 	s.log = zap.L().Named(s.Name())
-	s.setting = ioc.GetController(setting.AppName).(setting.Service)
 	s.user = ioc.GetController(user.AppName).(user.Service)
 	s.domain = ioc.GetController(domain.AppName).(domain.Service)
 	return nil

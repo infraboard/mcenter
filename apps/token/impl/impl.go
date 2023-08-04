@@ -12,9 +12,9 @@ import (
 	"go.mongodb.org/mongo-driver/x/bsonx"
 	"google.golang.org/grpc"
 
-	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
+	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
@@ -37,8 +37,8 @@ type service struct {
 	policy  policy.Service
 	ns      namespace.Service
 	checker security.Checker
-	code    code.Service
 	domain  domain.Service
+	notify  notify.Service
 }
 
 func (s *service) Init() error {
@@ -66,10 +66,10 @@ func (s *service) Init() error {
 	s.col = dc
 
 	s.log = zap.L().Named(s.Name())
-	s.code = ioc.GetController(code.AppName).(code.Service)
 	s.ns = ioc.GetController(namespace.AppName).(namespace.Service)
 	s.policy = ioc.GetController(policy.AppName).(policy.Service)
 	s.domain = ioc.GetController(domain.AppName).(domain.Service)
+	s.notify = ioc.GetController(notify.AppName).(notify.Service)
 
 	s.checker, err = security.NewChecker()
 	if err != nil {

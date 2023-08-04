@@ -8,6 +8,8 @@ import "mcenter/apps/domain/pb/ldap.proto";
 import "mcenter/apps/domain/pb/feishu.proto";
 import "mcenter/apps/domain/pb/dingding.proto";
 import "mcenter/apps/domain/pb/wechat_work.proto";
+import "mcenter/apps/notify/pb/notify.proto";
+import "mcenter/apps/notify/pb/setting.proto";
 
 message DomainSet {
     // 总数量
@@ -67,6 +69,12 @@ message CreateDomainRequest {
     // 登录安全
     // @gotags: bson:"login_security" json:"login_security"
     LoginSecurity login_security = 19; 
+    // 验证码配置
+    // @gotags: bson:"code_config" json:"code_config"
+    CodeSetting code_config = 20;
+    // 通知配置
+    // @gotags: bson:"notify_config" json:"notify_config"
+    notify.NotifySetting notify_config = 21;
     // 密码安全
     // @gotags: bson:"password_config" json:"password_config"
     PasswordConfig password_config = 13;
@@ -82,6 +90,21 @@ message CreateDomainRequest {
     // WechatWorkConfig 域关联的企业微信设置
     // @gotags: bson:"wechat_work_setting" json:"wechat_work_setting"
     WechatWorkConfig wechat_work_setting = 18;
+}
+
+message CodeSetting {
+	// 通知方式
+    // @gotags: `bson:"type" json:"type"`
+	notify.NOTIFY_TYPE notify_type = 1;
+    // 验证码默认过期时间
+    // @gotags: bson:"expire_minutes" json:"expire_minutes" validate:"required"
+    uint32 expire_minutes = 2;
+    // 邮件通知时的模板
+    // @gotags: bson:"mail_template" json:"mail_template"
+    string mail_template = 3;
+    // 短信通知时的云商模板ID
+    // @gotags: bson:"sms_template_id" json:"sms_template_id"
+    string sms_template_id = 4;
 }
 
 // 联系人

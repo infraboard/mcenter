@@ -10,7 +10,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/namespace"
@@ -107,11 +106,6 @@ func (c *ClientSet) Service() service.RPCClient {
 // Token服务的SDK
 func (c *ClientSet) Token() token.RPCClient {
 	return token.NewRPCClient(c.conn)
-}
-
-// Code服务的SDK
-func (c *ClientSet) Code() code.RPCClient {
-	return code.NewRPCClient(c.conn)
 }
 
 // Namespace服务的SDK

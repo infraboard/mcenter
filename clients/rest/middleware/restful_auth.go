@@ -63,7 +63,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		ak := token.GetAccessTokenFromHTTP(req.Request)
 
 		if ak == "" {
-			response.Failed(resp, token.ErrUnauthorized)
+			response.Failed(resp, token.ErrTokenUnauthorized)
 			return
 		}
 

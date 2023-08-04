@@ -20,10 +20,10 @@ import (
 	vms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms/v20200902"
 )
 
-func NewQcloudVoice(conf *Config) (voice.VoiceNotifyer, error) {
+func NewQcloudVoice(conf *notify.TencentVoiceConfig) (voice.VoiceNotifyer, error) {
 	ins := &TencentVoiceNotifyer{
-		Config: conf,
-		log:    zap.L().Named("voice.tencent"),
+		TencentVoiceConfig: conf,
+		log:                zap.L().Named("voice.tencent"),
 	}
 	if err := ins.validate(); err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func NewQcloudVoice(conf *Config) (voice.VoiceNotifyer, error) {
 }
 
 type TencentVoiceNotifyer struct {
-	*Config
+	*notify.TencentVoiceConfig
 	log logger.Logger
 }
 
@@ -56,7 +56,7 @@ func (v *TencentVoiceNotifyer) genVMSRequest(req *voice.SendVoiceRequest) *vms.S
 	request.TemplateId = common.StringPtr(req.TemplateId)
 	request.TemplateParamSet = common.StringPtrs(req.TemplateParams)
 	request.CalledNumber = common.StringPtr(req.PhoneNumber)
-	request.VoiceSdkAppid = common.StringPtr(v.Config.AppId)
+	request.VoiceSdkAppid = common.StringPtr(v.AppId)
 	request.PlayTimes = common.Uint64Ptr(req.PlayTimes)
 	request.SessionContext = common.StringPtr(req.SessionContext)
 	return request

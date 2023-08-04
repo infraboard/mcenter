@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package infraboard.mcenter.notify;
+option go_package = "github.com/infraboard/mcenter/apps/notify";
+
+import "mcenter/apps/notify/pb/notify.proto";
+
+message SmsConfig {
+    // 短信服务商
+    // @gotags: bson:"provider" json:"provider" env:"SMS_PROVIDER"
+    PROVIDER provider = 1;
+    // 腾讯短信服务配置
+    // @gotags: bson:"tencent" json:"tencent"
+    TencentSmsConfig tencent = 2;
+}
+
+// 接口和相关文档请参考https://console.cloud.tencent.com/api/explorer?Product=sms&Version=2019-07-11&Action=SendSms&SignVersion=
+message TencentSmsConfig {
+    // 服务地址
+    // @gotags: bson:"endpoint" json:"endpoint" env:"SMS_TENCENT_ENDPOINT"
+    string endpoint = 1;
+    // id
+    // @gotags: bson:"secret_id" json:"secret_id" validate:"required,lte=64" env:"SMS_TENCENT_SECRET_ID"
+    string secret_id = 2;
+    // secret
+    // @gotags: bson:"secret_key" json:"secret_key" validate:"required,lte=64" env:"SMS_TENCENT_SECRET_KEY"
+    string secret_key = 3;
+    // app id
+    // @gotags: bson:"app_id" json:"app_id" validate:"required,lte=64" env:"SMS_TENCENT_APPID"
+    string app_id = 4;
+    // sign
+    // @gotags: bson:"sign" json:"sign" validate:"required,lte=128" env:"SMS_TENCENT_SIGN"
+    string sign = 5;
+}

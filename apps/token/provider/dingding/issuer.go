@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/domain/password"
 	"github.com/infraboard/mcenter/apps/token"
@@ -110,14 +109,14 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	return tk, nil
 }
 
-func (i *issuer) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (*code.Code, error) {
+func (i *issuer) IssueCode(ctx context.Context, req *token.IssueCodeRequest) (*token.Code, error) {
 	_, err := i.validate(ctx, req.Username, req.AuthCode)
 	if err != nil {
 		return nil, err
 	}
 
 	// 颁发Token
-	c, err := code.NewCode(req)
+	c, err := token.NewCode(req)
 	if err != nil {
 		return nil, err
 	}

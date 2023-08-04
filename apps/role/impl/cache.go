@@ -20,8 +20,9 @@ func (d *Decorator) DescribeRole(ctx context.Context, req *role.DescribeRoleRequ
 	if req.Id != "" {
 		ins := role.NewDefaultRole()
 		if err := cache.C().Get(req.Id, ins); err != nil {
-			d.log.Infof("get %s from cache error, %s", req.Id, err)
+			d.log.Warnf("get %s from cache error, %s", req.Id, err)
 		} else {
+			d.log.Infof("get %s from cache", ins.Meta.Id)
 			return ins, nil
 		}
 	}
@@ -33,7 +34,9 @@ func (d *Decorator) DescribeRole(ctx context.Context, req *role.DescribeRoleRequ
 
 	if req.Id != "" {
 		if err := cache.C().Put(req.Id, ins); err != nil {
-			d.log.Infof("set %s to cache error, %s", req.Id, err)
+			d.log.Warnf("set %s to cache error, %s", req.Id, err)
+		} else {
+			d.log.Infof("set %s to cache", ins.Meta.Id)
 		}
 	}
 	return ins, nil

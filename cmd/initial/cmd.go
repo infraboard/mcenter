@@ -37,10 +37,6 @@ var Cmd = &cobra.Command{
 		// 初始化内置服务
 		err = exec.InitService(ctx)
 		cobra.CheckErr(err)
-
-		// 初始化系统设置
-		err = exec.InitSystemSetting(ctx)
-		cobra.CheckErr(err)
 	},
 }
 

@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
@@ -24,7 +23,6 @@ func NewHttpAuther() *httpAuther {
 	return &httpAuther{
 		log:              zap.L().Named("auther.http"),
 		tk:               ioc.GetController(token.AppName).(token.Service),
-		code:             ioc.GetController(code.AppName).(code.Service),
 		policy:           ioc.GetController(policy.AppName).(policy.Service),
 		cache:            cache.C(),
 		codeCheckSilence: 30 * time.Minute,
@@ -34,7 +32,6 @@ func NewHttpAuther() *httpAuther {
 type httpAuther struct {
 	log              logger.Logger
 	tk               token.Service
-	code             code.Service
 	cache            cache.Cache
 	policy           policy.Service
 	codeCheckSilence time.Duration
@@ -85,7 +82,7 @@ func (a *httpAuther) CheckAccessToken(req *restful.Request) (*token.Token, error
 	ak := token.GetAccessTokenFromHTTP(req.Request)
 
 	if ak == "" {
-		return nil, token.ErrUnauthorized
+		return nil, token.ErrTokenUnauthorized
 	}
 
 	// 调用GRPC 校验用户Token合法性
@@ -155,27 +152,27 @@ func (a *httpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Tok
 	return nil
 }
 
-func (a *httpAuther) CheckCode(req *restful.Request, tk *token.Token) (*code.Code, error) {
+func (a *httpAuther) CheckCode(req *restful.Request, tk *token.Token) (*token.Code, error) {
 	// 获取用户Code, Code放在Heander X-MCENTER-CODE
-	cdStr := code.GetCodeFromHTTP(req.Request)
+	cdStr := token.GetCodeFromHTTP(req.Request)
 	if cdStr == "" {
-		return nil, code.ErrUnauthorized
+		return nil, token.ErrCodeUnauthorized
 	}
 
 	// 调用GRPC 校验用户Code合法性
-	cd, err := a.code.VerifyCode(req.Request.Context(), code.NewVerifyCodeRequest(tk.Username, cdStr))
+	cd, err := a.tk.VerifyCode(req.Request.Context(), token.NewVerifyCodeRequest(tk.Username, cdStr))
 	if err != nil {
 		return nil, err
 	}
 
 	// 保存返回的Code信息
-	req.SetAttribute(code.CODE_ATTRIBUTE_NAME, cd)
+	req.SetAttribute(token.CODE_ATTRIBUTE_NAME, cd)
 	// 加入静默池中
 	a.SetCodeCheckSilence(cd)
 	return cd, nil
 }
 
-func (a *httpAuther) SetCodeCheckSilence(c *code.Code) {
+func (a *httpAuther) SetCodeCheckSilence(c *token.Code) {
 	err := a.cache.PutWithTTL(c.Key(), c.Code, a.codeCheckSilence)
 	if err != nil {
 		a.log.Errorf("set code Silence to cache error, %s", err)
@@ -183,5 +180,5 @@ func (a *httpAuther) SetCodeCheckSilence(c *code.Code) {
 }
 
 func (a *httpAuther) IsCodeCheckSilence(username string) bool {
-	return a.cache.IsExist(code.NewCodeKey(username))
+	return a.cache.IsExist(token.NewCodeKey(username))
 }

@@ -1085,6 +1085,135 @@ func (x *IssueTokenRequest) GetLocation() *Location {
 	return nil
 }
 
+type IssueCodeRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// 测试颁发
+	// @gotags: json:"dry_run"
+	DryRun bool `protobuf:"varint,1,opt,name=dry_run,json=dryRun,proto3" json:"dry_run"`
+	// 授权类型
+	// @gotags: json:"grant_type"
+	GrantType GRANT_TYPE `protobuf:"varint,2,opt,name=grant_type,json=grantType,proto3,enum=infraboard.mcenter.token.GRANT_TYPE" json:"grant_type"`
+	// 校验码过期时间
+	// @gotags: json:"expired_at"
+	ExpiredAt int64 `protobuf:"varint,3,opt,name=expired_at,json=expiredAt,proto3" json:"expired_at"`
+	// PASSWORD授权时, 用户名
+	// @gotags: json:"username,omitempty"
+	Username string `protobuf:"bytes,4,opt,name=username,proto3" json:"username,omitempty"`
+	// PASSWORD授权时, 用户密码
+	// @gotags: json:"password,omitempty"
+	Password string `protobuf:"bytes,5,opt,name=password,proto3" json:"password,omitempty"`
+	// PRIVATE_TOKEN授权时, 访问令牌
+	// @gotags: json:"access_token,omitempty"
+	AccessToken string `protobuf:"bytes,6,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	// AUTH_CODE授权时, Code
+	// @gotags: json:"auth_code"
+	AuthCode string `protobuf:"bytes,7,opt,name=auth_code,json=authCode,proto3" json:"auth_code"`
+	// AUTH_CODE授权时, State
+	// @gotags: json:"state"
+	State string `protobuf:"bytes,8,opt,name=state,proto3" json:"state"`
+	// 校验码颁发给客户端信息
+	// @gotags: json:"location,omitempty"
+	Location *Location `protobuf:"bytes,14,opt,name=location,proto3" json:"location,omitempty"`
+}
+
+func (x *IssueCodeRequest) Reset() {
+	*x = IssueCodeRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *IssueCodeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IssueCodeRequest) ProtoMessage() {}
+
+func (x *IssueCodeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_mcenter_apps_token_pb_token_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IssueCodeRequest.ProtoReflect.Descriptor instead.
+func (*IssueCodeRequest) Descriptor() ([]byte, []int) {
+	return file_mcenter_apps_token_pb_token_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *IssueCodeRequest) GetDryRun() bool {
+	if x != nil {
+		return x.DryRun
+	}
+	return false
+}
+
+func (x *IssueCodeRequest) GetGrantType() GRANT_TYPE {
+	if x != nil {
+		return x.GrantType
+	}
+	return GRANT_TYPE_PASSWORD
+}
+
+func (x *IssueCodeRequest) GetExpiredAt() int64 {
+	if x != nil {
+		return x.ExpiredAt
+	}
+	return 0
+}
+
+func (x *IssueCodeRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *IssueCodeRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+func (x *IssueCodeRequest) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *IssueCodeRequest) GetAuthCode() string {
+	if x != nil {
+		return x.AuthCode
+	}
+	return ""
+}
+
+func (x *IssueCodeRequest) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *IssueCodeRequest) GetLocation() *Location {
+	if x != nil {
+		return x.Location
+	}
+	return nil
+}
+
 var File_mcenter_apps_token_pb_token_proto protoreflect.FileDescriptor
 
 var file_mcenter_apps_token_pb_token_proto_rawDesc = []byte{
@@ -1235,6 +1364,28 @@ var file_mcenter_apps_token_pb_token_proto_rawDesc = []byte{
 	0x3e, 0x0a, 0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x0e, 0x20, 0x01, 0x28,
 	0x0b, 0x32, 0x22, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d,
 	0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2e, 0x4c, 0x6f, 0x63,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22,
+	0xdd, 0x02, 0x0a, 0x10, 0x49, 0x73, 0x73, 0x75, 0x65, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x17, 0x0a, 0x07, 0x64, 0x72, 0x79, 0x5f, 0x72, 0x75, 0x6e, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x64, 0x72, 0x79, 0x52, 0x75, 0x6e, 0x12, 0x43, 0x0a,
+	0x0a, 0x67, 0x72, 0x61, 0x6e, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x0e, 0x32, 0x24, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d,
+	0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2e, 0x47, 0x52, 0x41,
+	0x4e, 0x54, 0x5f, 0x54, 0x59, 0x50, 0x45, 0x52, 0x09, 0x67, 0x72, 0x61, 0x6e, 0x74, 0x54, 0x79,
+	0x70, 0x65, 0x12, 0x1d, 0x0a, 0x0a, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x64, 0x5f, 0x61, 0x74,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x64, 0x41,
+	0x74, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a,
+	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x63, 0x63,
+	0x65, 0x73, 0x73, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x1b, 0x0a, 0x09,
+	0x61, 0x75, 0x74, 0x68, 0x5f, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x08, 0x61, 0x75, 0x74, 0x68, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x74, 0x61,
+	0x74, 0x65, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x73, 0x74, 0x61, 0x74, 0x65, 0x12,
+	0x3e, 0x0a, 0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x0e, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x22, 0x2e, 0x69, 0x6e, 0x66, 0x72, 0x61, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x2e, 0x6d,
+	0x63, 0x65, 0x6e, 0x74, 0x65, 0x72, 0x2e, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x2e, 0x4c, 0x6f, 0x63,
 	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2a,
 	0xaa, 0x01, 0x0a, 0x0a, 0x47, 0x52, 0x41, 0x4e, 0x54, 0x5f, 0x54, 0x59, 0x50, 0x45, 0x12, 0x0c,
 	0x0a, 0x08, 0x50, 0x41, 0x53, 0x53, 0x57, 0x4f, 0x52, 0x44, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04,
@@ -1276,7 +1427,7 @@ func file_mcenter_apps_token_pb_token_proto_rawDescGZIP() []byte {
 }
 
 var file_mcenter_apps_token_pb_token_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_mcenter_apps_token_pb_token_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_mcenter_apps_token_pb_token_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_mcenter_apps_token_pb_token_proto_goTypes = []interface{}{
 	(GRANT_TYPE)(0),           // 0: infraboard.mcenter.token.GRANT_TYPE
 	(TOKEN_TYPE)(0),           // 1: infraboard.mcenter.token.TOKEN_TYPE
@@ -1289,17 +1440,18 @@ var file_mcenter_apps_token_pb_token_proto_goTypes = []interface{}{
 	(*UserAgent)(nil),         // 8: infraboard.mcenter.token.UserAgent
 	(*TokenSet)(nil),          // 9: infraboard.mcenter.token.TokenSet
 	(*IssueTokenRequest)(nil), // 10: infraboard.mcenter.token.IssueTokenRequest
-	nil,                       // 11: infraboard.mcenter.token.Token.MetaEntry
-	(user.TYPE)(0),            // 12: infraboard.mcenter.user.TYPE
+	(*IssueCodeRequest)(nil),  // 11: infraboard.mcenter.token.IssueCodeRequest
+	nil,                       // 12: infraboard.mcenter.token.Token.MetaEntry
+	(user.TYPE)(0),            // 13: infraboard.mcenter.user.TYPE
 }
 var file_mcenter_apps_token_pb_token_proto_depIdxs = []int32{
 	3,  // 0: infraboard.mcenter.token.Token.platform:type_name -> infraboard.mcenter.token.PLATFORM
-	12, // 1: infraboard.mcenter.token.Token.user_type:type_name -> infraboard.mcenter.user.TYPE
+	13, // 1: infraboard.mcenter.token.Token.user_type:type_name -> infraboard.mcenter.user.TYPE
 	0,  // 2: infraboard.mcenter.token.Token.grant_type:type_name -> infraboard.mcenter.token.GRANT_TYPE
 	1,  // 3: infraboard.mcenter.token.Token.type:type_name -> infraboard.mcenter.token.TOKEN_TYPE
 	5,  // 4: infraboard.mcenter.token.Token.status:type_name -> infraboard.mcenter.token.Status
 	6,  // 5: infraboard.mcenter.token.Token.location:type_name -> infraboard.mcenter.token.Location
-	11, // 6: infraboard.mcenter.token.Token.meta:type_name -> infraboard.mcenter.token.Token.MetaEntry
+	12, // 6: infraboard.mcenter.token.Token.meta:type_name -> infraboard.mcenter.token.Token.MetaEntry
 	2,  // 7: infraboard.mcenter.token.Status.block_type:type_name -> infraboard.mcenter.token.BLOCK_TYPE
 	7,  // 8: infraboard.mcenter.token.Location.ip_location:type_name -> infraboard.mcenter.token.IPLocation
 	8,  // 9: infraboard.mcenter.token.Location.user_agent:type_name -> infraboard.mcenter.token.UserAgent
@@ -1307,11 +1459,13 @@ var file_mcenter_apps_token_pb_token_proto_depIdxs = []int32{
 	0,  // 11: infraboard.mcenter.token.IssueTokenRequest.grant_type:type_name -> infraboard.mcenter.token.GRANT_TYPE
 	1,  // 12: infraboard.mcenter.token.IssueTokenRequest.type:type_name -> infraboard.mcenter.token.TOKEN_TYPE
 	6,  // 13: infraboard.mcenter.token.IssueTokenRequest.location:type_name -> infraboard.mcenter.token.Location
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	0,  // 14: infraboard.mcenter.token.IssueCodeRequest.grant_type:type_name -> infraboard.mcenter.token.GRANT_TYPE
+	6,  // 15: infraboard.mcenter.token.IssueCodeRequest.location:type_name -> infraboard.mcenter.token.Location
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_mcenter_apps_token_pb_token_proto_init() }
@@ -1404,6 +1558,18 @@ func file_mcenter_apps_token_pb_token_proto_init() {
 				return nil
 			}
 		}
+		file_mcenter_apps_token_pb_token_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*IssueCodeRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1411,7 +1577,7 @@ func file_mcenter_apps_token_pb_token_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_mcenter_apps_token_pb_token_proto_rawDesc,
 			NumEnums:      4,
-			NumMessages:   8,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

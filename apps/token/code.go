@@ -1,4 +1,4 @@
-package code
+package token
 
 import (
 	"fmt"
@@ -8,34 +8,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/go-playground/validator/v10"
-	"github.com/infraboard/mcube/exception"
 )
-
-const (
-	AppName = "code"
-)
-
-var (
-	validate = validator.New()
-)
-
-// NewIssueCodeRequest todo
-func NewIssueCodeRequest() *IssueCodeRequest {
-	return &IssueCodeRequest{}
-}
-
-func (req *IssueCodeRequest) Validate() error {
-	return validate.Struct(req)
-}
 
 // NewCode todo
 func NewCode(req *IssueCodeRequest) (*Code, error) {
-	if err := req.Validate(); err != nil {
-		return nil, exception.NewBadRequest("validate issue code request error, %s", err)
-	}
-
 	c := &Code{
 		Code:          GenRandomCode(6),
 		Username:      req.Username,
@@ -128,4 +104,9 @@ func GetCodeFromHTTP(r *http.Request) string {
 	}
 
 	return r.URL.Query().Get(CODE_QUERY_KEY)
+}
+
+// NewIssueCodeRequest todo
+func NewIssueCodeRequest() *IssueCodeRequest {
+	return &IssueCodeRequest{}
 }

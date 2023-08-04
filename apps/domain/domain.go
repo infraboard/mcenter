@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
+	notify "github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/common/format"
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
@@ -65,6 +66,8 @@ func NewCreateDomainRequest() *CreateDomainRequest {
 	return &CreateDomainRequest{
 		PasswordConfig: NewDefaulPasswordSecurity(),
 		LoginSecurity:  NewDefaultLoginSecurity(),
+		CodeConfig:     NewDefaultCodeSetting(),
+		NotifyConfig:   notify.NewNotifySetting(),
 	}
 }
 
@@ -245,4 +248,24 @@ func (c *FeishuConfig) MakeGetTokenFormRequest(code string) string {
 	form.Add("code", code)
 	form.Add("redirect_uri", c.RedirectUri)
 	return form.Encode()
+}
+
+// NewDefaultCodeSetting todo
+func NewDefaultCodeSetting() *CodeSetting {
+	return &CodeSetting{
+		NotifyType:    notify.NOTIFY_TYPE_MAIL,
+		ExpireMinutes: 10,
+		MailTemplate:  "您的动态验证码为：{1}，{2}分钟内有效！，如非本人操作，请忽略本邮件！",
+	}
+}
+
+// RenderMailCentent todo
+func (c *CodeSetting) RenderMailCentent(code string, expireMinite uint32) string {
+	// 如果为0 则使用默认值
+	if expireMinite == 0 {
+		expireMinite = c.ExpireMinutes
+	}
+
+	t1 := strings.ReplaceAll(c.MailTemplate, "{1}", code)
+	return strings.ReplaceAll(t1, "{2}", fmt.Sprintf("%d", expireMinite))
 }

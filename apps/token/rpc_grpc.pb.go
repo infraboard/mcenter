@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	RPC_ValidateToken_FullMethodName = "/infraboard.mcenter.token.RPC/ValidateToken"
+	RPC_VerifyCode_FullMethodName    = "/infraboard.mcenter.token.RPC/VerifyCode"
 )
 
 // RPCClient is the client API for RPC service.
@@ -28,6 +29,8 @@ const (
 type RPCClient interface {
 	// 校验Token
 	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*Token, error)
+	// 校验验证码
+	VerifyCode(ctx context.Context, in *VerifyCodeRequest, opts ...grpc.CallOption) (*Code, error)
 }
 
 type rPCClient struct {
@@ -47,12 +50,23 @@ func (c *rPCClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest,
 	return out, nil
 }
 
+func (c *rPCClient) VerifyCode(ctx context.Context, in *VerifyCodeRequest, opts ...grpc.CallOption) (*Code, error) {
+	out := new(Code)
+	err := c.cc.Invoke(ctx, RPC_VerifyCode_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RPCServer is the server API for RPC service.
 // All implementations must embed UnimplementedRPCServer
 // for forward compatibility
 type RPCServer interface {
 	// 校验Token
 	ValidateToken(context.Context, *ValidateTokenRequest) (*Token, error)
+	// 校验验证码
+	VerifyCode(context.Context, *VerifyCodeRequest) (*Code, error)
 	mustEmbedUnimplementedRPCServer()
 }
 
@@ -62,6 +76,9 @@ type UnimplementedRPCServer struct {
 
 func (UnimplementedRPCServer) ValidateToken(context.Context, *ValidateTokenRequest) (*Token, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
+}
+func (UnimplementedRPCServer) VerifyCode(context.Context, *VerifyCodeRequest) (*Code, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyCode not implemented")
 }
 func (UnimplementedRPCServer) mustEmbedUnimplementedRPCServer() {}
 
@@ -94,6 +111,24 @@ func _RPC_ValidateToken_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RPC_VerifyCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RPCServer).VerifyCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RPC_VerifyCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RPCServer).VerifyCode(ctx, req.(*VerifyCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RPC_ServiceDesc is the grpc.ServiceDesc for RPC service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -104,6 +139,10 @@ var RPC_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidateToken",
 			Handler:    _RPC_ValidateToken_Handler,
+		},
+		{
+			MethodName: "VerifyCode",
+			Handler:    _RPC_VerifyCode_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

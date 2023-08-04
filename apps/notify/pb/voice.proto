@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package infraboard.mcenter.notify;
+option go_package = "github.com/infraboard/mcenter/apps/notify";
+
+import "mcenter/apps/notify/pb/notify.proto";
+
+message VoiceConfig {
+    // 短信服务商
+    // @gotags: bson:"provider" json:"provider" env:"SMS_PROVIDER"
+    PROVIDER provider = 1;
+    // 腾讯云配置
+    // @gotags: bson:"tencent" json:"tencent"
+    TencentVoiceConfig tencent = 2;
+}
+
+message TencentVoiceConfig {
+    // SDK 会自动指定域名，通常无需指定域名，但访问金融区的服务时必须手动指定域名
+    // 例如 VMS 的上海金融区域名为 vms.ap-shanghai-fsi.tencentcloudapi.com 
+    // @gotags: bson:"endpoint" json:"endpoint" env:"VOICE_TENCENT_ENDPOINT"
+    string endpoint = 1;
+    // 腾讯云凭证Id
+    // @gotags: bson:"secret_id" json:"secret_id" validate:"required" env:"VOICE_TENCENT_SECRET_ID"
+    string secret_id = 2;
+    // 腾讯云凭证Key
+    // @gotags: bson:"secret_key" json:"secret_key" validate:"required" env:"VOICE_TENCENT_SECRET_KEY"
+    string secret_key = 3;
+    // 腾讯云控制台: https://console.cloud.tencent.com/vms/app 查看appId
+    // @gotags: bson:"app_id" json:"app_id" validate:"required" env:"VOICE_TENCENT_APPID"
+    string app_id = 4;
+    // 实例化 VMS 的 client 对象
+    // 第二个参数是地域信息，可以直接填写字符串 ap-guangzhou，或者引用预设的常量
+    // @gotags: bson:"region" json:"region" env:"VOICE_TENCENT_REGION"
+    string region = 5;
+    // SDK 默认用 TC3-HMAC-SHA256 进行签名，非必要请不要修改该字段
+    // @gotags: bson:"sign_method" json:"sign_method" env:"VOICE_TENCENT_SIGN_METHOD"
+    string sign_method = 6;
+	// SDK 默认使用 POST 方法
+	// 如需使用 GET 方法，可以在此处设置，但 GET 方法无法处理较大的请求
+    // @gotags: bson:"req_method" json:"req_method" env:"VOICE_TENCENT_REQ_METHOD"
+    string req_method = 7;
+}

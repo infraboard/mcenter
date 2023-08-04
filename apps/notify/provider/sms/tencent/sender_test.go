@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/caarlos0/env/v6"
+	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/notify/provider/sms"
 	"github.com/infraboard/mcenter/apps/notify/provider/sms/tencent"
 )
@@ -28,7 +29,7 @@ func TestSend(t *testing.T) {
 }
 
 func init() {
-	conf := &tencent.Config{}
+	conf := &notify.TencentSmsConfig{}
 	if err := env.Parse(conf); err != nil {
 		panic(err)
 	}

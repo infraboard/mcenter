@@ -10,7 +10,6 @@ import (
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/apps/setting"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger/zap"
@@ -96,7 +95,6 @@ func newExcutor() *excutor {
 		role:      ioc.GetController(role.AppName).(role.Service),
 		user:      ioc.GetController(user.AppName).(user.Service),
 		service:   ioc.GetController(service.AppName).(service.MetaService),
-		system:    ioc.GetController(setting.AppName).(setting.Service),
 	}
 }
 
@@ -108,7 +106,6 @@ type excutor struct {
 	domain    domain.Service
 	namespace namespace.Service
 	role      role.Service
-	system    setting.Service
 	user      user.Service
 	service   service.MetaService
 }
@@ -189,17 +186,6 @@ func (e *excutor) InitService(ctx context.Context) error {
 		fmt.Println()
 	}
 
-	return nil
-}
-
-func (e *excutor) InitSystemSetting(ctx context.Context) error {
-	sysConf := setting.NewDefaultSetting()
-	st, err := e.system.UpdateSetting(ctx, sysConf)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("初始化系统配置: %11s [成功]", st.Version)
-	fmt.Println()
 	return nil
 }
 

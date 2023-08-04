@@ -13,6 +13,8 @@ type Service interface {
 	QueryToken(context.Context, *QueryTokenRequest) (*TokenSet, error)
 	// 查询Token详情
 	DescribeToken(context.Context, *DescribeTokenRequest) (*Token, error)
+	// 颁发验证码
+	IssueCode(context.Context, *IssueCodeRequest) (*IssueCodeResponse, error)
 	// RPC
 	RPCServer
 }

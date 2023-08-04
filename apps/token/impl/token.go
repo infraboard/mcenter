@@ -3,7 +3,6 @@ package impl
 import (
 	"context"
 
-	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
@@ -111,7 +110,7 @@ func (s *service) AfterLoginSecurityCheck(ctx context.Context, verifyCode string
 	// 如果有校验码, 则直接通过校验码检测用户身份安全
 	if verifyCode != "" {
 		s.log.Debugf("verify code provided, check code ...")
-		_, err := s.code.VerifyCode(ctx, code.NewVerifyCodeRequest(tk.Username, verifyCode))
+		_, err := s.VerifyCode(ctx, token.NewVerifyCodeRequest(tk.Username, verifyCode))
 		if err != nil {
 			return exception.NewPermissionDeny("verify code invalidate, error, %s", err)
 		}

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/token"
 )
 
@@ -28,7 +27,7 @@ type TokenIssuer interface {
 
 // 验证码颁发器
 type CodeIssuer interface {
-	IssueCode(context.Context, *code.IssueCodeRequest) (*code.Code, error)
+	IssueCode(context.Context, *token.IssueCodeRequest) (*token.Code, error)
 }
 
 // 注册令牌颁发器

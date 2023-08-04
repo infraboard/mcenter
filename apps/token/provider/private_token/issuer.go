@@ -3,7 +3,6 @@ package private_token
 import (
 	"context"
 
-	"github.com/infraboard/mcenter/apps/code"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/user"
@@ -66,14 +65,14 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	return newTk, nil
 }
 
-func (i *issuer) IssueCode(ctx context.Context, req *code.IssueCodeRequest) (*code.Code, error) {
+func (i *issuer) IssueCode(ctx context.Context, req *token.IssueCodeRequest) (*token.Code, error) {
 	_, err := i.validate(ctx, req.AccessToken)
 	if err != nil {
 		return nil, err
 	}
 
 	// 颁发Token
-	c, err := code.NewCode(req)
+	c, err := token.NewCode(req)
 	if err != nil {
 		return nil, err
 	}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package infraboard.mcenter.notify;
+option go_package = "github.com/infraboard/mcenter/apps/notify";
+
+message MailConfig {
+    // mail服务器地址
+    // @gotags: bson:"host" json:"host" env:"MAIL_HOST"
+    string host = 1;
+    // mail服务器端口
+    // @gotags: bson:"port" json:"port" env:"MAIL_HORT"
+    int32 port = 2;
+    // 用户名称
+    // @gotags: bson:"username" json:"username" env:"MAIL_USERNAME"
+    string username = 3;
+    // 用户密码
+    // @gotags: bson:"password" json:"password" env:"MAIL_PASSWORD"
+    string password = 4;
+}

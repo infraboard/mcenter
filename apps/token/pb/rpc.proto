@@ -6,11 +6,14 @@ option go_package = "github.com/infraboard/mcenter/apps/token";
 import "mcube/pb/page/page.proto";
 import "mcenter/apps/user/pb/user.proto";
 import "mcenter/apps/token/pb/token.proto";
+import "mcenter/apps/token/pb/code.proto";
 
 // Token服务
 service RPC {
     // 校验Token
     rpc ValidateToken(ValidateTokenRequest) returns (Token) {};
+    // 校验验证码
+    rpc VerifyCode(VerifyCodeRequest) returns(Code);
 }
 
 message ValidateTokenRequest {
@@ -96,4 +99,21 @@ message DescribeTokenRequest {
     // 参数值
     // @gotags: json:"describe_value" validate:"required"
     string describe_value = 2;
+}
+
+// IssueCodeResponse todo
+message IssueCodeResponse {
+    // 颁发后返回的消息, 比如以发送到xxx手机
+    // @gotags: json:"message"
+    string message = 1;
+}
+
+// VerifyCodeRequest 验证码校验请求
+message VerifyCodeRequest {
+    // 用户名
+    // @gotags: json:"username" validate:"required"
+    string username = 1;
+    // 验证码
+    // @gotags: json:"code" validate:"required"
+    string code = 2;
 }

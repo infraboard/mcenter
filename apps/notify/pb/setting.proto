@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package infraboard.mcenter.notify;
+option go_package = "github.com/infraboard/mcenter/apps/notify";
+
+import "mcenter/apps/notify/pb/mail.proto";
+import "mcenter/apps/notify/pb/sms.proto";
+import "mcenter/apps/notify/pb/voice.proto";
+
+message NotifySetting {
+    // 邮箱配置
+    // @gotags: bson:"mail_config" json:"mail_config"
+    MailConfig mail_config = 1;
+    // 短信配置
+    // @gotags: bson:"sms_config" json:"sms_config"
+    SmsConfig sms_config = 2;
+    // 语音通知配置
+    // @gotags: bson:"voice_config" json:"voice_config"
+    VoiceConfig voice_config = 3;
+}

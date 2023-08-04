@@ -24,6 +24,12 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 		return nil, exception.NewBadRequest("validate SendNotifyRequest error, %s", err)
 	}
 
+	// 查询domain
+	dom, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(req.Domain))
+	if err != nil {
+		return nil, fmt.Errorf("get user domain error, %s", err)
+	}
+
 	r := notify.NewRecord(req)
 	mailSendReq := mail.NewSendMailRequest(req.Title, req.Content)
 	for i := range req.Users {
@@ -41,7 +47,7 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 			sendReq.TemplateId = req.SmsRequest.TemplateId
 			sendReq.TemplateParams = req.SmsRequest.TemplateParams
 			sendReq.AddPhone(u.Spec.Profile.Phone)
-			resp := s.SendSMS(ctx, sendReq)
+			resp := s.SendSMS(ctx, dom.Spec.NotifyConfig.SmsConfig, sendReq)
 			resp.User = u.Spec.Username
 			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_VOICE:
@@ -52,14 +58,14 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 				req.VoiceRequest.TemplateParams,
 			)
 			sendReq.SessionContext = req.SessionContext
-			resp := s.SendVoice(ctx, sendReq)
+			resp := s.SendVoice(ctx, dom.Spec.NotifyConfig.VoiceConfig, sendReq)
 			resp.User = u.Spec.Username
 			r.AddResponse(resp)
 		case notify.NOTIFY_TYPE_IM:
 			// 补充IM Id
 			sendReq := im.NewSendMessageRequest(req.Title, req.Content, u.Spec.GetFeishuUserId())
 			sendReq.ContentType = req.ContentType
-			resp := s.SendIM(ctx, u.Spec.Domain, sendReq)
+			resp := s.SendIM(ctx, dom, sendReq)
 			resp.User = u.Spec.Username
 			r.AddResponse(resp)
 		}
@@ -67,7 +73,7 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 
 	// 邮件批量通知
 	if mailSendReq.HasTo() {
-		resp := s.SendMailMail(ctx, mailSendReq)
+		resp := s.SendMailMail(ctx, dom.Spec.NotifyConfig.MailConfig, mailSendReq)
 		r.AddResponse(resp)
 	}
 
@@ -78,18 +84,11 @@ func (s *service) SendNotify(ctx context.Context, req *notify.SendNotifyRequest)
 }
 
 // 邮件通知
-func (s *service) SendMailMail(ctx context.Context, req *mail.SendMailRequest) *notify.SendResponse {
+func (s *service) SendMailMail(ctx context.Context, conf *notify.MailConfig, req *mail.SendMailRequest) *notify.SendResponse {
 	resp := notify.NewSendResponse(req.ToStrings())
 
-	// 查询系统邮件设置
-	conf, err := s.setting.GetSetting(ctx)
-	if err != nil {
-		resp.SendError(err)
-		return resp
-	}
-
 	// 发送邮件
-	sender := mail.NewSender(conf.Notify.Email)
+	sender := mail.NewSender(conf)
 	if err := sender.Send(ctx, req); err != nil {
 		resp.SendError(err)
 		return resp
@@ -100,21 +99,13 @@ func (s *service) SendMailMail(ctx context.Context, req *mail.SendMailRequest) *
 }
 
 // 短信通知
-func (s *service) SendSMS(ctx context.Context, req *sms.SendSMSRequest) *notify.SendResponse {
+func (s *service) SendSMS(ctx context.Context, conf *notify.SmsConfig, req *sms.SendSMSRequest) *notify.SendResponse {
 	resp := notify.NewSendResponse(req.PhoneNumbersString())
 
-	// 查询系统短信发送设置
-	conf, err := s.setting.GetSetting(ctx)
-	if err != nil {
-		resp.SendError(err)
-		return resp
-	}
-
 	// 发送短信
-	ss := conf.Notify.SMS
-	switch ss.Provider {
+	switch conf.Provider {
 	case notify.PROVIDER_TENCENT:
-		sender, err := tencent.NewSender(ss.TencentConfig)
+		sender, err := tencent.NewSender(conf.Tencent)
 		if err != nil {
 			resp.SendError(err)
 			return resp
@@ -127,7 +118,7 @@ func (s *service) SendSMS(ctx context.Context, req *sms.SendSMSRequest) *notify.
 	case notify.PROVIDER_ALI:
 		resp.SendError(errors.New("not impl"))
 	default:
-		resp.SendError(fmt.Errorf("unknow provier: %s", ss.Provider))
+		resp.SendError(fmt.Errorf("unknow provier: %s", conf.Provider))
 	}
 
 	resp.SendSuccess()
@@ -135,22 +126,13 @@ func (s *service) SendSMS(ctx context.Context, req *sms.SendSMSRequest) *notify.
 }
 
 // 语音通知
-func (s *service) SendVoice(ctx context.Context, req *voice.SendVoiceRequest) *notify.SendResponse {
+func (s *service) SendVoice(ctx context.Context, conf *notify.VoiceConfig, req *voice.SendVoiceRequest) *notify.SendResponse {
 	resp := notify.NewSendResponse(req.PhoneNumber)
 
-	// 查询系统短信发送设置
-	conf, err := s.setting.GetSetting(ctx)
-	if err != nil {
-		resp.SendError(err)
-		return resp
-	}
-	s.log.Debug(conf)
-
 	// 发送短信
-	ss := conf.Notify.Voice
-	switch ss.Provider {
+	switch conf.Provider {
 	case notify.PROVIDER_TENCENT:
-		sender, err := vtencent.NewQcloudVoice(ss.TencentConfig)
+		sender, err := vtencent.NewQcloudVoice(conf.Tencent)
 		if err != nil {
 			resp.SendError(err)
 			return resp
@@ -164,7 +146,7 @@ func (s *service) SendVoice(ctx context.Context, req *voice.SendVoiceRequest) *n
 	case notify.PROVIDER_ALI:
 		resp.SendError(errors.New("not impl"))
 	default:
-		resp.SendError(fmt.Errorf("unknow provier: %s", ss.Provider))
+		resp.SendError(fmt.Errorf("unknow provier: %s", conf.Provider))
 	}
 
 	resp.SendSuccess()
@@ -172,25 +154,20 @@ func (s *service) SendVoice(ctx context.Context, req *voice.SendVoiceRequest) *n
 }
 
 // 发送IM消息
-func (s *service) SendIM(ctx context.Context, dom string, req *im.SendMessageRequest) *notify.SendResponse {
+func (s *service) SendIM(ctx context.Context, dom *domain.Domain, req *im.SendMessageRequest) *notify.SendResponse {
 	resp := notify.NewSendResponse(req.Uid)
 	if req.Uid == "" {
 		resp.SendError(errors.New("feishu uid not found"))
 		return resp
 	}
 
-	d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(dom))
-	if err != nil {
-		resp.SendError(fmt.Errorf("get user domain error, %s", err))
-		return resp
-	}
-	if d.Spec.FeishuSetting == nil {
+	if dom.Spec.FeishuSetting == nil {
 		resp.SendError(fmt.Errorf("domain feishu setting is nil"))
 		return resp
 	}
-	notifyer := feishu.NewFeishuNotifyer(d.Spec.FeishuSetting)
+	notifyer := feishu.NewFeishuNotifyer(dom.Spec.FeishuSetting)
 
-	err = notifyer.SendMessage(ctx, req)
+	err := notifyer.SendMessage(ctx, req)
 	if err != nil {
 		resp.SendError(fmt.Errorf("send msg error, %s", err))
 		return resp
