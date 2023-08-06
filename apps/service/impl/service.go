@@ -50,11 +50,15 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 			if err != nil {
 				return nil, err
 			}
-			lan, err := service.ParseLANGUAGEFromString(languages.Primary())
-			if err != nil {
-				return nil, err
+
+			lan := languages.Primary()
+			if lan != "" {
+				lan, err := service.ParseLANGUAGEFromString(lan)
+				if err != nil {
+					return nil, err
+				}
+				repo.SetLanguage(lan)
 			}
-			repo.SetLanguage(lan)
 		}
 		if repo.EnableHook {
 			hookSetting, err := gitlab.ParseGitLabWebHookFromString(repo.HookConfig)
@@ -140,7 +144,7 @@ func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabPr
 		}
 	}
 
-	return svcs, nil
+	return svcs.Sort(), nil
 }
 
 func (i *impl) DescribeService(ctx context.Context, req *service.DescribeServiceRequest) (

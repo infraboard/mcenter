@@ -59,6 +59,9 @@ message CreateServiceRequest {
     // 服务等级, 默认0
     // @gotags: bson:"level" json:"level"
     uint32 level = 8;
+    // 创建时间
+    // @gotags: bson:"-" json:"create_timestamp,omitempty"
+    int64 create_timestamp = 12;
     // 代码仓库信息
     // @gotags: bson:"code_repository" json:"code_repository"
     CodeRepository code_repository = 9;

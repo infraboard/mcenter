@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"sort"
 	"strconv"
 
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
@@ -23,10 +24,15 @@ func (s *ServiceSet) ToJson() string {
 func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
 	svc := s.GetServiceByGitSshUrl(p.GitSshUrl)
 	if svc == nil {
+		// 创建新的服务
 		svc = NewServiceFromProject(p)
 		svc.Spec.CodeRepository.Token = tk
 		s.Add(svc)
+	} else {
+		// 更新服务
+		svc.UpdateCreateAt(p.CreatedAt.Unix())
 	}
+
 }
 
 func (s *ServiceSet) UpdateScope(domain, namespace string) {
@@ -48,8 +54,22 @@ func (s *ServiceSet) GetServiceByGitSshUrl(gitSshUrl string) *Service {
 	return nil
 }
 
+func (s *ServiceSet) Sort() *ServiceSet {
+	sort.Sort(s)
+	return s
+}
+
+func (s *ServiceSet) Less(i, j int) bool {
+	return s.Items[i].Meta.CreateAt < s.Items[j].Meta.CreateAt
+}
+
+func (s *ServiceSet) Swap(i, j int) {
+	s.Items[i], s.Items[j] = s.Items[j], s.Items[i]
+}
+
 func NewServiceFromProject(p *gitlab.Project) *Service {
 	svc := NewDefaultService()
+	svc.Meta.CreateAt = p.CreatedAt.Unix()
 	spec := svc.Spec
 	spec.Name = p.Name
 	spec.Logo = p.AvatarURL
@@ -73,6 +93,13 @@ func (s *Service) GetRepositorySshUrl() string {
 	}
 
 	return ""
+}
+
+func (s *Service) UpdateCreateAt(ts int64) {
+	if s.Meta == nil {
+		s.Meta = resource.NewMeta()
+	}
+	s.Meta.CreateAt = ts
 }
 
 func (s *Service) InjectGrpcClientMeta(md metadata.MD) {

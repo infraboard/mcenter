@@ -67,6 +67,9 @@ func NewService(req *CreateServiceRequest) (*Service, error) {
 		Security:   NewRandomSecurity(),
 	}
 	svc.Meta.Id = hash.FnvHash(svc.FullName())
+	if req.CreateTimestamp == 0 {
+		svc.Meta.CreateAt = req.CreateTimestamp
+	}
 	return svc, nil
 }
 
@@ -148,13 +151,13 @@ func (i *Service) ToJSON() string {
 }
 
 func (i *Service) Update(req *UpdateServiceRequest) {
-	i.Meta.UpdateAt = time.Now().UnixMilli()
+	i.Meta.UpdateAt = time.Now().Unix()
 	i.Meta.UpdateBy = req.UpdateBy
 	i.Spec = req.Spec
 }
 
 func (i *Service) Patch(req *UpdateServiceRequest) error {
-	i.Meta.UpdateAt = time.Now().UnixMicro()
+	i.Meta.UpdateAt = time.Now().Unix()
 	i.Meta.UpdateBy = req.UpdateBy
 	return mergo.MergeWithOverwrite(i.Spec, req.Spec)
 }
@@ -163,7 +166,7 @@ func NewUpdateServiceRequest(id string) *UpdateServiceRequest {
 	return &UpdateServiceRequest{
 		Id:         id,
 		UpdateMode: pb_request.UpdateMode_PUT,
-		UpdateAt:   time.Now().UnixMilli(),
+		UpdateAt:   time.Now().Unix(),
 		Spec:       NewCreateServiceRequest(),
 	}
 }
@@ -172,7 +175,7 @@ func NewPutServiceRequest(id string) *UpdateServiceRequest {
 	return &UpdateServiceRequest{
 		Id:         id,
 		UpdateMode: pb_request.UpdateMode_PUT,
-		UpdateAt:   time.Now().UnixMilli(),
+		UpdateAt:   time.Now().Unix(),
 		Spec:       NewCreateServiceRequest(),
 	}
 }
@@ -181,7 +184,7 @@ func NewPatchServiceRequest(id string) *UpdateServiceRequest {
 	return &UpdateServiceRequest{
 		Id:         id,
 		UpdateMode: pb_request.UpdateMode_PATCH,
-		UpdateAt:   time.Now().UnixMilli(),
+		UpdateAt:   time.Now().Unix(),
 		Spec:       NewCreateServiceRequest(),
 	}
 }
@@ -228,7 +231,11 @@ func NewQueryGitlabProjectRequestFromHTTP(r *restful.Request) *QueryGitlabProjec
 	if addr != "" {
 		conf.Address = addr
 	}
+
 	conf.Token = r.HeaderParameter("GITLAB_PRIVATE_TOKEN")
+	if conf.Token == "" {
+		conf.Token = qs.Get("token")
+	}
 	return conf
 }
 
