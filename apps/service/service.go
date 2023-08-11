@@ -70,6 +70,7 @@ func (s *ServiceSet) Swap(i, j int) {
 func NewServiceFromProject(p *gitlab.Project) *Service {
 	svc := NewDefaultService()
 	svc.Meta.CreateAt = p.CreatedAt.Unix()
+
 	spec := svc.Spec
 	spec.Name = p.Name
 	spec.Logo = p.AvatarURL
