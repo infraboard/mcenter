@@ -36,7 +36,7 @@ systemctl enable mongod
 
 ```
 docker pull mongo
-docker run -itd -p 27017:27017 --name mongo mongo
+docker run -itd -p 27017:27017 --name mongo mongo --auth
 ```
 
 # 创建管理用户
@@ -44,6 +44,10 @@ docker run -itd -p 27017:27017 --name mongo mongo
 进入Mongo Shell
 ```
 docker exec -it mongo mongo
+```
+进入Mongo Shell 6.x
+```
+docker exec -it mongo mongosh
 ```
 
 创建管理员账号
