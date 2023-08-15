@@ -31,7 +31,11 @@ func LoadTencentSmsConfigFromEnv() (*TencentSmsConfig, error) {
 // NewTencentSmsConfig todo
 func NewTencentSmsConfig() *TencentSmsConfig {
 	return &TencentSmsConfig{
-		Endpoint: DEFAULT_TENCENT_SMS_ENDPOINT,
+		Endpoint:  DEFAULT_TENCENT_SMS_ENDPOINT,
+		SecretId:  "default_secretId",
+		SecretKey: "default_secretKey",
+		AppId:     "default_id",
+		Sign:      "default_sign",
 	}
 }
 
