@@ -3,6 +3,7 @@ package initial
 import (
 	"fmt"
 
+	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/service"
 )
 
@@ -19,6 +20,7 @@ type InitApps struct {
 func (i *InitApps) Add(name, descrption string) {
 	req := service.NewCreateServiceRequest()
 	req.Name = name
+	req.Namespace = namespace.SYSTEM_NAMESPACE
 	req.Description = descrption
 	req.Owner = "admin"
 	req.Type = service.Type_CONTAINER_IMAGE

@@ -45,7 +45,6 @@ type MetaService interface {
 
 func NewCreateServiceRequest() *CreateServiceRequest {
 	return &CreateServiceRequest{
-
 		Domain:          domain.DEFAULT_DOMAIN,
 		Namespace:       namespace.DEFAULT_NAMESPACE,
 		Enabled:         true,

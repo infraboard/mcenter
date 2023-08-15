@@ -216,6 +216,12 @@ func (s *service) ChangeNamespace(ctx context.Context, req *token.ChangeNamespac
 		return nil, err
 	}
 
+	// 补充Token其他元数据
+	err = s.FillMeta(ctx, tk)
+	if err != nil {
+		return nil, err
+	}
+
 	return tk, nil
 }
 
