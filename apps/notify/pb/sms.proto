@@ -6,6 +6,9 @@ option go_package = "github.com/infraboard/mcenter/apps/notify";
 import "mcenter/apps/notify/pb/notify.proto";
 
 message SmsConfig {
+    // 开启短信通知
+    // @gotags: bson:"enabled" json:"enabled" env:"SMS_ENABLED"
+    bool enabled = 3;
     // 短信服务商
     // @gotags: bson:"provider" json:"provider" env:"SMS_PROVIDER"
     PROVIDER provider = 1;
@@ -20,15 +23,15 @@ message TencentSmsConfig {
     // @gotags: bson:"endpoint" json:"endpoint" env:"SMS_TENCENT_ENDPOINT"
     string endpoint = 1;
     // id
-    // @gotags: bson:"secret_id" json:"secret_id" validate:"required,lte=64" env:"SMS_TENCENT_SECRET_ID"
+    // @gotags: bson:"secret_id" json:"secret_id" env:"SMS_TENCENT_SECRET_ID"
     string secret_id = 2;
     // secret
-    // @gotags: bson:"secret_key" json:"secret_key" validate:"required,lte=64" env:"SMS_TENCENT_SECRET_KEY"
+    // @gotags: bson:"secret_key" json:"secret_key" env:"SMS_TENCENT_SECRET_KEY"
     string secret_key = 3;
     // app id
-    // @gotags: bson:"app_id" json:"app_id" validate:"required,lte=64" env:"SMS_TENCENT_APPID"
+    // @gotags: bson:"app_id" json:"app_id" env:"SMS_TENCENT_APPID"
     string app_id = 4;
     // sign
-    // @gotags: bson:"sign" json:"sign" validate:"required,lte=128" env:"SMS_TENCENT_SIGN"
+    // @gotags: bson:"sign" json:"sign" env:"SMS_TENCENT_SIGN"
     string sign = 5;
 }

@@ -4,6 +4,9 @@ package infraboard.mcenter.notify;
 option go_package = "github.com/infraboard/mcenter/apps/notify";
 
 message MailConfig {
+    // 开启语音通知
+    // @gotags: bson:"enabled" json:"enabled" env:"MAIL_ENABLED"
+    bool enabled = 5;
     // mail服务器地址
     // @gotags: bson:"host" json:"host" env:"MAIL_HOST"
     string host = 1;

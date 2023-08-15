@@ -4,6 +4,7 @@ import "github.com/caarlos0/env/v6"
 
 func NewVoiceConfig() *VoiceConfig {
 	return &VoiceConfig{
+		Enabled:  false,
 		Provider: PROVIDER_TENCENT,
 		Tencent:  DefaultTencentVoiceConfig(),
 	}

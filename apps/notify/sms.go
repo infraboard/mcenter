@@ -14,6 +14,7 @@ const (
 
 func NewSmsConfig() *SmsConfig {
 	return &SmsConfig{
+		Enabled:  false,
 		Provider: PROVIDER_TENCENT,
 		Tencent:  NewTencentSmsConfig(),
 	}
