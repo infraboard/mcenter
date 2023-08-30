@@ -57,8 +57,12 @@ func (d *Domain) ToJson() string {
 }
 
 func (d *Domain) Desense() {
-	d.Spec.FeishuSetting.DeSense()
-	d.Spec.LdapSetting.DeSense()
+	if d.Spec.FeishuSetting != nil {
+		d.Spec.FeishuSetting.DeSense()
+	}
+	if d.Spec.LdapSetting != nil {
+		d.Spec.LdapSetting.DeSense()
+	}
 }
 
 // NewCreateDomainRequest todo
@@ -68,6 +72,8 @@ func NewCreateDomainRequest() *CreateDomainRequest {
 		LoginSecurity:  NewDefaultLoginSecurity(),
 		CodeConfig:     NewDefaultCodeSetting(),
 		NotifyConfig:   notify.NewNotifySetting(),
+		FeishuSetting:  NewDefaultFeishuConfig(),
+		LdapSetting:    NewDefaultLDAPConfig(),
 	}
 }
 
