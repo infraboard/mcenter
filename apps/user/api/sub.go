@@ -15,7 +15,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryApi(&primary{})
+	ioc.Api().Registry(&primary{})
 }
 
 // 主账号用户管理接口

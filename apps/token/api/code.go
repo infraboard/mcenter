@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryApi(&codeHandler{})
+	ioc.Api().Registry(&codeHandler{})
 }
 
 type codeHandler struct {

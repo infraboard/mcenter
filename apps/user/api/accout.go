@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryApi(&sub{})
+	ioc.Api().Registry(&sub{})
 }
 
 // 子账号用户管理接口

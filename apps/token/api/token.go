@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryApi(&tokenHandler{})
+	ioc.Api().Registry(&tokenHandler{})
 }
 
 type tokenHandler struct {

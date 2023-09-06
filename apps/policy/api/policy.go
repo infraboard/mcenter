@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryApi(&policyHandler{})
+	ioc.Api().Registry(&policyHandler{})
 }
 
 type policyHandler struct {

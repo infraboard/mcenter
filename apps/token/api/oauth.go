@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryApi(&oath2Handler{})
+	ioc.Api().Registry(&oath2Handler{})
 }
 
 type oath2Handler struct {

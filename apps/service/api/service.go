@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryApi(&serviceHandler{})
+	ioc.Api().Registry(&serviceHandler{})
 }
 
 type serviceHandler struct {

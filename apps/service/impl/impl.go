@@ -17,7 +17,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryController(&impl{})
+	ioc.Controller().Registry(&impl{})
 }
 
 type impl struct {

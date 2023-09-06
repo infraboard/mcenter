@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryApi(&handler{})
+	ioc.Api().Registry(&handler{})
 }
 
 type handler struct {

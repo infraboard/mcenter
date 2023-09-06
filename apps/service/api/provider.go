@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryApi(&providerHandler{})
+	ioc.Api().Registry(&providerHandler{})
 }
 
 type providerHandler struct {
