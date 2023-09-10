@@ -22,9 +22,9 @@ func TestCreateEnvLabel(t *testing.T) {
 	req.Visiable = resource.VISIABLE_GLOBAL
 	req.DefaultValue = "开发"
 	req.AddEnumOption(
-		label.NewEnumOption("生产"),
-		label.NewEnumOption("测试"),
 		label.NewEnumOption("开发"),
+		label.NewEnumOption("测试"),
+		label.NewEnumOption("生产"),
 	)
 
 	r, err := impl.CreateLabel(ctx, req)
