@@ -295,6 +295,16 @@ func MakeMongoFilter(m bson.M, prefix string, labels []*resource.LabelRequiremen
 	}
 }
 
+func MakeMongoLabelFromMap(m bson.M, prefix string, labels map[string]string) {
+	for k, v := range labels {
+		key := k
+		if prefix != "" {
+			key = "labels." + k
+		}
+		m[key] = v
+	}
+}
+
 // func ScopeToMap(scope string) map[string]string {
 // 	filter := map[string]string{}
 
