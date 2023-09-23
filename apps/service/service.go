@@ -54,6 +54,17 @@ func (s *ServiceSet) GetServiceByGitSshUrl(gitSshUrl string) *Service {
 	return nil
 }
 
+func (s *ServiceSet) GetServiceById(id string) *Service {
+	for i := range s.Items {
+		item := s.Items[i]
+		if item.Meta.Id == id {
+			return item
+		}
+	}
+
+	return nil
+}
+
 func (s *ServiceSet) Sort() *ServiceSet {
 	sort.Sort(s)
 	return s

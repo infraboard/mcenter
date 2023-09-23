@@ -123,7 +123,10 @@ func NewDescribeServiceRequest(id string) *DescribeServiceRequest {
 
 func NewQueryServiceRequest() *QueryServiceRequest {
 	return &QueryServiceRequest{
-		Page: request.NewDefaultPageRequest(),
+		Page:              request.NewDefaultPageRequest(),
+		Ids:               []string{},
+		RepositorySshUrls: []string{},
+		Filters:           []*resource.LabelRequirement{},
 	}
 }
 

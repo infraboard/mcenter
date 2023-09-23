@@ -59,6 +59,9 @@ message QueryServiceRequest {
     // 名称关键字搜索
     // @gotags: json:"keywords" yaml:"keywords"
     string keywords = 6;
+    // 通过服务Id批量查找
+    // @gotags: json:"ids" yaml:"ids"
+    repeated string ids = 7;
 }
 
 enum DescribeBy {

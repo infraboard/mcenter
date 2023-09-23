@@ -68,6 +68,10 @@ func (r *queryRequest) FindFilter() bson.M {
 	if r.Keywords != "" {
 		filter["name"] = bson.M{"$regex": r.Keywords, "$options": "im"}
 	}
+
+	if len(r.Ids) > 0 {
+		filter["_id"] = bson.M{"$in": r.Ids}
+	}
 	return filter
 }
 
