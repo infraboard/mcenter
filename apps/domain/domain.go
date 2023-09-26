@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/rs/xid"
 
 	notify "github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/common/format"
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
-	"github.com/infraboard/mcube/pb/resource"
 	"github.com/infraboard/mcube/tools/hash"
 )
 
@@ -36,7 +36,7 @@ func New(req *CreateDomainRequest) (*Domain, error) {
 	}
 
 	d := &Domain{
-		Meta: resource.NewMeta(),
+		Meta: NewMeta(),
 		Spec: req,
 	}
 
@@ -45,9 +45,16 @@ func New(req *CreateDomainRequest) (*Domain, error) {
 	return d, nil
 }
 
+func NewMeta() *Meta {
+	return &Meta{
+		Id:       xid.New().String(),
+		CreateAt: time.Now().Unix(),
+	}
+}
+
 func (d *Domain) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
-		*resource.Meta
+		*Meta
 		*CreateDomainRequest
 	}{d.Meta, d.Spec})
 }

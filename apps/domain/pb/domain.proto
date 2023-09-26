@@ -3,7 +3,6 @@ syntax = "proto3";
 package infraboard.mcenter.domain;
 option go_package = "github.com/infraboard/mcenter/apps/domain";
 
-import "mcube/pb/resource/meta.proto";
 import "mcenter/apps/domain/pb/ldap.proto";
 import "mcenter/apps/domain/pb/feishu.proto";
 import "mcenter/apps/domain/pb/dingding.proto";
@@ -23,10 +22,25 @@ message DomainSet {
 message Domain  {
     // 元信息
     // @gotags: bson:",inline" json:"meta"
-    infraboard.mcube.resource.Meta meta = 1;
+    Meta meta = 1;
     // 创建信息
     // @gotags: bson:",inline" json:"spec"
     CreateDomainRequest spec = 2;
+}
+
+message Meta  {
+    // 对象Id
+    // @gotags: bson:"_id" json:"id"
+    string id = 1;
+    // 创建时间
+    // @gotags: bson:"create_at" json:"create_at"
+    int64 create_at = 2;
+    // 更新时间
+    // @gotags: bson:"update_at" json:"update_at"
+    int64 update_at = 3;
+    // 更新人
+    // @gotags: bson:"update_by" json:"update_by"
+    string update_by = 4;
 }
 
 message CreateDomainRequest {
