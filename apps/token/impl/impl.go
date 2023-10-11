@@ -7,9 +7,9 @@ import (
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/x/bsonx"
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/domain"
@@ -31,7 +31,7 @@ func init() {
 type service struct {
 	col *mongo.Collection
 	token.UnimplementedRPCServer
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 	log logger.Logger
 
 	policy  policy.Service
@@ -50,11 +50,11 @@ func (s *service) Init() error {
 	dc := db.Collection(s.Name())
 	indexs := []mongo.IndexModel{
 		{
-			Keys:    bsonx.Doc{{Key: "refresh_token", Value: bsonx.Int32(-1)}},
+			Keys:    bson.D{{Key: "refresh_token", Value: -1}},
 			Options: options.Index().SetUnique(true),
 		},
 		{
-			Keys: bsonx.Doc{{Key: "issue_at", Value: bsonx.Int32(-1)}},
+			Keys: bson.D{{Key: "issue_at", Value: -1}},
 		},
 	}
 

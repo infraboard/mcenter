@@ -19,7 +19,7 @@ func init() {
 type handler struct {
 	service domain.Service
 	log     logger.Logger
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (h *handler) Init() error {

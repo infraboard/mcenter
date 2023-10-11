@@ -20,7 +20,7 @@ func init() {
 type policyHandler struct {
 	service policy.Service
 	log     logger.Logger
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (h *policyHandler) Init() error {

@@ -20,7 +20,7 @@ func init() {
 type tokenHandler struct {
 	service token.Service
 	log     logger.Logger
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (h *tokenHandler) Init() error {

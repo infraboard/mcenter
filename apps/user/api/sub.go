@@ -22,7 +22,7 @@ func init() {
 type primary struct {
 	service user.Service
 	log     logger.Logger
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (h *primary) Init() error {

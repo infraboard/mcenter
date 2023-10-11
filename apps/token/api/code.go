@@ -19,7 +19,7 @@ func init() {
 type codeHandler struct {
 	service token.Service
 	log     logger.Logger
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (h *codeHandler) Init() error {

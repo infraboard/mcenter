@@ -21,7 +21,7 @@ type impl struct {
 	col *mongo.Collection
 	log logger.Logger
 	instance.UnimplementedRPCServer
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 
 	svc service.MetaService
 }

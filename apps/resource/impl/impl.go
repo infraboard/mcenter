@@ -20,7 +20,7 @@ type impl struct {
 	col *mongo.Collection
 	log logger.Logger
 	resource.UnimplementedRPCServer
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 
 	ep endpoint.Service
 }

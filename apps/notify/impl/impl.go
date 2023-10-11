@@ -21,7 +21,7 @@ func init() {
 type service struct {
 	col *mongo.Collection
 	notify.UnimplementedRPCServer
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 
 	user   user.Service
 	log    logger.Logger

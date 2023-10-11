@@ -10,7 +10,7 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/clients/rpc"
 	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/ioc/health"
+	"github.com/infraboard/mcube/ioc/apps/health"
 )
 
 var (

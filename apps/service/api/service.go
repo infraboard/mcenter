@@ -20,7 +20,7 @@ func init() {
 type serviceHandler struct {
 	service service.MetaService
 	log     logger.Logger
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (h *serviceHandler) Init() error {
