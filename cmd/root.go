@@ -57,24 +57,19 @@ func initail() {
 }
 
 // config 为全局变量, 只需要load 即可全局可用户
-func loadGlobalConfig(configType string) error {
+func loadGlobalConfig(configType string) (err error) {
 	// 配置加载
+	req := ioc.NewLoadConfigRequest()
 	switch configType {
 	case "file":
-		err := conf.LoadConfigFromToml(confFile)
-		if err != nil {
-			return err
-		}
+		req.ConfigType = ioc.CONFIG_TYPE_FILE
+		req.ConfigFile.Path = confFile
 	case "env":
-		err := conf.LoadConfigFromEnv()
-		if err != nil {
-			return err
-		}
+		req.ConfigType = ioc.CONFIG_TYPE_ENV
 	default:
 		return errors.New("unknown config type")
 	}
-
-	return nil
+	return ioc.LoadConfig(req)
 }
 
 // log 为全局变量, 只需要load 即可全局可用户, 依赖全局配置先初始化

@@ -44,10 +44,13 @@ func newResource() *resource.Resource {
 	// 因为需要手动设置ServiceName和版本, 不使用default的自动探测
 	// resource.Default()
 
+	resource.Default()
 	r, _ := resource.New(
 		context.Background(),
-		resource.WithFromEnv(),
+		resource.WithProcess(),
+		resource.WithHost(),
 		resource.WithTelemetrySDK(),
+		resource.WithFromEnv(),
 		resource.WithAttributes(
 			semconv.ServiceNameKey.String(version.ServiceName),
 			semconv.ServiceVersionKey.String(version.Short()),
