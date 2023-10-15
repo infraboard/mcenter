@@ -47,7 +47,9 @@ func initail() {
 	err = loadGlobalLogger()
 	cobra.CheckErr(err)
 
-	// 初始化全局app
+	// 加载Ioc配置
+
+	// 初始化Ioc对象
 	err = ioc.InitIocObject()
 	cobra.CheckErr(err)
 

@@ -11,10 +11,10 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-	oteltrace "go.opentelemetry.io/otel/trace"
+	// oteltrace "go.opentelemetry.io/otel/trace"
 )
 
-var Tracer oteltrace.Tracer
+// var Tracer oteltrace.Tracer
 
 func InitTracer() error {
 	ep := conf.C().Jaeger.Endpoint
@@ -35,7 +35,7 @@ func InitTracer() error {
 	)
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.Baggage{}, propagation.TraceContext{}))
-	Tracer = otel.GetTracerProvider().Tracer(version.ServiceName, oteltrace.WithInstrumentationVersion("0.1"))
+	// Tracer = otel.GetTracerProvider().Tracer(version.ServiceName, oteltrace.WithInstrumentationVersion("0.1"))
 	return nil
 }
 
