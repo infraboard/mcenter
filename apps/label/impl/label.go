@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/imdario/mergo"
+	"dario.cat/mergo"
 	"github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/pb/request"

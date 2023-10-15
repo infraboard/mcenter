@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"dario.cat/mergo"
 	"github.com/go-playground/validator/v10"
-	"github.com/imdario/mergo"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/exception"

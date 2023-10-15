@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
+	"dario.cat/mergo"
 	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
-	"github.com/imdario/mergo"
 	request "github.com/infraboard/mcube/http/request"
 	pb_request "github.com/infraboard/mcube/pb/request"
 	"github.com/infraboard/mcube/pb/resource"
