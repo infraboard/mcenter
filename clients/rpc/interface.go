@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	MCENTER = "mcenter_client"
+	MCENTER = "mcenter"
 )
 
 func C() *ClientSet {

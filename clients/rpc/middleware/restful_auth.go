@@ -1,14 +1,14 @@
 package middleware
 
 import (
+	"context"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/restful/response"
+	"github.com/infraboard/mcube/ioc/config/cache"
 	"github.com/infraboard/mcube/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/otel/trace"
@@ -47,7 +47,7 @@ func NewhttpAuther() *HttpAuther {
 		log:              logger.Sub("auther.http"),
 		client:           rpc.C(),
 		cache:            cache.C(),
-		codeCheckSilence: 30 * time.Minute,
+		codeCheckSilence: 30 * 60,
 	}
 }
 
@@ -58,11 +58,11 @@ type HttpAuther struct {
 	// 缓存
 	cache cache.Cache
 	// 校验码检查静默时长, 默认值30分钟, 30分钟之内只检查一次
-	codeCheckSilence time.Duration
+	codeCheckSilence int64
 }
 
 // 设置静默时长
-func (a *HttpAuther) SetCodeCheckSilenceTime(t time.Duration) {
+func (a *HttpAuther) SetCodeCheckSilenceTime(t int64) {
 	a.codeCheckSilence = t
 }
 
@@ -100,7 +100,7 @@ func (a *HttpAuther) PermissionCheck(req *restful.Request, resp *restful.Respons
 		}
 
 		// 验证码校验(双因子认证)
-		if !a.isCodeCheckSilence(tk.Username) && entry.CodeEnable {
+		if !a.isCodeCheckSilence(req.Request.Context(), tk.Username) && entry.CodeEnable {
 			_, err := a.checkCode(req, tk)
 			if err != nil {
 				return err
@@ -146,19 +146,24 @@ func (a *HttpAuther) checkCode(req *restful.Request, tk *token.Token) (*token.Co
 	// 保存返回的Code信息
 	req.SetAttribute(token.CODE_ATTRIBUTE_NAME, cd)
 	// 加入静默池中
-	a.setCodeCheckSilence(cd)
+	a.setCodeCheckSilence(req.Request.Context(), cd)
 	return cd, nil
 }
 
-func (a *HttpAuther) setCodeCheckSilence(c *token.Code) {
-	err := a.cache.PutWithTTL(c.Key(), c.Code, a.codeCheckSilence)
+func (a *HttpAuther) setCodeCheckSilence(ctx context.Context, c *token.Code) {
+	err := a.cache.Set(ctx, c.Key(), c.Code, cache.WithExpiration(a.codeCheckSilence))
 	if err != nil {
 		a.log.Error().Msgf("set code Silence to cache error, %s", err)
 	}
 }
 
-func (a *HttpAuther) isCodeCheckSilence(username string) bool {
-	return a.cache.IsExist(token.NewCodeKey(username))
+func (a *HttpAuther) isCodeCheckSilence(ctx context.Context, username string) bool {
+	err := a.cache.Exist(ctx, token.NewCodeKey(username))
+	if err != nil {
+		a.log.Error().Msgf("check error, %s", err)
+		return false
+	}
+	return true
 }
 
 func (a *HttpAuther) checkPermission(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
