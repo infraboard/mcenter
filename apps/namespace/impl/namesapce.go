@@ -120,7 +120,7 @@ func (s *impl) DeleteNamespace(ctx context.Context, req *namespace.DeleteNamespa
 	// 清除空间管理的所有策略
 	_, err = s.policy.DeletePolicy(ctx, policy.NewDeletePolicyRequestWithNamespace(req.Domain, req.Name))
 	if err != nil {
-		s.log.Errorf("delete namespace policy error, %s", err)
+		s.log.Error().Msgf("delete namespace policy error, %s", err)
 	}
 
 	return ns, nil

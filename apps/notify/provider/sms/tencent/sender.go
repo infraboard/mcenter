@@ -7,8 +7,8 @@ import (
 
 	"github.com/infraboard/mcenter/apps/notify"
 	sms_provider "github.com/infraboard/mcenter/apps/notify/provider/sms"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20190711"
@@ -33,14 +33,14 @@ func NewSender(conf *notify.TencentSmsConfig) (sms_provider.SmsNotifyer, error) 
 	return &Sender{
 		conf: conf,
 		sms:  client,
-		log:  zap.L().Named("tencent.sms"),
+		log:  logger.Sub("tencent.sms"),
 	}, nil
 }
 
 type Sender struct {
 	conf *notify.TencentSmsConfig
 	sms  *sms.Client
-	log  logger.Logger
+	log  *zerolog.Logger
 }
 
 // Send todo
@@ -71,6 +71,6 @@ func (s *Sender) Send(ctx context.Context, req *sms_provider.SendSMSRequest) err
 		}
 	}
 
-	s.log.Debugf("send sms response success: %s", response.ToJsonString())
+	s.log.Debug().Msgf("send sms response success: %s", response.ToJsonString())
 	return nil
 }

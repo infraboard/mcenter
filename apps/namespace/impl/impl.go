@@ -4,14 +4,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/counter"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcube/ioc/config/logger"
 	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 )
 
@@ -21,7 +21,7 @@ func init() {
 
 type impl struct {
 	col *mongo.Collection
-	log logger.Logger
+	log *zerolog.Logger
 	namespace.UnimplementedRPCServer
 	ioc.ObjectImpl
 
@@ -32,7 +32,7 @@ type impl struct {
 
 func (i *impl) Init() error {
 	i.col = ioc_mongo.DB().Collection(i.Name())
-	i.log = zap.L().Named(i.Name())
+	i.log = logger.Sub(i.Name())
 
 	i.role = ioc.GetController(role.AppName).(role.Service)
 	i.policy = ioc.GetController(policy.AppName).(policy.Service)

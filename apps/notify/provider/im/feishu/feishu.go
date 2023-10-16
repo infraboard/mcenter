@@ -6,25 +6,25 @@ import (
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/notify/provider/im"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
 	lark "github.com/larksuite/oapi-sdk-go/v3"
 	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
+	"github.com/rs/zerolog"
 )
 
 func NewFeishuNotifyer(conf *domain.FeishuConfig) im.ImNotifyer {
 	return &Feishu{
 		conf:   conf,
 		client: lark.NewClient(conf.AppId, conf.AppSecret),
-		log:    zap.L().Named("notifyer.feishu"),
+		log:    logger.Sub("notifyer.feishu"),
 	}
 }
 
 type Feishu struct {
 	conf   *domain.FeishuConfig
 	client *lark.Client
-	log    logger.Logger
+	log    *zerolog.Logger
 }
 
 // 发送飞书卡片消息

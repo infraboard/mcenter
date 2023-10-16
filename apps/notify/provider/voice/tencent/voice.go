@@ -13,8 +13,8 @@ import (
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/notify/provider/voice"
 	"github.com/infraboard/mcenter/common/validate"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	vms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vms/v20200902"
@@ -23,7 +23,7 @@ import (
 func NewQcloudVoice(conf *notify.TencentVoiceConfig) (voice.VoiceNotifyer, error) {
 	ins := &TencentVoiceNotifyer{
 		TencentVoiceConfig: conf,
-		log:                zap.L().Named("voice.tencent"),
+		log:                logger.Sub("voice.tencent"),
 	}
 	if err := ins.validate(); err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func NewQcloudVoice(conf *notify.TencentVoiceConfig) (voice.VoiceNotifyer, error
 
 type TencentVoiceNotifyer struct {
 	*notify.TencentVoiceConfig
-	log logger.Logger
+	log *zerolog.Logger
 }
 
 func (q *TencentVoiceNotifyer) validate() error {
@@ -98,7 +98,7 @@ func (v *TencentVoiceNotifyer) Call(ctx context.Context, req *voice.SendVoiceReq
 	}
 
 	// 打印返回的 JSON 字符串
-	v.log.Debugf("response: %s", response.ToJsonString())
+	v.log.Debug().Msgf("response: %s", response.ToJsonString())
 	return &notify.VoiceResponse{
 		CallId:         *response.Response.SendStatus.CallId,
 		SessionContext: *response.Response.SendStatus.SessionContext,

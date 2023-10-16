@@ -24,7 +24,7 @@ func (s *impl) CreatePolicy(ctx context.Context, req *policy.CreatePolicyRequest
 	if err != nil {
 		return nil, err
 	}
-	s.log.Debugf("user: %s", u.Spec.Username)
+	s.log.Debug().Msgf("user: %s", u.Spec.Username)
 
 	if _, err := s.col.InsertOne(ctx, ins); err != nil {
 		return nil, exception.NewInternalServerError("inserted policy(%s) document error, %s",
@@ -70,7 +70,7 @@ func (s *impl) QueryPolicy(ctx context.Context, req *policy.QueryPolicyRequest) 
 		}
 	}
 
-	s.log.Debugf("query policy filter: %s", r.FindFilter())
+	s.log.Debug().Msgf("query policy filter: %s", r.FindFilter())
 	resp, err := s.col.Find(ctx, r.FindFilter(), r.FindOptions())
 	if err != nil {
 		return nil, exception.NewInternalServerError("find policy error, error is %s", err)
@@ -114,7 +114,7 @@ func (s *impl) DescribePolicy(ctx context.Context, req *policy.DescribePolicyReq
 	}
 
 	ins := policy.NewDefaultPolicy()
-	s.log.Debugf("describe policy filter: %s", r.FindFilter())
+	s.log.Debug().Msgf("describe policy filter: %s", r.FindFilter())
 	if err := s.col.FindOne(ctx, r.FindFilter()).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("policy %s not found", req)

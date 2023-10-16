@@ -4,13 +4,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/user"
+	"github.com/infraboard/mcube/ioc/config/logger"
 	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 )
 
@@ -24,13 +24,13 @@ type service struct {
 	ioc.ObjectImpl
 
 	user   user.Service
-	log    logger.Logger
+	log    *zerolog.Logger
 	domain domain.Service
 }
 
 func (s *service) Init() error {
 	s.col = ioc_mongo.DB().Collection(s.Name())
-	s.log = zap.L().Named(s.Name())
+	s.log = logger.Sub(s.Name())
 	s.user = ioc.GetController(user.AppName).(user.Service)
 	s.domain = ioc.GetController(domain.AppName).(domain.Service)
 	return nil
