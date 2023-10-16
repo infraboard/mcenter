@@ -20,7 +20,7 @@ func init() {
 type oath2Handler struct {
 	service token.Service
 	log     logger.Logger
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (h *oath2Handler) Init() error {

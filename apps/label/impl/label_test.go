@@ -85,6 +85,29 @@ func TestCreateUserGroupLabel(t *testing.T) {
 	t.Log(r.ToJSON())
 }
 
+func TestCreateGrepGroupLabel(t *testing.T) {
+	req := label.NewCreateLabelRequest()
+	req.Visiable = resource.VISIABLE_GLOBAL
+	req.Key = "DeployGrepGroup"
+	req.KeyDesc = "灰度组"
+	req.ValueDesc = "部署所属灰度组"
+	req.Domain = domain.DEFAULT_DOMAIN
+	req.Namespace = namespace.DEFAULT_NAMESPACE
+	req.Required = true
+	req.ValueType = label.VALUE_TYPE_ENUM
+	req.Visiable = resource.VISIABLE_GLOBAL
+	req.DefaultValue = "default"
+	req.AddEnumOption(
+		label.NewEnumOption("default").SetLabel("默认组"),
+	)
+
+	r, err := impl.CreateLabel(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(r.ToJSON())
+}
+
 func TestQueryLabel(t *testing.T) {
 	req := label.NewQueryLabelRequest()
 	req.AddKey("UserGroup")

@@ -23,7 +23,7 @@ type impl struct {
 	col *mongo.Collection
 	log logger.Logger
 	namespace.UnimplementedRPCServer
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 
 	counter counter.Service
 	role    role.Service

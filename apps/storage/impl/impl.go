@@ -17,7 +17,7 @@ func init() {
 type service struct {
 	log logger.Logger
 	db  *mongo.Database
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (s *service) Init() error {

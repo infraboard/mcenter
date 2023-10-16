@@ -24,7 +24,7 @@ type impl struct {
 	col *mongo.Collection
 	log logger.Logger
 	policy.UnimplementedRPCServer
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 
 	user      user.Service
 	role      role.Service

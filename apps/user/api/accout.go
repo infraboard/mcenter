@@ -20,7 +20,7 @@ func init() {
 type sub struct {
 	service user.Service
 	log     logger.Logger
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (h *sub) Init() error {

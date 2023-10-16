@@ -6,9 +6,9 @@ import (
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/x/bsonx"
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/domain"
@@ -26,7 +26,7 @@ type service struct {
 	domain domain.Service
 
 	user.UnimplementedRPCServer
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (s *service) Init() error {
@@ -39,12 +39,12 @@ func (s *service) Init() error {
 
 	indexs := []mongo.IndexModel{
 		{
-			Keys: bsonx.Doc{{Key: "create_at", Value: bsonx.Int32(-1)}},
+			Keys: bson.D{{Key: "create_at", Value: -1}},
 		},
 		{
-			Keys: bsonx.Doc{
-				{Key: "domain", Value: bsonx.Int32(-1)},
-				{Key: "username", Value: bsonx.Int32(-1)},
+			Keys: bson.D{
+				{Key: "domain", Value: -1},
+				{Key: "username", Value: -1},
 			},
 			Options: options.Index().SetUnique(true),
 		},

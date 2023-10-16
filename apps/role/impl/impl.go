@@ -22,7 +22,7 @@ type impl struct {
 	perm *mongo.Collection
 	log  logger.Logger
 	role.UnimplementedRPCServer
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 
 	policy policy.Service
 }

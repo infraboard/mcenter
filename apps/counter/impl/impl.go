@@ -19,7 +19,7 @@ func init() {
 
 type service struct {
 	col *mongo.Collection
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (s *service) Init() error {

@@ -3,9 +3,9 @@ package impl
 import (
 	"context"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/x/bsonx"
 
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/logger"
@@ -24,7 +24,7 @@ type impl struct {
 	col *mongo.Collection
 	log logger.Logger
 	service.UnimplementedRPCServer
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (i *impl) Init() error {
@@ -37,13 +37,13 @@ func (i *impl) Init() error {
 	// 创建索引
 	indexs := []mongo.IndexModel{
 		{
-			Keys: bsonx.Doc{{Key: "create_at", Value: bsonx.Int32(-1)}},
+			Keys: bson.D{{Key: "create_at", Value: -1}},
 		},
 		{
-			Keys: bsonx.Doc{
-				{Key: "domain", Value: bsonx.Int32(-1)},
-				{Key: "namespace", Value: bsonx.Int32(-1)},
-				{Key: "name", Value: bsonx.Int32(-1)},
+			Keys: bson.D{
+				{Key: "domain", Value: -1},
+				{Key: "namespace", Value: -1},
+				{Key: "name", Value: -1},
 			},
 			Options: options.Index().SetUnique(true),
 		},

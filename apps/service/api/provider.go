@@ -19,7 +19,7 @@ type providerHandler struct {
 	log logger.Logger
 
 	service service.MetaService
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (h *providerHandler) Init() error {

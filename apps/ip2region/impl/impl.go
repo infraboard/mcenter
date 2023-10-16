@@ -25,7 +25,7 @@ type service struct {
 	dbFileName string
 	dbReader   *ip2region.IPReader
 	sync.Mutex
-	ioc.IocObjectImpl
+	ioc.ObjectImpl
 }
 
 func (s *service) Init() error {
