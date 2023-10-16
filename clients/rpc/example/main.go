@@ -5,14 +5,12 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcenter/clients/rpc"
+	"github.com/infraboard/mcube/ioc"
 )
 
 func main() {
-	// 提前加载好 mcenter客户端
-	conf := rpc.NewDefaultConfig()
-	conf.Address = "mcenter grpc address"
-	conf.WithCredentials("mcenter client_id", "mcenter client_secret")
-	err := rpc.LoadClientFromConfig(conf)
+	// 加载好Ioc对象配置
+	err := ioc.ConfigIocObject(ioc.NewLoadConfigRequest())
 	if err != nil {
 		panic(err)
 	}

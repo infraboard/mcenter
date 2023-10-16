@@ -24,7 +24,7 @@ import (
 )
 
 // NewClient todo
-func NewClient(conf *Config) (*ClientSet, error) {
+func NewClient(conf *Mcenter) (*ClientSet, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), conf.Timeout())
 	defer cancel()
 
@@ -58,7 +58,7 @@ func NewClient(conf *Config) (*ClientSet, error) {
 
 // Client 客户端
 type ClientSet struct {
-	conf *Config
+	conf *Mcenter
 	conn *grpc.ClientConn
 	log  *zerolog.Logger
 	svr  *service.Service

@@ -1,41 +1,71 @@
 package rpc
 
 import (
+	"context"
 	"net/url"
 	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
+	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/tools/pretty"
 )
 
-// NewDefaultConfig todo
-func NewDefaultConfig() *Config {
-	return &Config{
+func init() {
+	ioc.Config().Registry(&Mcenter{
 		Address:       "localhost:18010",
 		TimeoutSecond: 10,
 		Resolver:      NewDefaultResolver(),
-	}
+	})
 }
 
-// Config 客户端配置
-type Config struct {
+// Mcenter 客户端配置
+type Mcenter struct {
 	Address      string `json:"address" toml:"address" yaml:"address" env:"MCENTER_GRPC_ADDRESS"`
 	ClientID     string `json:"client_id" toml:"client_id" yaml:"client_id" env:"MCENTER_CLINET_ID"`
 	ClientSecret string `json:"client_secret" toml:"client_secret" yaml:"client_secret" env:"MCENTER_CLIENT_SECRET"`
 	// 默认值10秒
-	TimeoutSecond uint      `json:"timeout_second" toml:"timeout_second" yaml:"timeout_second" env:"MCENTER_GRPC_TIMEOUT_SECOND"`
+	TimeoutSecond uint      `json:"timeout_second" toml:"timeout_second" yaml:"timeout_second" env:"GRPC_TIMEOUT_SECOND"`
 	Resolver      *Resolver `json:"resolver" toml:"resolver" yaml:"resolver"`
+
+	ioc.ObjectImpl
+	cs *ClientSet
 }
 
-func (c *Config) Timeout() time.Duration {
+func (m *Mcenter) String() string {
+	return pretty.ToJSON(m)
+}
+
+func (m *Mcenter) Name() string {
+	return MCENTER
+}
+
+func (m *Mcenter) Init() error {
+	cs, err := NewClient(m)
+	if err != nil {
+		return err
+	}
+	m.cs = cs
+	return nil
+}
+
+func (c *Mcenter) Close(ctx context.Context) error {
+	if c.cs != nil {
+		c.cs.conn.Close()
+	}
+
+	return nil
+}
+
+func (c *Mcenter) Timeout() time.Duration {
 	return time.Second * time.Duration(c.TimeoutSecond)
 }
 
-func (c *Config) WithCredentials(clientId, clientSecret string) {
+func (c *Mcenter) WithCredentials(clientId, clientSecret string) {
 	c.ClientID = clientId
 	c.ClientSecret = clientSecret
 }
 
-func (c *Config) Credentials() *Authentication {
+func (c *Mcenter) Credentials() *Authentication {
 	return NewAuthentication(c.ClientID, c.ClientSecret)
 }
 

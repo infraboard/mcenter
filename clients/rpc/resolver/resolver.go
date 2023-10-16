@@ -42,14 +42,6 @@ func (*McenterResolverBuilder) Build(
 	opts resolver.BuildOptions) (
 	resolver.Resolver, error) {
 
-	// 加载mcenter client, 如果没有加载则从环境变量中加载
-	if !rpc.HasLoaded() {
-		err := rpc.LoadClientFromEnv()
-		if err != nil {
-			return nil, err
-		}
-	}
-
 	r := &mcenterResolver{
 		mcenter:            rpc.C().Instance(),
 		target:             target,

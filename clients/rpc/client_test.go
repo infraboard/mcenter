@@ -10,6 +10,7 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/clients/rpc"
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/ioc/apps/health"
 )
 
@@ -90,7 +91,7 @@ func TestHealthCheck(t *testing.T) {
 }
 
 func init() {
-	err := rpc.LoadClientFromEnv()
+	err := ioc.ConfigIocObject(ioc.NewLoadConfigRequest())
 	if err != nil {
 		panic(err)
 	}
