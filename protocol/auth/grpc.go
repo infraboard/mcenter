@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -23,14 +23,14 @@ func GrpcAuthUnaryServerInterceptor(app service.MetaService) grpc.UnaryServerInt
 
 func newGrpcAuther(svc service.MetaService) *grpcAuther {
 	return &grpcAuther{
-		log: zap.L().Named("Grpc Auther"),
+		log: logger.Sub("Grpc Auther"),
 		svc: svc,
 	}
 }
 
 // internal todo
 type grpcAuther struct {
-	log logger.Logger
+	log *zerolog.Logger
 	svc service.MetaService
 }
 
@@ -69,7 +69,7 @@ func (a *grpcAuther) Auth(
 			setErr = grpc.SetTrailer(ctx, metadata.Pairs(exception.TRAILER_ERROR_JSON_KEY, e.ToJson()))
 		}
 		if setErr != nil {
-			a.log.Error(setErr)
+			a.log.Error().Msgf("%s", setErr)
 		}
 	}
 

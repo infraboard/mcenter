@@ -6,8 +6,8 @@ import (
 	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
@@ -19,12 +19,12 @@ func init() {
 
 type oath2Handler struct {
 	service token.Service
-	log     logger.Logger
+	log     *zerolog.Logger
 	ioc.ObjectImpl
 }
 
 func (h *oath2Handler) Init() error {
-	h.log = zap.L().Named(token.AppName)
+	h.log = logger.Sub(token.AppName)
 	h.service = ioc.GetController(token.AppName).(token.Service)
 	return nil
 }

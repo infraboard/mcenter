@@ -76,7 +76,7 @@ func (r *queryRequest) FindFilter() bson.M {
 }
 
 func (i *impl) query(ctx context.Context, req *queryRequest) (*service.ServiceSet, error) {
-	i.log.Debugf("find filter: %s", req.FindFilter())
+	i.log.Debug().Msgf("find filter: %s", req.FindFilter())
 	resp, err := i.col.Find(ctx, req.FindFilter(), req.FindOptions())
 
 	if err != nil {

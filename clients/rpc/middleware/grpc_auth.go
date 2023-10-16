@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -23,7 +23,7 @@ func GrpcAuthUnaryServerInterceptor(namespace string) grpc.UnaryServerIntercepto
 
 func NewGrpcAuther(svr service.RPCClient) *GrpcAuther {
 	return &GrpcAuther{
-		log:     zap.L().Named("auther.grpc"),
+		log:     logger.Sub("auther.grpc"),
 		service: svr,
 	}
 }
@@ -31,7 +31,7 @@ func NewGrpcAuther(svr service.RPCClient) *GrpcAuther {
 // internal todo
 type GrpcAuther struct {
 	namespace string
-	log       logger.Logger
+	log       *zerolog.Logger
 	service   service.RPCClient
 }
 
@@ -76,7 +76,7 @@ func (a *GrpcAuther) Auth(
 			err = status.Errorf(codes.Code(exception.InternalServerError), e.Error())
 		}
 		if setErr != nil {
-			a.log.Error(setErr)
+			a.log.Error().Msgf("%s", setErr)
 		}
 	}
 

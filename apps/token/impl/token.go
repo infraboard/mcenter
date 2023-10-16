@@ -102,19 +102,19 @@ func (s *service) BeforeLoginSecurityCheck(ctx context.Context, req *token.Issue
 		return err
 	}
 
-	s.log.Debug("security check complete")
+	s.log.Debug().Msg("security check complete")
 	return nil
 }
 
 func (s *service) AfterLoginSecurityCheck(ctx context.Context, verifyCode string, tk *token.Token) error {
 	// 如果有校验码, 则直接通过校验码检测用户身份安全
 	if verifyCode != "" {
-		s.log.Debugf("verify code provided, check code ...")
+		s.log.Debug().Msgf("verify code provided, check code ...")
 		_, err := s.VerifyCode(ctx, token.NewVerifyCodeRequest(tk.Username, verifyCode))
 		if err != nil {
 			return exception.NewPermissionDeny("verify code invalidate, error, %s", err)
 		}
-		s.log.Debugf("verfiy code check passed")
+		s.log.Debug().Msgf("verfiy code check passed")
 		return nil
 	}
 
@@ -203,7 +203,7 @@ func (s *service) ChangeNamespace(ctx context.Context, req *token.ChangeNamespac
 			return nil, err
 		}
 		if ps.Total > policy.MAX_USER_POLICY {
-			s.log.Warnf("user policy large than max policy count %d, total: %d", policy.MAX_USER_POLICY, ps.Total)
+			s.log.Warn().Msgf("user policy large than max policy count %d, total: %d", policy.MAX_USER_POLICY, ps.Total)
 		}
 
 		if !ps.HasNamespace(req.Namespace) {

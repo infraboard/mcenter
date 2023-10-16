@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -32,7 +32,7 @@ type service struct {
 	col *mongo.Collection
 	token.UnimplementedRPCServer
 	ioc.ObjectImpl
-	log logger.Logger
+	log *zerolog.Logger
 
 	policy  policy.Service
 	ns      namespace.Service
@@ -60,7 +60,7 @@ func (s *service) Init() error {
 
 	s.col = dc
 
-	s.log = zap.L().Named(s.Name())
+	s.log = logger.Sub(s.Name())
 	s.ns = ioc.GetController(namespace.AppName).(namespace.Service)
 	s.policy = ioc.GetController(policy.AppName).(policy.Service)
 	s.domain = ioc.GetController(domain.AppName).(domain.Service)

@@ -16,7 +16,7 @@ func (s *impl) QueryPermission(ctx context.Context, req *role.QueryPermissionReq
 		return nil, err
 	}
 
-	s.log.Debugf("query permission filter: %s", query.FindFilter())
+	s.log.Debug().Msgf("query permission filter: %s", query.FindFilter())
 	resp, err := s.perm.Find(ctx, query.FindFilter(), query.FindOptions())
 	if err != nil {
 		return nil, exception.NewInternalServerError("find permissionn error, error is %s", err)

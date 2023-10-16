@@ -58,7 +58,7 @@ func (s *service) send(ctx context.Context, code *token.Code) (string, error) {
 	case notify.NOTIFY_TYPE_MAIL:
 		content := conf.RenderMailCentent(code.Code, code.ExpiredMinite)
 		// 邮件通知
-		s.log.Debugf("mail to user %s", code.Username)
+		s.log.Debug().Msgf("mail to user %s", code.Username)
 		req := notify.NewSendMailRequest(
 			"验证码",
 			content,
@@ -69,10 +69,10 @@ func (s *service) send(ctx context.Context, code *token.Code) (string, error) {
 			return "", fmt.Errorf("send verify code by mail error, %s", err)
 		}
 		message = fmt.Sprintf("验证码已通过邮件发送到你的邮箱: %s, 请及时查收", record.Targets())
-		s.log.Debugf("send verify code to user: %s by mail ok", code.Username)
+		s.log.Debug().Msgf("send verify code to user: %s by mail ok", code.Username)
 	case notify.NOTIFY_TYPE_SMS:
 		// 短信通知
-		s.log.Debugf("sms to user %s", code.Username)
+		s.log.Debug().Msgf("sms to user %s", code.Username)
 		req := notify.NewSendSMSRequest(
 			conf.SmsTemplateId,
 			[]string{code.ExpiredMiniteString()},
@@ -83,7 +83,7 @@ func (s *service) send(ctx context.Context, code *token.Code) (string, error) {
 			return "", fmt.Errorf("send verify code by sms error, %s", err)
 		}
 		message = fmt.Sprintf("验证码已通过短信发送到你的手机: %s, 请及时查收", record.Targets())
-		s.log.Debugf("send verify code to user: %s by sms ok", code.Username)
+		s.log.Debug().Msgf("send verify code to user: %s by sms ok", code.Username)
 	default:
 		return "", fmt.Errorf("unknown notify type %s", conf.NotifyType)
 	}
@@ -113,7 +113,7 @@ func (s *service) VerifyCode(ctx context.Context, req *token.VerifyCodeRequest) 
 
 	// 没过去验证成功, 删除
 	if err := s.deleteCode(ctx, code); err != nil {
-		s.log.Errorf("delete check ok verify code error, %s", err)
+		s.log.Error().Msgf("delete check ok verify code error, %s", err)
 	}
 
 	return code, nil

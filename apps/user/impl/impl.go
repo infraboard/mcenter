@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -21,7 +21,7 @@ func init() {
 }
 
 type service struct {
-	log    logger.Logger
+	log    *zerolog.Logger
 	col    *mongo.Collection
 	domain domain.Service
 
@@ -51,7 +51,7 @@ func (s *service) Init() error {
 	}
 
 	s.col = uc
-	s.log = zap.L().Named(user.AppName)
+	s.log = logger.Sub(user.AppName)
 	s.domain = ioc.GetController(domain.AppName).(domain.Service)
 	return nil
 }

@@ -8,11 +8,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/service"
+	"github.com/infraboard/mcube/ioc/config/logger"
 	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 )
 
@@ -22,7 +22,7 @@ func init() {
 
 type impl struct {
 	col *mongo.Collection
-	log logger.Logger
+	log *zerolog.Logger
 	service.UnimplementedRPCServer
 	ioc.ObjectImpl
 }
@@ -49,7 +49,7 @@ func (i *impl) Init() error {
 		return err
 	}
 
-	i.log = zap.L().Named(i.Name())
+	i.log = logger.Sub(i.Name())
 	return nil
 }
 

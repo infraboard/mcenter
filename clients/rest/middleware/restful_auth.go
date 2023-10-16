@@ -7,8 +7,8 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/restful/response"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/policy"
@@ -26,7 +26,7 @@ func RestfulServerInterceptor(clientId, clientSercret string) restful.FilterFunc
 // 给服务端提供的RESTful接口的 认证与鉴权中间件
 func newhttpAuther(credential *service.ValidateCredentialRequest) *httpAuther {
 	return &httpAuther{
-		log:        zap.L().Named("auther.http"),
+		log:        logger.Sub("auther.http"),
 		client:     rest.C(),
 		credential: credential,
 	}
@@ -42,7 +42,7 @@ const (
 )
 
 type httpAuther struct {
-	log logger.Logger
+	log *zerolog.Logger
 	// 基于rest客户端进行封装
 	client *rest.ClientSet
 	// 鉴权模式
@@ -98,7 +98,7 @@ func (a *httpAuther) CheckPermission(r *restful.Request, tk *token.Token, e *end
 
 	// 如果是超级管理员不做权限校验, 直接放行
 	if tk.UserType.IsIn(user.TYPE_SUPPER) {
-		a.log.Debugf("[%s] supper admin skip permission check!", tk.Username)
+		a.log.Debug().Msgf("[%s] supper admin skip permission check!", tk.Username)
 		return nil
 	}
 
@@ -115,11 +115,11 @@ func (a *httpAuther) CheckPermission(r *restful.Request, tk *token.Token, e *end
 func (a *httpAuther) ValidatePermissionByACL(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
-		a.log.Debugf("[%s] start check permission to keyauth ...", tk.Username)
+		a.log.Debug().Msgf("[%s] start check permission to keyauth ...", tk.Username)
 		if !e.IsAllow(tk.UserType) {
 			return exception.NewPermissionDeny("no permission, allow: %s, but current: %s", e.Allow, tk.UserType)
 		}
-		a.log.Debugf("[%s] permission check passed", tk.Username)
+		a.log.Debug().Msgf("[%s] permission check passed", tk.Username)
 	}
 
 	return nil
@@ -140,7 +140,7 @@ func (a *httpAuther) ValidatePermissionByPRBAC(r *restful.Request, tk *token.Tok
 	if err != nil {
 		return exception.NewPermissionDeny(err.Error())
 	}
-	a.log.Debugf("[%s] permission check passed", tk.Username)
+	a.log.Debug().Msgf("[%s] permission check passed", tk.Username)
 	// 保存访问访问信息
 	r.SetAttribute(policy.SCOPE_ATTRIBUTE_NAME, perm.Scope)
 	return nil

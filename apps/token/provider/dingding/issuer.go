@@ -11,20 +11,20 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 )
 
 type issuer struct {
 	domain domain.Service
 	user   user.Service
-	log    logger.Logger
+	log    *zerolog.Logger
 }
 
 func (i *issuer) Init() error {
 	i.domain = ioc.GetController(domain.AppName).(domain.Service)
 	i.user = ioc.GetController(user.AppName).(user.Service)
-	i.log = zap.L().Named("issuer.dingding")
+	i.log = logger.Sub("issuer.dingding")
 	return nil
 }
 
@@ -64,7 +64,7 @@ func (i *issuer) validate(ctx context.Context, username, code string) (*user.Use
 	lu, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestByName(du.Username()))
 	if err != nil {
 		if exception.IsNotFoundError(err) {
-			i.log.Debugf("sync user: %s(%s) to db", du.Username(), dom.Spec.Name)
+			i.log.Debug().Msgf("sync user: %s(%s) to db", du.Username(), dom.Spec.Name)
 			gen := password.New(dom.Spec.PasswordConfig)
 			randomPass, err := gen.Generate()
 			if err != nil {

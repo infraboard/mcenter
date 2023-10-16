@@ -8,21 +8,21 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 )
 
 type issuer struct {
 	token token.Service
 	user  user.Service
 
-	log logger.Logger
+	log *zerolog.Logger
 }
 
 func (i *issuer) Init() error {
 	i.token = ioc.GetController(token.AppName).(token.Service)
 	i.user = ioc.GetController(user.AppName).(user.Service)
-	i.log = zap.L().Named("issuer.privat_token")
+	i.log = logger.Sub("issuer.privat_token")
 	return nil
 }
 

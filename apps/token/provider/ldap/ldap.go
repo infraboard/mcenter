@@ -9,8 +9,8 @@ import (
 	"github.com/go-ldap/ldap/v3"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 )
 
 // OWASP recommends to escape some special characters.
@@ -29,14 +29,14 @@ type UserProvider interface {
 func NewProvider(conf *domain.LdapConfig) *Provider {
 	return &Provider{
 		conf: conf,
-		log:  zap.L().Named("ldap"),
+		log:  logger.Sub("ldap"),
 	}
 }
 
 // Provider todo
 type Provider struct {
 	conf *domain.LdapConfig
-	log  logger.Logger
+	log  *zerolog.Logger
 }
 
 // UserProfile todo
@@ -75,7 +75,7 @@ func (p *Provider) connect(userDN string, password string) (Connection, error) {
 	}
 
 	if url.Scheme == "ldaps" {
-		p.log.Debug("LDAP client starts a TLS session")
+		p.log.Debug().Msg("LDAP client starts a TLS session")
 		tlsConn, err := p.dialTLS("tcp", url.Host, &tls.Config{
 			InsecureSkipVerify: p.conf.SkipVerify,
 		})
@@ -85,7 +85,7 @@ func (p *Provider) connect(userDN string, password string) (Connection, error) {
 
 		conn = tlsConn
 	} else {
-		p.log.Debug("LDAP client starts a session over raw TCP")
+		p.log.Debug().Msg("LDAP client starts a session over raw TCP")
 		rawConn, err := p.dial("tcp", url.Host)
 		if err != nil {
 			return nil, err
@@ -160,7 +160,7 @@ func (p *Provider) resolveUserFilter(userFilter string, inputUsername string) st
 
 func (p *Provider) getUserProfile(conn Connection, inputUsername string) (*UserProfile, error) {
 	userFilter := p.resolveUserFilter(p.conf.UserFilter, inputUsername)
-	p.log.Debugf("Computed user filter is %s", userFilter)
+	p.log.Debug().Msgf("Computed user filter is %s", userFilter)
 
 	baseDN := p.conf.BaseDn
 
@@ -253,7 +253,7 @@ func (p *Provider) GetDetails(inputUsername string) (*UserProfile, error) {
 		return nil, fmt.Errorf("unable to create group filter for user %s. Cause: %s", inputUsername, err)
 	}
 
-	p.log.Debugf("Computed groups filter is %s", GroupFilter)
+	p.log.Debug().Msgf("Computed groups filter is %s", GroupFilter)
 
 	groupBaseDN := p.conf.BaseDn
 
@@ -271,7 +271,7 @@ func (p *Provider) GetDetails(inputUsername string) (*UserProfile, error) {
 
 	for _, res := range sr.Entries {
 		if len(res.Attributes) == 0 {
-			p.log.Warnf("No groups retrieved from LDAP for user %s", inputUsername)
+			p.log.Warn().Msgf("No groups retrieved from LDAP for user %s", inputUsername)
 			break
 		}
 		// Append all values of the document. Normally there should be only one per document.

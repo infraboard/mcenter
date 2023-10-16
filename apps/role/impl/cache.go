@@ -20,9 +20,9 @@ func (d *Decorator) DescribeRole(ctx context.Context, req *role.DescribeRoleRequ
 	if req.Id != "" {
 		ins := role.NewDefaultRole()
 		if err := cache.C().Get(req.Id, ins); err != nil {
-			d.log.Warnf("get %s from cache error, %s", req.Id, err)
+			d.log.Warn().Msgf("get %s from cache error, %s", req.Id, err)
 		} else {
-			d.log.Infof("get %s from cache", ins.Meta.Id)
+			d.log.Info().Msgf("get %s from cache", ins.Meta.Id)
 			return ins, nil
 		}
 	}
@@ -34,9 +34,9 @@ func (d *Decorator) DescribeRole(ctx context.Context, req *role.DescribeRoleRequ
 
 	if req.Id != "" {
 		if err := cache.C().Put(req.Id, ins); err != nil {
-			d.log.Warnf("set %s to cache error, %s", req.Id, err)
+			d.log.Warn().Msgf("set %s to cache error, %s", req.Id, err)
 		} else {
-			d.log.Infof("set %s to cache", ins.Meta.Id)
+			d.log.Info().Msgf("set %s to cache", ins.Meta.Id)
 		}
 	}
 	return ins, nil
@@ -50,7 +50,7 @@ func (d *Decorator) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest)
 	}
 
 	if err := cache.C().Delete(req.Id); err != nil {
-		d.log.Infof("delete %s to cache error, %s", req.Id, err)
+		d.log.Info().Msgf("delete %s to cache error, %s", req.Id, err)
 	}
 	return ins, nil
 }
@@ -63,7 +63,7 @@ func (d *Decorator) AddPermissionToRole(ctx context.Context, req *role.AddPermis
 	}
 
 	if err := cache.C().Delete(req.RoleId); err != nil {
-		d.log.Infof("delete %s to cache error, %s", req.RoleId, err)
+		d.log.Info().Msgf("delete %s to cache error, %s", req.RoleId, err)
 	}
 	return ins, nil
 }
@@ -76,7 +76,7 @@ func (d *Decorator) RemovePermissionFromRole(ctx context.Context, req *role.Remo
 	}
 
 	if err := cache.C().Delete(req.RoleId); err != nil {
-		d.log.Infof("delete %s to cache error, %s", req.RoleId, err)
+		d.log.Info().Msgf("delete %s to cache error, %s", req.RoleId, err)
 	}
 	return ins, nil
 }
@@ -89,7 +89,7 @@ func (d *Decorator) UpdatePermission(ctx context.Context, req *role.UpdatePermis
 	}
 
 	if err := cache.C().Delete(ins.Meta.Id); err != nil {
-		d.log.Infof("delete %s to cache error, %s", req.Id, err)
+		d.log.Info().Msgf("delete %s to cache error, %s", req.Id, err)
 	}
 	return ins, err
 }

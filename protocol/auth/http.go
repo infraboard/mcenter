@@ -14,14 +14,14 @@ import (
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/ioc"
 	"github.com/infraboard/mcube/ioc/config/cache"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 	"go.opentelemetry.io/otel/trace"
 )
 
 func NewHttpAuther() *httpAuther {
 	return &httpAuther{
-		log:              zap.L().Named("auther.http"),
+		log:              logger.Sub("auther.http"),
 		tk:               ioc.GetController(token.AppName).(token.Service),
 		policy:           ioc.GetController(policy.AppName).(policy.Service),
 		cache:            cache.C(),
@@ -30,7 +30,7 @@ func NewHttpAuther() *httpAuther {
 }
 
 type httpAuther struct {
-	log              logger.Logger
+	log              *zerolog.Logger
 	tk               token.Service
 	cache            cache.Cache
 	policy           policy.Service
@@ -103,7 +103,7 @@ func (a *httpAuther) CheckPermission(req *restful.Request, tk *token.Token, e *e
 
 	// 如果是超级管理员不做权限校验, 直接放行
 	if tk.UserType.IsIn(user.TYPE_SUPPER) {
-		a.log.Debugf("[%s] supper admin skip permission check!", tk.Username)
+		a.log.Debug().Msgf("[%s] supper admin skip permission check!", tk.Username)
 		return nil
 	}
 
@@ -118,18 +118,18 @@ func (a *httpAuther) CheckPermission(req *restful.Request, tk *token.Token, e *e
 func (a *httpAuther) validatePermissionByACL(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
-		a.log.Debugf("[%s] start check permission to mcenter ...", tk.Username)
+		a.log.Debug().Msgf("[%s] start check permission to mcenter ...", tk.Username)
 		if !e.IsAllow(tk.UserType) {
 			return exception.NewPermissionDeny("no permission, allow: %s, but current: %s", e.Allow, tk.UserType)
 		}
-		a.log.Debugf("[%s] permission check passed", tk.Username)
+		a.log.Debug().Msgf("[%s] permission check passed", tk.Username)
 	}
 	return nil
 }
 
 func (a *httpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Token, e *endpoint.Entry) error {
 	if !e.PermissionEnable {
-		a.log.Debugf("permission check disabled, skip permission check")
+		a.log.Debug().Msgf("permission check disabled, skip permission check")
 		return nil
 	}
 
@@ -139,13 +139,13 @@ func (a *httpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Tok
 	req.Username = tk.Username
 	req.ServiceId = version.ServiceName
 	req.Path = e.Path
-	a.log.Debugf("permission check request: %s", req.ToJSON())
+	a.log.Debug().Msgf("permission check request: %s", req.ToJSON())
 
 	perm, err := a.policy.CheckPermission(r.Request.Context(), req)
 	if err != nil {
 		return exception.NewPermissionDeny(err.Error())
 	}
-	a.log.Debugf("[%s] permission check passed", tk.Username)
+	a.log.Debug().Msgf("[%s] permission check passed", tk.Username)
 
 	// 保存访问访问信息
 	r.SetAttribute(policy.SCOPE_ATTRIBUTE_NAME, perm.Scope)
@@ -175,14 +175,14 @@ func (a *httpAuther) CheckCode(req *restful.Request, tk *token.Token) (*token.Co
 func (a *httpAuther) SetCodeCheckSilence(ctx context.Context, c *token.Code) {
 	err := a.cache.Set(ctx, c.Key(), c.Code, cache.WithExpiration(a.codeCheckSilence))
 	if err != nil {
-		a.log.Errorf("set code Silence to cache error, %s", err)
+		a.log.Error().Msgf("set code Silence to cache error, %s", err)
 	}
 }
 
 func (a *httpAuther) IsCodeCheckSilence(ctx context.Context, username string) bool {
 	err := a.cache.Exist(ctx, token.NewCodeKey(username))
 	if err != nil {
-		a.log.Error("check error, %s", err)
+		a.log.Error().Msgf("check error, %s", err)
 		return false
 	}
 	return true

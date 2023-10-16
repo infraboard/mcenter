@@ -1,6 +1,10 @@
 package github
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/infraboard/mcube/tools/pretty"
+)
 
 func NewTokenReponse() *TokenReponse {
 	return &TokenReponse{}
@@ -9,6 +13,10 @@ func NewTokenReponse() *TokenReponse {
 type TokenReponse struct {
 	Token
 	Response
+}
+
+func (r *TokenReponse) String() string {
+	return pretty.ToJSON(r)
 }
 
 type Token struct {

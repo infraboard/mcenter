@@ -6,8 +6,8 @@ import (
 	"github.com/google/go-github/v45/github"
 	"github.com/infraboard/mcube/client/negotiator"
 	"github.com/infraboard/mcube/client/rest"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 	"golang.org/x/oauth2"
 )
 
@@ -18,7 +18,7 @@ func NewGithub(conf *Config) *Github {
 
 	ins := &Github{
 		conf: conf,
-		log:  zap.L().Named("scm.github"),
+		log:  logger.Sub("scm.github"),
 		rest: rc,
 	}
 
@@ -39,7 +39,7 @@ func NewGithub(conf *Config) *Github {
 type Github struct {
 	conf   *Config
 	client *github.Client
-	log    logger.Logger
+	log    *zerolog.Logger
 	rest   *rest.RESTClient
 }
 
@@ -64,6 +64,6 @@ func (g *Github) Exchange(ctx context.Context, code string) error {
 		return err
 	}
 
-	g.log.Debug(tk)
+	g.log.Debug().Msgf("%s", tk)
 	return nil
 }

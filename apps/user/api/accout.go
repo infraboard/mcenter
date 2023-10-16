@@ -6,8 +6,8 @@ import (
 	"github.com/infraboard/mcube/http/label"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/user"
 )
@@ -19,12 +19,12 @@ func init() {
 // 子账号用户管理接口
 type sub struct {
 	service user.Service
-	log     logger.Logger
+	log     *zerolog.Logger
 	ioc.ObjectImpl
 }
 
 func (h *sub) Init() error {
-	h.log = zap.L().Named(user.AppName)
+	h.log = logger.Sub(user.AppName)
 	h.service = ioc.GetController(user.AppName).(user.Service)
 	return nil
 }

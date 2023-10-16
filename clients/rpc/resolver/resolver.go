@@ -9,8 +9,8 @@ import (
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/clients/rpc"
 	"github.com/infraboard/mcube/grpc/balancer/wrr"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc/attributes"
 	"google.golang.org/grpc/resolver"
 )
@@ -55,7 +55,7 @@ func (*McenterResolverBuilder) Build(
 		target:             target,
 		cc:                 cc,
 		queryTimeoutSecond: 3 * time.Second,
-		log:                zap.L().Named("mcenter.resolver"),
+		log:                logger.Sub("mcenter.resolver"),
 	}
 
 	// 强制触发一次更新
@@ -78,14 +78,14 @@ type mcenterResolver struct {
 	target             resolver.Target
 	cc                 resolver.ClientConn
 	queryTimeoutSecond time.Duration
-	log                logger.Logger
+	log                *zerolog.Logger
 }
 
 func (m *mcenterResolver) ResolveNow(o resolver.ResolveNowOptions) {
 	// 从mcenter中查询该target对应的服务实例
 	addrs, err := m.search()
 	if err != nil {
-		m.log.Errorf("search target %s error, %s", m.target.URL.String(), err)
+		m.log.Error().Msgf("search target %s error, %s", m.target.URL.String(), err)
 	}
 
 	// 更新给client
@@ -106,7 +106,7 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 
 	set, err := m.mcenter.Search(ctx, req)
 	if err != nil {
-		m.log.Errorf("search target %s error, %s", m.target, err)
+		m.log.Error().Msgf("search target %s error, %s", m.target.URL.String(), err)
 		return nil, err
 	}
 
@@ -132,7 +132,7 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 		addrString = append(addrString, s.RegistryInfo.Address)
 	}
 
-	m.log.Infof("search service params: %s,  address: %s", req.ToJSON(), strings.Join(addrString, ","))
+	m.log.Info().Msgf("search service params: %s,  address: %s", req.ToJSON(), strings.Join(addrString, ","))
 
 	return addrs, nil
 }

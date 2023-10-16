@@ -4,12 +4,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcube/ioc/config/logger"
 	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 )
 
@@ -20,7 +20,7 @@ func init() {
 type impl struct {
 	role *mongo.Collection
 	perm *mongo.Collection
-	log  logger.Logger
+	log  *zerolog.Logger
 	role.UnimplementedRPCServer
 	ioc.ObjectImpl
 
@@ -33,7 +33,7 @@ func (i *impl) Init() error {
 	i.perm = db.Collection("permission")
 
 	i.policy = ioc.GetController(policy.AppName).(policy.Service)
-	i.log = zap.L().Named(i.Name())
+	i.log = logger.Sub(i.Name())
 	return nil
 }
 

@@ -29,7 +29,7 @@ func (s *impl) QueryResources(ctx context.Context, req *resource.QueryResourceRe
 		return nil, err
 	}
 	if eps.Total > MaxQueryEndpoints {
-		s.log.Warnf("service %s total endpoints > %d", req.ServiceIds, eps.Total)
+		s.log.Warn().Msgf("service %s total endpoints > %d", req.ServiceIds, eps.Total)
 	}
 
 	rs.AddEndpointSet(eps)

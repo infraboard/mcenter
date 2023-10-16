@@ -9,8 +9,8 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 )
 
 var (
@@ -21,13 +21,13 @@ type issuer struct {
 	user   user.Service
 	domain domain.Service
 
-	log logger.Logger
+	log *zerolog.Logger
 }
 
 func (i *issuer) Init() error {
 	i.user = ioc.GetController(user.AppName).(user.Service)
 	i.domain = ioc.GetController(domain.AppName).(domain.Service)
-	i.log = zap.L().Named("issuer.forward_auth")
+	i.log = logger.Sub("issuer.forward_auth")
 	return nil
 }
 

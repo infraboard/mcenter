@@ -38,7 +38,7 @@ func (s *impl) QueryRole(ctx context.Context, req *role.QueryRoleRequest) (*role
 		return nil, err
 	}
 
-	s.log.Debugf("query role filter: %s", query.FindFilter())
+	s.log.Debug().Msgf("query role filter: %s", query.FindFilter())
 	resp, err := s.role.Find(ctx, query.FindFilter(), query.FindOptions())
 	if err != nil {
 		return nil, exception.NewInternalServerError("find role error, error is %s", err)
@@ -136,13 +136,13 @@ func (s *impl) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest) (*ro
 	permReq.RemoveAll = true
 	_, err = s.RemovePermissionFromRole(ctx, permReq)
 	if err != nil {
-		s.log.Errorf("delete role permission error, %s", err)
+		s.log.Error().Msgf("delete role permission error, %s", err)
 	}
 
 	// 清除角色关联的策略
 	_, err = s.policy.DeletePolicy(ctx, policy.NewDeletePolicyRequestWithID(req.Id))
 	if err != nil {
-		s.log.Errorf("delete role policy error, %s", err)
+		s.log.Error().Msgf("delete role policy error, %s", err)
 	}
 
 	return r, nil

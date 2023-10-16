@@ -71,7 +71,7 @@ func (s *service) blockOtherWebToken(ctx context.Context, tk *token.Token) error
 	if err != nil {
 		return err
 	}
-	s.log.Debugf("block %d tokens", rs.ModifiedCount)
+	s.log.Debug().Msgf("block %d tokens", rs.ModifiedCount)
 	return nil
 }
 
