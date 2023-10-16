@@ -10,7 +10,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
-	"github.com/infraboard/mcenter/conf"
+	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 )
 
 func init() {
@@ -28,10 +28,7 @@ type impl struct {
 }
 
 func (i *impl) Init() error {
-	db, err := conf.C().Mongo.GetDB()
-	if err != nil {
-		return err
-	}
+	db := ioc_mongo.DB()
 	i.role = db.Collection("role")
 	i.perm = db.Collection("permission")
 

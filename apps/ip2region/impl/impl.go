@@ -4,8 +4,8 @@ import (
 	"sync"
 
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/ip2region"
 	"github.com/infraboard/mcenter/apps/storage"
@@ -20,7 +20,7 @@ func init() {
 
 type service struct {
 	storage    storage.Service
-	log        logger.Logger
+	log        *zerolog.Logger
 	bucketName string
 	dbFileName string
 	dbReader   *ip2region.IPReader
@@ -31,7 +31,7 @@ type service struct {
 func (s *service) Init() error {
 	s.storage = ioc.GetController(storage.AppName).(storage.Service)
 
-	s.log = zap.L().Named("IP2Region")
+	s.log = logger.Sub("IP2Region")
 	return nil
 }
 

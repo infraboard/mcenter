@@ -80,7 +80,7 @@ func (s *impl) RegistryEndpoint(ctx context.Context, req *endpoint.RegistryReque
 
 	// 生成该服务的Endpoint
 	endpoints := req.Endpoints(req.ServiceId)
-	s.log.Debugf("registry endpoints: %s", endpoints)
+	s.log.Debug().Msgf("registry endpoints: %s", endpoints)
 
 	// 更新已有的记录
 	news := make([]interface{}, 0, len(endpoints))
@@ -110,6 +110,6 @@ func (s *impl) DeleteEndpoint(ctx context.Context, req *endpoint.DeleteEndpointR
 		return nil, exception.NewInternalServerError("delete service(%s) endpoint error, %s", req.ServiceId, err)
 	}
 
-	s.log.Infof("delete service %s endpoint success, total count: %d", req.ServiceId, result.DeletedCount)
+	s.log.Info().Msgf("delete service %s endpoint success, total count: %d", req.ServiceId, result.DeletedCount)
 	return nil, nil
 }

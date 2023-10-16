@@ -42,13 +42,13 @@ func (s *service) getDBReader() (*ip2region.IPReader, error) {
 
 	// 优先从本地文件加载DB文件
 	if err := s.loadDBFileFromLocal(); err != nil {
-		s.log.Infof("load ip2region db file from local error, %s, retry other load method ", err)
+		s.log.Info().Msgf("load ip2region db file from local error, %s, retry other load method ", err)
 	} else {
 		return s.dbReader, nil
 	}
 
 	if err := s.loadDBFileFromBucket(); err != nil {
-		s.log.Infof("load ip2region db file from bucket error, %s", err)
+		s.log.Info().Msgf("load ip2region db file from bucket error, %s", err)
 	} else {
 		return s.dbReader, nil
 	}

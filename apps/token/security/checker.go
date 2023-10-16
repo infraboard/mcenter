@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/ioc/config/cache"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -51,7 +51,7 @@ func (c *checker) MaxFailedRetryCheck(ctx context.Context, req *token.IssueToken
 	c.log.Debugf("max failed retry lock check enabled, checking ...")
 
 	var count uint32
-	err := c.cache.Get(req.AbnormalUserCheckKey(), &count)
+	err := c.cache.Get(ctx, req.AbnormalUserCheckKey(), &count)
 	if err != nil {
 		c.log.Errorf("get key %s from cache error, %s", req.AbnormalUserCheckKey(), err)
 	}
@@ -75,18 +75,19 @@ func (c *checker) UpdateFailedRetry(ctx context.Context, req *token.IssueTokenRe
 	c.log.Debugf("update failed retry count, check key: %s", req.AbnormalUserCheckKey())
 
 	var count int
-	if err := c.cache.Get(req.AbnormalUserCheckKey(), &count); err == nil {
+	if err := c.cache.Get(ctx, req.AbnormalUserCheckKey(), &count); err == nil {
 		// 之前已经登陆失败过
-		err := c.cache.Put(req.AbnormalUserCheckKey(), count+1)
+		_, err := c.cache.IncrBy(ctx, req.AbnormalUserCheckKey(), 1)
 		if err != nil {
 			c.log.Errorf("set key %s to cache error, %s", req.AbnormalUserCheckKey())
 		}
 	} else {
 		// 首次登陆失败
-		err := c.cache.PutWithTTL(
+		err := c.cache.Set(
+			ctx,
 			req.AbnormalUserCheckKey(),
 			count+1,
-			ss.RetryLockConfig.LockedMiniteDuration(),
+			cache.WithExpiration(int64(ss.RetryLockConfig.LockedMinite)*60),
 		)
 		if err != nil {
 			c.log.Errorf("set key %s to cache error, %s", req.AbnormalUserCheckKey())

@@ -19,7 +19,7 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/token/security"
-	"github.com/infraboard/mcenter/conf"
+	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 
 	_ "github.com/infraboard/mcenter/apps/token/provider/all"
 )
@@ -42,12 +42,7 @@ type service struct {
 }
 
 func (s *service) Init() error {
-	db, err := conf.C().Mongo.GetDB()
-	if err != nil {
-		return err
-	}
-
-	dc := db.Collection(s.Name())
+	dc := ioc_mongo.DB().Collection(s.Name())
 	indexs := []mongo.IndexModel{
 		{
 			Keys:    bson.D{{Key: "refresh_token", Value: -1}},
@@ -58,7 +53,7 @@ func (s *service) Init() error {
 		},
 	}
 
-	_, err = dc.Indexes().CreateMany(context.Background(), indexs)
+	_, err := dc.Indexes().CreateMany(context.Background(), indexs)
 	if err != nil {
 		return err
 	}

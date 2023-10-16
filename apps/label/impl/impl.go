@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/label"
-	"github.com/infraboard/mcenter/conf"
+	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 )
 
 func init() {
@@ -24,11 +24,7 @@ type impl struct {
 }
 
 func (i *impl) Init() error {
-	db, err := conf.C().Mongo.GetDB()
-	if err != nil {
-		return err
-	}
-	i.col = db.Collection(i.Name())
+	i.col = ioc_mongo.DB().Collection(i.Name())
 	i.log = zap.L().Named(i.Name())
 	return nil
 }

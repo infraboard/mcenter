@@ -11,7 +11,7 @@ import (
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcenter/conf"
+	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 )
 
 func init() {
@@ -29,12 +29,7 @@ type service struct {
 }
 
 func (s *service) Init() error {
-	db, err := conf.C().Mongo.GetDB()
-	if err != nil {
-		return err
-	}
-
-	s.col = db.Collection(s.Name())
+	s.col = ioc_mongo.DB().Collection(s.Name())
 	s.log = zap.L().Named(s.Name())
 	s.user = ioc.GetController(user.AppName).(user.Service)
 	s.domain = ioc.GetController(domain.AppName).(domain.Service)

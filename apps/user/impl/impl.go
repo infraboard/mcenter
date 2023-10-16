@@ -13,7 +13,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcenter/conf"
+	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 )
 
 func init() {
@@ -30,12 +30,7 @@ type service struct {
 }
 
 func (s *service) Init() error {
-	db, err := conf.C().Mongo.GetDB()
-	if err != nil {
-		return err
-	}
-
-	uc := db.Collection("user")
+	uc := ioc_mongo.DB().Collection("user")
 
 	indexs := []mongo.IndexModel{
 		{
@@ -50,7 +45,7 @@ func (s *service) Init() error {
 		},
 	}
 
-	_, err = uc.Indexes().CreateMany(context.Background(), indexs)
+	_, err := uc.Indexes().CreateMany(context.Background(), indexs)
 	if err != nil {
 		return err
 	}

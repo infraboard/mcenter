@@ -9,8 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/infraboard/mcenter/apps/counter"
-	"github.com/infraboard/mcenter/conf"
 	"github.com/infraboard/mcube/ioc"
+	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
 )
 
 func init() {
@@ -23,13 +23,7 @@ type service struct {
 }
 
 func (s *service) Init() error {
-	db, err := conf.C().Mongo.GetDB()
-	if err != nil {
-		return err
-	}
-
-	dc := db.Collection("counter")
-	s.col = dc
+	s.col = ioc_mongo.DB().Collection("counter")
 	return nil
 }
 

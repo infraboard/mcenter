@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"context"
 	"strings"
-	"time"
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/endpoint"
@@ -10,10 +10,10 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcenter/version"
-	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/ioc/config/cache"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"go.opentelemetry.io/otel/trace"
@@ -25,7 +25,7 @@ func NewHttpAuther() *httpAuther {
 		tk:               ioc.GetController(token.AppName).(token.Service),
 		policy:           ioc.GetController(policy.AppName).(policy.Service),
 		cache:            cache.C(),
-		codeCheckSilence: 30 * time.Minute,
+		codeCheckSilence: 30 * 60,
 	}
 }
 
@@ -34,11 +34,11 @@ type httpAuther struct {
 	tk               token.Service
 	cache            cache.Cache
 	policy           policy.Service
-	codeCheckSilence time.Duration
+	codeCheckSilence int64
 }
 
 // 设置静默时长
-func (a *httpAuther) SetCodeCheckSilenceTime(t time.Duration) {
+func (a *httpAuther) SetCodeCheckSilenceTime(t int64) {
 	a.codeCheckSilence = t
 }
 
@@ -62,7 +62,7 @@ func (a *httpAuther) GoRestfulAuthFunc(req *restful.Request, resp *restful.Respo
 		}
 
 		// 验证码校验(双因子认证)
-		if !a.IsCodeCheckSilence(tk.Username) && entry.CodeEnable {
+		if !a.IsCodeCheckSilence(req.Request.Context(), tk.Username) && entry.CodeEnable {
 			_, err := a.CheckCode(req, tk)
 			if err != nil {
 				response.Failed(resp, err)
@@ -168,17 +168,22 @@ func (a *httpAuther) CheckCode(req *restful.Request, tk *token.Token) (*token.Co
 	// 保存返回的Code信息
 	req.SetAttribute(token.CODE_ATTRIBUTE_NAME, cd)
 	// 加入静默池中
-	a.SetCodeCheckSilence(cd)
+	a.SetCodeCheckSilence(req.Request.Context(), cd)
 	return cd, nil
 }
 
-func (a *httpAuther) SetCodeCheckSilence(c *token.Code) {
-	err := a.cache.PutWithTTL(c.Key(), c.Code, a.codeCheckSilence)
+func (a *httpAuther) SetCodeCheckSilence(ctx context.Context, c *token.Code) {
+	err := a.cache.Set(ctx, c.Key(), c.Code, cache.WithExpiration(a.codeCheckSilence))
 	if err != nil {
 		a.log.Errorf("set code Silence to cache error, %s", err)
 	}
 }
 
-func (a *httpAuther) IsCodeCheckSilence(username string) bool {
-	return a.cache.IsExist(token.NewCodeKey(username))
+func (a *httpAuther) IsCodeCheckSilence(ctx context.Context, username string) bool {
+	err := a.cache.Exist(ctx, token.NewCodeKey(username))
+	if err != nil {
+		a.log.Error("check error, %s", err)
+		return false
+	}
+	return true
 }

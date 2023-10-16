@@ -17,6 +17,7 @@ coverage.txt
 
 index.html
 etc/config.toml
+etc/application.toml
 etc/config.env
 etc/unit_test.env
 etc/ssl

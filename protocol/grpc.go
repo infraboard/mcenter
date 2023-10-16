@@ -7,18 +7,17 @@ import (
 
 	"github.com/infraboard/mcube/grpc/middleware/recovery"
 	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/rs/zerolog"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/conf"
 	"github.com/infraboard/mcenter/protocol/auth"
+	"github.com/infraboard/mcube/ioc/config/application"
+	"github.com/infraboard/mcube/ioc/config/logger"
 )
 
 // NewGRPCService todo
 func NewGRPCService() *GRPCService {
-	log := zap.L().Named("GRPC Service")
 	appImpl := ioc.GetController(service.AppName).(service.MetaService)
 	rc := recovery.NewInterceptor(recovery.NewZapRecoveryHandler())
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
@@ -29,16 +28,16 @@ func NewGRPCService() *GRPCService {
 
 	return &GRPCService{
 		svr: grpcServer,
-		l:   log,
-		c:   conf.C(),
+		l:   logger.Sub("grpc"),
+		c:   application.App().GRPC,
 	}
 }
 
 // GRPCService grpc服务
 type GRPCService struct {
 	svr *grpc.Server
-	l   logger.Logger
-	c   *conf.Config
+	l   *zerolog.Logger
+	c   *application.Grpc
 }
 
 // Start 启动GRPC服务
@@ -47,19 +46,19 @@ func (s *GRPCService) Start() {
 	ioc.LoadGrpcController(s.svr)
 
 	// 启动HTTP服务
-	lis, err := net.Listen("tcp", s.c.App.GRPC.Addr())
+	lis, err := net.Listen("tcp", s.c.Addr())
 	if err != nil {
-		s.l.Errorf("listen grpc tcp conn error, %s", err)
+		s.l.Error().Msgf("listen grpc tcp conn error, %s", err)
 		return
 	}
 
-	s.l.Infof("GRPC 服务监听地址: %s", s.c.App.GRPC.Addr())
+	s.l.Info().Msgf("GRPC 服务监听地址: %s", s.c.Addr())
 	if err := s.svr.Serve(lis); err != nil {
 		if err == grpc.ErrServerStopped {
-			s.l.Info("service is stopped")
+			s.l.Info().Msgf("service is stopped")
 			return
 		}
-		s.l.Error("start grpc service error, %s", err.Error())
+		s.l.Error().Msgf("start grpc service error, %s", err.Error())
 	}
 }
 
