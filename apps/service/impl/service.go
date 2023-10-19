@@ -114,7 +114,31 @@ func (i *impl) UpdateService(ctx context.Context, req *service.UpdateServiceRequ
 func (i *impl) QueryService(ctx context.Context, req *service.QueryServiceRequest) (
 	*service.ServiceSet, error) {
 	query := newQueryRequest(req)
-	return i.query(ctx, query)
+	i.log.Debug().Msgf("find filter: %s", query.FindFilter())
+	resp, err := i.col.Find(ctx, query.FindFilter(), query.FindOptions())
+
+	if err != nil {
+		return nil, exception.NewInternalServerError("find book error, error is %s", err)
+	}
+
+	ServiceSet := service.NewServiceSet()
+	// 循环
+	for resp.Next(ctx) {
+		ins := service.NewDefaultService()
+		if err := resp.Decode(ins); err != nil {
+			return nil, exception.NewInternalServerError("decode book error, error is %s", err)
+		}
+
+		ServiceSet.Add(ins.Desense())
+	}
+
+	// count
+	count, err := i.col.CountDocuments(ctx, query.FindFilter())
+	if err != nil {
+		return nil, exception.NewInternalServerError("get Service count error, error is %s", err)
+	}
+	ServiceSet.Total = count
+	return ServiceSet, nil
 }
 
 func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabProjectRequest) (

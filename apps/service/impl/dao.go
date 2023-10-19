@@ -75,34 +75,6 @@ func (r *queryRequest) FindFilter() bson.M {
 	return filter
 }
 
-func (i *impl) query(ctx context.Context, req *queryRequest) (*service.ServiceSet, error) {
-	i.log.Debug().Msgf("find filter: %s", req.FindFilter())
-	resp, err := i.col.Find(ctx, req.FindFilter(), req.FindOptions())
-
-	if err != nil {
-		return nil, exception.NewInternalServerError("find book error, error is %s", err)
-	}
-
-	ServiceSet := service.NewServiceSet()
-	// 循环
-	for resp.Next(ctx) {
-		ins := service.NewDefaultService()
-		if err := resp.Decode(ins); err != nil {
-			return nil, exception.NewInternalServerError("decode book error, error is %s", err)
-		}
-
-		ServiceSet.Add(ins.Desense())
-	}
-
-	// count
-	count, err := i.col.CountDocuments(ctx, req.FindFilter())
-	if err != nil {
-		return nil, exception.NewInternalServerError("get Service count error, error is %s", err)
-	}
-	ServiceSet.Total = count
-	return ServiceSet, nil
-}
-
 func (i *impl) get(ctx context.Context, req *service.DescribeServiceRequest) (*service.Service, error) {
 	filter := bson.M{}
 

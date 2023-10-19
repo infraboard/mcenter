@@ -29,6 +29,27 @@ func TestQueryService(t *testing.T) {
 	t.Log(tools.MustToJson(set))
 }
 
+func TestDescribeService(t *testing.T) {
+	req := service.NewDescribeServiceRequestByClientId("w3N8ozuoqVGVQGxEOQ4zyhiE")
+	set, err := impl.DescribeService(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(tools.MustToJson(set))
+}
+
+func TestValidateCredential(t *testing.T) {
+	req := service.NewValidateCredentialRequest(
+		"w3N8ozuoqVGVQGxEOQ4zyhiE",
+		"nPvMEfQGl24dQwjE3MF8SNHXN0ul080P",
+	)
+	ins, err := impl.ValidateCredential(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(tools.MustToJson(ins))
+}
+
 func TestCreateService(t *testing.T) {
 	req := service.NewCreateServiceRequest()
 	req.Name = "moperator"
