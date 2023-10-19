@@ -9,10 +9,10 @@ import (
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcenter/version"
 	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/http/restful/response"
 	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/ioc/config/application"
 	"github.com/infraboard/mcube/ioc/config/cache"
 	"github.com/infraboard/mcube/ioc/config/logger"
 	"github.com/rs/zerolog"
@@ -137,7 +137,7 @@ func (a *httpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Tok
 	req.Domain = tk.Domain
 	req.Namespace = tk.Namespace
 	req.Username = tk.Username
-	req.ServiceId = version.ServiceName
+	req.ServiceId = application.App().AppName
 	req.Path = e.Path
 	a.log.Debug().Msgf("permission check request: %s", req.ToJSON())
 

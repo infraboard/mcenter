@@ -1,8 +1,8 @@
 package token
 
 import (
-	"github.com/infraboard/mcenter/version"
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/ioc/config/application"
 )
 
 var (
@@ -10,5 +10,5 @@ var (
 )
 
 var (
-	ErrCodeUnauthorized = exception.NewAPIException(version.ServiceName, 1401, "验证码校验失败", "Code Header Required, Format: %s: ${code}", CODE_HEADER_KEY)
+	ErrCodeUnauthorized = exception.NewAPIException(application.App().AppName, 1401, "验证码校验失败", "Code Header Required, Format: %s: ${code}", CODE_HEADER_KEY)
 )

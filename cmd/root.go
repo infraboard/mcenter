@@ -7,8 +7,8 @@ import (
 
 	"github.com/infraboard/mcenter/cmd/initial"
 	"github.com/infraboard/mcenter/cmd/start"
-	"github.com/infraboard/mcenter/version"
 	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/ioc/config/application"
 )
 
 var (
@@ -27,7 +27,7 @@ var RootCmd = &cobra.Command{
 	Long:  "基于Etcd的微服务注册中心",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if vers {
-			fmt.Println(version.FullVersion())
+			fmt.Println(application.FullVersion())
 			return nil
 		}
 		return cmd.Help()

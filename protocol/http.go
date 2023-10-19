@@ -16,7 +16,6 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/github.com/emicklei/go-restful/otelrestful"
 
 	"github.com/infraboard/mcenter/protocol/auth"
-	"github.com/infraboard/mcenter/version"
 	"github.com/infraboard/mcube/ioc/config/application"
 	"github.com/infraboard/mcube/ioc/config/logger"
 )
@@ -37,7 +36,7 @@ func NewHTTPService() *HTTPService {
 	}
 	r.Filter(cors.Filter)
 	// trace中间件
-	filter := otelrestful.OTelFilter(version.ServiceName)
+	filter := otelrestful.OTelFilter(application.App().AppName)
 	restful.DefaultContainer.Filter(filter)
 	// 添加鉴权中间件
 	r.Filter(auth.NewHttpAuther().GoRestfulAuthFunc)
@@ -120,8 +119,8 @@ func (s *HTTPService) RegistryEndpoint() {
 		entries = append(entries, endpoint.GetPRBACEntry(es)...)
 	}
 
-	req := endpoint.NewRegistryRequest(version.Short(), entries)
-	req.ServiceId = version.ServiceName
+	req := endpoint.NewRegistryRequest(application.App().AppName, entries)
+	req.ServiceId = application.App().AppName
 	controller := ioc.GetController(endpoint.AppName).(endpoint.Service)
 	_, err := controller.RegistryEndpoint(context.Background(), req)
 	if err != nil {

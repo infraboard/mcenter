@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/infraboard/mcenter/clients/rest"
-	"github.com/infraboard/mcenter/version"
+	"github.com/infraboard/mcube/ioc/config/application"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +18,7 @@ var RootCmd = &cobra.Command{
 	Long:  "Mcenter cli",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if vers {
-			fmt.Println(version.FullVersion())
+			fmt.Println(application.FullVersion())
 			return nil
 		}
 		return cmd.Help()

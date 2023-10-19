@@ -15,7 +15,7 @@ BUILD_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 BUILD_COMMIT := ${shell git rev-parse HEAD}
 BUILD_TIME := ${shell date '+%Y-%m-%d %H:%M:%S'}
 BUILD_GO_VERSION := $(shell go version | grep -o  'go[0-9].[0-9].*')
-VERSION_PATH := "${PKG}/version"
+VERSION_PATH := "github.com/infraboard/mcube/ioc/config/application"
 OUTPUT_NAME := "mcenter-api"
 
 IMAGE_BUILD_TIME := ${shell date '+%Y%m%d'}

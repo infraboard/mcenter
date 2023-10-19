@@ -2,7 +2,7 @@ package swagger
 
 import (
 	"github.com/go-openapi/spec"
-	"github.com/infraboard/mcenter/version"
+	"github.com/infraboard/mcube/ioc/config/application"
 )
 
 func Docs(swo *spec.Swagger) {
@@ -23,7 +23,7 @@ func Docs(swo *spec.Swagger) {
 					URL:  "http://mit.org",
 				},
 			},
-			Version: version.Short(),
+			Version: application.Short(),
 		},
 	}
 }
