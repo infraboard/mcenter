@@ -1,6 +1,7 @@
 package ip2region
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,8 +10,8 @@ import (
 
 // Service todo
 type Service interface {
-	UpdateDBFile(*UpdateDBFileRequest) error
-	LookupIP(ip string) (*IPInfo, error)
+	UpdateDBFile(context.Context, *UpdateDBFileRequest) error
+	LookupIP(ctx context.Context, ip string) (*IPInfo, error)
 }
 
 // NewDefaultIPInfo todo

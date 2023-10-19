@@ -4,7 +4,9 @@ import (
 	// 注册所有内部服务模块, 无须对外暴露的服务, 用于内部依赖
 	_ "github.com/infraboard/mcenter/apps/counter/impl"
 	_ "github.com/infraboard/mcenter/apps/ip2region/impl"
-	_ "github.com/infraboard/mcenter/apps/storage/impl"
+
+	// 引入第三方存储模块(Mongo)
+	_ "github.com/infraboard/mcube/ioc/apps/oss/mongo"
 
 	// 注册所有GRPC服务模块, 暴露给框架GRPC服务器加载, 注意 导入有先后顺序
 	_ "github.com/infraboard/mcenter/apps/domain/impl"

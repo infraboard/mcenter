@@ -113,7 +113,7 @@ func (c *checker) OtherPlaceLoggedInChecK(ctx context.Context, tk *token.Token) 
 	// 查询当前登陆IP地域
 	rip := tk.Location.IpLocation.RemoteIp
 	c.log.Debug().Msgf("query remote ip: %s location ...", rip)
-	login, err := c.ip2Regoin.LookupIP(rip)
+	login, err := c.ip2Regoin.LookupIP(ctx, rip)
 	if err != nil {
 		c.log.Error().Msgf("lookup ip %s error, %s, skip OtherPlaceLoggedInChecK", rip, err)
 		return nil

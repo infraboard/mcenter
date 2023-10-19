@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"strconv"
 	"strings"
 )
@@ -16,7 +15,7 @@ const (
 
 // New todo
 func New(db io.Reader) (*IPReader, error) {
-	dbBinStr, err := ioutil.ReadAll(db)
+	dbBinStr, err := io.ReadAll(db)
 	if err != nil {
 		return nil, fmt.Errorf("load db file to memory error")
 	}

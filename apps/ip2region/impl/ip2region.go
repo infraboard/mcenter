@@ -2,16 +2,17 @@ package impl
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os"
 
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/ioc/apps/oss"
 
 	"github.com/infraboard/mcenter/apps/ip2region"
-	"github.com/infraboard/mcenter/apps/storage"
 )
 
-func (s *service) UpdateDBFile(req *ip2region.UpdateDBFileRequest) error {
+func (s *service) UpdateDBFile(ctx context.Context, req *ip2region.UpdateDBFileRequest) error {
 	if err := req.Validate(); err != nil {
 		return exception.NewBadRequest("validate update db file requrest error, %s", err)
 	}
@@ -19,12 +20,12 @@ func (s *service) UpdateDBFile(req *ip2region.UpdateDBFileRequest) error {
 	reader := req.ReadCloser()
 	defer reader.Close()
 
-	uploadReq := storage.NewUploadFileRequest(s.bucketName, s.dbFileName, reader)
-	return s.storage.UploadFile(uploadReq)
+	uploadReq := oss.NewUploadFileRequest(s.bucketName, s.dbFileName, reader)
+	return s.oss.UploadFile(ctx, uploadReq)
 }
 
-func (s *service) LookupIP(ip string) (*ip2region.IPInfo, error) {
-	dbReader, err := s.getDBReader()
+func (s *service) LookupIP(ctx context.Context, ip string) (*ip2region.IPInfo, error) {
+	dbReader, err := s.getDBReader(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +33,7 @@ func (s *service) LookupIP(ip string) (*ip2region.IPInfo, error) {
 	return dbReader.MemorySearch(ip)
 }
 
-func (s *service) getDBReader() (*ip2region.IPReader, error) {
+func (s *service) getDBReader(ctx context.Context) (*ip2region.IPReader, error) {
 	s.Lock()
 	defer s.Unlock()
 
@@ -47,7 +48,7 @@ func (s *service) getDBReader() (*ip2region.IPReader, error) {
 		return s.dbReader, nil
 	}
 
-	if err := s.loadDBFileFromBucket(); err != nil {
+	if err := s.loadDBFileFromBucket(ctx); err != nil {
 		s.log.Info().Msgf("load ip2region db file from bucket error, %s", err)
 	} else {
 		return s.dbReader, nil
@@ -70,10 +71,10 @@ func (s *service) loadDBFileFromLocal() error {
 	return nil
 }
 
-func (s *service) loadDBFileFromBucket() error {
+func (s *service) loadDBFileFromBucket(ctx context.Context) error {
 	buf := bytes.NewBuffer([]byte{})
-	downloadReq := storage.NewDownloadFileRequest(s.bucketName, s.dbFileName, buf)
-	if err := s.storage.Download(downloadReq); err != nil {
+	downloadReq := oss.NewDownloadFileRequest(s.bucketName, s.dbFileName, buf)
+	if err := s.oss.Download(ctx, downloadReq); err != nil {
 		return err
 	}
 
