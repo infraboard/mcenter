@@ -13,7 +13,7 @@ require (
 	github.com/go-openapi/spec v0.20.9
 	github.com/go-playground/validator/v10 v10.15.5
 	github.com/google/go-github/v45 v45.2.0
-	github.com/infraboard/mcube v1.9.25
+	github.com/infraboard/mcube v1.9.27
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.30
 	github.com/mssola/user_agent v0.6.0
 	github.com/rs/xid v1.5.0
