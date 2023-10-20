@@ -34,9 +34,9 @@ func NewEndpoint(serviceID, version string, entry *Entry) *Endpoint {
 // GenHashID hash id
 func GenHashID(service, grpcPath string) string {
 	hashedStr := fmt.Sprintf("%s-%s", service, grpcPath)
-	h := fnv.New32a()
+	h := fnv.New64a()
 	h.Write([]byte(hashedStr))
-	return fmt.Sprintf("%x", h.Sum32())
+	return fmt.Sprintf("%x", h.Sum64())
 }
 
 // LabelsToStr 扁平化标签  action:get;action:list;action-list-echo

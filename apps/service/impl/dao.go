@@ -6,7 +6,6 @@ import (
 
 	"github.com/infraboard/mcube/exception"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/infraboard/mcenter/apps/policy"
@@ -73,30 +72,6 @@ func (r *queryRequest) FindFilter() bson.M {
 		filter["_id"] = bson.M{"$in": r.Ids}
 	}
 	return filter
-}
-
-func (i *impl) get(ctx context.Context, req *service.DescribeServiceRequest) (*service.Service, error) {
-	filter := bson.M{}
-
-	switch req.DescribeBy {
-	case service.DescribeBy_SERVICE_ID:
-		filter["_id"] = req.Id
-	case service.DescribeBy_SERVICE_CLIENT_ID:
-		filter["credential.client_id"] = req.ClientId
-	case service.DescribeBy_SERVICE_NAME:
-		filter["name"] = req.Name
-	}
-
-	ins := service.NewDefaultService()
-	if err := i.col.FindOne(ctx, filter).Decode(ins); err != nil {
-		if err == mongo.ErrNoDocuments {
-			return nil, exception.NewNotFound("Service %s not found", req)
-		}
-
-		return nil, exception.NewInternalServerError("find Service %s error, %s", req, err)
-	}
-
-	return ins, nil
 }
 
 func (i *impl) delete(ctx context.Context, ins *service.Service) error {

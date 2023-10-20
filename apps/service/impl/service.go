@@ -3,6 +3,8 @@ package impl
 import (
 	"context"
 
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -173,7 +175,28 @@ func (i *impl) QueryGitlabProject(ctx context.Context, in *service.QueryGitlabPr
 
 func (i *impl) DescribeService(ctx context.Context, req *service.DescribeServiceRequest) (
 	*service.Service, error) {
-	return i.get(ctx, req)
+	filter := bson.M{}
+
+	switch req.DescribeBy {
+	case service.DescribeBy_SERVICE_ID:
+		filter["_id"] = req.Id
+	case service.DescribeBy_SERVICE_CLIENT_ID:
+		filter["credential.client_id"] = req.ClientId
+	case service.DescribeBy_SERVICE_NAME:
+		filter["name"] = req.Name
+	}
+
+	ins := service.NewDefaultService()
+	if err := i.col.FindOne(ctx, filter).Decode(ins); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, exception.NewNotFound("Service %s not found", req)
+		}
+
+		return nil, exception.NewInternalServerError("find Service %s error, %s", req, err)
+	}
+
+	return ins, nil
+
 }
 
 func (i *impl) DeleteService(ctx context.Context, req *service.DeleteServiceRequest) (
