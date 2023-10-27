@@ -282,7 +282,7 @@ func GetScopeFilterFromRequest(r *restful.Request) []*resource.LabelRequirement 
 func MakeMongoFilter(m bson.M, prefix string, labels []*resource.LabelRequirement) {
 	for i := range labels {
 		label := labels[i]
-		if label.IsMatchAll() {
+		if label.IsMatchAll() || label.Key == "" {
 			continue
 		}
 
