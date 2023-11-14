@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/ioc/config/application"
 	"github.com/infraboard/mcube/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
@@ -17,8 +18,8 @@ import (
 )
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
-func GrpcAuthUnaryServerInterceptor(namespace string) grpc.UnaryServerInterceptor {
-	return NewGrpcAuther(rpc.C().Service()).WithNamespace(namespace).Auth
+func GrpcAuthUnaryServerInterceptor() grpc.UnaryServerInterceptor {
+	return NewGrpcAuther(rpc.C().Service()).WithNamespace(application.App().AppName).Auth
 }
 
 func NewGrpcAuther(svr service.RPCClient) *GrpcAuther {

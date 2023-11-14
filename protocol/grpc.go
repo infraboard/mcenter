@@ -19,7 +19,7 @@ import (
 // NewGRPCService todo
 func NewGRPCService() *GRPCService {
 	appImpl := ioc.GetController(service.AppName).(service.MetaService)
-	rc := recovery.NewInterceptor(recovery.NewZapRecoveryHandler())
+	rc := recovery.NewInterceptor(recovery.NewZeroLogRecoveryHandler())
 	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
 		rc.UnaryServerInterceptor(),
 		otelgrpc.UnaryServerInterceptor(),
