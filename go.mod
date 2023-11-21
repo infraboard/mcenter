@@ -13,7 +13,7 @@ require (
 	github.com/go-openapi/spec v0.20.9
 	github.com/go-playground/validator/v10 v10.15.5
 	github.com/google/go-github/v45 v45.2.0
-	github.com/infraboard/mcube v1.9.27
+	github.com/infraboard/mcube v1.9.28
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.30
 	github.com/mssola/user_agent v0.6.0
 	github.com/rs/xid v1.5.0
@@ -43,6 +43,7 @@ require (
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
