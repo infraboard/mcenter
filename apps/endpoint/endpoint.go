@@ -314,8 +314,6 @@ func NewEntryFromRestRequest(req *restful.Request) *Entry {
 	entry.Method = route.Method()
 	entry.LoadMeta(route.Metadata())
 	entry.Path = route.Path()
-
-	entry.Path = entry.UniquePath()
 	return entry
 }
 
