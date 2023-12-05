@@ -8,7 +8,7 @@ package policy
 
 import (
 	role "github.com/infraboard/mcenter/apps/role"
-	resource "github.com/infraboard/mcube/pb/resource"
+	resource "github.com/infraboard/mcube/v2/pb/resource"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

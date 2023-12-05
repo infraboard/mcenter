@@ -4,8 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/infraboard/mcube/grpc/middleware/exception"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/grpc/middleware/exception"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

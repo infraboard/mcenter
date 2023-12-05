@@ -9,9 +9,9 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/tools/sense"
+	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/tools/sense"
 )
 
 func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
@@ -252,7 +252,7 @@ func (s *service) ValidateToken(ctx context.Context, req *token.ValidateTokenReq
 	return tk.Desense(), nil
 }
 
-func (s *service) makeBlockExcption(bt token.BLOCK_TYPE, message string) exception.APIException {
+func (s *service) makeBlockExcption(bt token.BLOCK_TYPE, message string) *exception.APIException {
 	switch bt {
 	case token.BLOCK_TYPE_REFRESH_TOKEN_EXPIRED:
 		return exception.NewSessionTerminated(message)

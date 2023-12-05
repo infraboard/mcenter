@@ -3,8 +3,8 @@ package api
 import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/endpoint"
-	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/http/restful/response"
+	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/http/restful/response"
 )
 
 // RegistryEndpoint 注册Endpint

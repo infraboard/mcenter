@@ -7,8 +7,8 @@ import (
 
 	"github.com/infraboard/mcenter/cmd/initial"
 	"github.com/infraboard/mcenter/cmd/start"
-	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/ioc/config/application"
+	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/application"
 )
 
 var (

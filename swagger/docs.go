@@ -2,7 +2,7 @@ package swagger
 
 import (
 	"github.com/go-openapi/spec"
-	"github.com/infraboard/mcube/ioc/config/application"
+	"github.com/infraboard/mcube/v2/ioc/config/application"
 )
 
 func Docs(swo *spec.Swagger) {

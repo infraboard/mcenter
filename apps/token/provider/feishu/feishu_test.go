@@ -6,7 +6,6 @@ import (
 	"github.com/caarlos0/env/v6"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token/provider/feishu"
-	"github.com/infraboard/mcube/logger/zap"
 )
 
 var (
@@ -40,5 +39,4 @@ func TestLogin(t *testing.T) {
 }
 
 func init() {
-	zap.DevelopmentSetup()
 }

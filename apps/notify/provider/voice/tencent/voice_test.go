@@ -8,7 +8,6 @@ import (
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/notify/provider/voice"
 	"github.com/infraboard/mcenter/apps/notify/provider/voice/tencent"
-	"github.com/infraboard/mcube/logger/zap"
 )
 
 var (
@@ -29,8 +28,6 @@ func TestQcloudVoice(t *testing.T) {
 }
 
 func init() {
-	zap.DevelopmentSetup()
-
 	conf, err := notify.LoadTencentVoiceConfigFromEnv()
 	if err != nil {
 		panic(err)

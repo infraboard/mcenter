@@ -8,8 +8,8 @@ import (
 
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/clients/rpc"
-	"github.com/infraboard/mcube/grpc/balancer/wrr"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/grpc/balancer/wrr"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/attributes"
 	"google.golang.org/grpc/resolver"

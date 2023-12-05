@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcube/client/rest"
-	"github.com/infraboard/mcube/pb/request"
+	"github.com/infraboard/mcube/v2/client/rest"
+	"github.com/infraboard/mcube/v2/pb/request"
 )
 
 type MetaService interface {

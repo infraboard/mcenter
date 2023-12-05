@@ -7,7 +7,7 @@ MOD_DIR := $(shell go env GOPATH)/pkg/mod
 PKG_LIST := $(shell go list ${PKG}/... | grep -v /vendor/ | grep -v redis)
 GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
 
-MCUBE_MODULE := "github.com/infraboard/mcube"
+MCUBE_MODULE := "github.com/infraboard/mcube/v2"
 MCUBE_VERSION :=$(shell go list -m ${MCUBE_MODULE} | cut -d' ' -f2)
 MCUBE_PKG_PATH := ${MOD_DIR}/${MCUBE_MODULE}@${MCUBE_VERSION}
 
@@ -15,7 +15,7 @@ BUILD_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 BUILD_COMMIT := ${shell git rev-parse HEAD}
 BUILD_TIME := ${shell date '+%Y-%m-%d %H:%M:%S'}
 BUILD_GO_VERSION := $(shell go version | grep -o  'go[0-9].[0-9].*')
-VERSION_PATH := "github.com/infraboard/mcube/ioc/config/application"
+VERSION_PATH := "github.com/infraboard/mcube/v2/ioc/config/application"
 OUTPUT_NAME := "mcenter-api"
 
 IMAGE_BUILD_TIME := ${shell date '+%Y%m%d'}
@@ -65,15 +65,15 @@ clean: ## Remove previous build
 	@rm -f dist/${PROJECT_NAME}
 
 install: ## Install depence go package
-	@go install github.com/infraboard/mcube/cmd@latest
+	@go install github.com/infraboard/mcube/v2/cmd@latest
 	@go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	@go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	@go install github.com/favadi/protoc-go-inject-tag@latest
 
 pb: ## Copy mcube protobuf files to common/pb
-	@mkdir -pv common/pb/github.com/infraboard/mcube/pb
-	@cp -r ${MCUBE_PKG_PATH}/pb/* common/pb/github.com/infraboard/mcube/pb
-	@sudo rm -rf common/pb/github.com/infraboard/mcube/pb/*/*.go
+	@mkdir -pv common/pb/github.com/infraboard/mcube/v2/pb
+	@cp -r ${MCUBE_PKG_PATH}/pb/* common/pb/github.com/infraboard/mcube/v2/pb
+	@sudo rm -rf common/pb/github.com/infraboard/mcube/v2/pb/*/*.go
 
 gen: ## Init Service
 	@protoc -I=.. --go_out=. --go_opt=module=${PKG} --go-grpc_out=. --go-grpc_opt=module=${PKG} ../mcenter/apps/*/pb/*.proto

@@ -7,8 +7,8 @@
 package service
 
 import (
-	request "github.com/infraboard/mcube/pb/request"
-	resource "github.com/infraboard/mcube/pb/resource"
+	request "github.com/infraboard/mcube/v2/pb/request"
+	resource "github.com/infraboard/mcube/v2/pb/resource"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

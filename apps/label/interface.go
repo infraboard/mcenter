@@ -6,8 +6,8 @@ import (
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/token"
-	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/validator"
+	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/ioc/config/validator"
 )
 
 const (

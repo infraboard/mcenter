@@ -1,15 +1,15 @@
 package impl
 
 import (
-	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/rs/zerolog"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcube/ioc/config/logger"
-	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
 
 func init() {

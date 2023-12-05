@@ -5,7 +5,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/test/tools"
-	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/v2/ioc"
 )
 
 var (

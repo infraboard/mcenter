@@ -2,7 +2,7 @@ package token
 
 import (
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mcube/v2/pb/resource"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

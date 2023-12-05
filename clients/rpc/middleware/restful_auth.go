@@ -6,10 +6,10 @@ import (
 	"sync"
 
 	"github.com/emicklei/go-restful/v3"
-	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/http/restful/response"
-	"github.com/infraboard/mcube/ioc/config/cache"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/http/restful/response"
+	"github.com/infraboard/mcube/v2/ioc/config/cache"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/otel/trace"
 

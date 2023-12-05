@@ -3,7 +3,7 @@ package impl
 import (
 	"fmt"
 
-	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/v2/exception"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 

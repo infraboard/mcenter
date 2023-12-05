@@ -3,14 +3,14 @@ package impl
 import (
 	"context"
 
-	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/v2/ioc"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/domain"
-	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
+	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
 
 func init() {

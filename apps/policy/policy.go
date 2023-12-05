@@ -9,8 +9,8 @@ import (
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
-	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/pb/resource"
 	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/infraboard/mcenter/apps/role"

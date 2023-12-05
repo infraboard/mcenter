@@ -15,7 +15,7 @@ import (
 	"github.com/infraboard/mcenter/apps/notify/provider/voice"
 	vtencent "github.com/infraboard/mcenter/apps/notify/provider/voice/tencent"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/v2/exception"
 )
 
 // 邮件通知

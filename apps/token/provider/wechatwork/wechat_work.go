@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcube/client/rest"
+	"github.com/infraboard/mcube/v2/client/rest"
 )
 
 func NewWechatWorkClient(conf *domain.WechatWorkConfig) *WechatWork {

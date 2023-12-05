@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/clients/rpc"
-	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/v2/exception"
 )
 
 func (i *impl) RegistryInstance(ctx context.Context, req *instance.RegistryRequest) (

@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
-	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/v2/exception"
 )
 
 func newDescribeEndpointRequest(req *endpoint.DescribeEndpointRequest) (*describeEndpointRequest, error) {

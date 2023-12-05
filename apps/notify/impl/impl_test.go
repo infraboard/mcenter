@@ -6,7 +6,7 @@ import (
 	// 注册所有服务
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/test/tools"
-	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/v2/ioc"
 )
 
 var (

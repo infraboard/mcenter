@@ -9,9 +9,9 @@ import (
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
-	"github.com/infraboard/mcube/http/label"
-	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/types/ftime"
+	"github.com/infraboard/mcube/v2/http/label"
+	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/types/ftime"
 )
 
 // NewDefaultEndpoint todo

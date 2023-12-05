@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcenter/common/validate"
-	"github.com/infraboard/mcube/pb/resource"
-	"github.com/infraboard/mcube/tools/hash"
-	"github.com/infraboard/mcube/tools/pretty"
+	"github.com/infraboard/mcube/v2/pb/resource"
+	"github.com/infraboard/mcube/v2/tools/hash"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 func NewLabelSet() *LabelSet {

@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/infraboard/mcenter/clients/rest"
-	"github.com/infraboard/mcube/ioc/config/application"
+	"github.com/infraboard/mcube/v2/ioc/config/application"
 	"github.com/spf13/cobra"
 )
 

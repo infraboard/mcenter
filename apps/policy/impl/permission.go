@@ -7,7 +7,7 @@ import (
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
-	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/v2/exception"
 )
 
 func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionRequest) (

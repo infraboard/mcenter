@@ -6,7 +6,7 @@ import (
 	_ "github.com/infraboard/mcenter/apps/ip2region/impl"
 
 	// 引入第三方存储模块(Mongo)
-	_ "github.com/infraboard/mcube/ioc/apps/oss/mongo"
+	_ "github.com/infraboard/mcube/v2/ioc/apps/oss/mongo"
 
 	// 注册所有GRPC服务模块, 暴露给框架GRPC服务器加载, 注意 导入有先后顺序
 	_ "github.com/infraboard/mcenter/apps/domain/impl"

@@ -8,10 +8,10 @@ import (
 
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/common/format"
-	"github.com/infraboard/mcube/exception"
-	request "github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/logger/zap"
-	"github.com/infraboard/mcube/tools/pretty"
+	"github.com/infraboard/mcube/v2/exception"
+	request "github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 // NewAddPermissionToRoleRequest todo
@@ -231,9 +231,10 @@ func (s *PermissionSet) HasPermission(ep *endpoint.Endpoint) (*Permission, bool,
 
 		rok = perm.Spec.MatchResource(ep.ServiceId, ep.Entry.Resource)
 		lok = perm.Spec.MatchLabel(ep.Entry.Labels)
-		zap.L().Debugf("resource match: service_id: %s[target: %s] resource: %s[target: %s], result: %v",
+
+		logger.L().Debug().Msgf("resource match: service_id: %s[target: %s] resource: %s[target: %s], result: %v",
 			ep.ServiceId, perm.Spec.ServiceId, ep.Entry.Resource, perm.Spec.ResourceName, rok)
-		zap.L().Debugf("label match: %v from [key: %v, value: %v, result: %v",
+		logger.L().Debug().Msgf("label match: %v from [key: %v, value: %v, result: %v",
 			ep.Entry.Labels, perm.Spec.LabelKey, perm.Spec.LabelValues, lok)
 		if rok && lok {
 

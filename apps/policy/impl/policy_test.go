@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
-	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mcube/v2/pb/resource"
 )
 
 func TestCreatePolicy(t *testing.T) {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -19,7 +19,7 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/token/security"
-	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
+	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 
 	_ "github.com/infraboard/mcenter/apps/token/provider/all"
 )

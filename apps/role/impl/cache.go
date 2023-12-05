@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/infraboard/mcenter/apps/role"
-	"github.com/infraboard/mcube/cache"
+	"github.com/infraboard/mcube/v2/ioc/config/cache"
 )
 
 func CacheWrapper(i *impl) *Decorator {
@@ -19,7 +19,7 @@ func (d *Decorator) DescribeRole(ctx context.Context, req *role.DescribeRoleRequ
 	*role.Role, error) {
 	if req.Id != "" {
 		ins := role.NewDefaultRole()
-		if err := cache.C().Get(req.Id, ins); err != nil {
+		if err := cache.C().Get(ctx, req.Id, ins); err != nil {
 			d.log.Warn().Msgf("get %s from cache error, %s", req.Id, err)
 		} else {
 			d.log.Info().Msgf("get %s from cache", ins.Meta.Id)
@@ -33,7 +33,7 @@ func (d *Decorator) DescribeRole(ctx context.Context, req *role.DescribeRoleRequ
 	}
 
 	if req.Id != "" {
-		if err := cache.C().Put(req.Id, ins); err != nil {
+		if err := cache.C().Set(ctx, req.Id, ins); err != nil {
 			d.log.Warn().Msgf("set %s to cache error, %s", req.Id, err)
 		} else {
 			d.log.Info().Msgf("set %s to cache", ins.Meta.Id)
@@ -49,7 +49,7 @@ func (d *Decorator) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest)
 		return nil, err
 	}
 
-	if err := cache.C().Delete(req.Id); err != nil {
+	if err := cache.C().Del(ctx, req.Id); err != nil {
 		d.log.Info().Msgf("delete %s to cache error, %s", req.Id, err)
 	}
 	return ins, nil
@@ -62,7 +62,7 @@ func (d *Decorator) AddPermissionToRole(ctx context.Context, req *role.AddPermis
 		return nil, err
 	}
 
-	if err := cache.C().Delete(req.RoleId); err != nil {
+	if err := cache.C().Del(ctx, req.RoleId); err != nil {
 		d.log.Info().Msgf("delete %s to cache error, %s", req.RoleId, err)
 	}
 	return ins, nil
@@ -75,7 +75,7 @@ func (d *Decorator) RemovePermissionFromRole(ctx context.Context, req *role.Remo
 		return nil, err
 	}
 
-	if err := cache.C().Delete(req.RoleId); err != nil {
+	if err := cache.C().Del(ctx, req.RoleId); err != nil {
 		d.log.Info().Msgf("delete %s to cache error, %s", req.RoleId, err)
 	}
 	return ins, nil
@@ -88,7 +88,7 @@ func (d *Decorator) UpdatePermission(ctx context.Context, req *role.UpdatePermis
 		return nil, err
 	}
 
-	if err := cache.C().Delete(ins.Meta.Id); err != nil {
+	if err := cache.C().Del(ctx, ins.Meta.Id); err != nil {
 		d.log.Info().Msgf("delete %s to cache error, %s", req.Id, err)
 	}
 	return ins, err

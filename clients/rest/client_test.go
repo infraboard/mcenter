@@ -8,7 +8,6 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/clients/rest"
 	"github.com/infraboard/mcenter/test/tools"
-	"github.com/infraboard/mcube/logger/zap"
 )
 
 var (
@@ -37,7 +36,6 @@ func TestValidateToken(t *testing.T) {
 }
 
 func init() {
-	zap.DevelopmentSetup()
 	err := rest.LoadClientFromEnv()
 	if err != nil {
 		panic(err)

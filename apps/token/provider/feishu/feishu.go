@@ -6,7 +6,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcube/client/rest"
+	"github.com/infraboard/mcube/v2/client/rest"
 )
 
 func NewFeishuClient(conf *domain.FeishuConfig) *Feishu {

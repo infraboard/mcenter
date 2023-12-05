@@ -4,8 +4,8 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/infraboard/mcube/client/negotiator"
-	"github.com/infraboard/mcube/client/rest"
+	"github.com/infraboard/mcube/v2/client/negotiator"
+	"github.com/infraboard/mcube/v2/client/rest"
 )
 
 func newProjectV4(gitlab *GitlabV4) *ProjectV4 {

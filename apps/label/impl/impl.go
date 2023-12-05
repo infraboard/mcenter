@@ -3,13 +3,13 @@ package impl
 import (
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/label"
-	"github.com/infraboard/mcube/ioc/config/logger"
-	ioc_mongo "github.com/infraboard/mcube/ioc/config/mongo"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
 
 func init() {

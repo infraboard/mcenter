@@ -6,8 +6,8 @@ import (
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcube/http/label"
-	"github.com/infraboard/mcube/http/restful/response"
+	"github.com/infraboard/mcube/v2/http/label"
+	"github.com/infraboard/mcube/v2/http/restful/response"
 )
 
 func (h *handler) Registry(ws *restful.WebService) {

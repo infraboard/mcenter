@@ -1,8 +1,8 @@
 package token
 
 import (
-	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/ioc/config/application"
+	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/ioc/config/application"
 )
 
 var (

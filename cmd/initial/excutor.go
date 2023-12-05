@@ -11,8 +11,7 @@ import (
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/logger/zap"
+	"github.com/infraboard/mcube/v2/ioc"
 
 	// 注册所有服务
 	_ "github.com/infraboard/mcenter/apps"
@@ -21,13 +20,6 @@ import (
 // NewInitialerFromCLI 初始化
 func NewExecutorFromCLI() (*excutor, error) {
 	e := newExcutor()
-
-	// debug 开关
-	if debug {
-		zap.SetLevel(zap.DebugLevel)
-	} else {
-		zap.SetLevel(zap.ErrorLevel)
-	}
 
 	// if err := i.checkIsInit(context.Background()); err != nil {
 	// 	return nil, err

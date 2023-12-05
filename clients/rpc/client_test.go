@@ -9,9 +9,9 @@ import (
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/clients/rpc"
-	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/ioc/apps/health"
+	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/apps/health"
 )
 
 var (
@@ -23,7 +23,7 @@ func TestValidateToken(t *testing.T) {
 	req := token.NewValidateTokenRequest("t9EE4ov1J9hap3YE6fDNxE5m")
 	tk, err := c.Token().ValidateToken(ctx, req)
 	if err != nil {
-		if e, ok := err.(exception.APIException); ok {
+		if e, ok := err.(*exception.APIException); ok {
 			t.Fatal(e.ToJson())
 		} else {
 			t.Fatal(err)

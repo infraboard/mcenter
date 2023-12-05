@@ -3,8 +3,8 @@ package policy
 import (
 	"fmt"
 
-	request "github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/tools/pretty"
+	request "github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 // NewCheckPermissionrequest todo

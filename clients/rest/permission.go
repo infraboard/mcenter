@@ -5,7 +5,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
-	"github.com/infraboard/mcube/client/rest"
+	"github.com/infraboard/mcube/v2/client/rest"
 )
 
 type PolicyService interface {

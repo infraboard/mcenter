@@ -11,8 +11,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/token"
-	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/tools/pretty"
+	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 const (

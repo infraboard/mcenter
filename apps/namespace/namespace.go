@@ -9,10 +9,10 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/common/format"
-	"github.com/infraboard/mcube/exception"
-	request "github.com/infraboard/mcube/http/request"
-	resource "github.com/infraboard/mcube/pb/resource"
-	"github.com/infraboard/mcube/tools/hash"
+	"github.com/infraboard/mcube/v2/exception"
+	request "github.com/infraboard/mcube/v2/http/request"
+	resource "github.com/infraboard/mcube/v2/pb/resource"
+	"github.com/infraboard/mcube/v2/tools/hash"
 )
 
 // use a single instance of Validate, it caches struct info

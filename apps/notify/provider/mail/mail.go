@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-gomail/gomail"
 	"github.com/infraboard/mcenter/apps/notify"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 )
 

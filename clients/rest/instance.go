@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcube/client/rest"
+	"github.com/infraboard/mcube/v2/client/rest"
 )
 
 type InstanceService interface {

@@ -7,7 +7,7 @@
 package policy
 
 import (
-	request "github.com/infraboard/mcube/http/request"
+	request "github.com/infraboard/mcube/v2/http/request"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

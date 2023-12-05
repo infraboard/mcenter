@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
-	"github.com/infraboard/mcube/exception"
-	request "github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/v2/exception"
+	request "github.com/infraboard/mcube/v2/http/request"
 )
 
 const (

@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/role"
-	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mcube/v2/pb/resource"
 )
 
 func TestCreateRole(t *testing.T) {

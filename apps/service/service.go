@@ -9,7 +9,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
 	"github.com/infraboard/mcenter/common/format"
-	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mcube/v2/pb/resource"
 	"google.golang.org/grpc/metadata"
 )
 

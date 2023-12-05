@@ -5,15 +5,15 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/infraboard/mcube/grpc/middleware/recovery"
-	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/v2/grpc/middleware/recovery"
+	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/protocol/auth"
-	"github.com/infraboard/mcube/ioc/config/application"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/application"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 )
 
 // NewGRPCService todo

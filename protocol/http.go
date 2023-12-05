@@ -9,15 +9,15 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/swagger"
-	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/ioc/apps/apidoc"
-	"github.com/infraboard/mcube/ioc/apps/health"
+	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/apps/apidoc"
+	"github.com/infraboard/mcube/v2/ioc/apps/health"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/emicklei/go-restful/otelrestful"
 
 	"github.com/infraboard/mcenter/protocol/auth"
-	"github.com/infraboard/mcube/ioc/config/application"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/application"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 )
 
 // NewHTTPService 构建函数

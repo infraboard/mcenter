@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcenter/clients/rpc"
-	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/v2/ioc"
 )
 
 func main() {

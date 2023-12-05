@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/ioc/apps/oss"
+	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/ioc/apps/oss"
 
 	"github.com/infraboard/mcenter/apps/ip2region"
 )

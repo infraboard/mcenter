@@ -13,9 +13,9 @@ import (
 
 	notify "github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/common/format"
-	request "github.com/infraboard/mcube/http/request"
-	pb_request "github.com/infraboard/mcube/pb/request"
-	"github.com/infraboard/mcube/tools/hash"
+	request "github.com/infraboard/mcube/v2/http/request"
+	pb_request "github.com/infraboard/mcube/v2/pb/request"
+	"github.com/infraboard/mcube/v2/tools/hash"
 )
 
 // use a single instance of Validate, it caches struct info

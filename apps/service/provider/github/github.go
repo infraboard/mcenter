@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/google/go-github/v45/github"
-	"github.com/infraboard/mcube/client/negotiator"
-	"github.com/infraboard/mcube/client/rest"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/client/negotiator"
+	"github.com/infraboard/mcube/v2/client/rest"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"golang.org/x/oauth2"
 )

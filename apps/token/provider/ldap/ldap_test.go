@@ -3,7 +3,6 @@ package ldap_test
 import (
 	"testing"
 
-	"github.com/infraboard/mcube/logger/zap"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/infraboard/mcenter/apps/domain"
@@ -54,8 +53,6 @@ func TestBaseDnToSuffix(t *testing.T) {
 }
 
 func init() {
-	zap.DevelopmentSetup()
-
 	conf := domain.NewDefaultLDAPConfig()
 	conf.Url = "ldap://127.0.0.1:389"
 	conf.BindDn = "cn=admin,dc=example,dc=org"

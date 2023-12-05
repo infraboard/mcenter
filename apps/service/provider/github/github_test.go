@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/infraboard/mcenter/apps/service/provider/github"
-	"github.com/infraboard/mcube/logger/zap"
 )
 
 var (
@@ -25,7 +24,6 @@ func TestExchange(t *testing.T) {
 }
 
 func init() {
-	zap.DevelopmentSetup()
 	conf, err := github.LoadConfigFromEnv()
 	if err != nil {
 		panic(err)

@@ -3,8 +3,8 @@ package notify
 import (
 	"fmt"
 
-	"github.com/infraboard/mcube/http/request"
-	"github.com/infraboard/mcube/pb/resource"
+	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/pb/resource"
 )
 
 const (

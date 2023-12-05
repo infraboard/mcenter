@@ -3,7 +3,7 @@ package impl_test
 import (
 	"context"
 
-	"github.com/infraboard/mcube/ioc"
+	"github.com/infraboard/mcube/v2/ioc"
 
 	// 注册所有服务
 	"github.com/infraboard/mcenter/apps/service"

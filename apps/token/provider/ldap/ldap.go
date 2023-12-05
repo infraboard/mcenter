@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-ldap/ldap/v3"
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 )
 

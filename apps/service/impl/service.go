@@ -10,8 +10,8 @@ import (
 
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
-	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/pb/request"
+	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/pb/request"
 )
 
 func (i *impl) ValidateCredential(ctx context.Context, req *service.ValidateCredentialRequest) (

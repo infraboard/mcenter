@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/infraboard/mcube/exception"
-	"github.com/infraboard/mcube/ioc/config/application"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/ioc/config/application"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -61,7 +61,7 @@ func (a *grpcAuther) Auth(
 	// 注入自定义异常
 	if err != nil {
 		var setErr error
-		if e, ok := err.(exception.APIException); ok {
+		if e, ok := err.(*exception.APIException); ok {
 			setErr = grpc.SetTrailer(ctx, metadata.Pairs(exception.TRAILER_ERROR_JSON_KEY, e.ToJson()))
 			err = status.Errorf(codes.Code(e.ErrorCode()), e.Error())
 		} else {

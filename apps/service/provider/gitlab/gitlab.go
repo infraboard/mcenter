@@ -1,7 +1,7 @@
 package gitlab
 
 import (
-	"github.com/infraboard/mcube/client/rest"
+	"github.com/infraboard/mcube/v2/client/rest"
 )
 
 func NewGitlabV4(conf *Config) *GitlabV4 {

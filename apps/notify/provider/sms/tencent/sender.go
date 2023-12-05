@@ -7,7 +7,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/notify"
 	sms_provider "github.com/infraboard/mcenter/apps/notify/provider/sms"
-	"github.com/infraboard/mcube/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"

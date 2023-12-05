@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
-	"github.com/infraboard/mcube/ioc"
-	"github.com/infraboard/mcube/tools/pretty"
+	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 func init() {

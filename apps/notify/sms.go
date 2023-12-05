@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/caarlos0/env/v6"
-	"github.com/infraboard/mcube/validator"
+	"github.com/infraboard/mcube/v2/ioc/config/validator"
 )
 
 const (
