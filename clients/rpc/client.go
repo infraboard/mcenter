@@ -41,8 +41,7 @@ func NewClient(conf *Mcenter) (*ClientSet, error) {
 		// 将异常转化为 API Exception
 		grpc.WithChainUnaryInterceptor(exception.NewUnaryClientInterceptor()),
 		// Grpc Trace
-		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
-		grpc.WithStreamInterceptor(otelgrpc.StreamClientInterceptor()),
+		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
 	)
 
 	if err != nil {
