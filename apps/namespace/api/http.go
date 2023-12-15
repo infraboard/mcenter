@@ -20,7 +20,7 @@ type handler struct {
 
 func (h *handler) Init() error {
 	h.log = logger.Sub(namespace.AppName)
-	h.service = ioc.GetController(namespace.AppName).(namespace.Service)
+	h.service = ioc.Controller().Get(namespace.AppName).(namespace.Service)
 	return nil
 }
 

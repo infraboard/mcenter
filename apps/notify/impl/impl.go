@@ -31,8 +31,8 @@ type service struct {
 func (s *service) Init() error {
 	s.col = ioc_mongo.DB().Collection(s.Name())
 	s.log = logger.Sub(s.Name())
-	s.user = ioc.GetController(user.AppName).(user.Service)
-	s.domain = ioc.GetController(domain.AppName).(domain.Service)
+	s.user = ioc.Controller().Get(user.AppName).(user.Service)
+	s.domain = ioc.Controller().Get(domain.AppName).(domain.Service)
 	return nil
 }
 

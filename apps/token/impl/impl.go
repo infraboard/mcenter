@@ -61,10 +61,10 @@ func (s *service) Init() error {
 	s.col = dc
 
 	s.log = logger.Sub(s.Name())
-	s.ns = ioc.GetController(namespace.AppName).(namespace.Service)
-	s.policy = ioc.GetController(policy.AppName).(policy.Service)
-	s.domain = ioc.GetController(domain.AppName).(domain.Service)
-	s.notify = ioc.GetController(notify.AppName).(notify.Service)
+	s.ns = ioc.Controller().Get(namespace.AppName).(namespace.Service)
+	s.policy = ioc.Controller().Get(policy.AppName).(policy.Service)
+	s.domain = ioc.Controller().Get(domain.AppName).(domain.Service)
+	s.notify = ioc.Controller().Get(notify.AppName).(notify.Service)
 
 	s.checker, err = security.NewChecker()
 	if err != nil {

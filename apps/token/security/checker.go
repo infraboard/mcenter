@@ -24,11 +24,11 @@ func NewChecker() (Checker, error) {
 	}
 
 	return &checker{
-		domain:    ioc.GetController(domain.AppName).(domain.Service),
-		user:      ioc.GetController(user.AppName).(user.Service),
-		token:     ioc.GetController(token.AppName).(token.Service),
+		domain:    ioc.Controller().Get(domain.AppName).(domain.Service),
+		user:      ioc.Controller().Get(user.AppName).(user.Service),
+		token:     ioc.Controller().Get(token.AppName).(token.Service),
 		cache:     c,
-		ip2Regoin: ioc.GetController(ip2region.AppName).(ip2region.Service),
+		ip2Regoin: ioc.Controller().Get(ip2region.AppName).(ip2region.Service),
 		log:       logger.Sub("Login Security"),
 	}, nil
 }

@@ -17,5 +17,5 @@ var (
 
 func init() {
 	tools.DevelopmentSetup()
-	impl = ioc.GetController(service.AppName).(service.MetaService)
+	impl = ioc.Controller().Get(service.AppName).(service.MetaService)
 }

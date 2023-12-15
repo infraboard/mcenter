@@ -15,5 +15,5 @@ var (
 
 func init() {
 	tools.DevelopmentSetup()
-	impl = ioc.GetController(token.AppName).(token.Service)
+	impl = ioc.Controller().Get(token.AppName).(token.Service)
 }

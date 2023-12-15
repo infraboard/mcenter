@@ -29,7 +29,7 @@ func (i *impl) Init() error {
 	i.col = ioc_mongo.DB().Collection(i.Name())
 	i.log = logger.Sub(i.Name())
 
-	i.ep = ioc.GetController(endpoint.AppName).(endpoint.Service)
+	i.ep = ioc.Controller().Get(endpoint.AppName).(endpoint.Service)
 	return nil
 }
 

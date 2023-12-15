@@ -36,10 +36,10 @@ func (i *impl) Init() error {
 	i.col = ioc_mongo.DB().Collection(i.Name())
 	i.log = logger.Sub(i.Name())
 
-	i.user = ioc.GetController(user.AppName).(user.Service)
-	i.role = ioc.GetController(role.AppName).(role.Service)
-	i.namespace = ioc.GetController(namespace.AppName).(namespace.Service)
-	i.endpoint = ioc.GetController(endpoint.AppName).(endpoint.Service)
+	i.user = ioc.Controller().Get(user.AppName).(user.Service)
+	i.role = ioc.Controller().Get(role.AppName).(role.Service)
+	i.namespace = ioc.Controller().Get(namespace.AppName).(namespace.Service)
+	i.endpoint = ioc.Controller().Get(endpoint.AppName).(endpoint.Service)
 	return nil
 }
 

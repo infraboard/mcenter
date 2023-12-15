@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	ioc.RegistryController(&service{
+	ioc.Controller().Registry(&service{
 		bucketName: "ip2region",
 		dbFileName: "ip2region.db",
 	})
@@ -29,7 +29,7 @@ type service struct {
 }
 
 func (s *service) Init() error {
-	s.oss = ioc.GetController(oss.AppName).(oss.Service)
+	s.oss = ioc.Controller().Get(oss.AppName).(oss.Service)
 
 	s.log = logger.Sub("IP2Region")
 	return nil

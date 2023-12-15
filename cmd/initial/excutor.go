@@ -82,11 +82,11 @@ func NewExecutorFromCLI() (*excutor, error) {
 
 func newExcutor() *excutor {
 	return &excutor{
-		domain:    ioc.GetController(domain.AppName).(domain.Service),
-		namespace: ioc.GetController(namespace.AppName).(namespace.Service),
-		role:      ioc.GetController(role.AppName).(role.Service),
-		user:      ioc.GetController(user.AppName).(user.Service),
-		service:   ioc.GetController(service.AppName).(service.MetaService),
+		domain:    ioc.Controller().Get(domain.AppName).(domain.Service),
+		namespace: ioc.Controller().Get(namespace.AppName).(namespace.Service),
+		role:      ioc.Controller().Get(role.AppName).(role.Service),
+		user:      ioc.Controller().Get(user.AppName).(user.Service),
+		service:   ioc.Controller().Get(service.AppName).(service.MetaService),
 	}
 }
 

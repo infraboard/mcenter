@@ -25,7 +25,7 @@ type tokenHandler struct {
 
 func (h *tokenHandler) Init() error {
 	h.log = logger.Sub(token.AppName)
-	h.service = ioc.GetController(token.AppName).(token.Service)
+	h.service = ioc.Controller().Get(token.AppName).(token.Service)
 	return nil
 }
 

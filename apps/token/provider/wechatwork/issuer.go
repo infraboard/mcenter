@@ -22,8 +22,8 @@ type issuer struct {
 }
 
 func (i *issuer) Init() error {
-	i.domain = ioc.GetController(domain.AppName).(domain.Service)
-	i.user = ioc.GetController(user.AppName).(user.Service)
+	i.domain = ioc.Controller().Get(domain.AppName).(domain.Service)
+	i.user = ioc.Controller().Get(user.AppName).(user.Service)
 	i.log = logger.Sub("issuer.wechat")
 	return nil
 }

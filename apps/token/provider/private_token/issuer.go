@@ -20,8 +20,8 @@ type issuer struct {
 }
 
 func (i *issuer) Init() error {
-	i.token = ioc.GetController(token.AppName).(token.Service)
-	i.user = ioc.GetController(user.AppName).(user.Service)
+	i.token = ioc.Controller().Get(token.AppName).(token.Service)
+	i.user = ioc.Controller().Get(user.AppName).(user.Service)
 	i.log = logger.Sub("issuer.privat_token")
 	return nil
 }

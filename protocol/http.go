@@ -121,7 +121,7 @@ func (s *HTTPService) RegistryEndpoint() {
 
 	req := endpoint.NewRegistryRequest(application.App().AppName, entries)
 	req.ServiceId = application.App().AppName
-	controller := ioc.GetController(endpoint.AppName).(endpoint.Service)
+	controller := ioc.Controller().Get(endpoint.AppName).(endpoint.Service)
 	_, err := controller.RegistryEndpoint(context.Background(), req)
 	if err != nil {
 		s.l.Warn().Msgf("registry endpoints error, %s", err)

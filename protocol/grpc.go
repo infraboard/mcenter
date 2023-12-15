@@ -18,13 +18,14 @@ import (
 
 // NewGRPCService todo
 func NewGRPCService() *GRPCService {
-	appImpl := ioc.GetController(service.AppName).(service.MetaService)
+	appImpl := ioc.Controller().Get(service.AppName).(service.MetaService)
 	rc := recovery.NewInterceptor(recovery.NewZeroLogRecoveryHandler())
-	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
-		rc.UnaryServerInterceptor(),
-		otelgrpc.UnaryServerInterceptor(),
-		auth.GrpcAuthUnaryServerInterceptor(appImpl),
-	))
+	grpcServer := grpc.NewServer(
+		grpc.StatsHandler(otelgrpc.NewServerHandler()),
+		grpc.ChainUnaryInterceptor(
+			rc.UnaryServerInterceptor(),
+			auth.GrpcAuthUnaryServerInterceptor(appImpl),
+		))
 
 	return &GRPCService{
 		svr: grpcServer,

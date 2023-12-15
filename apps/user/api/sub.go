@@ -27,7 +27,7 @@ type primary struct {
 
 func (h *primary) Init() error {
 	h.log = logger.Sub(user.AppName)
-	h.service = ioc.GetController(user.AppName).(user.Service)
+	h.service = ioc.Controller().Get(user.AppName).(user.Service)
 	return nil
 }
 

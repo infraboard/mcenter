@@ -34,9 +34,9 @@ func (i *impl) Init() error {
 	i.col = ioc_mongo.DB().Collection(i.Name())
 	i.log = logger.Sub(i.Name())
 
-	i.role = ioc.GetController(role.AppName).(role.Service)
-	i.policy = ioc.GetController(policy.AppName).(policy.Service)
-	i.counter = ioc.GetController(counter.AppName).(counter.Service)
+	i.role = ioc.Controller().Get(role.AppName).(role.Service)
+	i.policy = ioc.Controller().Get(policy.AppName).(policy.Service)
+	i.counter = ioc.Controller().Get(counter.AppName).(counter.Service)
 	return nil
 }
 

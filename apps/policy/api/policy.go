@@ -25,7 +25,7 @@ type policyHandler struct {
 
 func (h *policyHandler) Init() error {
 	h.log = logger.Sub(policy.AppName)
-	h.service = ioc.GetController(policy.AppName).(policy.Service)
+	h.service = ioc.Controller().Get(policy.AppName).(policy.Service)
 	return nil
 }
 

@@ -25,7 +25,7 @@ type serviceHandler struct {
 
 func (h *serviceHandler) Init() error {
 	h.log = logger.Sub(service.AppName)
-	h.service = ioc.GetController(service.AppName).(service.MetaService)
+	h.service = ioc.Controller().Get(service.AppName).(service.MetaService)
 	return nil
 }
 

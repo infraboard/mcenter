@@ -24,7 +24,7 @@ type codeHandler struct {
 
 func (h *codeHandler) Init() error {
 	h.log = logger.Sub(token.AppName)
-	h.service = ioc.GetController(token.AppName).(token.Service)
+	h.service = ioc.Controller().Get(token.AppName).(token.Service)
 	return nil
 }
 

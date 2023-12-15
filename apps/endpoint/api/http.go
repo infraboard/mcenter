@@ -23,7 +23,7 @@ type handler struct {
 
 func (h *handler) Init() error {
 	h.log = logger.Sub(h.Name())
-	h.service = ioc.GetController(endpoint.AppName).(endpoint.Service)
+	h.service = ioc.Controller().Get(endpoint.AppName).(endpoint.Service)
 	return nil
 }
 

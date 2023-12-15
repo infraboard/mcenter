@@ -52,7 +52,7 @@ func (s *service) Init() error {
 
 	s.col = uc
 	s.log = logger.Sub(user.AppName)
-	s.domain = ioc.GetController(domain.AppName).(domain.Service)
+	s.domain = ioc.Controller().Get(domain.AppName).(domain.Service)
 	return nil
 }
 

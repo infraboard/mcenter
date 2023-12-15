@@ -22,8 +22,8 @@ import (
 func NewHttpAuther() *httpAuther {
 	return &httpAuther{
 		log:              logger.Sub("auther.http"),
-		tk:               ioc.GetController(token.AppName).(token.Service),
-		policy:           ioc.GetController(policy.AppName).(policy.Service),
+		tk:               ioc.Controller().Get(token.AppName).(token.Service),
+		policy:           ioc.Controller().Get(policy.AppName).(policy.Service),
 		cache:            cache.C(),
 		codeCheckSilence: 30 * 60,
 	}

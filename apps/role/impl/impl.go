@@ -32,7 +32,7 @@ func (i *impl) Init() error {
 	i.role = db.Collection("role")
 	i.perm = db.Collection("permission")
 
-	i.policy = ioc.GetController(policy.AppName).(policy.Service)
+	i.policy = ioc.Controller().Get(policy.AppName).(policy.Service)
 	i.log = logger.Sub(i.Name())
 	return nil
 }

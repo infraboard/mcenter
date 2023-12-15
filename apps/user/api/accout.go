@@ -25,7 +25,7 @@ type sub struct {
 
 func (h *sub) Init() error {
 	h.log = logger.Sub(user.AppName)
-	h.service = ioc.GetController(user.AppName).(user.Service)
+	h.service = ioc.Controller().Get(user.AppName).(user.Service)
 	return nil
 }
 
