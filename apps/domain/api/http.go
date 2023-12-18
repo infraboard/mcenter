@@ -24,7 +24,7 @@ type handler struct {
 
 func (h *handler) Init() error {
 	h.log = logger.Sub(domain.AppName)
-	h.service = ioc.GetController(domain.AppName).(domain.Service)
+	h.service = ioc.Controller().Get(domain.AppName).(domain.Service)
 	return nil
 }
 
