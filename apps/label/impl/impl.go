@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/label"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
 
@@ -25,7 +25,7 @@ type impl struct {
 
 func (i *impl) Init() error {
 	i.col = ioc_mongo.DB().Collection(i.Name())
-	i.log = logger.Sub(i.Name())
+	i.log = log.Sub(i.Name())
 	return nil
 }
 

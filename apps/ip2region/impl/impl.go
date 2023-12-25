@@ -5,7 +5,7 @@ import (
 
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/apps/oss"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/ip2region"
@@ -31,7 +31,7 @@ type service struct {
 func (s *service) Init() error {
 	s.oss = ioc.Controller().Get(oss.AppName).(oss.Service)
 
-	s.log = logger.Sub("IP2Region")
+	s.log = log.Sub("IP2Region")
 	return nil
 }
 

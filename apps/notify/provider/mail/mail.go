@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-gomail/gomail"
 	"github.com/infraboard/mcenter/apps/notify"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 )
 
@@ -19,7 +19,7 @@ const (
 func NewSender(conf *notify.MailConfig) MailNotifyer {
 	s := &Sender{
 		MailConfig: conf,
-		log:        logger.Sub("Mail Sender"),
+		log:        log.Sub("Mail Sender"),
 	}
 	return s
 }

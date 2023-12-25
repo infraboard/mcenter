@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-github/v45/github"
 	"github.com/infraboard/mcube/v2/client/negotiator"
 	"github.com/infraboard/mcube/v2/client/rest"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"golang.org/x/oauth2"
 )
@@ -18,7 +18,7 @@ func NewGithub(conf *Config) *Github {
 
 	ins := &Github{
 		conf: conf,
-		log:  logger.Sub("scm.github"),
+		log:  log.Sub("scm.github"),
 		rest: rc,
 	}
 

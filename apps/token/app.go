@@ -13,7 +13,7 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/v2/http/request"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/mssola/user_agent"
 )
 
@@ -212,7 +212,7 @@ func GetAccessTokenFromHTTP(r *http.Request) string {
 
 	ck, err := r.Cookie(ACCESS_TOKEN_COOKIE_KEY)
 	if err != nil {
-		logger.L().Warn().Msgf("get tk from cookie: %s error, %s", ACCESS_TOKEN_COOKIE_KEY, err)
+		log.L().Warn().Msgf("get tk from cookie: %s error, %s", ACCESS_TOKEN_COOKIE_KEY, err)
 		return r.URL.Query().Get(ACCESS_TOKEN_QUERY_KEY)
 	}
 

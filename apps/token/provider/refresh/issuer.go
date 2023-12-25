@@ -8,7 +8,7 @@ import (
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcube/v2/exception"
 	"github.com/infraboard/mcube/v2/ioc"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 )
 
@@ -20,7 +20,7 @@ type issuer struct {
 
 func (i *issuer) Init() error {
 	i.token = ioc.Controller().Get(token.AppName).(token.Service)
-	i.log = logger.Sub("issuer.refresh")
+	i.log = log.Sub("issuer.refresh")
 	return nil
 }
 

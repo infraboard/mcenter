@@ -7,7 +7,7 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/v2/exception"
 	"github.com/infraboard/mcube/v2/http/restful/response"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
@@ -26,7 +26,7 @@ func RestfulServerInterceptor(clientId, clientSercret string) restful.FilterFunc
 // 给服务端提供的RESTful接口的 认证与鉴权中间件
 func newhttpAuther(credential *service.ValidateCredentialRequest) *httpAuther {
 	return &httpAuther{
-		log:        logger.Sub("auther.http"),
+		log:        log.Sub("auther.http"),
 		client:     rest.C(),
 		credential: credential,
 	}

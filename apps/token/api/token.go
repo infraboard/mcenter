@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/token"
@@ -24,7 +24,7 @@ type tokenHandler struct {
 }
 
 func (h *tokenHandler) Init() error {
-	h.log = logger.Sub(token.AppName)
+	h.log = log.Sub(token.AppName)
 	h.service = ioc.Controller().Get(token.AppName).(token.Service)
 	return nil
 }

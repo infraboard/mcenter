@@ -6,7 +6,7 @@ import (
 	"syscall"
 
 	"github.com/infraboard/mcube/v2/ioc"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 
@@ -40,7 +40,7 @@ func newService() (*service, error) {
 	svr := &service{
 		http: http,
 		grpc: grpc,
-		log:  logger.Sub("CLI"),
+		log:  log.Sub("CLI"),
 		ch:   ch,
 	}
 

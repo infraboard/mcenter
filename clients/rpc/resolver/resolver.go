@@ -9,7 +9,7 @@ import (
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcenter/clients/rpc"
 	"github.com/infraboard/mcube/v2/grpc/balancer/wrr"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/attributes"
 	"google.golang.org/grpc/resolver"
@@ -47,7 +47,7 @@ func (*McenterResolverBuilder) Build(
 		target:             target,
 		cc:                 cc,
 		queryTimeoutSecond: 3 * time.Second,
-		log:                logger.Sub("mcenter.resolver"),
+		log:                log.Sub("mcenter.resolver"),
 	}
 
 	// 强制触发一次更新

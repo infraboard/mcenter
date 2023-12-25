@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/service"
@@ -24,7 +24,7 @@ type serviceHandler struct {
 }
 
 func (h *serviceHandler) Init() error {
-	h.log = logger.Sub(service.AppName)
+	h.log = log.Sub(service.AppName)
 	h.service = ioc.Controller().Get(service.AppName).(service.MetaService)
 	return nil
 }

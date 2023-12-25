@@ -13,7 +13,7 @@ import (
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/notify/provider/voice"
 	"github.com/infraboard/mcenter/common/validate"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -23,7 +23,7 @@ import (
 func NewQcloudVoice(conf *notify.TencentVoiceConfig) (voice.VoiceNotifyer, error) {
 	ins := &TencentVoiceNotifyer{
 		TencentVoiceConfig: conf,
-		log:                logger.Sub("voice.tencent"),
+		log:                log.Sub("voice.tencent"),
 	}
 	if err := ins.validate(); err != nil {
 		return nil, err

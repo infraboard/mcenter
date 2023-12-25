@@ -9,7 +9,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
 
@@ -33,7 +33,7 @@ func (i *impl) Init() error {
 	i.perm = db.Collection("permission")
 
 	i.policy = ioc.Controller().Get(policy.AppName).(policy.Service)
-	i.log = logger.Sub(i.Name())
+	i.log = log.Sub(i.Name())
 	return nil
 }
 

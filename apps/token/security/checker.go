@@ -7,7 +7,7 @@ import (
 
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/cache"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/domain"
@@ -29,7 +29,7 @@ func NewChecker() (Checker, error) {
 		token:     ioc.Controller().Get(token.AppName).(token.Service),
 		cache:     c,
 		ip2Regoin: ioc.Controller().Get(ip2region.AppName).(ip2region.Service),
-		log:       logger.Sub("Login Security"),
+		log:       log.Sub("Login Security"),
 	}, nil
 }
 

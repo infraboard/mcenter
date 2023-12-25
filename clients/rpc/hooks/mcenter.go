@@ -13,12 +13,14 @@ import (
 	"github.com/infraboard/mcenter/clients/rpc/middleware"
 	"github.com/infraboard/mcenter/clients/rpc/tools"
 	"github.com/infraboard/mcube/v2/ioc/config/application"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/grpc"
+	ioc_http "github.com/infraboard/mcube/v2/ioc/config/http"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 )
 
 func NewMcenterAppHook() *McenterAppHook {
 	return &McenterAppHook{
-		log:                logger.Sub("mcenter.app.hooks"),
+		log:                log.Sub("mcenter.app.hooks"),
 		EnableApiAuth:      true,
 		EnableGrpcAuth:     true,
 		EnableGrpcRegistry: true,
@@ -37,19 +39,19 @@ type McenterAppHook struct {
 func (s *McenterAppHook) SetupAppHook() {
 	// 开启GRPC服务注册与注销
 	if s.EnableGrpcRegistry {
-		application.App().GRPC.PostStart = s.grpcPostStart
-		application.App().GRPC.PreStop = s.grpcPreStop
+		grpc.Get().PostStart = s.grpcPostStart
+		grpc.Get().PreStop = s.grpcPreStop
 	}
 
 	// 开启鉴权时, 需要注册功能列表与添加鉴权中间件
 	if s.EnableApiAuth {
-		application.App().HTTP.RouterBuildConfig.BeforeLoad = s.httpBeforeLoad
-		application.App().HTTP.RouterBuildConfig.AfterLoad = s.httpAfterLoad
+		ioc_http.Get().RouterBuildConfig.BeforeLoad = s.httpBeforeLoad
+		ioc_http.Get().RouterBuildConfig.AfterLoad = s.httpAfterLoad
 	}
 
 	// 补充Grpc认证
 	if s.EnableGrpcAuth {
-		application.App().GRPC.AddInterceptors(middleware.GrpcAuthUnaryServerInterceptor())
+		grpc.Get().AddInterceptors(middleware.GrpcAuthUnaryServerInterceptor())
 	}
 }
 
@@ -79,7 +81,7 @@ func (s *McenterAppHook) grpcPostStart(ctx context.Context) error {
 	mcenter := mcenter.C()
 
 	req := instance.NewRegistryRequest()
-	req.Address = application.App().GRPC.Addr()
+	req.Address = grpc.Get().Addr()
 	ins, err := mcenter.Instance().RegistryInstance(ctx, req)
 	if err != nil {
 		return fmt.Errorf("registry to mcenter error, %s", err)

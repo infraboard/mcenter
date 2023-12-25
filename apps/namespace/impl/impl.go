@@ -11,7 +11,7 @@ import (
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
 
@@ -32,7 +32,7 @@ type impl struct {
 
 func (i *impl) Init() error {
 	i.col = ioc_mongo.DB().Collection(i.Name())
-	i.log = logger.Sub(i.Name())
+	i.log = log.Sub(i.Name())
 
 	i.role = ioc.Controller().Get(role.AppName).(role.Service)
 	i.policy = ioc.Controller().Get(policy.AppName).(policy.Service)

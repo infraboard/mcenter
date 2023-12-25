@@ -14,14 +14,14 @@ import (
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/application"
 	"github.com/infraboard/mcube/v2/ioc/config/cache"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/otel/trace"
 )
 
 func NewHttpAuther() *httpAuther {
 	return &httpAuther{
-		log:              logger.Sub("auther.http"),
+		log:              log.Sub("auther.http"),
 		tk:               ioc.Controller().Get(token.AppName).(token.Service),
 		policy:           ioc.Controller().Get(policy.AppName).(policy.Service),
 		cache:            cache.C(),
@@ -137,7 +137,7 @@ func (a *httpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Tok
 	req.Domain = tk.Domain
 	req.Namespace = tk.Namespace
 	req.Username = tk.Username
-	req.ServiceId = application.App().AppName
+	req.ServiceId = application.Get().AppName
 	req.Path = e.Path
 	a.log.Debug().Msgf("permission check request: %s", req.ToJSON())
 

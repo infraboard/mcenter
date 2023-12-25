@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/policy"
@@ -24,7 +24,7 @@ type policyHandler struct {
 }
 
 func (h *policyHandler) Init() error {
-	h.log = logger.Sub(policy.AppName)
+	h.log = log.Sub(policy.AppName)
 	h.service = ioc.Controller().Get(policy.AppName).(policy.Service)
 	return nil
 }

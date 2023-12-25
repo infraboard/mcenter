@@ -6,7 +6,7 @@ import (
 
 	"github.com/infraboard/mcube/v2/exception"
 	"github.com/infraboard/mcube/v2/ioc/config/application"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -19,12 +19,12 @@ import (
 
 // GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
 func GrpcAuthUnaryServerInterceptor() grpc.UnaryServerInterceptor {
-	return NewGrpcAuther(rpc.C().Service()).WithNamespace(application.App().AppName).Auth
+	return NewGrpcAuther(rpc.C().Service()).WithNamespace(application.Get().AppName).Auth
 }
 
 func NewGrpcAuther(svr service.RPCClient) *GrpcAuther {
 	return &GrpcAuther{
-		log:     logger.Sub("auther.grpc"),
+		log:     log.Sub("auther.grpc"),
 		service: svr,
 	}
 }

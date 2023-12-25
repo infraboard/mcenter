@@ -17,7 +17,8 @@ import (
 
 	"github.com/infraboard/mcenter/protocol/auth"
 	"github.com/infraboard/mcube/v2/ioc/config/application"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	ioc_http "github.com/infraboard/mcube/v2/ioc/config/http"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 )
 
 // NewHTTPService 构建函数
@@ -36,27 +37,25 @@ func NewHTTPService() *HTTPService {
 	}
 	r.Filter(cors.Filter)
 	// trace中间件
-	filter := otelrestful.OTelFilter(application.App().AppName)
+	filter := otelrestful.OTelFilter(application.Get().AppName)
 	restful.DefaultContainer.Filter(filter)
 	// 添加鉴权中间件
 	r.Filter(auth.NewHttpAuther().GoRestfulAuthFunc)
 
-	app := application.App()
 	server := &http.Server{
 		ReadHeaderTimeout: 60 * time.Second,
 		ReadTimeout:       60 * time.Second,
 		WriteTimeout:      60 * time.Second,
 		IdleTimeout:       60 * time.Second,
 		MaxHeaderBytes:    1 << 20, // 1M
-		Addr:              app.HTTP.Addr(),
+		Addr:              ioc_http.Get().Addr(),
 		Handler:           r,
 	}
 
 	return &HTTPService{
 		r:      r,
 		server: server,
-		l:      logger.Sub("http"),
-		app:    app,
+		l:      log.Sub("http"),
 
 		apiDocPath: "/apidocs.json",
 	}
@@ -66,14 +65,13 @@ func NewHTTPService() *HTTPService {
 type HTTPService struct {
 	r      *restful.Container
 	l      *zerolog.Logger
-	app    *application.Application
 	server *http.Server
 
 	apiDocPath string
 }
 
 func (s *HTTPService) PathPrefix() string {
-	return fmt.Sprintf("/%s/api", s.app.AppName)
+	return fmt.Sprintf("/%s/api", application.Get().AppName)
 }
 
 // Start 启动服务
@@ -87,12 +85,12 @@ func (s *HTTPService) Start() {
 	// Open http://localhost:8080/apidocs/?url=http://localhost:8080/apidocs.json
 	// http.Handle("/apidocs/", http.StripPrefix("/apidocs/", http.FileServer(http.Dir("/Users/emicklei/Projects/swagger-ui/dist"))))
 	s.r.Add(apidoc.APIDocs(s.apiDocPath, swagger.Docs))
-	s.l.Info().Msgf("Swagger API Doc访问地址: http://%s%s", s.app.HTTP.Addr(), s.apiDocPath)
+	s.l.Info().Msgf("Swagger API Doc访问地址: http://%s%s", ioc_http.Get().Addr(), s.apiDocPath)
 
 	// HealthCheck
 	hc := health.NewDefaultHealthChecker()
 	s.r.Add(hc.WebService())
-	s.l.Info().Msgf("健康检查地址: http://%s%s", s.app.HTTP.Addr(), hc.HealthCheckPath)
+	s.l.Info().Msgf("健康检查地址: http://%s%s", ioc_http.Get().Addr(), hc.HealthCheckPath)
 
 	// 注册路由条目
 	s.RegistryEndpoint()
@@ -119,8 +117,8 @@ func (s *HTTPService) RegistryEndpoint() {
 		entries = append(entries, endpoint.GetPRBACEntry(es)...)
 	}
 
-	req := endpoint.NewRegistryRequest(application.App().AppName, entries)
-	req.ServiceId = application.App().AppName
+	req := endpoint.NewRegistryRequest(application.Get().AppName, entries)
+	req.ServiceId = application.Get().AppName
 	controller := ioc.Controller().Get(endpoint.AppName).(endpoint.Service)
 	_, err := controller.RegistryEndpoint(context.Background(), req)
 	if err != nil {

@@ -11,7 +11,7 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/v2/exception"
 	"github.com/infraboard/mcube/v2/ioc"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 )
 
@@ -24,7 +24,7 @@ type issuer struct {
 func (i *issuer) Init() error {
 	i.domain = ioc.Controller().Get(domain.AppName).(domain.Service)
 	i.user = ioc.Controller().Get(user.AppName).(user.Service)
-	i.log = logger.Sub("issuer.wechat")
+	i.log = log.Sub("issuer.wechat")
 	return nil
 }
 

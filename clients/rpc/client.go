@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/infraboard/mcube/v2/grpc/middleware/exception"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -51,7 +51,7 @@ func NewClient(conf *Mcenter) (*ClientSet, error) {
 	return &ClientSet{
 		conf: conf,
 		conn: conn,
-		log:  logger.Sub("mcenter.rpc"),
+		log:  log.Sub("mcenter.rpc"),
 	}, nil
 }
 

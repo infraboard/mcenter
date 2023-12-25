@@ -11,7 +11,7 @@ import (
 	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/v2/exception"
 	request "github.com/infraboard/mcube/v2/http/request"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/infraboard/mcube/v2/pb/resource"
 	"github.com/infraboard/mcube/v2/tools/hash"
 )
@@ -157,9 +157,9 @@ func (r *Role) HasPermission(ep *endpoint.Endpoint) (*PermissionSpec, bool, erro
 
 		rok = perm.MatchResource(ep.ServiceId, ep.Entry.Resource)
 		lok = perm.MatchLabel(ep.Entry.Labels)
-		logger.L().Debug().Msgf("resource match: service_id: %s[target: %s] resource: %s[target: %s], result: %v",
+		log.L().Debug().Msgf("resource match: service_id: %s[target: %s] resource: %s[target: %s], result: %v",
 			ep.ServiceId, perm.ServiceId, ep.Entry.Resource, perm.ResourceName, rok)
-		logger.L().Debug().Msgf("label match: %v from [key: %v, value: %v, result: %v",
+		log.L().Debug().Msgf("label match: %v from [key: %v, value: %v, result: %v",
 			ep.Entry.Labels, perm.LabelKey, perm.LabelValues, lok)
 		if rok && lok {
 			return perm, true, nil

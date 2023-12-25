@@ -7,13 +7,13 @@ import (
 
 	"github.com/infraboard/mcube/v2/grpc/middleware/recovery"
 	"github.com/infraboard/mcube/v2/ioc"
+	ioc_grpc "github.com/infraboard/mcube/v2/ioc/config/grpc"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 
 	"github.com/infraboard/mcenter/apps/service"
 	"github.com/infraboard/mcenter/protocol/auth"
-	"github.com/infraboard/mcube/v2/ioc/config/application"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
 )
 
 // NewGRPCService todo
@@ -29,8 +29,8 @@ func NewGRPCService() *GRPCService {
 
 	return &GRPCService{
 		svr: grpcServer,
-		l:   logger.Sub("grpc"),
-		c:   application.App().GRPC,
+		l:   log.Sub("grpc"),
+		c:   ioc_grpc.Get(),
 	}
 }
 
@@ -38,7 +38,7 @@ func NewGRPCService() *GRPCService {
 type GRPCService struct {
 	svr *grpc.Server
 	l   *zerolog.Logger
-	c   *application.Grpc
+	c   *ioc_grpc.Grpc
 }
 
 // Start 启动GRPC服务

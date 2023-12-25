@@ -9,7 +9,7 @@ import (
 	"github.com/infraboard/mcube/v2/exception"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc/config/cache"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/otel/trace"
 
@@ -44,7 +44,7 @@ func GetHttpAuther() *HttpAuther {
 // 给服务端提供的RESTful接口的 认证与鉴权中间件
 func NewhttpAuther() *HttpAuther {
 	return &HttpAuther{
-		log:              logger.Sub("auther.http"),
+		log:              log.Sub("auther.http"),
 		client:           rpc.C(),
 		cache:            cache.C(),
 		codeCheckSilence: 30 * 60,

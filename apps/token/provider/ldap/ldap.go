@@ -9,7 +9,7 @@ import (
 	"github.com/go-ldap/ldap/v3"
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcube/v2/exception"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 )
 
@@ -29,7 +29,7 @@ type UserProvider interface {
 func NewProvider(conf *domain.LdapConfig) *Provider {
 	return &Provider{
 		conf: conf,
-		log:  logger.Sub("ldap"),
+		log:  log.Sub("ldap"),
 	}
 }
 

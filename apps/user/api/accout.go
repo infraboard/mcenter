@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/user"
@@ -24,7 +24,7 @@ type sub struct {
 }
 
 func (h *sub) Init() error {
-	h.log = logger.Sub(user.AppName)
+	h.log = log.Sub(user.AppName)
 	h.service = ioc.Controller().Get(user.AppName).(user.Service)
 	return nil
 }

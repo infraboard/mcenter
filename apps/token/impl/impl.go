@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcube/v2/ioc"
-	"github.com/infraboard/mcube/v2/ioc/config/logger"
 	"github.com/rs/zerolog"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -19,6 +18,7 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/token/security"
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 
 	_ "github.com/infraboard/mcenter/apps/token/provider/all"
@@ -60,7 +60,7 @@ func (s *service) Init() error {
 
 	s.col = dc
 
-	s.log = logger.Sub(s.Name())
+	s.log = log.Sub(s.Name())
 	s.ns = ioc.Controller().Get(namespace.AppName).(namespace.Service)
 	s.policy = ioc.Controller().Get(policy.AppName).(policy.Service)
 	s.domain = ioc.Controller().Get(domain.AppName).(domain.Service)
