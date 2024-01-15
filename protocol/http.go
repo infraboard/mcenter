@@ -8,10 +8,7 @@ import (
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/endpoint"
-	"github.com/infraboard/mcenter/swagger"
 	"github.com/infraboard/mcube/v2/ioc"
-	"github.com/infraboard/mcube/v2/ioc/apps/apidoc"
-	"github.com/infraboard/mcube/v2/ioc/apps/health"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/emicklei/go-restful/otelrestful"
 
@@ -78,19 +75,6 @@ func (s *HTTPService) PathPrefix() string {
 func (s *HTTPService) Start() {
 	// 装置子服务路由
 	ioc.LoadGoRestfulApi(s.PathPrefix(), s.r)
-
-	// API Doc
-	// Optionally, you can install the Swagger Service which provides a nice Web UI on your REST API
-	// You need to download the Swagger HTML5 assets and change the FilePath location in the config below.
-	// Open http://localhost:8080/apidocs/?url=http://localhost:8080/apidocs.json
-	// http.Handle("/apidocs/", http.StripPrefix("/apidocs/", http.FileServer(http.Dir("/Users/emicklei/Projects/swagger-ui/dist"))))
-	s.r.Add(apidoc.APIDocs(s.apiDocPath, swagger.Docs))
-	s.l.Info().Msgf("Swagger API Doc访问地址: http://%s%s", ioc_http.Get().Addr(), s.apiDocPath)
-
-	// HealthCheck
-	hc := health.NewDefaultHealthChecker()
-	s.r.Add(hc.WebService())
-	s.l.Info().Msgf("健康检查地址: http://%s%s", ioc_http.Get().Addr(), hc.HealthCheckPath)
 
 	// 注册路由条目
 	s.RegistryEndpoint()

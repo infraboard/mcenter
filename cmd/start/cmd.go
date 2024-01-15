@@ -14,6 +14,10 @@ import (
 
 	// 注册所有服务
 	_ "github.com/infraboard/mcenter/apps"
+
+	// 非功能性模块
+	_ "github.com/infraboard/mcube/v2/ioc/apps/apidoc/restful"
+	_ "github.com/infraboard/mcube/v2/ioc/apps/metric/restful"
 )
 
 // startCmd represents the start command

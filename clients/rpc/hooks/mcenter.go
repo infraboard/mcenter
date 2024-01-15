@@ -45,8 +45,9 @@ func (s *McenterAppHook) SetupAppHook() {
 
 	// 开启鉴权时, 需要注册功能列表与添加鉴权中间件
 	if s.EnableApiAuth {
-		ioc_http.Get().RouterBuildConfig.BeforeLoad = s.httpBeforeLoad
-		ioc_http.Get().RouterBuildConfig.AfterLoad = s.httpAfterLoad
+		rb := ioc_http.Get().GetRouterBuilder()
+		rb.BeforeLoadHooks(s.httpBeforeLoad)
+		rb.AfterLoadHooks(s.httpAfterLoad)
 	}
 
 	// 补充Grpc认证
