@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/infraboard/mcenter/apps/notify"
-	"github.com/infraboard/mcenter/common/validate"
+	"github.com/infraboard/mcube/v2/ioc/config/validator"
 )
 
 type VoiceNotifyer interface {
@@ -34,7 +34,7 @@ type SendVoiceRequest struct {
 }
 
 func (req *SendVoiceRequest) Validate() error {
-	return validate.Validate(req)
+	return validator.Validate(req)
 }
 
 type SendVoiceResponse struct {

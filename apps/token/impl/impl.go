@@ -9,7 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/namespace"
@@ -18,6 +17,7 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/apps/token/security"
+	"github.com/infraboard/mcube/v2/ioc/config/grpc"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 
@@ -76,13 +76,10 @@ func (s *service) Init() error {
 		return err
 	}
 
+	token.RegisterRPCServer(grpc.Get().Server(), s)
 	return nil
 }
 
 func (s *service) Name() string {
 	return token.AppName
-}
-
-func (s *service) Registry(server *grpc.Server) {
-	token.RegisterRPCServer(server, s)
 }

@@ -5,12 +5,12 @@ import (
 
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/rs/zerolog"
-	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/counter"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcube/v2/ioc/config/grpc"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
@@ -37,13 +37,11 @@ func (i *impl) Init() error {
 	i.role = ioc.Controller().Get(role.AppName).(role.Service)
 	i.policy = ioc.Controller().Get(policy.AppName).(policy.Service)
 	i.counter = ioc.Controller().Get(counter.AppName).(counter.Service)
+
+	namespace.RegisterRPCServer(grpc.Get().Server(), i)
 	return nil
 }
 
 func (i *impl) Name() string {
 	return namespace.AppName
-}
-
-func (i *impl) Registry(server *grpc.Server) {
-	namespace.RegisterRPCServer(server, i)
 }

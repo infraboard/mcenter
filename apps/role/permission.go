@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
-	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/v2/exception"
 	request "github.com/infraboard/mcube/v2/http/request"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
@@ -141,7 +140,7 @@ func (p *Permission) ID(namespace string) string {
 }
 
 func (p *Permission) ToJson() string {
-	return format.Prettify(p)
+	return pretty.ToJSON(p)
 }
 
 // MatchResource 检测资源是否匹配

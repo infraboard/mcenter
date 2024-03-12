@@ -8,7 +8,7 @@ import (
 
 	"github.com/caarlos0/env/v6"
 
-	"github.com/infraboard/mcenter/common/validate"
+	"github.com/infraboard/mcube/v2/ioc/config/validator"
 )
 
 func LoadConfigFromEnv() (*Config, error) {
@@ -45,7 +45,7 @@ func (c *Config) Validate() error {
 			return fmt.Errorf("personal access token required")
 		}
 	case AUTH_TYPE_OAUTH2:
-		return validate.Validate(c.Oauth2Config)
+		return validator.Validate(c.Oauth2Config)
 	default:
 		return fmt.Errorf("unknown auth type %s", c.AuthType)
 	}

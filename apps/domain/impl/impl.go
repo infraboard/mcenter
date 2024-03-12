@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/grpc"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/domain"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
@@ -41,16 +41,12 @@ func (s *service) Init() error {
 	if err != nil {
 		return err
 	}
-
 	s.col = dc
 
+	domain.RegisterRPCServer(grpc.Get().Server(), s)
 	return nil
 }
 
 func (s *service) Name() string {
 	return domain.AppName
-}
-
-func (s *service) Registry(server *grpc.Server) {
-	domain.RegisterRPCServer(server, s)
 }

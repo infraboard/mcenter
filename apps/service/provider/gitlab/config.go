@@ -2,7 +2,7 @@ package gitlab
 
 import (
 	"github.com/caarlos0/env/v6"
-	"github.com/infraboard/mcenter/common/validate"
+	"github.com/infraboard/mcube/v2/ioc/config/validator"
 )
 
 func NewDefaultConfig() *Config {
@@ -29,7 +29,7 @@ type Config struct {
 }
 
 func (c *Config) Validate() error {
-	return validate.Validate(c)
+	return validator.Validate(c)
 }
 
 func (c *Config) SetAddress(address string) {

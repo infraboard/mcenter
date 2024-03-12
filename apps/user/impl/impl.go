@@ -8,10 +8,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/user"
+	"github.com/infraboard/mcube/v2/ioc/config/grpc"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
@@ -53,13 +53,11 @@ func (s *service) Init() error {
 	s.col = uc
 	s.log = log.Sub(user.AppName)
 	s.domain = ioc.Controller().Get(domain.AppName).(domain.Service)
+
+	user.RegisterRPCServer(grpc.Get().Server(), s)
 	return nil
 }
 
 func (s *service) Name() string {
 	return user.AppName
-}
-
-func (s *service) Registry(server *grpc.Server) {
-	user.RegisterRPCServer(server, s)
 }

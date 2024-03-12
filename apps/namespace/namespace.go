@@ -8,11 +8,11 @@ import (
 	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/token"
-	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/v2/exception"
 	request "github.com/infraboard/mcube/v2/http/request"
 	resource "github.com/infraboard/mcube/v2/pb/resource"
 	"github.com/infraboard/mcube/v2/tools/hash"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -63,7 +63,7 @@ func (n *Namespace) MarshalJSON() ([]byte, error) {
 }
 
 func (n *Namespace) ToJson() string {
-	return format.Prettify(n)
+	return pretty.ToJSON(n)
 }
 
 // NewCreateNamespaceRequest todo
@@ -103,7 +103,7 @@ func NewNamespaceSet() *NamespaceSet {
 }
 
 func (s *NamespaceSet) ToJson() string {
-	return format.Prettify(s)
+	return pretty.ToJSON(s)
 }
 
 // Add 添加应用

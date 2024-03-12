@@ -12,10 +12,10 @@ import (
 	"github.com/rs/xid"
 
 	notify "github.com/infraboard/mcenter/apps/notify"
-	"github.com/infraboard/mcenter/common/format"
 	request "github.com/infraboard/mcube/v2/http/request"
 	pb_request "github.com/infraboard/mcube/v2/pb/request"
 	"github.com/infraboard/mcube/v2/tools/hash"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -60,7 +60,7 @@ func (d *Domain) MarshalJSON() ([]byte, error) {
 }
 
 func (d *Domain) ToJson() string {
-	return format.Prettify(d)
+	return pretty.ToJSON(d)
 }
 
 func (d *Domain) Desense() {
@@ -219,7 +219,7 @@ func NewDomainSet() *DomainSet {
 }
 
 func (s *DomainSet) ToJson() string {
-	return format.Prettify(s)
+	return pretty.ToJSON(s)
 }
 
 func (s *DomainSet) Add(item *Domain) {

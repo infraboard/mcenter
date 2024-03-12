@@ -5,11 +5,11 @@ import (
 
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/rs/zerolog"
-	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/user"
+	"github.com/infraboard/mcube/v2/ioc/config/grpc"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
@@ -33,13 +33,11 @@ func (s *service) Init() error {
 	s.log = log.Sub(s.Name())
 	s.user = ioc.Controller().Get(user.AppName).(user.Service)
 	s.domain = ioc.Controller().Get(domain.AppName).(domain.Service)
+
+	notify.RegisterRPCServer(grpc.Get().Server(), s)
 	return nil
 }
 
 func (s *service) Name() string {
 	return notify.AppName
-}
-
-func (s *service) Registry(server *grpc.Server) {
-	notify.RegisterRPCServer(server, s)
 }

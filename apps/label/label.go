@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/infraboard/mcenter/common/validate"
+	"github.com/infraboard/mcube/v2/ioc/config/validator"
 	"github.com/infraboard/mcube/v2/pb/resource"
 	"github.com/infraboard/mcube/v2/tools/hash"
 	"github.com/infraboard/mcube/v2/tools/pretty"
@@ -43,7 +43,7 @@ func New(in *CreateLabelRequest) (*Label, error) {
 }
 
 func (r *CreateLabelRequest) Validate() error {
-	return validate.Validate(r)
+	return validator.Validate(r)
 }
 
 func (r *CreateLabelRequest) BuildValue() {

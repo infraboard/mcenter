@@ -11,11 +11,11 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcube/v2/http/request"
 	"github.com/infraboard/mcube/v2/pb/resource"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/apps/token"
-	"github.com/infraboard/mcenter/common/format"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -58,7 +58,7 @@ func (p *Policy) IsAllNamespace() bool {
 }
 
 func (p *Policy) ToJson() string {
-	return format.Prettify(p)
+	return pretty.ToJSON(p)
 }
 
 func (u *Policy) MarshalJSON() ([]byte, error) {
@@ -122,7 +122,7 @@ func (p *PolicySet) Len() int {
 }
 
 func (p *PolicySet) ToJson() string {
-	return format.Prettify(p)
+	return pretty.ToJSON(p)
 }
 
 // Users 策略包含的所有用户ID, 已去重
