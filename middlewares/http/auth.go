@@ -1,4 +1,4 @@
-package auth
+package http
 
 import (
 	"context"
@@ -19,14 +19,10 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-func NewHttpAuther() *httpAuther {
-	return &httpAuther{
-		log:              log.Sub("auther.http"),
-		tk:               ioc.Controller().Get(token.AppName).(token.Service),
-		policy:           ioc.Controller().Get(policy.AppName).(policy.Service),
-		cache:            cache.C(),
+func init() {
+	ioc.Config().Registry(&httpAuther{
 		codeCheckSilence: 30 * 60,
-	}
+	})
 }
 
 type httpAuther struct {
@@ -35,6 +31,21 @@ type httpAuther struct {
 	cache            cache.Cache
 	policy           policy.Service
 	codeCheckSilence int64
+
+	ioc.ObjectImpl
+}
+
+func (a *httpAuther) Init() error {
+	a.log = log.Sub("auther.http")
+	a.tk = ioc.Controller().Get(token.AppName).(token.Service)
+	a.policy = ioc.Controller().Get(policy.AppName).(policy.Service)
+	a.cache = cache.C()
+
+	return nil
+}
+
+func (a *httpAuther) Name() string {
+	return "http_auth"
 }
 
 // 设置静默时长

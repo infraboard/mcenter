@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/v2/pb/resource"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 func NewRecordSet() *RecordSet {
@@ -32,7 +32,7 @@ func (r *Record) MarshalJSON() ([]byte, error) {
 }
 
 func (r *Record) ToJson() string {
-	return format.Prettify(r)
+	return pretty.ToJSON(r)
 }
 
 func (r *Record) FailedResponse() (items []*SendResponse) {

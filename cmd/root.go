@@ -9,6 +9,7 @@ import (
 	"github.com/infraboard/mcenter/cmd/start"
 	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/application"
+	"github.com/infraboard/mcube/v2/ioc/server"
 )
 
 var (
@@ -45,6 +46,7 @@ func initail() {
 		req.ConfigEnv.Enabled = true
 	}
 	err := ioc.ConfigIocObject(req)
+	server.DefaultConfig = req
 	cobra.CheckErr(err)
 }
 

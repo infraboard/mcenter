@@ -1,14 +1,15 @@
-package middleware
+package gorestful
 
 import (
 	"context"
 	"strings"
-	"sync"
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcube/v2/exception"
 	"github.com/infraboard/mcube/v2/http/restful/response"
+	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/cache"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/otel/trace"
@@ -20,35 +21,10 @@ import (
 	"github.com/infraboard/mcenter/clients/rpc"
 )
 
-var (
-	httpAuther *HttpAuther
-	lock       sync.Mutex
-)
-
-// RestfulServerInterceptor go-restful认证中间件
-func RestfulServerInterceptor() restful.FilterFunction {
-	return GetHttpAuther().GoRestfulAuthFunc
-}
-
-func GetHttpAuther() *HttpAuther {
-	lock.Lock()
-	defer lock.Unlock()
-
-	if httpAuther == nil {
-		httpAuther = NewhttpAuther()
-	}
-
-	return httpAuther
-}
-
-// 给服务端提供的RESTful接口的 认证与鉴权中间件
-func NewhttpAuther() *HttpAuther {
-	return &HttpAuther{
-		log:              log.Sub("auther.http"),
-		client:           rpc.C(),
-		cache:            cache.C(),
+func init() {
+	ioc.Config().Registry(&HttpAuther{
 		codeCheckSilence: 30 * 60,
-	}
+	})
 }
 
 type HttpAuther struct {
@@ -59,6 +35,18 @@ type HttpAuther struct {
 	cache cache.Cache
 	// 校验码检查静默时长, 默认值30分钟, 30分钟之内只检查一次
 	codeCheckSilence int64
+
+	ioc.ObjectImpl
+}
+
+func (a *HttpAuther) Init() error {
+	a.log = log.Sub(AppName)
+	a.client = rpc.C()
+	a.cache = cache.C()
+
+	// 注册认证中间件
+	gorestful.Get().Filter(a.GoRestfulAuthFunc)
+	return nil
 }
 
 // 设置静默时长

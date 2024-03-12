@@ -8,8 +8,8 @@ import (
 	"strconv"
 
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
-	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/v2/pb/resource"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -18,7 +18,7 @@ func (s *ServiceSet) Len() int {
 }
 
 func (s *ServiceSet) ToJson() string {
-	return format.Prettify(s)
+	return pretty.ToJSON(s)
 }
 
 func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
@@ -129,7 +129,7 @@ func (s *Service) Desense() *Service {
 }
 
 func (s *Service) ToJson() string {
-	return format.Prettify(s)
+	return pretty.ToJSON(s)
 }
 
 func (s *Service) MarshalJSON() ([]byte, error) {

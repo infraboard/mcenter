@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/infraboard/mcenter/common/validate"
+	"github.com/infraboard/mcube/v2/ioc/config/validator"
 )
 
 type SmsNotifyer interface {
@@ -42,7 +42,7 @@ func (req *SendSMSRequest) AddPhone(params ...string) {
 
 // Validate todo
 func (req *SendSMSRequest) Validate() error {
-	return validate.Validate(req)
+	return validator.Validate(req)
 }
 
 // InjectDefaultIsoCode todo

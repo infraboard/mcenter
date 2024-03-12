@@ -1,10 +1,11 @@
-package auth
+package grpc
 
 import (
 	"context"
 	"fmt"
 
 	"github.com/infraboard/mcube/v2/exception"
+	"github.com/infraboard/mcube/v2/ioc"
 	"github.com/infraboard/mcube/v2/ioc/config/application"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
@@ -14,24 +15,32 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/infraboard/mcenter/apps/service"
+	ioc_grpc "github.com/infraboard/mcube/v2/ioc/config/grpc"
 )
 
-// GrpcAuthUnaryServerInterceptor returns a new unary server interceptor for auth.
-func GrpcAuthUnaryServerInterceptor(app service.MetaService) grpc.UnaryServerInterceptor {
-	return newGrpcAuther(app).Auth
-}
-
-func newGrpcAuther(svc service.MetaService) *grpcAuther {
-	return &grpcAuther{
-		log: log.Sub("Grpc Auther"),
-		svc: svc,
-	}
+func init() {
+	ioc.Config().Registry(&grpcAuther{})
 }
 
 // internal todo
 type grpcAuther struct {
 	log *zerolog.Logger
 	svc service.MetaService
+
+	ioc.ObjectImpl
+}
+
+func (a *grpcAuther) Init() error {
+	a.log = log.Sub("Grpc Auther")
+	a.svc = ioc.Controller().Get(service.AppName).(service.MetaService)
+
+	// 注册认证中间件
+	ioc_grpc.Get().AddInterceptors(a.Auth)
+	return nil
+}
+
+func (a *grpcAuther) Name() string {
+	return "grpc_auth"
 }
 
 func (a *grpcAuther) Auth(

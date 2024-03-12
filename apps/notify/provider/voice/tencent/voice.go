@@ -12,8 +12,8 @@ import (
 
 	"github.com/infraboard/mcenter/apps/notify"
 	"github.com/infraboard/mcenter/apps/notify/provider/voice"
-	"github.com/infraboard/mcenter/common/validate"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
+	"github.com/infraboard/mcube/v2/ioc/config/validator"
 	"github.com/rs/zerolog"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -37,7 +37,7 @@ type TencentVoiceNotifyer struct {
 }
 
 func (q *TencentVoiceNotifyer) validate() error {
-	return validate.Validate(q)
+	return validator.Validate(q)
 }
 
 /* 基本类型的设置:

@@ -8,12 +8,12 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/endpoint"
 	"github.com/infraboard/mcenter/apps/token"
-	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/v2/exception"
 	request "github.com/infraboard/mcube/v2/http/request"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/infraboard/mcube/v2/pb/resource"
 	"github.com/infraboard/mcube/v2/tools/hash"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 // use a single instance of Validate, it caches struct info
@@ -121,7 +121,7 @@ func (req *CreateRoleRequest) UpdateFromToken(tk *token.Token) {
 }
 
 func (r *Role) ToJson() string {
-	return format.Prettify(r)
+	return pretty.ToJSON(r)
 }
 
 func (r *Role) CheckScope(s *resource.Scope) error {
@@ -182,7 +182,7 @@ func (s *RoleSet) Add(item *Role) {
 }
 
 func (s *RoleSet) ToJson() string {
-	return format.Prettify(s)
+	return pretty.ToJSON(s)
 }
 
 // HasPermission todo

@@ -1,2 +1,0 @@
-# mcenter app hooks
-

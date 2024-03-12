@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/infraboard/mcenter/common/format"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
 func NewProjectSet() *ProjectSet {
@@ -27,7 +27,7 @@ func (s *ProjectSet) SetTotalFromString(t string) {
 }
 
 func (s *ProjectSet) String() string {
-	return format.Prettify(s)
+	return pretty.ToJSON(s)
 }
 
 func (s *ProjectSet) Len() int {
@@ -110,7 +110,7 @@ type GitLabWebHook struct {
 }
 
 func (h *GitLabWebHook) ToJson() string {
-	return format.Prettify(h)
+	return pretty.ToJSON(h)
 }
 
 func (req *GitLabWebHook) FormValue() url.Values {
@@ -223,7 +223,7 @@ type ProjectLanguage struct {
 }
 
 func (p *ProjectLanguageSet) String() string {
-	return format.Prettify(p)
+	return pretty.ToJSON(p)
 }
 
 func (p *ProjectLanguageSet) Add(item *ProjectLanguage) {
@@ -272,7 +272,7 @@ type BranchSet struct {
 }
 
 func (s *BranchSet) String() string {
-	return format.Prettify(s)
+	return pretty.ToJSON(s)
 }
 
 func (s *BranchSet) SetTotalFromString(t string) {
@@ -298,7 +298,7 @@ type Branch struct {
 }
 
 func (b *Branch) String() string {
-	return format.Prettify(b)
+	return pretty.ToJSON(b)
 }
 
 type Commit struct {

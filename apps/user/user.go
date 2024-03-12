@@ -10,11 +10,11 @@ import (
 	"dario.cat/mergo"
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcenter/common/format"
 	"github.com/infraboard/mcube/v2/exception"
 	request "github.com/infraboard/mcube/v2/http/request"
 	pb_request "github.com/infraboard/mcube/v2/pb/request"
 	"github.com/infraboard/mcube/v2/pb/resource"
+	"github.com/infraboard/mcube/v2/tools/pretty"
 	"github.com/rs/xid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -261,7 +261,7 @@ func NewUserSet() *UserSet {
 }
 
 func (s *UserSet) ToJson() string {
-	return format.Prettify(s)
+	return pretty.ToJSON(s)
 }
 
 func (s *UserSet) Add(item *User) {
@@ -299,7 +299,7 @@ func (u *User) Desensitize() {
 }
 
 func (u *User) ToJson() string {
-	return format.Prettify(u)
+	return pretty.ToJSON(u)
 }
 
 func (u *User) MarshalJSON() ([]byte, error) {
