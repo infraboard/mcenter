@@ -39,6 +39,10 @@ type HttpAuther struct {
 	ioc.ObjectImpl
 }
 
+func (a *HttpAuther) Name() string {
+	return AppName
+}
+
 func (a *HttpAuther) Init() error {
 	a.log = log.Sub(AppName)
 	a.client = rpc.C()
