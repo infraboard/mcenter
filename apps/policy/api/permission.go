@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
@@ -26,6 +27,7 @@ type handler struct {
 func (h *handler) Init() error {
 	h.log = log.Sub(policy.AppName)
 	h.service = ioc.Controller().Get(policy.AppName).(policy.Service)
+	h.Registry()
 	return nil
 }
 
@@ -37,9 +39,10 @@ func (h *handler) Version() string {
 	return "v1"
 }
 
-func (h *handler) Registry(ws *restful.WebService) {
+func (h *handler) Registry() {
 	tags := []string{"用户权限"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.CheckPermission).
 		Doc("权限校验").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

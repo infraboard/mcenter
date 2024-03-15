@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
@@ -26,6 +27,7 @@ type policyHandler struct {
 func (h *policyHandler) Init() error {
 	h.log = log.Sub(policy.AppName)
 	h.service = ioc.Controller().Get(policy.AppName).(policy.Service)
+	h.Registry()
 	return nil
 }
 
@@ -37,9 +39,10 @@ func (h *policyHandler) Version() string {
 	return "v1"
 }
 
-func (h *policyHandler) Registry(ws *restful.WebService) {
+func (h *policyHandler) Registry() {
 	tags := []string{"策略管理"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.CreatePolicy).
 		Doc("创建策略").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/infraboard/mcube/v2/pb/request"
 	"github.com/rs/zerolog"
@@ -28,6 +29,7 @@ type primary struct {
 func (h *primary) Init() error {
 	h.log = log.Sub(user.AppName)
 	h.service = ioc.Controller().Get(user.AppName).(user.Service)
+	h.Registry()
 	return nil
 }
 
@@ -39,9 +41,10 @@ func (h *primary) Version() string {
 	return "v1"
 }
 
-func (h *primary) Registry(ws *restful.WebService) {
+func (h *primary) Registry() {
 	tags := []string{"子账号管理"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.CreateUser).
 		Doc("创建子账号").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

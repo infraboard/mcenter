@@ -7,6 +7,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 )
@@ -25,6 +26,7 @@ type providerHandler struct {
 func (h *providerHandler) Init() error {
 	h.log = log.Sub(service.AppName)
 	h.service = ioc.Controller().Get(service.AppName).(service.MetaService)
+	h.Registry()
 	return nil
 }
 
@@ -36,9 +38,10 @@ func (h *providerHandler) Version() string {
 	return "v1"
 }
 
-func (h *providerHandler) Registry(ws *restful.WebService) {
+func (h *providerHandler) Registry() {
 	tags := []string{"服务提供商"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.GET("/gitlab/projects").To(h.QueryGitlabProject).
 		Doc("查询Gitlab项目列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

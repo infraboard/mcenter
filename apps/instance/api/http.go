@@ -2,10 +2,10 @@ package api
 
 import (
 	restfulspec "github.com/emicklei/go-restful-openapi/v2"
-	"github.com/emicklei/go-restful/v3"
 	"github.com/infraboard/mcenter/apps/instance"
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 )
@@ -23,6 +23,7 @@ type handler struct {
 func (h *handler) Init() error {
 	h.log = log.Sub(instance.AppName)
 	h.service = ioc.Controller().Get(instance.AppName).(instance.Service)
+	h.Registry()
 	return nil
 }
 
@@ -34,9 +35,10 @@ func (h *handler) Version() string {
 	return "v1"
 }
 
-func (h *handler) Registry(ws *restful.WebService) {
+func (h *handler) Registry() {
 	tags := []string{"服务实例管理"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.GET("/").To(h.SearchInstance).
 		Doc("搜索实例").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

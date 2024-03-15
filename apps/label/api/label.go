@@ -7,12 +7,14 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	http_label "github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/pb/request"
 )
 
-func (h *handler) Registry(ws *restful.WebService) {
+func (h *handler) Registry() {
 	tags := []string{"标签管理"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.CreateLabel).
 		Doc("创建标签").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

@@ -40,7 +40,7 @@ func (h *handler) Version() string {
 func (h *handler) Registry() {
 	tags := []string{"域管理"}
 
-	ws := gorestful.NewGoRestfulApiService(h)
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.CreateDomain).
 		Doc("创建域").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
@@ -26,6 +27,7 @@ type oath2Handler struct {
 func (h *oath2Handler) Init() error {
 	h.log = log.Sub(token.AppName)
 	h.service = ioc.Controller().Get(token.AppName).(token.Service)
+	h.Registry()
 	return nil
 }
 
@@ -37,9 +39,10 @@ func (h *oath2Handler) Version() string {
 	return "v1"
 }
 
-func (h *oath2Handler) Registry(ws *restful.WebService) {
+func (h *oath2Handler) Registry() {
 	tags := []string{"第三方登陆"}
 
+	ws := gorestful.ObjectRouter(h)
 	code := ws.QueryParameter("code", "oauth2 auth code").DataType("string").Required(true)
 	stat := ws.QueryParameter("state", "oauth2 state").DataType("string").Required(false)
 	dom := ws.QueryParameter("domain", "auth domain").DataType("string").DefaultValue(domain.DEFAULT_DOMAIN)

@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
@@ -26,6 +27,7 @@ type sub struct {
 func (h *sub) Init() error {
 	h.log = log.Sub(user.AppName)
 	h.service = ioc.Controller().Get(user.AppName).(user.Service)
+	h.Registry()
 	return nil
 }
 
@@ -37,9 +39,10 @@ func (h *sub) Version() string {
 	return "v1"
 }
 
-func (h *sub) Registry(ws *restful.WebService) {
+func (h *sub) Registry() {
 	tags := []string{"账号管理"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/password").To(h.UpdatePassword).
 		Doc("子账号修改自己密码").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

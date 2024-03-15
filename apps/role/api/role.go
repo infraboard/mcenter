@@ -7,11 +7,13 @@ import (
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 )
 
-func (h *handler) Registry(ws *restful.WebService) {
+func (h *handler) Registry() {
 	tags := []string{"角色管理"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.CreateRole).
 		Doc("创建角色").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
@@ -26,6 +27,7 @@ type tokenHandler struct {
 func (h *tokenHandler) Init() error {
 	h.log = log.Sub(token.AppName)
 	h.service = ioc.Controller().Get(token.AppName).(token.Service)
+	h.Registry()
 	return nil
 }
 
@@ -37,9 +39,10 @@ func (h *tokenHandler) Version() string {
 	return "v1"
 }
 
-func (h *tokenHandler) Registry(ws *restful.WebService) {
+func (h *tokenHandler) Registry() {
 	tags := []string{"登录"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.IssueToken).
 		Doc("颁发令牌").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

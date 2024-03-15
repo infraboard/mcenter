@@ -8,11 +8,13 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 )
 
-func (h *handler) Registry(ws *restful.WebService) {
+func (h *handler) Registry() {
 	tags := []string{"空间管理"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.CreateNamespace).
 		Doc("创建空间").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

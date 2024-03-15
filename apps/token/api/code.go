@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
@@ -25,6 +26,7 @@ type codeHandler struct {
 func (h *codeHandler) Init() error {
 	h.log = log.Sub(token.AppName)
 	h.service = ioc.Controller().Get(token.AppName).(token.Service)
+	h.Registry()
 	return nil
 }
 
@@ -36,9 +38,10 @@ func (h *codeHandler) Version() string {
 	return "v1"
 }
 
-func (h *codeHandler) Registry(ws *restful.WebService) {
+func (h *codeHandler) Registry() {
 	tags := []string{"验证码管理"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.IssueCode).
 		Doc("颁发验证码").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

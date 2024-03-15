@@ -45,7 +45,7 @@ func (a *HttpAuther) Init() error {
 	a.cache = cache.C()
 
 	// 注册认证中间件
-	gorestful.Get().Filter(a.GoRestfulAuthFunc)
+	gorestful.RootRouter().Filter(a.GoRestfulAuthFunc)
 	return nil
 }
 
@@ -167,13 +167,13 @@ func (a *HttpAuther) checkPermission(req *restful.Request, tk *token.Token, e *e
 
 	switch strings.ToUpper(e.PermissionMode) {
 	case "ACL":
-		return a.validatePermissionByACL(req, tk, e)
+		return a.validatePermissionByACL(tk, e)
 	default:
 		return a.validatePermissionByPRBAC(req, tk, e)
 	}
 }
 
-func (a *HttpAuther) validatePermissionByACL(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+func (a *HttpAuther) validatePermissionByACL(tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
 		a.log.Debug().Msgf("[%s] start check permission to mcenter ...", tk.Username)

@@ -21,6 +21,7 @@ type handler struct {
 func (h *handler) Init() error {
 	h.log = log.Sub(label.AppName)
 	h.service = ioc.Controller().Get(label.AppName).(label.Service)
+	h.Registry()
 	return nil
 }
 

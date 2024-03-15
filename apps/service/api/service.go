@@ -6,6 +6,7 @@ import (
 	"github.com/infraboard/mcube/v2/http/label"
 	"github.com/infraboard/mcube/v2/http/restful/response"
 	"github.com/infraboard/mcube/v2/ioc"
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
@@ -26,6 +27,7 @@ type serviceHandler struct {
 func (h *serviceHandler) Init() error {
 	h.log = log.Sub(service.AppName)
 	h.service = ioc.Controller().Get(service.AppName).(service.MetaService)
+	h.Registry()
 	return nil
 }
 
@@ -37,9 +39,10 @@ func (h *serviceHandler) Version() string {
 	return "v1"
 }
 
-func (h *serviceHandler) Registry(ws *restful.WebService) {
+func (h *serviceHandler) Registry() {
 	tags := []string{"服务管理"}
 
+	ws := gorestful.ObjectRouter(h)
 	ws.Route(ws.POST("/").To(h.CreateService).
 		Doc("创建服务").
 		Metadata(restfulspec.KeyOpenAPITags, tags).

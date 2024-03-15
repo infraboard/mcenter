@@ -36,7 +36,7 @@ func (r *EndpointRegistor) Registry() {
 	// 注册服务权限条目
 	r.log.Info().Msg("start registry endpoints ...")
 
-	router := gorestful.Get()
+	router := gorestful.RootRouter()
 	register := tools.NewEndpointRegister()
 	err := register.Registry(context.Background(), router, application.Short())
 	if err != nil {
