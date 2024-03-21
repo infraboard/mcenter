@@ -17,6 +17,8 @@ import (
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 	"go.opentelemetry.io/otel/trace"
+
+	"github.com/infraboard/mcube/v2/ioc/config/gorestful"
 )
 
 func init() {
@@ -41,6 +43,8 @@ func (a *httpAuther) Init() error {
 	a.policy = ioc.Controller().Get(policy.AppName).(policy.Service)
 	a.cache = cache.C()
 
+	// 注册认证中间件
+	gorestful.RootRouter().Filter(a.GoRestfulAuthFunc)
 	return nil
 }
 
@@ -120,13 +124,13 @@ func (a *httpAuther) CheckPermission(req *restful.Request, tk *token.Token, e *e
 
 	switch strings.ToUpper(e.PermissionMode) {
 	case "ACL":
-		return a.validatePermissionByACL(req, tk, e)
+		return a.validatePermissionByACL(tk, e)
 	default:
 		return a.validatePermissionByPRBAC(req, tk, e)
 	}
 }
 
-func (a *httpAuther) validatePermissionByACL(req *restful.Request, tk *token.Token, e *endpoint.Entry) error {
+func (a *httpAuther) validatePermissionByACL(tk *token.Token, e *endpoint.Entry) error {
 	// 检查是否是允许的类型
 	if len(e.Allow) > 0 {
 		a.log.Debug().Msgf("[%s] start check permission to mcenter ...", tk.Username)

@@ -19,4 +19,6 @@ level = "debug"
 
 [log.file]
 enable = true
-file_path = "logs/app.log"
+
+[jaeger]
+enable = false
