@@ -7,6 +7,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/apps/label"
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/apps/service"
@@ -87,6 +88,7 @@ func newExcutor() *excutor {
 		role:      ioc.Controller().Get(role.AppName).(role.Service),
 		user:      ioc.Controller().Get(user.AppName).(user.Service),
 		service:   ioc.Controller().Get(service.AppName).(service.MetaService),
+		label:     ioc.Controller().Get(service.AppName).(label.Service),
 	}
 }
 
@@ -100,6 +102,7 @@ type excutor struct {
 	role      role.Service
 	user      user.Service
 	service   service.MetaService
+	label     label.Service
 }
 
 func (e *excutor) InitDomain(ctx context.Context) error {
@@ -193,6 +196,20 @@ func (e *excutor) InitAdminUser(ctx context.Context) error {
 		return err
 	}
 	fmt.Printf("初始化系统管理员: %9s [成功]", u.Spec.Username)
+	fmt.Println()
+	return nil
+}
+
+func (e *excutor) InitLabel(ctx context.Context) error {
+	lables := label.BuildInLables()
+	for i := range lables {
+		ins, err := e.label.CreateLabel(ctx, lables[i])
+		if err != nil {
+			return fmt.Errorf("初始化标签失败: %s", err)
+		}
+
+		fmt.Printf("初始化标签: %15s [成功]", ins.Spec.Key)
+	}
 	fmt.Println()
 	return nil
 }

@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/infraboard/mcenter/apps/domain"
+	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcube/v2/ioc/config/validator"
 	"github.com/infraboard/mcube/v2/pb/resource"
 	"github.com/infraboard/mcube/v2/tools/hash"
@@ -93,4 +95,59 @@ func (b *Label) MarshalJSON() ([]byte, error) {
 		*resource.Meta
 		*CreateLabelRequest
 	}{b.Meta, b.Spec})
+}
+
+func BuildInLables() (items []*CreateLabelRequest) {
+	env := NewCreateLabelRequest()
+	env.Visiable = resource.VISIABLE_GLOBAL
+	env.Key = "Env"
+	env.KeyDesc = "环境"
+	env.ValueDesc = "资源所属环境"
+	env.Domain = domain.DEFAULT_DOMAIN
+	env.Namespace = namespace.DEFAULT_NAMESPACE
+	env.Required = true
+	env.ValueType = VALUE_TYPE_ENUM
+	env.Visiable = resource.VISIABLE_GLOBAL
+	env.DefaultValue = "开发"
+	env.AddEnumOption(
+		NewEnumOption("开发"),
+		NewEnumOption("测试"),
+		NewEnumOption("生产"),
+	)
+	items = append(items, env)
+
+	rgroup := NewCreateLabelRequest()
+	rgroup.Visiable = resource.VISIABLE_GLOBAL
+	rgroup.Key = "ResourceGroup"
+	rgroup.KeyDesc = "资源组"
+	rgroup.ValueDesc = "资源所属组"
+	rgroup.Domain = domain.DEFAULT_DOMAIN
+	rgroup.Namespace = namespace.DEFAULT_NAMESPACE
+	rgroup.Required = true
+	rgroup.ValueType = VALUE_TYPE_ENUM
+	rgroup.Visiable = resource.VISIABLE_GLOBAL
+	rgroup.DefaultValue = "默认"
+	rgroup.AddEnumOption(
+		NewEnumOption("默认"),
+	)
+	items = append(items, rgroup)
+
+	ugroup := NewCreateLabelRequest()
+	ugroup.Visiable = resource.VISIABLE_GLOBAL
+	ugroup.Key = "UserGroup"
+	ugroup.KeyDesc = "用户组"
+	ugroup.ValueDesc = "用户所属组"
+	ugroup.Domain = domain.DEFAULT_DOMAIN
+	ugroup.Namespace = namespace.DEFAULT_NAMESPACE
+	ugroup.Required = false
+	ugroup.ValueType = VALUE_TYPE_ENUM
+	ugroup.Visiable = resource.VISIABLE_GLOBAL
+	ugroup.DefaultValue = ""
+	ugroup.AddEnumOption(
+		NewEnumOption("研发部"),
+		NewEnumOption("测试部"),
+		NewEnumOption("运维部"),
+	)
+	items = append(items, ugroup)
+	return
 }
