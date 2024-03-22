@@ -80,7 +80,7 @@ gen: ## Init Service
 	@go fmt ./...
 
 	@protoc-go-inject-tag -input=apps/*/*.pb.go
-	@mcube generate enum -p -m apps/*/*.pb.go
+	@mcube enum -p -m apps/*/*.pb.go
 
 
 help: ## Display this help screen
