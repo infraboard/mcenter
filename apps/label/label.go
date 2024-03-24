@@ -109,6 +109,11 @@ const (
 
 func MergeInheritanceLabel(src, target map[string]string) {
 	for _, k := range InheritanceLables {
+		// 如果存在 则不覆盖
+		if _, ok := target[k]; ok {
+			continue
+		}
+		// 如果目标元素有值
 		if v, ok := src[k]; ok {
 			target[k] = v
 		}
