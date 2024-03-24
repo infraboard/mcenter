@@ -88,9 +88,9 @@ func TestCreateUserGroupLabel(t *testing.T) {
 func TestCreateGrepGroupLabel(t *testing.T) {
 	req := label.NewCreateLabelRequest()
 	req.Visiable = resource.VISIABLE_GLOBAL
-	req.Key = "DeployGrepGroup"
-	req.KeyDesc = "绿蓝部署组"
-	req.ValueDesc = "绿蓝部署组"
+	req.Key = "DeployGroup"
+	req.KeyDesc = "部署组"
+	req.ValueDesc = "部署组"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
 	req.Required = true

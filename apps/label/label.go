@@ -152,9 +152,9 @@ func BuildInLables() (items []*CreateLabelRequest) {
 
 	dgroup := NewCreateLabelRequest()
 	dgroup.Visiable = resource.VISIABLE_GLOBAL
-	dgroup.Key = "DeployGrepGroup"
-	dgroup.KeyDesc = "绿蓝部署组"
-	dgroup.ValueDesc = "绿蓝部署组"
+	dgroup.Key = "DeployGroup"
+	dgroup.KeyDesc = "部署组"
+	dgroup.ValueDesc = "部署组"
 	dgroup.Domain = domain.DEFAULT_DOMAIN
 	dgroup.Namespace = namespace.DEFAULT_NAMESPACE
 	dgroup.Required = true
