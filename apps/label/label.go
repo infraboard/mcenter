@@ -149,5 +149,23 @@ func BuildInLables() (items []*CreateLabelRequest) {
 		NewEnumOption("运维部"),
 	)
 	items = append(items, ugroup)
+
+	dgroup := NewCreateLabelRequest()
+	dgroup.Visiable = resource.VISIABLE_GLOBAL
+	dgroup.Key = "DeployGrepGroup"
+	dgroup.KeyDesc = "绿蓝部署组"
+	dgroup.ValueDesc = "绿蓝部署组"
+	dgroup.Domain = domain.DEFAULT_DOMAIN
+	dgroup.Namespace = namespace.DEFAULT_NAMESPACE
+	dgroup.Required = true
+	dgroup.ValueType = VALUE_TYPE_ENUM
+	dgroup.Visiable = resource.VISIABLE_GLOBAL
+	dgroup.DefaultValue = "default"
+	// 色名 https://htmlcolorcodes.com/zh/yanse-ming/
+	dgroup.AddEnumOption(
+		NewEnumOption("green").SetLabel("绿组").SetColor("MediumSeaGreen"),
+		NewEnumOption("blue").SetLabel("蓝组").SetColor("SteelBlue"),
+	)
+	items = append(items, ugroup)
 	return
 }

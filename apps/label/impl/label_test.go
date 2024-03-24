@@ -89,16 +89,18 @@ func TestCreateGrepGroupLabel(t *testing.T) {
 	req := label.NewCreateLabelRequest()
 	req.Visiable = resource.VISIABLE_GLOBAL
 	req.Key = "DeployGrepGroup"
-	req.KeyDesc = "灰度组"
-	req.ValueDesc = "部署所属灰度组"
+	req.KeyDesc = "绿蓝部署组"
+	req.ValueDesc = "绿蓝部署组"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
 	req.Required = true
 	req.ValueType = label.VALUE_TYPE_ENUM
 	req.Visiable = resource.VISIABLE_GLOBAL
 	req.DefaultValue = "default"
+	// 色名 https://htmlcolorcodes.com/zh/yanse-ming/
 	req.AddEnumOption(
-		label.NewEnumOption("default").SetLabel("默认组"),
+		label.NewEnumOption("green").SetLabel("绿组").SetColor("MediumSeaGreen"),
+		label.NewEnumOption("blue").SetLabel("蓝组").SetColor("SteelBlue"),
 	)
 
 	r, err := impl.CreateLabel(ctx, req)

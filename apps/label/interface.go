@@ -50,6 +50,11 @@ func (e *EnumOption) SetLabel(label string) *EnumOption {
 	return e
 }
 
+func (e *EnumOption) SetColor(color string) *EnumOption {
+	e.Color = color
+	return e
+}
+
 func (e *EnumOption) HasChildren() bool {
 	return len(e.Children) > 0
 }
