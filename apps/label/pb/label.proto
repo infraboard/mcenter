@@ -106,6 +106,9 @@ message EnumOption {
 	// 选项的值, 根据parent.input + children.input 自动生成
 	// @gotags: bson:"value" json:"value" 
 	string value = 3;
+    // 标签的颜色
+    // @gotags: json:"color" bson:"color"
+    string color = 7;
 	// 是否废弃
 	// @gotags: bson:"deprecate" json:"deprecate"
 	bool deprecate = 4;
