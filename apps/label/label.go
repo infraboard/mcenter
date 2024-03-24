@@ -97,10 +97,28 @@ func (b *Label) MarshalJSON() ([]byte, error) {
 	}{b.Meta, b.Spec})
 }
 
+// 需要被继承的标签
+var InheritanceLables = []string{ENV_KEY, RESOURCE_GROUP_KEY, USER_GROUP, DEPLOY_GROUP}
+
+const (
+	ENV_KEY            = "Env"
+	RESOURCE_GROUP_KEY = "ResourceGroup"
+	USER_GROUP         = "UserGroup"
+	DEPLOY_GROUP       = "DeployGroup"
+)
+
+func MergeInheritanceLabel(src, target map[string]string) {
+	for _, k := range InheritanceLables {
+		if v, ok := src[k]; ok {
+			target[k] = v
+		}
+	}
+}
+
 func BuildInLables() (items []*CreateLabelRequest) {
 	env := NewCreateLabelRequest()
 	env.Visiable = resource.VISIABLE_GLOBAL
-	env.Key = "Env"
+	env.Key = ENV_KEY
 	env.KeyDesc = "环境"
 	env.ValueDesc = "资源所属环境"
 	env.Domain = domain.DEFAULT_DOMAIN
@@ -118,7 +136,7 @@ func BuildInLables() (items []*CreateLabelRequest) {
 
 	rgroup := NewCreateLabelRequest()
 	rgroup.Visiable = resource.VISIABLE_GLOBAL
-	rgroup.Key = "ResourceGroup"
+	rgroup.Key = RESOURCE_GROUP_KEY
 	rgroup.KeyDesc = "资源组"
 	rgroup.ValueDesc = "资源所属组"
 	rgroup.Domain = domain.DEFAULT_DOMAIN
@@ -134,7 +152,7 @@ func BuildInLables() (items []*CreateLabelRequest) {
 
 	ugroup := NewCreateLabelRequest()
 	ugroup.Visiable = resource.VISIABLE_GLOBAL
-	ugroup.Key = "UserGroup"
+	ugroup.Key = USER_GROUP
 	ugroup.KeyDesc = "用户组"
 	ugroup.ValueDesc = "用户所属组"
 	ugroup.Domain = domain.DEFAULT_DOMAIN
