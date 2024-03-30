@@ -88,7 +88,7 @@ func newExcutor() *excutor {
 		role:      ioc.Controller().Get(role.AppName).(role.Service),
 		user:      ioc.Controller().Get(user.AppName).(user.Service),
 		service:   ioc.Controller().Get(service.AppName).(service.MetaService),
-		label:     ioc.Controller().Get(service.AppName).(label.Service),
+		label:     ioc.Controller().Get(label.AppName).(label.Service),
 	}
 }
 
