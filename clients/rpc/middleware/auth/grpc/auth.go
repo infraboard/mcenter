@@ -46,6 +46,10 @@ func (a *GrpcAuther) Name() string {
 	return AppName
 }
 
+func (m *GrpcAuther) Priority() int {
+	return 299
+}
+
 func (a *GrpcAuther) WithNamespace(ns string) *GrpcAuther {
 	a.namespace = ns
 	return a

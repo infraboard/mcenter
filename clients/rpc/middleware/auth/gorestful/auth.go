@@ -43,6 +43,10 @@ func (a *HttpAuther) Name() string {
 	return AppName
 }
 
+func (m *HttpAuther) Priority() int {
+	return 289
+}
+
 func (a *HttpAuther) Init() error {
 	a.log = log.Sub(AppName)
 	a.client = rpc.C()

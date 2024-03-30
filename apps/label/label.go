@@ -175,7 +175,7 @@ func BuildInLables() (items []*CreateLabelRequest) {
 
 	dgroup := NewCreateLabelRequest()
 	dgroup.Visiable = resource.VISIABLE_GLOBAL
-	dgroup.Key = "DeployGroup"
+	dgroup.Key = DEPLOY_GROUP
 	dgroup.KeyDesc = "部署组"
 	dgroup.ValueDesc = "部署组"
 	dgroup.Domain = domain.DEFAULT_DOMAIN

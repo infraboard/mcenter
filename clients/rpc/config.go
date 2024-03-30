@@ -39,6 +39,10 @@ func (m *Mcenter) Name() string {
 	return MCENTER
 }
 
+func (i *Mcenter) Priority() int {
+	return 399
+}
+
 func (m *Mcenter) Init() error {
 	cs, err := NewClient(m)
 	if err != nil {

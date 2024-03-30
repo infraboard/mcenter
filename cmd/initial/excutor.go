@@ -209,6 +209,7 @@ func (e *excutor) InitLabel(ctx context.Context) error {
 		}
 
 		fmt.Printf("初始化标签: %15s [成功]", ins.Spec.Key)
+		fmt.Println()
 	}
 	fmt.Println()
 	return nil
