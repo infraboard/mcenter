@@ -156,7 +156,7 @@ func (a *HttpAuther) setCodeCheckSilence(ctx context.Context, c *token.Code) {
 func (a *HttpAuther) isCodeCheckSilence(ctx context.Context, username string) bool {
 	err := a.cache.Exist(ctx, token.NewCodeKey(username))
 	if err != nil {
-		a.log.Error().Msgf("check error, %s", err)
+		a.log.Error().Msgf("cache check error, %s", err)
 		return false
 	}
 	return true
