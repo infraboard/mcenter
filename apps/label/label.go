@@ -189,6 +189,6 @@ func BuildInLables() (items []*CreateLabelRequest) {
 		NewEnumOption("green").SetLabel("绿组").SetColor("MediumSeaGreen"),
 		NewEnumOption("blue").SetLabel("蓝组").SetColor("SteelBlue"),
 	)
-	items = append(items, ugroup)
+	items = append(items, dgroup)
 	return
 }
