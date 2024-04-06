@@ -28,7 +28,7 @@ func (r *EndpointRegistor) Name() string {
 
 func (r *EndpointRegistor) Init() error {
 	r.log = log.Sub(AppName)
-
+	r.Registry()
 	return nil
 }
 
