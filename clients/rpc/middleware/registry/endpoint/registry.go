@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	ioc.Config().Registry(&EndpointRegistor{})
+	ioc.Api().Registry(&EndpointRegistor{})
 }
 
 type EndpointRegistor struct {
@@ -30,6 +30,10 @@ func (r *EndpointRegistor) Init() error {
 	r.log = log.Sub(AppName)
 	r.Registry()
 	return nil
+}
+
+func (r *EndpointRegistor) Priority() int {
+	return -199
 }
 
 func (r *EndpointRegistor) Registry() {
