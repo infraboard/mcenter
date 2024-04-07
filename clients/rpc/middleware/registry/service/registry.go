@@ -28,6 +28,10 @@ func (a *ServiceRegistor) Name() string {
 	return AppName
 }
 
+func (r *ServiceRegistor) Priority() int {
+	return -199
+}
+
 func (a *ServiceRegistor) Init() error {
 	a.log = log.Sub(AppName)
 

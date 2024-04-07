@@ -33,6 +33,7 @@ func CreateAdminRoleRequest(createBy string) *CreateRoleRequest {
 			Effect:       EffectType_ALLOW,
 			ServiceId:    "*",
 			ResourceName: "*",
+			LabelKey:     "*",
 			MatchAll:     true,
 		},
 	}
@@ -53,6 +54,7 @@ func CreateVisitorRoleRequest(createBy string) *CreateRoleRequest {
 			Effect:       EffectType_ALLOW,
 			ServiceId:    "*",
 			ResourceName: "*",
+			LabelKey:     label.Action,
 			LabelValues:  []string{label.List.Value(), label.Get.Value()},
 		},
 	}

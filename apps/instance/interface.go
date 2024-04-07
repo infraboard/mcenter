@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/infraboard/mcenter/apps/service"
-	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcube/v2/http/request"
 	"github.com/infraboard/mcube/v2/tools/pretty"
 )
@@ -82,10 +81,6 @@ func NewInstance(req *RegistryRequest, svc *service.Service) (*Instance, error) 
 		return nil, err
 	}
 
-	if req.Name == "" {
-		req.Name = "ins-" + token.MakeBearer(8)
-	}
-
 	ins := &Instance{
 		Domain:       svc.Spec.Domain,
 		Namespace:    svc.Spec.Namespace,
@@ -95,7 +90,7 @@ func NewInstance(req *RegistryRequest, svc *service.Service) (*Instance, error) 
 		Config:       NewDefaultConfig(),
 	}
 
-	ins.Id = ins.FullNameHash()
+	ins.Id = "ins-" + ins.FullNameHash()
 	ins.Config.Weight = req.Weight
 	return ins, nil
 }
