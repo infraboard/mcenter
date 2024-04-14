@@ -13,7 +13,7 @@ import (
 func init() {
 	ioc.Config().Registry(&Mcenter{
 		Address:       "localhost:18010",
-		TimeoutSecond: 10,
+		TimeoutSecond: 5,
 		Resolver:      NewDefaultResolver(),
 	})
 }
