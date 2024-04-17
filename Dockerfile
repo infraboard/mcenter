@@ -15,6 +15,7 @@ ENV GOPROXY https://goproxy.cn,direct
 # 下载依赖
 RUN go mod download
 # 执行构建
+COPY . .
 RUN make build
 
 FROM registry.cn-hangzhou.aliyuncs.com/godev/alpine:latest

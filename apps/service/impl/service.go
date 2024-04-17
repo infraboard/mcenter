@@ -210,14 +210,15 @@ func (i *impl) DeleteService(ctx context.Context, req *service.DeleteServiceRequ
 	repo := ins.Spec.CodeRepository
 	if repo.EnableHook {
 		gc, err := repo.MakeGitlabConfig()
-		if err != nil {
-			return nil, err
-		}
-		v4 := gitlab.NewGitlabV4(gc)
-		removeHookReq := gitlab.NewDeleteProjectHookReqeust(repo.ProjectId, repo.HookId)
-		err = v4.Project().DeleteProjectHook(ctx, removeHookReq)
-		if err != nil {
-			return nil, err
+		if err == nil {
+			v4 := gitlab.NewGitlabV4(gc)
+			removeHookReq := gitlab.NewDeleteProjectHookReqeust(repo.ProjectId, repo.HookId)
+			err = v4.Project().DeleteProjectHook(ctx, removeHookReq)
+			if err != nil {
+				i.log.Error().Msgf("delete project hook error, %s", err)
+			}
+		} else {
+			i.log.Error().Msgf("new gitlab client error, %s", err)
 		}
 	}
 
