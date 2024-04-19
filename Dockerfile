@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/godev/golang:1.20 AS builder
+FROM registry.cn-hangzhou.aliyuncs.com/godev/golang:1.22 AS builder
 
 LABEL stage=gobuilder
 
