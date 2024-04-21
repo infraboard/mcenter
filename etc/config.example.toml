@@ -20,5 +20,6 @@ level = "debug"
 [log.file]
 enable = true
 
-[jaeger]
+[trace]
 enable = false
+endpoint = "127.0.0.1:4318"
