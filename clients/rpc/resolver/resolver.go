@@ -3,7 +3,6 @@ package resolver
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/infraboard/mcenter/apps/instance"
@@ -14,6 +13,12 @@ import (
 	"google.golang.org/grpc/attributes"
 	"google.golang.org/grpc/resolver"
 )
+
+func init() {
+	// Register the mcenter ResolverBuilder. This is usually done in a package's
+	// init() function.
+	resolver.Register(&McenterResolverBuilder{})
+}
 
 const (
 	Scheme = "mcenter"
@@ -30,10 +35,6 @@ const (
 // target, and send updates to the ClientConn.
 
 // McenterResolverBuilder is a ResolverBuilder.
-// 注意通过环境变量读取reslover配置相关信息
-// MCENTER_CLINET_ID
-// MCENTER_CLIENT_SECRET
-// MCENTER_GRPC_ADDRESS
 type McenterResolverBuilder struct{}
 
 func (*McenterResolverBuilder) Build(
@@ -48,13 +49,13 @@ func (*McenterResolverBuilder) Build(
 		cc:                 cc,
 		queryTimeoutSecond: 3 * time.Second,
 		log:                log.Sub("mcenter.resolver"),
+		refreshInterval:    30,
 	}
 
-	// 强制触发一次更新
-	r.ResolveNow(resolver.ResolveNowOptions{})
-
-	// 添加给Manger管理, Manager负责更新
-	M.add(r)
+	// 同步更新一次
+	r.resolve()
+	// 后台刷新
+	go r.Watch()
 	return r, nil
 }
 
@@ -65,29 +66,41 @@ func (*McenterResolverBuilder) Scheme() string {
 // exampleResolver is a
 // Resolver(https://godoc.org/google.golang.org/grpc/resolver#Resolver).
 type mcenterResolver struct {
-	mcenter instance.RPCClient
-
+	mcenter            instance.RPCClient
 	target             resolver.Target
 	cc                 resolver.ClientConn
 	queryTimeoutSecond time.Duration
 	log                *zerolog.Logger
+	addrHash           string
+	refreshInterval    int32
 }
 
-func (m *mcenterResolver) ResolveNow(o resolver.ResolveNowOptions) {
+func (m *mcenterResolver) refreshTime() time.Duration {
+	return time.Duration(m.refreshInterval) * time.Second
+}
+
+func (m *mcenterResolver) ResolveNow(o resolver.ResolveNowOptions) {}
+
+func (m *mcenterResolver) resolve() {
 	// 从mcenter中查询该target对应的服务实例
-	addrs, err := m.search()
+	address, err := m.search()
 	if err != nil {
-		m.log.Error().Msgf("search target %s error, %s", m.target.URL.String(), err)
+		m.log.Debug().Msgf("update endpoints error, %s", err)
+		return
 	}
 
 	// 更新给client
-	m.cc.UpdateState(resolver.State{Addresses: addrs})
+	err = m.cc.UpdateState(resolver.State{Addresses: address})
+	if err != nil {
+		m.log.Error().Msgf("update state error, %s", err)
+		return
+	}
 }
 
 // 查询名称对应的实例
 func (m *mcenterResolver) search() ([]resolver.Address, error) {
 	req := m.buildSerchReq()
-
+	endpoints := []resolver.Address{}
 	if req.ServiceName == "" {
 		return nil, fmt.Errorf("application name required")
 	}
@@ -98,9 +111,18 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 
 	set, err := m.mcenter.Search(ctx, req)
 	if err != nil {
-		m.log.Error().Msgf("search target %s error, %s", m.target.URL.String(), err)
-		return nil, err
+		return nil, fmt.Errorf("search target %s error, %s", m.target.URL.String(), err)
 	}
+	if set.Len() == 0 {
+		return nil, fmt.Errorf("no service instance")
+	}
+
+	// 是否需要更新
+	newHash := set.RegistryInfoHash()
+	if m.addrHash == newHash {
+		return nil, fmt.Errorf("address not changed")
+	}
+	m.addrHash = newHash
 
 	// 优先获取对应匹配的组, 如果没匹配的，则使用最老的那个组
 	items := set.GetGroupInstance(req.Group)
@@ -109,24 +131,22 @@ func (m *mcenterResolver) search() ([]resolver.Address, error) {
 	}
 
 	addrString := []string{}
-	addrs := make([]resolver.Address, len(items))
-	for i, s := range items {
-		attr := attributes.New("region", s.RegistryInfo.Region)
-		attr.WithValue("environment", s.RegistryInfo.Environment)
-		attr.WithValue("group", s.RegistryInfo.Group)
-		addr := resolver.Address{
-			Addr:       s.RegistryInfo.Address,
-			Attributes: attr,
-		}
-		wrr.SetWeight(&addr, s.Config.Weight)
-		addrs[i] = addr
+	for i := range items {
+		item := items[i]
+		attr := attributes.New("region", item.RegistryInfo.Region)
+		attr.WithValue("environment", item.RegistryInfo.Environment)
+		attr.WithValue("group", item.RegistryInfo.Group)
+		attr.WithValue(wrr.WEIGHT_ATTRIBUTE_KEY, item.Config.Weight)
 
-		addrString = append(addrString, s.RegistryInfo.Address)
+		endpoints = append(endpoints, resolver.Address{
+			Addr:       item.RegistryInfo.Address,
+			Attributes: attr,
+		})
+		addrString = append(addrString, item.RegistryInfo.Address)
 	}
 
-	m.log.Info().Msgf("search service params: %s,  address: %s", req.ToJSON(), strings.Join(addrString, ","))
-
-	return addrs, nil
+	m.log.Info().Msgf("search service params: %s,  address: %v", req.ToJSON(), addrString)
+	return endpoints, nil
 }
 
 // 构建mcenter实例查询参数
@@ -146,10 +166,4 @@ func (m *mcenterResolver) buildSerchReq() *instance.SearchRequest {
 
 func (m *mcenterResolver) Close() {
 
-}
-
-func init() {
-	// Register the mcenter ResolverBuilder. This is usually done in a package's
-	// init() function.
-	resolver.Register(&McenterResolverBuilder{})
 }

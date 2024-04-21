@@ -1,6 +1,7 @@
 package instance
 
 import (
+	"crypto/md5"
 	"fmt"
 	"hash/fnv"
 	"net/http"
@@ -157,6 +158,15 @@ func NewInstanceSet() *InstanceSet {
 
 func (s *InstanceSet) Add(item *Instance) {
 	s.Items = append(s.Items, item)
+}
+
+func (s *InstanceSet) RegistryInfoHash() string {
+	h := md5.New()
+	for i := range s.Items {
+		ins := s.Items[i]
+		h.Write([]byte(ins.RegistryInfo.String()))
+	}
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
 func (s *InstanceSet) GetGroupInstance(group string) (items []*Instance) {
