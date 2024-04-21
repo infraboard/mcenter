@@ -42,7 +42,6 @@ func NewClient(conf *Mcenter) (*ClientSet, error) {
 		grpc.WithChainUnaryInterceptor(exception.NewUnaryClientInterceptor()),
 		// Grpc Trace
 		grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
-		grpc.WithBlock(),
 	)
 
 	if err != nil {
