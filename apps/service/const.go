@@ -39,3 +39,18 @@ func GetValueFromMetaData(md metadata.MD, key string) string {
 
 	return v[0]
 }
+
+// 从上下文中获取认证信息
+func GetMetaData(ctx context.Context, key string) string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return ""
+	}
+
+	values := md.Get(key)
+	if len(values) > 0 {
+		return values[0]
+	}
+
+	return ""
+}
