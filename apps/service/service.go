@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/infraboard/mcenter/apps/service/provider/gitlab"
+	"github.com/infraboard/mcube/v2/ioc/config/application"
 	"github.com/infraboard/mcube/v2/pb/resource"
 	"github.com/infraboard/mcube/v2/tools/pretty"
 	"google.golang.org/grpc/metadata"
@@ -26,7 +27,12 @@ func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
 	if svc == nil {
 		// 创建新的服务
 		svc = NewServiceFromProject(p)
-		svc.Spec.CodeRepository.Token = tk
+		// 补充WebHook
+		svc.Spec.CodeRepository.EnableHook = true
+		hc := gitlab.NewGitLabWebHook(tk)
+		hc.Url = fmt.Sprintf("%s/mflow/api/v1/triggers/gitlab", application.Get().Domain)
+		svc.Spec.CodeRepository.HookConfig = hc.ToJson()
+
 		s.Add(svc)
 	} else {
 		// 更新服务
@@ -92,10 +98,6 @@ func NewServiceFromProject(p *gitlab.Project) *Service {
 	spec.CodeRepository.Namespace = p.NamespacePath
 	spec.CodeRepository.WebUrl = p.WebURL
 	spec.CodeRepository.CreatedAt = p.CreatedAt.Unix()
-	spec.CodeRepository.EnableHook = true
-	spec.CodeRepository.HookConfig = gitlab.NewGitLabWebHook(
-		"自动填充服务的Id",
-	).ToJson()
 	return svc
 }
 

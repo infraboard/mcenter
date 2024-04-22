@@ -78,7 +78,7 @@ func NewGitLabWebHook(token string) *GitLabWebHook {
 		NoteEvents:          true,
 		ReleasesEvents:      true,
 		Token:               token,
-		Url:                 "http://api.mdevcloud.cn/mpaas/api/v1/triggers/gitlab",
+		Url:                 "",
 	}
 }
 
