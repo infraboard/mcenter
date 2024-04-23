@@ -122,6 +122,12 @@ git remote add gitlab https://gitlab.com/infraboard/mcenter.git
 git push -u gitlab --all 
 ```
 
+## 镜像构建
+
+```sh
+docker buildx build  --platform linux/amd64 -t mcenter .
+```
+
 ## 相关文档
 
 https://petstore.swagger.io/#/
