@@ -38,7 +38,6 @@ func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
 		// 更新服务
 		svc.UpdateCreateAt(p.CreatedAt.Unix())
 	}
-
 }
 
 func (s *ServiceSet) UpdateScope(domain, namespace string) {
