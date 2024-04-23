@@ -6,9 +6,9 @@ WORKDIR /src
 COPY go.mod .
 COPY go.sum .
 
-ENV CGO_ENABLED=0\
-GOOS=linux\
-GOARCH=amd64\
+ENV CGO_ENABLED=0 \
+GOOS=linux \
+GOARCH=amd64 \
 GOPROXY=https://goproxy.cn,direct
 
 # 下载依赖
@@ -24,13 +24,13 @@ COPY --from=builder /src/dist/mcenter-api /app/mcenter-api
 COPY --from=builder /src/etc /app/etc
 
 # 默认配置
-ENV APP_NAME=mcenter\
-APP_DOMAIN=console.mdev.group\
-HTTP_HOST=127.0.0.1\
-HTTP_PORT=8010\
-GRPC_HOST=127.0.0.1\
-GRPC_PORT=18010\
-MONGO_ENDPOINTS=127.0.0.1:27017\
+ENV APP_NAME=mcenter \
+APP_DOMAIN=console.mdev.group \
+HTTP_HOST=127.0.0.1 \
+HTTP_PORT=8010 \
+GRPC_HOST=127.0.0.1 \
+GRPC_PORT=18010 \
+MONGO_ENDPOINTS=127.0.0.1:27017 \
 MONGO_DATABASE=mcenter
 
 
