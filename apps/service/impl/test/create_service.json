@@ -1,6 +1,6 @@
 {
    "id": "",
-   "create_at": 1704436304,
+   "create_at": 1713353361,
    "update_at": 0,
    "update_by": "",
    "domain": "default",
@@ -8,22 +8,22 @@
    "owner": "",
    "enabled": true,
    "type": "SOURCE_CODE",
-   "name": "go13",
+   "name": "Cicd Test",
    "logo": "",
    "description": "",
    "level": 0,
    "code_repository": {
       "provider": "GITLAB",
-      "project_id": "53577691",
-      "namespace": "go-course-project/go13",
-      "web_url": "https://gitlab.com/go-course-project/go13",
-      "ssh_url": "git@gitlab.com:go-course-project/go13.git",
-      "http_url": "https://gitlab.com/go-course-project/go13.git",
+      "project_id": "56951652",
+      "namespace": "infraboard/cicd_test",
+      "web_url": "https://gitlab.com/infraboard/cicd_test",
+      "ssh_url": "git@gitlab.com:infraboard/cicd_test.git",
+      "http_url": "https://gitlab.com/infraboard/cicd_test.git",
       "language": null,
       "enable_hook": true,
-      "hook_config": "{\n  \"push_events_branch_filter\": \"\",\n  \"push_events\": true,\n  \"issues_events\": true,\n  \"confidential_issues_events\": false,\n  \"merge_requests_events\": true,\n  \"tag_push_events\": true,\n  \"note_events\": true,\n  \"confidential_note_events\": false,\n  \"wiki_page_events\": false,\n  \"releases_events\": true,\n  \"token\": \"glpat-4xV_b_3k4D8MpzNEAL1n\",\n  \"url\": \"localhost/mflow/api/v1/triggers/gitlab\"\n}",
+      "hook_config": "{\n  \"push_events_branch_filter\": \"\",\n  \"push_events\": true,\n  \"issues_events\": true,\n  \"confidential_issues_events\": false,\n  \"merge_requests_events\": true,\n  \"tag_push_events\": true,\n  \"note_events\": true,\n  \"confidential_note_events\": false,\n  \"wiki_page_events\": false,\n  \"releases_events\": true,\n  \"token\": \"  glpat-4xV_b_3k4D8MpzNEAL1n\",\n  \"url\": \"http://console.mdev.group/mflow/api/v1/triggers/gitlab\"\n}",
       "hook_id": "",
-      "created_at": 1704436304
+      "created_at": 1713353361
    },
    "image_repository": {
       "address": "",

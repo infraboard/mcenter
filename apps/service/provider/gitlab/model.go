@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/infraboard/mcube/v2/tools/pretty"
 )
 
@@ -67,7 +68,10 @@ type Project struct {
 
 // 2024-04-17T11:29:21.640Z
 func (s *Project) CreatedAtTime() time.Time {
-	t, _ := time.Parse(time.RFC3339, s.CreatedAt)
+	t, err := time.Parse(time.RFC3339, s.CreatedAt)
+	if err != nil {
+		log.L().Error().Msgf("parse project time %s error,%s", s.CreatedAt, err)
+	}
 	return t
 }
 

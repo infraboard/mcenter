@@ -30,7 +30,8 @@ func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
 		// 补充WebHook
 		app := application.Get()
 		svc.Spec.CodeRepository.EnableHook = app.IsInternalIP()
-		hc := gitlab.NewGitLabWebHook(tk)
+		svc.Spec.CodeRepository.Token = tk
+		hc := gitlab.NewGitLabWebHook(svc.Meta.Id)
 		hc.Url = fmt.Sprintf("%s/mflow/api/v1/triggers/gitlab", app.Endpoint())
 		svc.Spec.CodeRepository.HookConfig = hc.ToJson()
 		s.Add(svc)
