@@ -5,13 +5,13 @@ import (
 )
 
 const (
-	MCENTER = "mcenter"
+	AppName = "mcenter"
 )
 
 func C() *ClientSet {
-	return ioc.Config().Get(MCENTER).(*Mcenter).cs
+	return ioc.Config().Get(AppName).(*Mcenter).cs
 }
 
 func Config() *Mcenter {
-	return ioc.Config().Get(MCENTER).(*Mcenter)
+	return ioc.Config().Get(AppName).(*Mcenter)
 }

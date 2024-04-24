@@ -20,9 +20,9 @@ func init() {
 
 // Mcenter 客户端配置
 type Mcenter struct {
-	Address      string `json:"address" toml:"address" yaml:"address" env:"MCENTER_GRPC_ADDRESS"`
-	ClientID     string `json:"client_id" toml:"client_id" yaml:"client_id" env:"MCENTER_CLINET_ID"`
-	ClientSecret string `json:"client_secret" toml:"client_secret" yaml:"client_secret" env:"MCENTER_CLIENT_SECRET"`
+	Address      string `json:"address" toml:"address" yaml:"address" env:"GRPC_ADDRESS"`
+	ClientID     string `json:"client_id" toml:"client_id" yaml:"client_id" env:"CLINET_ID"`
+	ClientSecret string `json:"client_secret" toml:"client_secret" yaml:"client_secret" env:"CLIENT_SECRET"`
 	// 默认值10秒
 	TimeoutSecond uint      `json:"timeout_second" toml:"timeout_second" yaml:"timeout_second" env:"GRPC_TIMEOUT_SECOND"`
 	Resolver      *Resolver `json:"resolver" toml:"resolver" yaml:"resolver"`
@@ -36,7 +36,7 @@ func (m *Mcenter) String() string {
 }
 
 func (m *Mcenter) Name() string {
-	return MCENTER
+	return AppName
 }
 
 func (i *Mcenter) Priority() int {
@@ -84,15 +84,15 @@ func NewDefaultResolver() *Resolver {
 
 type Resolver struct {
 	// 实例所属地域, 默认default
-	Region string `json:"region" toml:"region" yaml:"region" env:"MCENTER_INSTANCE_REGION" validate:"required"`
+	Region string `json:"region" toml:"region" yaml:"region" env:"INSTANCE_REGION" validate:"required"`
 	// 实例所属环境, 默认default
-	Environment string `json:"environment" toml:"environment" yaml:"environment" env:"MCENTER_INSTANCE_ENV" validate:"required"`
+	Environment string `json:"environment" toml:"environment" yaml:"environment" env:"INSTANCE_ENV" validate:"required"`
 	// 实例所属集群,默认default
-	Cluster string `json:"cluster" toml:"cluster" yaml:"cluster" env:"MCENTER_INSTANCE_CLUSTER" validate:"required"`
+	Cluster string `json:"cluster" toml:"cluster" yaml:"cluster" env:"INSTANCE_CLUSTER" validate:"required"`
 	// 实例所属分组,默认default
-	Group string `json:"group" toml:"group" yaml:"group" env:"MCENTER_INSTANCE_GROUP" validate:"required"`
+	Group string `json:"group" toml:"group" yaml:"group" env:"INSTANCE_GROUP" validate:"required"`
 	// 实例标签, 可以根据标签快速过滤实例, 格式k=v,k=v
-	Labels string `json:"labels" toml:"labels" yaml:"labels" env:"MCENTER_INSTANCE_LABELS"`
+	Labels string `json:"labels" toml:"labels" yaml:"labels" env:"INSTANCE_LABELS"`
 }
 
 func (r *Resolver) ToQueryString() string {

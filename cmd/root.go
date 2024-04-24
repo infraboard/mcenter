@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -16,7 +17,6 @@ var (
 	// pusher service config option
 	confType string
 	confFile string
-	confETCD string
 )
 
 var vers bool
@@ -24,8 +24,8 @@ var vers bool
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "mcenter",
-	Short: "基于Etcd的微服务注册中心",
-	Long:  "基于Etcd的微服务注册中心",
+	Short: "微服务公共能力中心",
+	Long:  "微服务公共能力中心",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if vers {
 			fmt.Println(application.FullVersion())
@@ -44,7 +44,10 @@ func initail() {
 		req.ConfigFile.Path = confFile
 	default:
 		req.ConfigEnv.Enabled = true
+		// 调整日志级别
+		os.Setenv("LOG_LEVEL", "info")
 	}
+
 	err := ioc.ConfigIocObject(req)
 	server.DefaultConfig = req
 	cobra.CheckErr(err)
@@ -62,8 +65,7 @@ func Execute() {
 }
 
 func init() {
-	RootCmd.PersistentFlags().StringVarP(&confType, "config-type", "t", "file", "the service config type [file/env/etcd]")
+	RootCmd.PersistentFlags().StringVarP(&confType, "config-type", "t", "file", "the service config type [file/env]")
 	RootCmd.PersistentFlags().StringVarP(&confFile, "config-file", "f", "etc/config.toml", "the service config from file")
-	RootCmd.PersistentFlags().StringVarP(&confETCD, "config-etcd", "e", "127.0.0.1:2379", "the service config from etcd")
 	RootCmd.PersistentFlags().BoolVarP(&vers, "version", "v", false, "the mcenter version")
 }
