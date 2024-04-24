@@ -2,6 +2,7 @@ package impl
 
 import (
 	"context"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -50,14 +51,14 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 		if repo.Language == nil {
 			languages, err := v4.Project().ListProjectLanguage(ctx, repo.ProjectId)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("list repo languages error, %s", err)
 			}
 
 			lan := languages.Primary()
 			if lan != "" {
 				lan, err := service.ParseLANGUAGEFromString(lan)
 				if err != nil {
-					return nil, err
+					return nil, fmt.Errorf("parse language from string error, %s", err)
 				}
 				repo.SetLanguage(lan)
 			}
@@ -65,13 +66,15 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 		if repo.EnableHook {
 			hookSetting, err := gitlab.ParseGitLabWebHookFromString(repo.HookConfig)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("parse gitlab webhook from string error, %s", err)
 			}
 			hookSetting.Token = ins.Meta.Id
+
 			addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectId, hookSetting)
+			i.log.Debug().Msgf("add hook req: %s", addHookReq.ToJSON())
 			resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("add project hook error, %s", err)
 			}
 			repo.HookId = resp.IDToString()
 		}

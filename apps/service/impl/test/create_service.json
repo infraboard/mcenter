@@ -1,25 +1,43 @@
 {
+   "id": "",
+   "create_at": 1704436304,
+   "update_at": 0,
+   "update_by": "",
    "domain": "default",
    "namespace": "default",
    "owner": "",
    "enabled": true,
    "type": "SOURCE_CODE",
-   "name": "mcenter",
+   "name": "go13",
    "logo": "",
    "description": "",
    "level": 0,
    "code_repository": {
       "provider": "GITLAB",
-      "project_id": "44712580",
-      "namespace": "infraboard/mcenter",
-      "web_url": "https://gitlab.com/infraboard/mcenter",
-      "ssh_url": "git@gitlab.com:infraboard/mcenter.git",
-      "http_url": "https://gitlab.com/infraboard/mcenter.git",
+      "project_id": "53577691",
+      "namespace": "go-course-project/go13",
+      "web_url": "https://gitlab.com/go-course-project/go13",
+      "ssh_url": "git@gitlab.com:go-course-project/go13.git",
+      "http_url": "https://gitlab.com/go-course-project/go13.git",
       "language": null,
       "enable_hook": true,
-      "hook_config": "{\n   \"push_events_branch_filter\": \"\",\n   \"push_events\": true,\n   \"issues_events\": true,\n   \"confidential_issues_events\": false,\n   \"merge_requests_events\": true,\n   \"tag_push_events\": true,\n   \"note_events\": true,\n   \"confidential_note_events\": false,\n   \"wiki_page_events\": false,\n   \"releases_events\": true,\n   \"token\": \"自动填充服务的Id\",\n   \"url\": \"http://api.mdevcloud.cn/mpaas/api/v1/triggers/gitlab\"\n}",
+      "hook_config": "{\n  \"push_events_branch_filter\": \"\",\n  \"push_events\": true,\n  \"issues_events\": true,\n  \"confidential_issues_events\": false,\n  \"merge_requests_events\": true,\n  \"tag_push_events\": true,\n  \"note_events\": true,\n  \"confidential_note_events\": false,\n  \"wiki_page_events\": false,\n  \"releases_events\": true,\n  \"token\": \"glpat-4xV_b_3k4D8MpzNEAL1n\",\n  \"url\": \"localhost/mflow/api/v1/triggers/gitlab\"\n}",
       "hook_id": "",
-      "created_at": 1680049976
+      "created_at": 1704436304
    },
-   "labels": {}
+   "image_repository": {
+      "address": "",
+      "version": "latest"
+   },
+   "labels": {},
+   "credential": {
+      "enabled": false,
+      "update_at": 0,
+      "client_id": "",
+      "client_secret": ""
+   },
+   "security": {
+      "encrypt_key": ""
+   },
+   "synced": false
 }

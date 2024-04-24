@@ -28,15 +28,15 @@ func (s *ServiceSet) UpdateFromGitProject(p *gitlab.Project, tk string) {
 		// 创建新的服务
 		svc = NewServiceFromProject(p)
 		// 补充WebHook
-		svc.Spec.CodeRepository.EnableHook = true
+		app := application.Get()
+		svc.Spec.CodeRepository.EnableHook = app.IsInternalIP()
 		hc := gitlab.NewGitLabWebHook(tk)
-		hc.Url = fmt.Sprintf("%s/mflow/api/v1/triggers/gitlab", application.Get().Domain)
+		hc.Url = fmt.Sprintf("%s/mflow/api/v1/triggers/gitlab", app.Endpoint())
 		svc.Spec.CodeRepository.HookConfig = hc.ToJson()
-
 		s.Add(svc)
 	} else {
 		// 更新服务
-		svc.UpdateCreateAt(p.CreatedAt.Unix())
+		svc.UpdateCreateAt(p.CreatedAtTime().Unix())
 	}
 }
 
@@ -85,7 +85,7 @@ func (s *ServiceSet) Swap(i, j int) {
 
 func NewServiceFromProject(p *gitlab.Project) *Service {
 	svc := NewDefaultService()
-	svc.Meta.CreateAt = p.CreatedAt.Unix()
+	svc.Meta.CreateAt = p.CreatedAtTime().Unix()
 
 	spec := svc.Spec
 	spec.Name = p.Name
@@ -96,7 +96,7 @@ func NewServiceFromProject(p *gitlab.Project) *Service {
 	spec.CodeRepository.HttpUrl = p.GitHttpUrl
 	spec.CodeRepository.Namespace = p.NamespacePath
 	spec.CodeRepository.WebUrl = p.WebURL
-	spec.CodeRepository.CreatedAt = p.CreatedAt.Unix()
+	spec.CodeRepository.CreatedAt = p.CreatedAtTime().Unix()
 	return svc
 }
 

@@ -50,7 +50,7 @@ type Project struct {
 	// 描述
 	Description string `json:"description"`
 	// 项目创建时间
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt string `json:"created_at"`
 	// 名称
 	Name string `json:"name"`
 	// 项目的Web访问地址
@@ -63,6 +63,12 @@ type Project struct {
 	GitHttpUrl string `json:"http_url_to_repo"`
 	// namespace
 	NamespacePath string `json:"path_with_namespace"`
+}
+
+// 2024-04-17T11:29:21.640Z
+func (s *Project) CreatedAtTime() time.Time {
+	t, _ := time.Parse(time.RFC3339, s.CreatedAt)
+	return t
 }
 
 func (s *Project) IdToString() string {
@@ -135,6 +141,10 @@ type AddProjectHookRequest struct {
 	ProjectID string `json:"project_id"`
 	// Gitlab WebHook配置
 	WebHook *GitLabWebHook `json:"webhook"`
+}
+
+func (s *AddProjectHookRequest) ToJSON() string {
+	return pretty.ToJSON(s)
 }
 
 func NewAddProjectHookResponse() *AddProjectHookResponse {
