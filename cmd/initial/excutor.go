@@ -167,18 +167,19 @@ func (e *excutor) InitRole(ctx context.Context) error {
 
 func (e *excutor) InitService(ctx context.Context) error {
 	apps := NewInitApps()
-	apps.Add("maudit", "审计中心")
 	apps.Add("mflow", "流水线服务")
 	apps.Add("moperator", "平台k8s Operator状态同步器")
 	apps.Add("mpaas", "发布中心")
-	apps.Add("cmdb", "资源中心")
 
 	for _, req := range apps.items {
 		svc, err := e.service.CreateService(ctx, req)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("初始化服务: %15s [成功]", svc.Spec.Name)
+		fmt.Printf("初始化服务: %15s [成功], client_id: %s, client_secret: %s",
+			svc.Spec.Name,
+			svc.Credential.ClientId,
+			svc.Credential.ClientSecret)
 		fmt.Println()
 	}
 
