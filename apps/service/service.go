@@ -89,13 +89,14 @@ func NewServiceFromProject(p *gitlab.Project) *Service {
 	svc.Meta.CreateAt = p.CreatedAtTime().Unix()
 
 	spec := svc.Spec
-	spec.Name = p.Name
+	spec.Name = p.UniName()
+	spec.Description = p.Name
 	spec.Logo = p.AvatarURL
 	spec.Description = p.Description
 	spec.CodeRepository.ProjectId = p.IdToString()
 	spec.CodeRepository.SshUrl = p.GitSshUrl
 	spec.CodeRepository.HttpUrl = p.GitHttpUrl
-	spec.CodeRepository.Namespace = p.NamespacePath
+	spec.CodeRepository.Namespace = p.NameSpace()
 	spec.CodeRepository.WebUrl = p.WebURL
 	spec.CodeRepository.CreatedAt = p.CreatedAtTime().Unix()
 	return svc

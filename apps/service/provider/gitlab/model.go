@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"path"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/infraboard/mcube/v2/ioc/config/log"
@@ -64,6 +66,21 @@ type Project struct {
 	GitHttpUrl string `json:"http_url_to_repo"`
 	// namespace
 	NamespacePath string `json:"path_with_namespace"`
+}
+
+func (s *Project) NameSpace() string {
+	return path.Dir(s.NamespacePath)
+}
+
+func (s *Project) Path() string {
+	return path.Base(s.NamespacePath)
+}
+
+// 把 / _ 替换为中横线
+func (s *Project) UniName() string {
+	un := strings.ReplaceAll(s.NamespacePath, "/", "-")
+	un = strings.ReplaceAll(un, "_", "-")
+	return un
 }
 
 // 2024-04-17T11:29:21.640Z
