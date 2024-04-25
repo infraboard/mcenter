@@ -69,6 +69,7 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 				return nil, fmt.Errorf("parse gitlab webhook from string error, %s", err)
 			}
 			hookSetting.Token = ins.Meta.Id
+			hookSetting.Url = fmt.Sprintf("%s&service_id=%s", hookSetting.Url, ins.Meta.Id)
 
 			addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectId, hookSetting)
 			i.log.Debug().Msgf("add hook req: %s", addHookReq.ToJSON())
