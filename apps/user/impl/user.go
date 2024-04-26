@@ -153,7 +153,7 @@ func (s *service) UpdatePassword(ctx context.Context, req *user.UpdatePasswordRe
 
 	err = ins.Password.CheckPassword(req.OldPass)
 	if err != nil {
-		return nil, err
+		return nil, exception.NewBadRequest("旧密码不正确")
 	}
 
 	pass, err := user.NewHashedPassword(req.NewPass)

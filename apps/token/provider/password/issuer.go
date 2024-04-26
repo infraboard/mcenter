@@ -46,7 +46,7 @@ func (i *issuer) validate(ctx context.Context, username, pass string) (*user.Use
 		return nil, err
 	}
 	if err := u.Password.CheckPassword(pass); err != nil {
-		return nil, AUTH_FAILED
+		return nil, err
 	}
 
 	// 检测密码是否过期

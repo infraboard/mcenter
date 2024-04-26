@@ -10,6 +10,7 @@ import (
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
+	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
 )
 
@@ -60,7 +61,8 @@ func (h *sub) UpdatePassword(r *restful.Request, w *restful.Response) {
 		return
 	}
 
-	req.UserId = r.PathParameter("id")
+	tk := token.GetTokenFromRequest(r)
+	req.UserId = tk.UserId
 	set, err := h.service.UpdatePassword(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)

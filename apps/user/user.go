@@ -151,6 +151,11 @@ func NewQueryUserRequest() *QueryUserRequest {
 	}
 }
 
+func (r *QueryUserRequest) WithType(t TYPE) *QueryUserRequest {
+	r.Type = &t
+	return r
+}
+
 // NewDescriptUserRequestById 查询详情请求
 func NewDescriptUserRequestById(id string) *DescribeUserRequest {
 	return &DescribeUserRequest{
@@ -226,7 +231,7 @@ func NewUpdatePasswordRequest() *UpdatePasswordRequest {
 func (p *Password) CheckPassword(password string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(p.Password), []byte(password))
 	if err != nil {
-		return exception.NewUnauthorized("user or password not connrect")
+		return exception.NewBadRequest("用户名或者密码不正确")
 	}
 
 	return nil

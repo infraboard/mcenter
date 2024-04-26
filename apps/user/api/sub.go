@@ -191,6 +191,7 @@ func (h *primary) DeleteUser(r *restful.Request, w *restful.Response) {
 
 func (h *primary) QueryUser(r *restful.Request, w *restful.Response) {
 	req := user.NewQueryUserRequestFromHTTP(r.Request)
+	req.WithType(user.TYPE_SUB)
 	ins, err := h.service.QueryUser(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
