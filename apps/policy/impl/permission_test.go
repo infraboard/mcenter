@@ -28,11 +28,11 @@ func TestCheckPermissionDeny(t *testing.T) {
 	req := policy.NewCheckPermissionRequest()
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
-	req.UserId = "test@default"
+	req.UserId = "guest@default"
 
-	// 检查是否有创建Pipeline权限
-	req.ServiceId = "cd08fc9c"
-	req.Path = "POST./mpaas/api/v1/pipelines"
+	// 查询Guest用户是否可以访问服务列表
+	req.ServiceId = "mcenter"
+	req.Path = "GET./mcenter/api/v1/service/"
 	_, err := impl.CheckPermission(ctx, req)
 	if err != nil {
 		t.Fatal(err)

@@ -91,6 +91,7 @@ func (s *impl) QueryPolicy(ctx context.Context, req *policy.QueryPolicyRequest) 
 	if req.WithRole && set.Len() > 0 {
 		descRole := role.NewQueryRoleRequest()
 		descRole.RoleIds = set.RoleIds()
+		descRole.WithPermission = true
 		rs, err := s.role.QueryRole(ctx, descRole)
 		if err != nil {
 			return nil, err

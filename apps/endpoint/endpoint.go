@@ -32,8 +32,8 @@ func NewEndpoint(serviceID, version string, entry *Entry) *Endpoint {
 }
 
 // GenHashID hash id
-func GenHashID(service, grpcPath string) string {
-	hashedStr := fmt.Sprintf("%s-%s", service, grpcPath)
+func GenHashID(service, uniqPath string) string {
+	hashedStr := fmt.Sprintf("%s-%s", service, uniqPath)
 	h := fnv.New64a()
 	h.Write([]byte(hashedStr))
 	return fmt.Sprintf("%x", h.Sum64())

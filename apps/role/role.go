@@ -163,9 +163,10 @@ func (r *Role) HasPermission(ep *endpoint.Endpoint) (*PermissionSpec, bool, erro
 		perm := r.Permissions[i]
 
 		rok = perm.MatchResource(ep.ServiceId, ep.Entry.Resource)
-		lok = perm.MatchLabel(ep.Entry.Labels)
 		log.L().Debug().Msgf("resource match: service_id: %s[target: %s] resource: %s[target: %s], result: %v",
 			ep.ServiceId, perm.ServiceId, ep.Entry.Resource, perm.ResourceName, rok)
+
+		lok = perm.MatchLabel(ep.Entry.Labels)
 		log.L().Debug().Msgf("label match: %v from [key: %v, value: %v, result: %v",
 			ep.Entry.Labels, perm.LabelKey, perm.LabelValues, lok)
 		if rok && lok {
