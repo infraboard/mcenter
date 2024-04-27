@@ -78,6 +78,7 @@ func (s *service) DescribeUser(ctx context.Context, req *user.DescribeUserReques
 	}
 
 	ins := user.NewDefaultUser()
+	s.log.Debug().Msgf("query filter: %s", filter)
 	if err := s.col.FindOne(ctx, filter).Decode(ins); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, exception.NewNotFound("user %s not found", req)

@@ -112,7 +112,7 @@ func (i *impl) AvailableNamespace(
 			if err := cursor.Decode(&result); err != nil {
 				return nil, err
 			}
-			nsReq.AddId(result["_id"])
+			nsReq.AddName(result["_id"])
 		}
 	}
 

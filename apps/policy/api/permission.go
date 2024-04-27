@@ -94,5 +94,5 @@ func (h *handler) AvailableNamespace(r *restful.Request, w *restful.Response) {
 		return
 	}
 
-	response.Success(w, set.Total)
+	response.Success(w, set)
 }

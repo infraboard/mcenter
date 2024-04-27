@@ -16,18 +16,6 @@ func newPaggingQuery(req *namespace.QueryNamespaceRequest) *queryNamespaceReques
 
 type queryNamespaceRequest struct {
 	*namespace.QueryNamespaceRequest
-	namespaces []string
-}
-
-func (r *queryNamespaceRequest) AddNamespace(ns []string) {
-	// 如果是*表示无需过滤
-	for _, v := range ns {
-		if v == "*" {
-			return
-		}
-	}
-
-	r.namespaces = ns
 }
 
 func (r *queryNamespaceRequest) FindOptions() *options.FindOptions {
@@ -46,8 +34,15 @@ func (r *queryNamespaceRequest) FindOptions() *options.FindOptions {
 func (r *queryNamespaceRequest) FindFilter() bson.M {
 	filter := bson.M{}
 
-	if len(r.namespaces) > 0 {
-		filter["name"] = bson.M{"$in": r.namespaces}
+	if r.Domain != "" {
+		filter["domain"] = r.Domain
+	}
+
+	if len(r.Name) > 0 {
+		filter["name"] = bson.M{"$in": r.Name}
+	}
+	if len(r.Ids) > 0 {
+		filter["_id"] = bson.M{"$in": r.Ids}
 	}
 
 	return filter

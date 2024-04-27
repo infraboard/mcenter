@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/infraboard/mcube/v2/exception"
-	"github.com/infraboard/mcube/v2/http/request"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/infraboard/mcenter/apps/namespace"
@@ -40,22 +39,9 @@ func (s *impl) QueryNamespace(ctx context.Context, req *namespace.QueryNamespace
 	r := newPaggingQuery(req)
 	set := namespace.NewNamespaceSet()
 
-	if req.UserId != "" {
-		qp := policy.NewQueryPolicyRequest()
-		qp.Page = request.NewPageRequest(policy.MAX_USER_POLICY, 1)
-		qp.Domain = req.Domain
-		qp.UserId = req.UserId
-		ps, err := s.policy.QueryPolicy(ctx, qp)
-		if err != nil {
-			return nil, err
-		}
-		nss, total := ps.GetNamespaceWithPage(req.Page)
-		r.AddNamespace(nss)
-		set.Total = total
-		return set, nil
-	}
-
-	resp, err := s.col.Find(ctx, r.FindFilter(), r.FindOptions())
+	filter := r.FindFilter()
+	s.log.Debug().Msgf("query filter: %s", filter)
+	resp, err := s.col.Find(ctx, filter, r.FindOptions())
 	if err != nil {
 		return nil, exception.NewInternalServerError("find namespace error, error is %s", err)
 	}
@@ -71,13 +57,11 @@ func (s *impl) QueryNamespace(ctx context.Context, req *namespace.QueryNamespace
 	}
 
 	// count
-	if len(r.namespaces) == 0 {
-		count, err := s.col.CountDocuments(ctx, r.FindFilter())
-		if err != nil {
-			return nil, exception.NewInternalServerError("get namespace count error, error is %s", err)
-		}
-		set.Total = count
+	count, err := s.col.CountDocuments(ctx, r.FindFilter())
+	if err != nil {
+		return nil, exception.NewInternalServerError("get namespace count error, error is %s", err)
 	}
+	set.Total = count
 
 	return set, nil
 }

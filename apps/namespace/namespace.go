@@ -131,9 +131,8 @@ func NewDescriptNamespaceRequestById(id string) *DescriptNamespaceRequest {
 // NewQueryNamespaceRequestFromHTTP 列表查询请求
 func NewQueryNamespaceRequestFromHTTP(r *restful.Request) *QueryNamespaceRequest {
 	return &QueryNamespaceRequest{
-		Page:   request.NewPageRequestFromHTTP(r.Request),
-		Name:   []string{r.QueryParameter("name")},
-		UserId: r.QueryParameter("user_id"),
+		Page: request.NewPageRequestFromHTTP(r.Request),
+		Name: []string{r.QueryParameter("name")},
 	}
 }
 
@@ -151,6 +150,10 @@ func (req *QueryNamespaceRequest) UpdateOwner(tk *token.Token) {
 
 func (req *QueryNamespaceRequest) AddId(ids ...string) {
 	req.Ids = append(req.Ids, ids...)
+}
+
+func (req *QueryNamespaceRequest) AddName(ns ...string) {
+	req.Name = append(req.Name, ns...)
 }
 
 // Validate 校验详情查询请求
