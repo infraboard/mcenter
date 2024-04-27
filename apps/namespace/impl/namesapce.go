@@ -40,11 +40,11 @@ func (s *impl) QueryNamespace(ctx context.Context, req *namespace.QueryNamespace
 	r := newPaggingQuery(req)
 	set := namespace.NewNamespaceSet()
 
-	if req.Username != "" {
+	if req.UserId != "" {
 		qp := policy.NewQueryPolicyRequest()
 		qp.Page = request.NewPageRequest(policy.MAX_USER_POLICY, 1)
 		qp.Domain = req.Domain
-		qp.Username = req.Username
+		qp.UserId = req.UserId
 		ps, err := s.policy.QueryPolicy(ctx, qp)
 		if err != nil {
 			return nil, err

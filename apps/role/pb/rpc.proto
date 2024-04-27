@@ -45,6 +45,9 @@ message QueryRoleRequest {
     string namespace = 4;
     // @gotags: json:"with_permission"
     bool with_permission = 5;
+    // 角色Id列表, 批量查询角色
+    // @gotags: json:"role_ids"
+    repeated string role_ids = 6;
 }
 
 // DescribeRoleRequest role详情

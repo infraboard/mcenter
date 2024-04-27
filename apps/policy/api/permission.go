@@ -12,6 +12,8 @@ import (
 
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcenter/apps/token"
+	"github.com/infraboard/mcenter/apps/user"
 )
 
 func init() {
@@ -69,4 +71,26 @@ func (h *handler) CheckPermission(r *restful.Request, w *restful.Response) {
 	}
 
 	response.Success(w, perm)
+}
+
+func (h *handler) AvailableNamespace(r *restful.Request, w *restful.Response) {
+	req := policy.NewQueryPolicyRequestFromHTTP(r)
+	tk := token.GetTokenFromRequest(r)
+
+	// 超级管理员或者主账号或者空间管理员直接获取所有空间列表
+	if tk.UserType.Equal(user.TYPE_SUPPER) ||
+		tk.UserType.Equal(user.TYPE_PRIMARY) ||
+		tk.IsNamespaceManager {
+
+	}
+
+	req.UserId = tk.UserId
+	req.WithNamespace = true
+	set, err := h.service.QueryPolicy(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	response.Success(w, set)
 }

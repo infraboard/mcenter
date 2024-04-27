@@ -30,8 +30,8 @@ message QueryNamespaceRequest {
     // @gotags: json:"with_sub"
     bool with_sub  = 5;
     // 用户加入的空间
-    // @gotags: json:"username"
-    string username  = 6;
+    // @gotags: json:"user_id"
+    string user_id  = 6;
 }
 
 enum DESCRIBE_BY {

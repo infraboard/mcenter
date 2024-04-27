@@ -25,13 +25,13 @@ func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionR
 		return nil, err
 	}
 	// 空间管理员直接给空间内所有权限
-	if ns.IsManager(req.Username) {
+	if ns.IsManager(req.UserId) {
 		return role.NamespaceManagerPermssion(), nil
 	}
 
 	// 查询用户权限策略
 	pReq := policy.NewQueryPolicyRequest()
-	pReq.Username = req.Username
+	pReq.UserId = req.UserId
 	pReq.Domain = req.Domain
 	pReq.Namespace = req.Namespace
 	pReq.WithRole = true

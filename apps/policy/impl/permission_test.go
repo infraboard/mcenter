@@ -12,7 +12,7 @@ func TestCheckPermissionOk(t *testing.T) {
 	req := policy.NewCheckPermissionRequest()
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
-	req.Username = "test02"
+	req.UserId = "test02@default"
 
 	// 检查test用户在默认空间下是否有访问mpaas服务的构建配置功能
 	req.ServiceId = "mcenter-api"
@@ -28,7 +28,7 @@ func TestCheckPermissionDeny(t *testing.T) {
 	req := policy.NewCheckPermissionRequest()
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
-	req.Username = "test"
+	req.UserId = "test@default"
 
 	// 检查是否有创建Pipeline权限
 	req.ServiceId = "cd08fc9c"

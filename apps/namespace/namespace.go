@@ -42,13 +42,13 @@ func NewDefaultNamespace() *Namespace {
 	}
 }
 
-func (n *Namespace) IsManager(username string) bool {
-	if n.Spec.Owner == username {
+func (n *Namespace) IsManager(user_id string) bool {
+	if n.Spec.Owner == user_id {
 		return true
 	}
 
 	for i := range n.Spec.Assistants {
-		if n.Spec.Assistants[i] == username {
+		if n.Spec.Assistants[i] == user_id {
 			return true
 		}
 	}
@@ -131,9 +131,9 @@ func NewDescriptNamespaceRequestById(id string) *DescriptNamespaceRequest {
 // NewQueryNamespaceRequestFromHTTP 列表查询请求
 func NewQueryNamespaceRequestFromHTTP(r *restful.Request) *QueryNamespaceRequest {
 	return &QueryNamespaceRequest{
-		Page:     request.NewPageRequestFromHTTP(r.Request),
-		Name:     []string{r.QueryParameter("name")},
-		Username: r.QueryParameter("username"),
+		Page:   request.NewPageRequestFromHTTP(r.Request),
+		Name:   []string{r.QueryParameter("name")},
+		UserId: r.QueryParameter("user_id"),
 	}
 }
 

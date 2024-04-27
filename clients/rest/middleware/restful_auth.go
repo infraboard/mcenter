@@ -132,7 +132,7 @@ func (a *httpAuther) ValidatePermissionByPRBAC(r *restful.Request, tk *token.Tok
 	}
 
 	req := policy.NewCheckPermissionRequest()
-	req.Username = tk.Username
+	req.UserId = tk.UserId
 	req.Namespace = tk.Namespace
 	req.ServiceId = svr.Meta.Id
 	req.Path = e.UniquePath()

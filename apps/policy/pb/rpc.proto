@@ -36,8 +36,8 @@ message QueryPolicyRequest {
     // @gotags: json:"namespace"
     string namespace = 3;
     // 用户名称
-    // @gotags: json:"username"
-    string username = 4;
+    // @gotags: json:"user_id"
+    string user_id = 4;
     // 用户角色
     // @gotags: json:"role_id"
     string role_id = 5; 

@@ -28,7 +28,7 @@ func TestQueryPolicy(t *testing.T) {
 	req := policy.NewQueryPolicyRequest()
 	req.WithRole = true
 	// 查询test用户在默认空间的策略
-	req.Username = "test"
+	req.UserId = "test@default"
 	req.Domain = domain.DEFAULT_DOMAIN
 	req.Namespace = namespace.DEFAULT_NAMESPACE
 

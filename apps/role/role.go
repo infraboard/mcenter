@@ -34,8 +34,15 @@ func NewQueryRoleRequestFromHTTP(r *restful.Request) *QueryRoleRequest {
 // NewQueryRoleRequest 列表查询请求
 func NewQueryRoleRequest() *QueryRoleRequest {
 	return &QueryRoleRequest{
-		Page: request.NewDefaultPageRequest(),
+		Page:    request.NewDefaultPageRequest(),
+		RoleIds: []string{},
 	}
+}
+
+// Validate todo
+func (req *QueryRoleRequest) AddRoleId(rid ...string) *QueryRoleRequest {
+	req.RoleIds = append(req.RoleIds, rid...)
+	return req
 }
 
 // Validate todo

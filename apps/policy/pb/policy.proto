@@ -5,6 +5,7 @@ option go_package = "github.com/infraboard/mcenter/apps/policy";
 
 import "mcube/pb/resource/meta.proto";
 import "mcenter/apps/role/pb/role.proto";
+import "mcenter/apps/namespace/pb/namespace.proto";
 import "mcube/pb/resource/label.proto";
 
 // Policy 权限策略
@@ -18,6 +19,9 @@ message Policy {
     // 关联的角色对象
     // @gotags: bson:"-" json:"role,omitempty"
     role.Role role = 3;
+    // 关联的空间
+    // @gotags: bson:"-" json:"namespace,omitempty"
+    namespace.Namespace namespace = 4;
 }
 
 // CreatePolicyRequest 创建策略的请求

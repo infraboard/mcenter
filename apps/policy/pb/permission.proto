@@ -11,8 +11,8 @@ message CheckPermissionRequest {
     // @gotags: json:"page"
     infraboard.mcube.page.PageRequest page = 1;
     // 用户名
-    // @gotags: json:"username"
-    string username = 7;
+    // @gotags: json:"user_id"
+    string user_id = 7;
     // 那个域
     // @gotags: json:"domain"
     string domain = 2;

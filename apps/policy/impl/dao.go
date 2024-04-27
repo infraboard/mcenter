@@ -73,8 +73,8 @@ func (r *queryPolicyRequest) FindFilter() bson.M {
 	if r.RoleId != "" {
 		filter["role_id"] = r.RoleId
 	}
-	if r.Username != "" {
-		filter["user_id"] = fmt.Sprintf("%s@%s", r.Username, r.Domain)
+	if r.UserId != "" {
+		filter["user_id"] = r.UserId
 	}
 
 	return filter

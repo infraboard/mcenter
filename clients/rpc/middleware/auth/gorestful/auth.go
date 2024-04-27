@@ -203,7 +203,7 @@ func (a *HttpAuther) validatePermissionByPRBAC(r *restful.Request, tk *token.Tok
 	req := policy.NewCheckPermissionRequest()
 	req.Domain = tk.Domain
 	req.Namespace = tk.Namespace
-	req.Username = tk.Username
+	req.UserId = tk.UserId
 	req.ServiceId = ci.Meta.Id
 	req.Path = e.UniquePath()
 	a.log.Debug().Msgf("permission check request: %s", req.ToJSON())

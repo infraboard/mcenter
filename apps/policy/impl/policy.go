@@ -84,16 +84,29 @@ func (s *impl) QueryPolicy(ctx context.Context, req *policy.QueryPolicyRequest) 
 			return nil, exception.NewInternalServerError("decode policy error, error is %s", err)
 		}
 
-		// 补充关联的角色信息
-		if req.WithRole {
-			descRole := role.NewDescribeRoleRequestWithID(ins.Spec.RoleId)
-			ins.Role, err = s.role.DescribeRole(ctx, descRole)
-			if err != nil {
-				return nil, err
-			}
-		}
-
 		set.Add(ins)
+	}
+
+	// 补充关联的角色信息
+	if req.WithRole && set.Len() > 0 {
+		descRole := role.NewQueryRoleRequest()
+		descRole.RoleIds = set.RoleIds()
+		rs, err := s.role.QueryRole(ctx, descRole)
+		if err != nil {
+			return nil, err
+		}
+		set.UpdateRole(rs.Items...)
+	}
+
+	//  关联空间
+	if req.WithNamespace && set.Len() > 0 {
+		descRole := namespace.NewQueryNamespaceRequest()
+		descRole.Ids = set.Namespaces()
+		ns, err := s.namespace.QueryNamespace(ctx, descRole)
+		if err != nil {
+			return nil, err
+		}
+		set.UpdateNamespace(ns.Items...)
 	}
 
 	// count

@@ -14,6 +14,7 @@ import (
 	"github.com/infraboard/mcube/v2/tools/pretty"
 	"go.mongodb.org/mongo-driver/bson"
 
+	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/apps/token"
 )
@@ -138,6 +139,64 @@ func (s *PolicySet) Users() []string {
 	}
 
 	return set
+}
+
+// Users 策略包含的所有角色Id, 已去重
+func (s *PolicySet) RoleIds() []string {
+	rids := map[string]struct{}{}
+	for i := range s.Items {
+		rids[s.Items[i].Spec.RoleId] = struct{}{}
+	}
+
+	set := make([]string, 0, len(rids))
+	for k := range rids {
+		set = append(set, k)
+	}
+
+	return set
+}
+
+// Users 策略包含的所有空间Id, 已去重
+func (s *PolicySet) Namespaces() []string {
+	nss := map[string]struct{}{}
+	for i := range s.Items {
+		nss[s.Items[i].Spec.Namespace] = struct{}{}
+	}
+
+	set := make([]string, 0, len(nss))
+	for k := range nss {
+		set = append(set, k)
+	}
+
+	return set
+}
+
+// Users 策略包含的所有角色Id, 已去重
+func (s *PolicySet) UpdateRole(roles ...*role.Role) {
+	for ri := range roles {
+		r := roles[ri]
+		for i := range s.Items {
+			item := s.Items[i]
+			if item.Spec.RoleId == r.Meta.Id {
+				item.Role = r
+				break
+			}
+		}
+	}
+}
+
+// Users 策略包含的所有角色Id, 已去重
+func (s *PolicySet) UpdateNamespace(nss ...*namespace.Namespace) {
+	for ri := range nss {
+		ns := nss[ri]
+		for i := range s.Items {
+			item := s.Items[i]
+			if item.Spec.RoleId == ns.Meta.Id {
+				item.Namespace = ns
+				break
+			}
+		}
+	}
 }
 
 // Add 添加
