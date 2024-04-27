@@ -149,6 +149,10 @@ func (req *QueryNamespaceRequest) UpdateOwner(tk *token.Token) {
 	req.Name = []string{tk.Username}
 }
 
+func (req *QueryNamespaceRequest) AddId(ids ...string) {
+	req.Ids = append(req.Ids, ids...)
+}
+
 // Validate 校验详情查询请求
 func (req *DescriptNamespaceRequest) Validate() error {
 	switch req.DescribeBy {

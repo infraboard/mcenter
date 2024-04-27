@@ -7,7 +7,9 @@ import (
 	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/v2/exception"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionRequest) (
@@ -81,4 +83,43 @@ func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionR
 	}
 
 	return perm, nil
+}
+
+// 查询用户策略允许的空间
+func (i *impl) AvailableNamespace(
+	ctx context.Context,
+	in *policy.AvailableNamespaceRequest) (
+	*namespace.NamespaceSet, error) {
+	u, err := i.user.DescribeUser(ctx, user.NewDescriptUserRequestById(in.UserId))
+	if err != nil {
+		return nil, err
+	}
+
+	nsReq := namespace.NewQueryNamespaceRequest()
+	nsReq.Domain = u.Spec.Domain
+
+	// 如果是子账号, 只返回子账号加入的空间
+	if u.Spec.Type.Equal(user.TYPE_SUB) {
+		cursor, err := i.col.Aggregate(ctx, bson.A{
+			bson.M{"$group": bson.M{"_id": "$namespace"}},
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		result := map[string]string{}
+		for cursor.Next(ctx) {
+			if err := cursor.Decode(&result); err != nil {
+				return nil, err
+			}
+			nsReq.AddId(result["_id"])
+		}
+	}
+
+	nss, err := i.namespace.QueryNamespace(ctx, nsReq)
+	if err != nil {
+		return nil, err
+	}
+
+	return nss, nil
 }

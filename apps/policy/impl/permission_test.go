@@ -38,3 +38,13 @@ func TestCheckPermissionDeny(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestAvailableNamespace(t *testing.T) {
+	req := policy.NewAvailableNamespaceRequest()
+	req.UserId = "guest@default"
+	nss, err := impl.AvailableNamespace(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(nss)
+}

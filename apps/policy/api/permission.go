@@ -10,10 +10,10 @@ import (
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	"github.com/rs/zerolog"
 
+	"github.com/infraboard/mcenter/apps/namespace"
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/apps/token"
-	"github.com/infraboard/mcenter/apps/user"
 )
 
 func init() {
@@ -45,7 +45,7 @@ func (h *handler) Registry() {
 	tags := []string{"用户权限"}
 
 	ws := gorestful.ObjectRouter(h)
-	ws.Route(ws.POST("/").To(h.CheckPermission).
+	ws.Route(ws.POST("/check").To(h.CheckPermission).
 		Doc("权限校验").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(label.Auth, label.Enable).
@@ -53,6 +53,16 @@ func (h *handler) Registry() {
 		Metadata(label.Allow, label.AllowAll()).
 		Writes(role.Permission{}).
 		Returns(200, "OK", role.Permission{}).
+		Returns(404, "Not Found", nil))
+
+	ws.Route(ws.GET("/namespaces").To(h.AvailableNamespace).
+		Doc("获取可以访问的空间列表").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
+		Metadata(label.Allow, label.AllowAll()).
+		Writes(namespace.NamespaceSet{}).
+		Returns(200, "OK", namespace.NamespaceSet{}).
 		Returns(404, "Not Found", nil))
 }
 
@@ -74,23 +84,15 @@ func (h *handler) CheckPermission(r *restful.Request, w *restful.Response) {
 }
 
 func (h *handler) AvailableNamespace(r *restful.Request, w *restful.Response) {
-	req := policy.NewQueryPolicyRequestFromHTTP(r)
+	req := policy.NewAvailableNamespaceRequestFromHTTP(r)
 	tk := token.GetTokenFromRequest(r)
-
-	// 超级管理员或者主账号或者空间管理员直接获取所有空间列表
-	if tk.UserType.Equal(user.TYPE_SUPPER) ||
-		tk.UserType.Equal(user.TYPE_PRIMARY) ||
-		tk.IsNamespaceManager {
-
-	}
-
 	req.UserId = tk.UserId
-	req.WithNamespace = true
-	set, err := h.service.QueryPolicy(r.Request.Context(), req)
+
+	set, err := h.service.AvailableNamespace(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
 		return
 	}
 
-	response.Success(w, set)
+	response.Success(w, set.Total)
 }

@@ -7,6 +7,7 @@ import "mcube/pb/page/page.proto";
 import "mcenter/apps/policy/pb/permission.proto";
 import "mcenter/apps/policy/pb/policy.proto";
 import "mcenter/apps/role/pb/permission.proto";
+import "mcenter/apps/namespace/pb/namespace.proto";
 import "mcube/pb/resource/meta.proto";
 
 // RPC 策略服务
@@ -22,6 +23,17 @@ service RPC {
 
     // 策略鉴权
     rpc CheckPermission(CheckPermissionRequest) returns(role.Permission);
+    // 查询用户策略允许的空间
+    rpc AvailableNamespace(AvailableNamespaceRequest) returns(namespace.NamespaceSet);
+}
+
+message AvailableNamespaceRequest {
+    // 分页参数
+    // @gotags: bson:"page" json:"page"
+    infraboard.mcube.page.PageRequest page = 1;
+    // 用户名称
+    // @gotags: json:"user_id"
+    string user_id = 2;
 }
 
 // QueryPolicyRequest 获取子账号列表
