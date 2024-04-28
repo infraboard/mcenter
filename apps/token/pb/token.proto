@@ -89,6 +89,9 @@ message Token {
     // 用户Id
     // @gotags: bson:"user_id" json:"user_id"
     string user_id = 10;
+    // 是否是共享账号, 允许多人同时使用, 继承自用户类型, 第三方SSO除外
+    // @gotags: bson:"shared_user" json:"shared_user"
+    bool shared_user = 21;
     // 授权类型
     // @gotags: bson:"grant_type" json:"grant_type"
     GRANT_TYPE grant_type = 11;

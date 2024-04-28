@@ -154,6 +154,9 @@ message CreateUserRequest {
     // 用户类型
     // @gotags: json:"type" bson:"type"
     TYPE type = 2;
+    // 是否共享账号, 默认SSO, 不允许同一个账号给多少同时使用
+    // @gotags: json:"shared" bson:"shared"
+    bool shared = 15;
     // 创建来源
     // @gotags: json:"create_from" bson:"create_from"
     CREATE_FROM create_from = 3;

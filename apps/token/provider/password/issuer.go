@@ -83,6 +83,7 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	// 3. 颁发Token
 	tk := token.NewToken(req)
 	tk.Domain = u.Spec.Domain
+	tk.SharedUser = u.Spec.Shared
 	tk.Username = u.Spec.Username
 	tk.UserType = u.Spec.Type
 	tk.UserId = u.Meta.Id

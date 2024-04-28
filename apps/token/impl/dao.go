@@ -46,6 +46,11 @@ func (s *service) update(ctx context.Context, tk *token.Token) error {
 }
 
 func (s *service) blockOtherWebToken(ctx context.Context, tk *token.Token) error {
+	// 共享账号不关闭之前的Token
+	if tk.SharedUser {
+		return nil
+	}
+
 	// 如果不是web登陆, 不需要关闭之前的登录令牌
 	if !tk.Platform.Equal(token.PLATFORM_WEB) {
 		return nil
