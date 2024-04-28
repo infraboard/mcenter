@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/go-playground/validator/v10"
@@ -130,10 +131,15 @@ func NewDescriptNamespaceRequestById(id string) *DescriptNamespaceRequest {
 
 // NewQueryNamespaceRequestFromHTTP 列表查询请求
 func NewQueryNamespaceRequestFromHTTP(r *restful.Request) *QueryNamespaceRequest {
-	return &QueryNamespaceRequest{
-		Page: request.NewPageRequestFromHTTP(r.Request),
-		Name: []string{r.QueryParameter("name")},
+	req := NewQueryNamespaceRequest()
+	req.Page = request.NewPageRequestFromHTTP(r.Request)
+
+	name := r.QueryParameter("name")
+	if name != "" {
+		req.Name = strings.Split(name, ",")
 	}
+
+	return req
 }
 
 // NewQueryNamespaceRequest 列表查询请求
