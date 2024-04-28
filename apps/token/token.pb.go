@@ -295,7 +295,7 @@ type Token struct {
 	// 用户Id
 	// @gotags: bson:"user_id" json:"user_id"
 	UserId string `protobuf:"bytes,10,opt,name=user_id,json=userId,proto3" json:"user_id" bson:"user_id"`
-	// 是否是共享账号, 运行多人同时使用, 继承自用户类型
+	// 是否是共享账号, 允许多人同时使用, 继承自用户类型, 第三方SSO除外
 	// @gotags: bson:"shared_user" json:"shared_user"
 	SharedUser bool `protobuf:"varint,21,opt,name=shared_user,json=sharedUser,proto3" json:"shared_user" bson:"shared_user"`
 	// 授权类型

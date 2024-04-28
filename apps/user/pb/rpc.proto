@@ -111,6 +111,9 @@ message UpdateUserRequest {
     // 用户描述
     // @gotags: json:"description"
     string description = 4;
+    // 是否共享账号, 默认SSO, 不允许同一个账号给多少同时使用
+    // @gotags: json:"shared" bson:"shared"
+    bool shared = 13;
     // 用户标签
     // @gotags: json:"labels"
     map<string,string> labels = 7;

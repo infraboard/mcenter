@@ -325,6 +325,7 @@ func (i *User) Update(req *UpdateUserRequest) {
 	i.Meta.UpdateAt = time.Now().UnixMicro()
 	i.Spec.Profile = req.Profile
 	i.Spec.Description = req.Description
+	i.Spec.Shared = req.Shared
 	i.Spec.Feishu = req.Feishu
 	i.Spec.Dingding = req.Dingding
 	i.Spec.Wechatwork = req.Wechatwork
