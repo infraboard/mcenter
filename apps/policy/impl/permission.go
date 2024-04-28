@@ -55,7 +55,7 @@ func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionR
 	}
 
 	// 判断改功能是否需要鉴权
-	if !ep.Entry.PermissionEnable {
+	if !req.ForceCheck && !ep.Entry.PermissionEnable {
 		return role.NewSkipPermission("endpoint not enable permission check, allow all access"), nil
 	}
 

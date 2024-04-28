@@ -25,4 +25,7 @@ message CheckPermissionRequest {
     // 访问路径, 比如HTTP Path
     // @gotags: json:"path"
     string path = 6;
+    // 强制鉴权, 如果Path注册时并没有开启鉴权, 可以强制临时鉴权
+    // @gotags: json:"force_check"
+    bool force_check = 8;
 }
