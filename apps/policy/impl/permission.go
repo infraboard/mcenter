@@ -75,10 +75,11 @@ func (s *impl) CheckPermission(ctx context.Context, req *policy.CheckPermissionR
 	}
 
 	if perm == nil {
-		return nil, exception.NewPermissionDeny("in namespace %s, role %s has no permission access endpoint: %s",
-			req.Namespace,
+		return nil, exception.NewPermissionDeny("你当前角色(%s)在空间(%s)中无权限对%s资源进行%s操作",
 			ps.RoleNames(),
-			ep.Entry.Path,
+			req.Namespace,
+			ep.Entry.Resource,
+			ep.Entry.FunctionName,
 		)
 	}
 
