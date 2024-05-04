@@ -103,5 +103,12 @@ func (r *queryRequest) FindFilter() bson.M {
 		}
 	}
 
+	if len(r.ExtraUserIds) > 0 {
+		filter = bson.M{"$or": bson.A{
+			filter,
+			bson.M{"_id": bson.M{"$in": r.ExtraUserIds}},
+		}}
+	}
+
 	return filter
 }

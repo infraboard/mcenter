@@ -138,16 +138,21 @@ func NewQueryUserRequestFromHTTP(r *http.Request) *QueryUserRequest {
 	if uids != "" {
 		query.UserIds = strings.Split(uids, ",")
 	}
+	euids := strings.TrimSpace(qs.Get("extra_user_ids"))
+	if euids != "" {
+		query.ExtraUserIds = strings.Split(euids, ",")
+	}
 	return query
 }
 
 // NewQueryUserRequest 列表查询请求
 func NewQueryUserRequest() *QueryUserRequest {
 	return &QueryUserRequest{
-		Page:      request.NewPageRequest(20, 1),
-		SkipItems: false,
-		Labels:    map[string]string{},
-		UserIds:   []string{},
+		Page:         request.NewPageRequest(20, 1),
+		SkipItems:    false,
+		Labels:       map[string]string{},
+		UserIds:      []string{},
+		ExtraUserIds: []string{},
 	}
 }
 
