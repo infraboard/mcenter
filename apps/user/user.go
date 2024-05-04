@@ -131,10 +131,10 @@ func NewQueryUserRequestFromHTTP(r *http.Request) *QueryUserRequest {
 
 	qs := r.URL.Query()
 	query.Page = request.NewPageRequestFromHTTP(r)
-	query.Keywords = qs.Get("keywords")
+	query.Keywords = strings.TrimSpace(qs.Get("keywords"))
 	query.SkipItems = qs.Get("skip_items") == "true"
 
-	uids := qs.Get("user_ids")
+	uids := strings.TrimSpace(qs.Get("user_ids"))
 	if uids != "" {
 		query.UserIds = strings.Split(uids, ",")
 	}
