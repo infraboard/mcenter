@@ -59,7 +59,7 @@ func (h *primary) Registry() {
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(label.Auth, label.Enable).
 		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
-		Metadata(label.Allow, user.TypeToString(user.TYPE_PRIMARY)).
+		Metadata(label.Allow, label.AllowAll()).
 		Returns(200, "OK", user.UserSet{}))
 
 	ws.Route(ws.GET("/{id}").To(h.DescribeUser).
@@ -68,7 +68,7 @@ func (h *primary) Registry() {
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(label.Auth, label.Enable).
 		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
-		Metadata(label.Allow, user.TypeToString(user.TYPE_PRIMARY)).
+		Metadata(label.Allow, label.AllowAll()).
 		Writes(user.User{}).
 		Returns(200, "OK", user.User{}))
 
