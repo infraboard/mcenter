@@ -109,6 +109,30 @@ func NewGitLabWebHook(token string) *GitLabWebHook {
 	}
 }
 
+func NewGitLabWebHookSet() *GitLabWebHookSet {
+	return &GitLabWebHookSet{
+		Items: []*GitLabWebHook{},
+	}
+}
+
+type GitLabWebHookSet struct {
+	Items []*GitLabWebHook `json:"items"`
+	Total int              `json:"total"`
+}
+
+func (s *GitLabWebHookSet) ToJSON() string {
+	return pretty.ToJSON(s)
+}
+
+func (s *GitLabWebHookSet) HasURL(url string) bool {
+	for i := range s.Items {
+		if s.Items[i].Url == url {
+			return true
+		}
+	}
+	return false
+}
+
 func ParseGitLabWebHookFromString(conf string) (*GitLabWebHook, error) {
 	hook := NewGitLabWebHook("")
 	if conf != "" {
@@ -122,6 +146,7 @@ func ParseGitLabWebHookFromString(conf string) (*GitLabWebHook, error) {
 }
 
 type GitLabWebHook struct {
+	ID                       int64  `json:"id"`
 	PushEventsBranchFilter   string `json:"push_events_branch_filter"`
 	PushEvents               bool   `json:"push_events"`
 	IssuesEvents             bool   `json:"issues_events"`
@@ -150,47 +175,61 @@ func (req *GitLabWebHook) FormValue() url.Values {
 	return params
 }
 
-func NewAddProjectHookRequest(projectID string, webhook *GitLabWebHook) *AddProjectHookRequest {
-	return &AddProjectHookRequest{
+func NewAddProjectHookRequest(projectID string, webhook *GitLabWebHook) *AddProjectWebHookRequest {
+	return &AddProjectWebHookRequest{
 		ProjectID: projectID,
 		WebHook:   webhook,
 	}
 }
 
-type AddProjectHookRequest struct {
+type AddProjectWebHookRequest struct {
 	// 项目Id
 	ProjectID string `json:"project_id"`
 	// Gitlab WebHook配置
 	WebHook *GitLabWebHook `json:"webhook"`
 }
 
-func (s *AddProjectHookRequest) ToJSON() string {
+func (s *AddProjectWebHookRequest) ToJSON() string {
 	return pretty.ToJSON(s)
 }
 
-func NewAddProjectHookResponse() *AddProjectHookResponse {
-	return &AddProjectHookResponse{
-		GitLabWebHook: &GitLabWebHook{},
-	}
-}
-
-type AddProjectHookResponse struct {
-	ID int64 `json:"id"`
-	*GitLabWebHook
-}
-
-func (r *AddProjectHookResponse) IDToString() string {
+func (r *GitLabWebHook) IDToString() string {
 	return fmt.Sprintf("%d", r.ID)
 }
 
-func NewDeleteProjectHookReqeust(projectID, hookID string) *DeleteProjectHookReqeust {
-	return &DeleteProjectHookReqeust{
+func NewGetProjectWebHookRequest(pid, hid string) *GetProjectWebHookRequest {
+	return &GetProjectWebHookRequest{
+		ProjectID: pid,
+		HookId:    hid,
+	}
+}
+
+type GetProjectWebHookRequest struct {
+	// 项目Id
+	ProjectID string `json:"project_id"`
+	// HookId
+	HookId string `json:"hook_id"`
+}
+
+func NewListProjectWebHookRequest(pid string) *ListProjectWebHookRequest {
+	return &ListProjectWebHookRequest{
+		ProjectID: pid,
+	}
+}
+
+type ListProjectWebHookRequest struct {
+	// 项目Id
+	ProjectID string `json:"project_id"`
+}
+
+func NewDeleteProjectWebHookReqeust(projectID, hookID string) *DeleteProjectWebHookReqeust {
+	return &DeleteProjectWebHookReqeust{
 		ProjectID: projectID,
 		HookID:    hookID,
 	}
 }
 
-type DeleteProjectHookReqeust struct {
+type DeleteProjectWebHookReqeust struct {
 	ProjectID string `json:"project_id"`
 	HookID    string `json:"hook_id"`
 }

@@ -65,9 +65,9 @@ func (p *ProjectV4) ListProjectLanguage(ctx context.Context, pid string) (*Proje
 
 // Adds a hook to a specified project.
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html#add-project-hook
-func (p *ProjectV4) AddProjectHook(ctx context.Context, req *AddProjectHookRequest) (
-	*AddProjectHookResponse, error) {
-	ins := NewAddProjectHookResponse()
+func (p *ProjectV4) AddProjectWebHook(ctx context.Context, req *AddProjectWebHookRequest) (
+	*GitLabWebHook, error) {
+	ins := NewGitLabWebHook("")
 	err := p.client.
 		Post(req.ProjectID).
 		Suffix("hooks").
@@ -82,10 +82,46 @@ func (p *ProjectV4) AddProjectHook(ctx context.Context, req *AddProjectHookReque
 	return ins, nil
 }
 
+// Get a list of project hooks.
+// 参考文档: https://docs.gitlab.com/ee/api/projects.html#list-project-hooks
+func (p *ProjectV4) ListProjectWebHook(ctx context.Context, req *ListProjectWebHookRequest) (
+	*GitLabWebHookSet, error) {
+	set := NewGitLabWebHookSet()
+	err := p.client.
+		Group(req.ProjectID).
+		Get("hooks").
+		Do(ctx).
+		Into(&set.Items)
+
+	if err != nil {
+		return nil, err
+	}
+	set.Total = len(set.Items)
+	return set, nil
+}
+
+// Get a specific hook for a project.
+// 参考文档: https://docs.gitlab.com/ee/api/projects.html#get-project-hook
+func (p *ProjectV4) GetProjectWebHook(ctx context.Context, req *GetProjectWebHookRequest) (
+	*GitLabWebHook, error) {
+	ins := NewGitLabWebHook("")
+	err := p.client.
+		Group(req.ProjectID).
+		Get("hooks").
+		Suffix(req.HookId).
+		Do(ctx).
+		Into(ins)
+
+	if err != nil {
+		return nil, err
+	}
+	return ins, nil
+}
+
 // Removes a hook from a project.
 // This is an idempotent method and can be called multiple times. Either the hook is available or not.
 // 参考文档: https://docs.gitlab.com/ce/api/projects.html#delete-project-hook
-func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *DeleteProjectHookReqeust) error {
+func (p *ProjectV4) DeleteProjectHook(ctx context.Context, req *DeleteProjectWebHookReqeust) error {
 	err := p.client.
 		Delete(req.ProjectID).
 		Suffix("hooks").

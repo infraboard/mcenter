@@ -18,6 +18,15 @@ func TestListProject(t *testing.T) {
 	t.Log(set)
 }
 
+func TestListProjectWebHook(t *testing.T) {
+	req := gitlab.NewListProjectWebHookRequest("56951652")
+	set, err := v4.Project().ListProjectWebHook(ctx, req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(set.ToJSON())
+}
+
 func TestListProjectLanguage(t *testing.T) {
 	set, err := v4.Project().ListProjectLanguage(ctx, ProjectID)
 	if err != nil {
@@ -53,7 +62,7 @@ func TestAddProjectHook(t *testing.T) {
 	hook := gitlab.NewGitLabWebHook("9999")
 	req := gitlab.NewAddProjectHookRequest(ProjectID, hook)
 
-	resp, err := v4.Project().AddProjectHook(ctx, req)
+	resp, err := v4.Project().AddProjectWebHook(ctx, req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +70,7 @@ func TestAddProjectHook(t *testing.T) {
 }
 
 func TestDeleteProjectHook(t *testing.T) {
-	req := gitlab.NewDeleteProjectHookReqeust(ProjectID, "19001857")
+	req := gitlab.NewDeleteProjectWebHookReqeust(ProjectID, "19001857")
 	err := v4.Project().DeleteProjectHook(ctx, req)
 	if err != nil {
 		t.Fatal(err)

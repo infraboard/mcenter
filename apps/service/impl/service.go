@@ -73,11 +73,21 @@ func (i *impl) CreateService(ctx context.Context, req *service.CreateServiceRequ
 
 			addHookReq := gitlab.NewAddProjectHookRequest(repo.ProjectId, hookSetting)
 			i.log.Debug().Msgf("add hook req: %s", addHookReq.ToJSON())
-			resp, err := v4.Project().AddProjectHook(ctx, addHookReq)
+
+			// 判断WebHook URL是否之前已经添加
+			hs, err := v4.Project().ListProjectWebHook(ctx, gitlab.NewListProjectWebHookRequest(repo.ProjectId))
 			if err != nil {
-				return nil, fmt.Errorf("add project hook error, %s", err)
+				return nil, fmt.Errorf("list project web hook error, %s", err)
 			}
-			repo.HookId = resp.IDToString()
+
+			// 如果没有则添加
+			if !hs.HasURL(hookSetting.Url) {
+				resp, err := v4.Project().AddProjectWebHook(ctx, addHookReq)
+				if err != nil {
+					return nil, fmt.Errorf("add project hook error, %s", err)
+				}
+				repo.HookId = resp.IDToString()
+			}
 		}
 	}
 
@@ -216,7 +226,7 @@ func (i *impl) DeleteService(ctx context.Context, req *service.DeleteServiceRequ
 		gc, err := repo.MakeGitlabConfig()
 		if err == nil {
 			v4 := gitlab.NewGitlabV4(gc)
-			removeHookReq := gitlab.NewDeleteProjectHookReqeust(repo.ProjectId, repo.HookId)
+			removeHookReq := gitlab.NewDeleteProjectWebHookReqeust(repo.ProjectId, repo.HookId)
 			err = v4.Project().DeleteProjectHook(ctx, removeHookReq)
 			if err != nil {
 				i.log.Error().Msgf("delete project hook error, %s", err)
