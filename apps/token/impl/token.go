@@ -11,13 +11,14 @@ import (
 	"github.com/infraboard/mcenter/apps/user"
 	"github.com/infraboard/mcube/v2/exception"
 	"github.com/infraboard/mcube/v2/http/request"
+	"github.com/infraboard/mcube/v2/ioc/config/ip2region"
 	"github.com/infraboard/mcube/v2/tools/sense"
 )
 
 func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	*token.Token, error) {
-	// 登陆前安全检查
-	if err := s.BeforeLoginSecurityCheck(ctx, req); err != nil {
+	// 补充Ip地域信息查询
+	if err := s.FillIpInfo(ctx, req); err != nil {
 		return nil, exception.NewBadRequest(err.Error())
 	}
 
@@ -47,7 +48,22 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 	return tk, nil
 }
 
+func (s *service) FillIpInfo(ctx context.Context, req *token.IssueTokenRequest) error {
+	// 查询Ip地域信息
+	ipInfo, err := ip2region.Get().LookupIP(req.Location.IpLocation.RemoteIp)
+	if err != nil {
+		return err
+	}
+	req.Location.IpLocation.Country = ipInfo.Country
+	req.Location.IpLocation.Region = ipInfo.Region
+	req.Location.IpLocation.Province = ipInfo.Province
+	req.Location.IpLocation.City = ipInfo.City
+	req.Location.IpLocation.Isp = ipInfo.ISP
+	return nil
+}
+
 func (s *service) FillMeta(ctx context.Context, ins *token.Token) error {
+	// 补充domain信息
 	d, err := s.domain.DescribeDomain(ctx, domain.NewDescribeDomainRequestByName(ins.Domain))
 	if err != nil {
 		return err

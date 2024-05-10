@@ -13,7 +13,6 @@ import (
 	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
-	"github.com/infraboard/mcube/v2/ioc/config/ip2region"
 )
 
 // NewChecker todo
@@ -24,22 +23,20 @@ func NewChecker() (Checker, error) {
 	}
 
 	return &checker{
-		domain:    ioc.Controller().Get(domain.AppName).(domain.Service),
-		user:      ioc.Controller().Get(user.AppName).(user.Service),
-		token:     ioc.Controller().Get(token.AppName).(token.Service),
-		cache:     c,
-		ip2Regoin: ip2region.Get(),
-		log:       log.Sub("Login Security"),
+		domain: ioc.Controller().Get(domain.AppName).(domain.Service),
+		user:   ioc.Controller().Get(user.AppName).(user.Service),
+		token:  ioc.Controller().Get(token.AppName).(token.Service),
+		cache:  c,
+		log:    log.Sub("Login Security"),
 	}, nil
 }
 
 type checker struct {
-	domain    domain.Service
-	user      user.Service
-	token     token.Service
-	cache     cache.Cache
-	ip2Regoin ip2region.IpRegionSearcher
-	log       *zerolog.Logger
+	domain domain.Service
+	user   user.Service
+	token  token.Service
+	cache  cache.Cache
+	log    *zerolog.Logger
 }
 
 func (c *checker) MaxFailedRetryCheck(ctx context.Context, req *token.IssueTokenRequest) error {
@@ -110,15 +107,6 @@ func (c *checker) OtherPlaceLoggedInChecK(ctx context.Context, tk *token.Token) 
 
 	c.log.Debug().Msgf("other place login check enabled, checking ...")
 
-	// 查询当前登陆IP地域
-	rip := tk.Location.IpLocation.RemoteIp
-	c.log.Debug().Msgf("query remote ip: %s location ...", rip)
-	login, err := c.ip2Regoin.LookupIP(rip)
-	if err != nil {
-		c.log.Error().Msgf("lookup ip %s error, %s, skip OtherPlaceLoggedInChecK", rip, err)
-		return nil
-	}
-
 	// 查询出用户上次登陆的地域
 	queryReq := token.NewQueryUserWebLastToken(tk.UserId)
 	lastTKSet, err := c.token.QueryToken(ctx, queryReq)
@@ -131,14 +119,14 @@ func (c *checker) OtherPlaceLoggedInChecK(ctx context.Context, tk *token.Token) 
 	}
 	location := lastTKSet.Items[0].Location.IpLocation
 
-	// city为0 表示内网IP, 不错异地登录校验
-	if !login.IsPublic() {
+	// 不错异地登录校验
+	if !tk.Location.IpLocation.IsPublic() {
 		c.log.Warn().Msgf("内网IP skip OtherPlaceLoggedInChecK")
 		return nil
 	}
 
 	c.log.Debug().Msgf("user last login city: %s", location.City)
-	if login.City != location.City {
+	if tk.Location.IpLocation.City != location.City {
 		return fmt.Errorf("异地登录, 请输入验证码后再次提交")
 	}
 

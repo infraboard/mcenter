@@ -11,6 +11,7 @@
 *.idea
 *vendor
 *.log
+*.xdb
 
 cover.out
 coverage.txt

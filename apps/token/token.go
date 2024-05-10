@@ -34,5 +34,5 @@ func MakeMongoFilter(m bson.M, scope *resource.Scope) {
 }
 
 func (ip *IPLocation) IsPublic() bool {
-	return ip.City != "内网IP"
+	return ip.City != "" && ip.City != "内网IP"
 }
