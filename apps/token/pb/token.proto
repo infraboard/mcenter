@@ -150,9 +150,6 @@ message IPLocation {
     // 令牌申请者IP地址
     // @gotags: bson:"remote_ip" json:"remote_ip"
     string remote_ip = 1;
-    // 城市编号
-    // @gotags: bson:"city_id" json:"city_id"
-    int64 city_id = 2;
     // 国家
     // @gotags: bson:"country" json:"country"
     string country = 3;

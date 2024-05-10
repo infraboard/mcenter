@@ -11,9 +11,9 @@ import (
 	"github.com/rs/zerolog"
 
 	"github.com/infraboard/mcenter/apps/domain"
-	"github.com/infraboard/mcenter/apps/ip2region"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/user"
+	"github.com/infraboard/mcube/v2/ioc/config/ip2region"
 )
 
 // NewChecker todo
@@ -28,7 +28,7 @@ func NewChecker() (Checker, error) {
 		user:      ioc.Controller().Get(user.AppName).(user.Service),
 		token:     ioc.Controller().Get(token.AppName).(token.Service),
 		cache:     c,
-		ip2Regoin: ioc.Controller().Get(ip2region.AppName).(ip2region.Service),
+		ip2Regoin: ip2region.Get(),
 		log:       log.Sub("Login Security"),
 	}, nil
 }
@@ -38,7 +38,7 @@ type checker struct {
 	user      user.Service
 	token     token.Service
 	cache     cache.Cache
-	ip2Regoin ip2region.Service
+	ip2Regoin ip2region.IpRegionSearcher
 	log       *zerolog.Logger
 }
 
@@ -113,7 +113,7 @@ func (c *checker) OtherPlaceLoggedInChecK(ctx context.Context, tk *token.Token) 
 	// 查询当前登陆IP地域
 	rip := tk.Location.IpLocation.RemoteIp
 	c.log.Debug().Msgf("query remote ip: %s location ...", rip)
-	login, err := c.ip2Regoin.LookupIP(ctx, rip)
+	login, err := c.ip2Regoin.LookupIP(rip)
 	if err != nil {
 		c.log.Error().Msgf("lookup ip %s error, %s, skip OtherPlaceLoggedInChecK", rip, err)
 		return nil
@@ -132,13 +132,13 @@ func (c *checker) OtherPlaceLoggedInChecK(ctx context.Context, tk *token.Token) 
 	location := lastTKSet.Items[0].Location.IpLocation
 
 	// city为0 表示内网IP, 不错异地登录校验
-	if login.CityID == 0 || location.CityId == 0 {
-		c.log.Warn().Msgf("city id is 0, 内网IP skip OtherPlaceLoggedInChecK")
+	if !login.IsPublic() {
+		c.log.Warn().Msgf("内网IP skip OtherPlaceLoggedInChecK")
 		return nil
 	}
 
-	c.log.Debug().Msgf("user last login city: %s (%d)", location.City, location.CityId)
-	if login.CityID != location.CityId {
+	c.log.Debug().Msgf("user last login city: %s", location.City)
+	if login.City != location.City {
 		return fmt.Errorf("异地登录, 请输入验证码后再次提交")
 	}
 

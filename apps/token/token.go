@@ -32,3 +32,7 @@ func MakeMongoFilter(m bson.M, scope *resource.Scope) {
 		m["namespace"] = scope.Namespace
 	}
 }
+
+func (ip *IPLocation) IsPublic() bool {
+	return ip.City != "内网IP"
+}
