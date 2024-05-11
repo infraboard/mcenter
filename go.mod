@@ -13,7 +13,7 @@ require (
 	github.com/go-openapi/spec v0.21.0
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/google/go-github/v45 v45.2.0
-	github.com/infraboard/mcube/v2 v2.0.13
+	github.com/infraboard/mcube/v2 v2.0.14
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.30
 	github.com/mssola/user_agent v0.6.0
 	github.com/rs/xid v1.5.0
@@ -63,6 +63,7 @@ require (
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
+	github.com/lionsoul2014/ip2region/binding/golang v0.0.0-20240419130813-d2b12ef0c81c // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
