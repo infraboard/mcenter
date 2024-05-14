@@ -10,5 +10,7 @@ var (
 )
 
 var (
-	ErrCodeUnauthorized = exception.NewAPIException(1401, "验证码校验失败", "Code Header Required, Format: %s: ${code}", CODE_HEADER_KEY).WithNamespace(application.Get().AppName)
+	ErrCodeUnauthorized = exception.NewAPIException(1401, "验证码校验失败").
+		WithMessagef("Code Header Required, Format: %s: ${code}", CODE_HEADER_KEY).
+		WithNamespace(application.Get().AppName)
 )

@@ -86,7 +86,7 @@ func (a *GrpcAuther) Auth(
 			setErr = grpc.SetTrailer(ctx, metadata.Pairs(exception.TRAILER_ERROR_JSON_KEY, e.ToJson()))
 			err = status.Errorf(codes.Code(e.ErrorCode()), e.Error())
 		} else {
-			e := exception.NewAPIException(exception.InternalServerError, "系统内部错误", err.Error()).WithNamespace(a.namespace)
+			e := exception.NewAPIException(exception.InternalServerError, "系统内部错误").WithMessagef(err.Error()).WithNamespace(a.namespace)
 			setErr = grpc.SetTrailer(ctx, metadata.Pairs(exception.TRAILER_ERROR_JSON_KEY, e.ToJson()))
 			err = status.Errorf(codes.Code(exception.InternalServerError), e.Error())
 		}
