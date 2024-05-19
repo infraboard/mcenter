@@ -1,6 +1,8 @@
 module github.com/infraboard/mcenter
 
-go 1.20
+go 1.22
+
+toolchain go1.22.0
 
 require (
 	dario.cat/mergo v1.0.0
@@ -13,7 +15,7 @@ require (
 	github.com/go-openapi/spec v0.21.0
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/google/go-github/v45 v45.2.0
-	github.com/infraboard/mcube/v2 v2.0.14
+	github.com/infraboard/mcube/v2 v2.0.15
 	github.com/larksuite/oapi-sdk-go/v3 v3.0.30
 	github.com/mssola/user_agent v0.6.0
 	github.com/rs/xid v1.5.0
@@ -26,7 +28,7 @@ require (
 	go.mongodb.org/mongo-driver v1.14.0
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.49.0
 	go.opentelemetry.io/otel/trace v1.24.0
-	golang.org/x/crypto v0.21.0
+	golang.org/x/crypto v0.23.0
 	golang.org/x/oauth2 v0.17.0
 	google.golang.org/grpc v1.63.2
 	google.golang.org/protobuf v1.33.0
@@ -93,11 +95,11 @@ require (
 	go.opentelemetry.io/otel/metric v1.24.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.24.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.1.0 // indirect
-	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/term v0.18.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
+	golang.org/x/term v0.20.0 // indirect
+	golang.org/x/text v0.15.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240227224415-6ceb2ff114de // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240227224415-6ceb2ff114de // indirect
