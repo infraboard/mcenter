@@ -10,6 +10,7 @@ import (
 )
 
 func DevelopmentSetup() {
+	os.Setenv("IP2REGION_ENABLE", "false")
 	ioc.DevelopmentSetup()
 }
 

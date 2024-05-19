@@ -23,9 +23,10 @@ EXPOSE 8010
 COPY --from=builder /src/dist/mcenter-api /app/mcenter-api
 COPY --from=builder /src/etc /app/etc
 
-# 默认配置
+# 默认配置, HTTPS
 ENV APP_NAME=mcenter \
 APP_DOMAIN=console.mdev.group \
+APP_SECURITY=true \
 HTTP_HOST=127.0.0.1 \
 HTTP_PORT=8010 \
 GRPC_HOST=127.0.0.1 \
