@@ -19,7 +19,7 @@ func (s *service) CreateUser(ctx context.Context, req *user.CreateUserRequest) (
 
 	// 如果是管理员创建的账号需要用户自己重置密码
 	if req.CreateFrom.IsIn(user.CREATE_FROM_PRIMARY_ACCOUNT) {
-		u.Password.SetNeedReset("admin created user need reset when first login")
+		u.Password.SetNeedReset("由于安全及管理需要, 您必须重置您的登录密码之后, 才能访问系统")
 	}
 
 	if err := s.save(ctx, u); err != nil {

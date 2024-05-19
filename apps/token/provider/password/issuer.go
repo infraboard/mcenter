@@ -87,6 +87,10 @@ func (i *issuer) IssueToken(ctx context.Context, req *token.IssueTokenRequest) (
 	tk.Username = u.Spec.Username
 	tk.UserType = u.Spec.Type
 	tk.UserId = u.Meta.Id
+	if u.Password.NeedReset {
+		tk.Meta["reset_password"] = u.Password.ResetReason
+	}
+
 	return tk, nil
 }
 
