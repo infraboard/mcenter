@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
-	"github.com/infraboard/mcenter/apps/resource"
+	"github.com/infraboard/mcenter/apps/system"
 	"github.com/infraboard/mcube/v2/ioc/config/log"
 	ioc_mongo "github.com/infraboard/mcube/v2/ioc/config/mongo"
 )
@@ -17,12 +17,12 @@ func init() {
 }
 
 type impl struct {
-	col *mongo.Collection
-	log *zerolog.Logger
-	resource.UnimplementedRPCServer
+	system.UnimplementedRPCServer
 	ioc.ObjectImpl
 
-	ep endpoint.Service
+	ep  endpoint.Service
+	col *mongo.Collection
+	log *zerolog.Logger
 }
 
 func (i *impl) Init() error {
@@ -34,9 +34,9 @@ func (i *impl) Init() error {
 }
 
 func (i *impl) Name() string {
-	return resource.AppName
+	return system.AppName
 }
 
 func (i *impl) Registry(server *grpc.Server) {
-	resource.RegisterRPCServer(server, i)
+	system.RegisterRPCServer(server, i)
 }

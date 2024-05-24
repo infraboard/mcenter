@@ -1,4 +1,4 @@
-package resource
+package system
 
 type Service interface {
 	RPCServer

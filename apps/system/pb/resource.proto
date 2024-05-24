@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package infraboard.mcenter.resource;
-option go_package = "github.com/infraboard/mcenter/apps/resource";
+package infraboard.mcenter.system;
+option go_package = "github.com/infraboard/mcenter/apps/system";
 
 // Resource todo
 message Resource {
-    // 资源所属服务名称
+    // 资源所属服务ID
     // @gotags: json:"service_id"
     string service_id = 1;
     // 资源名称

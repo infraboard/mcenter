@@ -15,9 +15,9 @@ import (
 	_ "github.com/infraboard/mcenter/apps/namespace/impl"
 	_ "github.com/infraboard/mcenter/apps/notify/impl"
 	_ "github.com/infraboard/mcenter/apps/policy/impl"
-	_ "github.com/infraboard/mcenter/apps/resource/impl"
 	_ "github.com/infraboard/mcenter/apps/role/impl"
 	_ "github.com/infraboard/mcenter/apps/service/impl"
+	_ "github.com/infraboard/mcenter/apps/system/impl"
 	_ "github.com/infraboard/mcenter/apps/token/impl"
 	_ "github.com/infraboard/mcenter/apps/user/impl"
 )

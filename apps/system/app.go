@@ -1,4 +1,4 @@
-package resource
+package system
 
 import (
 	"net/http"
@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	AppName = "resource"
+	AppName = "system"
 )
 
 // UpdatePath todo

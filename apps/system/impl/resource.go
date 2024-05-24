@@ -4,22 +4,22 @@ import (
 	"context"
 
 	"github.com/infraboard/mcenter/apps/endpoint"
-	"github.com/infraboard/mcenter/apps/resource"
+	"github.com/infraboard/mcenter/apps/system"
 	"github.com/infraboard/mcube/v2/http/request"
 )
 
 const (
 	// MaxQueryEndpoints todo
-	MaxQueryEndpoints = 1000
+	MaxQueryEndpoints = 10000
 )
 
-func (s *impl) QueryResources(ctx context.Context, req *resource.QueryResourceRequest) (
-	*resource.ResourceSet, error) {
+func (s *impl) QueryResource(ctx context.Context, req *system.QueryResourceRequest) (
+	*system.ResourceSet, error) {
 	if err := req.Validate(); err != nil {
 		return nil, err
 	}
 
-	rs := resource.NewResourceSet()
+	rs := system.NewResourceSet()
 	queryE := endpoint.NewQueryEndpointRequest(request.NewPageRequest(MaxQueryEndpoints, 1))
 	queryE.PermissionEnable = req.PermissionEnable
 	queryE.Resources = req.Resources
