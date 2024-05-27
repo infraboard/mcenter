@@ -27,6 +27,7 @@ func CreateAdminRoleRequest(createBy string) *CreateRoleRequest {
 	req.Visiable = resource.VISIABLE_GLOBAL
 	req.Name = ADMIN_ROLE_NAME
 	req.Description = "管理员"
+	req.ReadOnly = true
 	req.Specs = []*PermissionSpec{
 		{
 			Desc:         "管理员具备读写权限",
@@ -48,6 +49,7 @@ func CreateVisitorRoleRequest(createBy string) *CreateRoleRequest {
 	req.Visiable = resource.VISIABLE_GLOBAL
 	req.Name = VISITOR_ROLE_NAME
 	req.Description = "访客"
+	req.ReadOnly = true
 	req.Specs = []*PermissionSpec{
 		{
 			Desc:         "访客具备可读权限",

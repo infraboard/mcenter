@@ -55,7 +55,7 @@ func (h *handler) Registry() {
 		Writes(service.ServiceSet{}).
 		Returns(200, "OK", service.ServiceSet{}))
 	ws.Route(ws.GET("/resource").To(h.QueryResource).
-		Doc("查询服务资源列表").
+		Doc("查询资源列表").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(label.Resource, h.Name()).
 		Metadata(label.Action, label.List.Value()).
