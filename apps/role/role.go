@@ -23,10 +23,9 @@ var (
 
 // NewQueryRoleRequestFromHTTP 列表查询请求
 func NewQueryRoleRequestFromHTTP(r *restful.Request) *QueryRoleRequest {
-	page := request.NewPageRequestFromHTTP(r.Request)
-
 	req := NewQueryRoleRequest()
-	req.Page = page
+	req.Page = request.NewPageRequestFromHTTP(r.Request)
+	req.Scope = token.GetTokenFromRequest(r).GenScope()
 	req.WithPermission = r.QueryParameter("with_permission") == "true"
 	return req
 }

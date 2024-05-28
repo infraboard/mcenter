@@ -63,8 +63,13 @@ message CreateRoleRequest {
 
 // DeleteRoleRequest role删除
 message DeleteRoleRequest {
+    // 资源范围
+    // @gotags: json:"scope"
+    mcube.resource.Scope scope = 3;
+    // 角色Id
     // @gotags: json:"id" validate:"required,lte=64"
     string id = 1;
+    // 是否删除角色关联策略
     // @gotags: json:"delete_policy"
     bool delete_policy = 2;
 }

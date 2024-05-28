@@ -10,6 +10,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/policy"
 	"github.com/infraboard/mcenter/apps/role"
+	"github.com/infraboard/mcenter/apps/token"
 )
 
 func (s *impl) CreateRole(ctx context.Context, req *role.CreateRoleRequest) (*role.Role, error) {
@@ -121,7 +122,10 @@ func (s *impl) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest) (*ro
 		}
 	}
 
-	resp, err := s.role.DeleteOne(ctx, bson.M{"_id": req.Id})
+	// 补充过滤条件
+	filter := bson.M{"_id": req.Id}
+	token.MakeMongoFilter(filter, req.Scope)
+	resp, err := s.role.DeleteOne(ctx, filter)
 	if err != nil {
 		return nil, exception.NewInternalServerError("delete role(%s) error, %s", req.Id, err)
 	}
@@ -144,6 +148,5 @@ func (s *impl) DeleteRole(ctx context.Context, req *role.DeleteRoleRequest) (*ro
 	if err != nil {
 		s.log.Error().Msgf("delete role policy error, %s", err)
 	}
-
 	return r, nil
 }

@@ -46,6 +46,15 @@ func (h *handler) Registry() {
 		Returns(200, "OK", role.Role{}).
 		Returns(404, "Not Found", nil))
 
+	ws.Route(ws.DELETE("/{id}").To(h.DeleteRole).
+		Doc("删除角色").
+		Metadata(restfulspec.KeyOpenAPITags, tags).
+		Metadata(label.Resource, h.Name()).
+		Metadata(label.Action, label.Delete.Value()).
+		Metadata(label.Auth, label.Enable).
+		Metadata(label.Permission, label.Enable).
+		Param(ws.PathParameter("id", "identifier of the service").DataType("string")))
+
 	ws.Route(ws.POST("/{id}/permissions").To(h.AddPermissionToRole).
 		Doc("角色添加权限").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
@@ -111,6 +120,18 @@ func (h *handler) QueryRole(r *restful.Request, w *restful.Response) {
 func (h *handler) DescribeRole(r *restful.Request, w *restful.Response) {
 	req := role.NewDescribeRoleRequestWithID(r.PathParameter("id"))
 	set, err := h.service.DescribeRole(r.Request.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	response.Success(w, set)
+}
+
+func (h *handler) DeleteRole(r *restful.Request, w *restful.Response) {
+	req := role.NewDeleteRoleWithID(r.PathParameter("id"))
+	req.Scope = token.GetTokenFromRequest(r).GenScope()
+	set, err := h.service.DeleteRole(r.Request.Context(), req)
 	if err != nil {
 		response.Failed(w, err)
 		return
