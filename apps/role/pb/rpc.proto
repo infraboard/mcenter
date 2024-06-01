@@ -39,15 +39,11 @@ message QueryRoleRequest {
     mcube.resource.Scope scope = 1;
     // @gotags: json:"page"
     mcube.page.PageRequest page = 2;
-    // @gotags: json:"domain"
-    string domain = 3;
-    // @gotags: json:"namespace"
-    string namespace = 4;
     // @gotags: json:"with_permission"
-    bool with_permission = 5;
+    bool with_permission = 3;
     // 角色Id列表, 批量查询角色
     // @gotags: json:"role_ids"
-    repeated string role_ids = 6;
+    repeated string role_ids = 4;
 }
 
 // DescribeRoleRequest role详情

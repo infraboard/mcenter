@@ -69,7 +69,7 @@ func TestCreateAdminRole(t *testing.T) {
 
 func TestQueryRole(t *testing.T) {
 	req := role.NewQueryRoleRequest()
-	req.Domain = domain.DEFAULT_DOMAIN
+	req.Scope.Domain = domain.DEFAULT_DOMAIN
 	req.WithPermission = true
 	r, err := impl.QueryRole(ctx, req)
 	if err != nil {

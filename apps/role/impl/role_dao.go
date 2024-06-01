@@ -8,6 +8,7 @@ import (
 
 	"github.com/infraboard/mcenter/apps/role"
 	"github.com/infraboard/mcenter/apps/token"
+	"github.com/infraboard/mcube/v2/pb/resource"
 )
 
 func newDescribeRoleRequest(req *role.DescribeRoleRequest) (*describeRoleRequest, error) {
@@ -73,7 +74,24 @@ func (r *queryRoleRequest) FindOptions() *options.FindOptions {
 
 func (r *queryRoleRequest) FindFilter() bson.M {
 	filter := bson.M{}
-	token.MakeMongoFilter(filter, r.Scope)
+
+	if r.Scope != nil {
+		token.MakeMongoFilter(filter, r.Scope)
+
+		// 全局共享
+		orConditions := bson.A{
+			filter,
+			bson.M{"visiable": resource.VISIABLE_GLOBAL},
+		}
+
+		// 域内公开
+		if r.Scope.Domain != "" {
+			orConditions = append(orConditions,
+				bson.M{"visiable": resource.VISIABLE_DOMAIN, "domain": r.Scope.Domain})
+		}
+
+		filter = bson.M{"$or": orConditions}
+	}
 
 	return filter
 }
