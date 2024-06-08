@@ -11,7 +11,7 @@ message FeishuConfig {
     // @gotags: bson:"app_id" json:"app_id" env:"FEISHU_APP_ID"
     string app_id = 1;
     // 飞书应用凭证, Oauth2.0时 也叫client_secret
-    // @gotags: bson:"app_secret" json:"app_secret" env:"FEISHU_APP_SECRET"
+    // @gotags: bson:"app_secret" json:"app_secret" env:"FEISHU_APP_SECRET" mask:",3,2"
     string app_secret = 2;
     // Oauth2.0时, 应用服务地址页面
     // @gotags: bson:"redirect_uri" json:"redirect_uri" env:"FEISHU_REDIRECT_URI"

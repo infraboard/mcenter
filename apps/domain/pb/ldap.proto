@@ -14,7 +14,7 @@ message LdapConfig {
     // @gotags: bson:"bind_dn" json:"bind_dn"
     string bind_dn = 2; 
     // 管理账号的用户密码 
-    // @gotags: bson:"bind_password" json:"bind_password"
+    // @gotags: bson:"bind_password" json:"bind_password" mask:",2,0"
     string bind_password = 3; 
     // TLS是是否校验证书有效性
     // @gotags: bson:"skip_verify" json:"skip_verify"

@@ -3,8 +3,6 @@ package domain
 import (
 	"fmt"
 	"strings"
-
-	"github.com/infraboard/mcube/v2/tools/sense"
 )
 
 // NewDefaultConfig represents the default LDAP config.
@@ -45,10 +43,6 @@ func (c *LdapConfig) getBaseDN(entry string) []string {
 		}
 	}
 	return baseDN
-}
-
-func (c *LdapConfig) DeSense() {
-	c.BindPassword = sense.ShortDesenser.DeSense(c.BindPassword)
 }
 
 // Validate todo

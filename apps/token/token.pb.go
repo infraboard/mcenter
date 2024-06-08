@@ -269,8 +269,8 @@ type Token struct {
 	// @gotags: bson:"platform" json:"platform"
 	Platform PLATFORM `protobuf:"varint,1,opt,name=platform,proto3,enum=infraboard.mcenter.token.PLATFORM" json:"platform" bson:"platform"`
 	// 访问令牌
-	// @gotags: bson:"_id" json:"access_token"
-	AccessToken string `protobuf:"bytes,2,opt,name=access_token,json=accessToken,proto3" json:"access_token" bson:"_id"`
+	// @gotags: bson:"_id" json:"access_token" mask:",3,2"
+	AccessToken string `protobuf:"bytes,2,opt,name=access_token,json=accessToken,proto3" json:"access_token" bson:"_id" mask:",3,2"`
 	// 刷新令牌, 当访问令牌过期时, 可以刷新令牌进行刷新
 	// @gotags: bson:"refresh_token" json:"refresh_token"
 	RefreshToken string `protobuf:"bytes,3,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token" bson:"refresh_token"`

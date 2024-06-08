@@ -63,15 +63,6 @@ func (d *Domain) ToJson() string {
 	return pretty.ToJSON(d)
 }
 
-func (d *Domain) Desense() {
-	if d.Spec.FeishuSetting != nil {
-		d.Spec.FeishuSetting.DeSense()
-	}
-	if d.Spec.LdapSetting != nil {
-		d.Spec.LdapSetting.DeSense()
-	}
-}
-
 // NewCreateDomainRequest todo
 func NewCreateDomainRequest() *CreateDomainRequest {
 	return &CreateDomainRequest{

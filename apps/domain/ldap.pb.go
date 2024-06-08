@@ -35,8 +35,8 @@ type LdapConfig struct {
 	// @gotags: bson:"bind_dn" json:"bind_dn"
 	BindDn string `protobuf:"bytes,2,opt,name=bind_dn,json=bindDn,proto3" json:"bind_dn" bson:"bind_dn"`
 	// 管理账号的用户密码
-	// @gotags: bson:"bind_password" json:"bind_password"
-	BindPassword string `protobuf:"bytes,3,opt,name=bind_password,json=bindPassword,proto3" json:"bind_password" bson:"bind_password"`
+	// @gotags: bson:"bind_password" json:"bind_password" mask:",2,0"
+	BindPassword string `protobuf:"bytes,3,opt,name=bind_password,json=bindPassword,proto3" json:"bind_password" bson:"bind_password" mask:",2,0"`
 	// TLS是是否校验证书有效性
 	// @gotags: bson:"skip_verify" json:"skip_verify"
 	SkipVerify bool `protobuf:"varint,4,opt,name=skip_verify,json=skipVerify,proto3" json:"skip_verify" bson:"skip_verify"`

@@ -63,7 +63,7 @@ message Token {
     // @gotags: bson:"platform" json:"platform"
     PLATFORM platform = 1;
     // 访问令牌
-    // @gotags: bson:"_id" json:"access_token"
+    // @gotags: bson:"_id" json:"access_token" mask:",3,2"
     string access_token = 2;
     // 刷新令牌, 当访问令牌过期时, 可以刷新令牌进行刷新
     // @gotags: bson:"refresh_token" json:"refresh_token"

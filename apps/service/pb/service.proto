@@ -142,7 +142,7 @@ message CodeRepository {
     // @gotags: bson:"provider" json:"provider"
     SCM_PROVIDER provider = 1;
     // token 操作仓库, 比如设置回调
-    // @gotags: bson:"token" json:"token"
+    // @gotags: bson:"token" json:"token" mask:",3,2"
     string token = 2;
     // 仓库对应的项目Id
     // @gotags: bson:"project_id" json:"project_id"

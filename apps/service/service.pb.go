@@ -645,8 +645,8 @@ type CodeRepository struct {
 	// @gotags: bson:"provider" json:"provider"
 	Provider SCM_PROVIDER `protobuf:"varint,1,opt,name=provider,proto3,enum=infraboard.mcenter.service.SCM_PROVIDER" json:"provider" bson:"provider"`
 	// token 操作仓库, 比如设置回调
-	// @gotags: bson:"token" json:"token"
-	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" bson:"token"`
+	// @gotags: bson:"token" json:"token" mask:",3,2"
+	Token string `protobuf:"bytes,2,opt,name=token,proto3" json:"token" bson:"token" mask:",3,2"`
 	// 仓库对应的项目Id
 	// @gotags: bson:"project_id" json:"project_id"
 	ProjectId string `protobuf:"bytes,3,opt,name=project_id,json=projectId,proto3" json:"project_id" bson:"project_id"`
