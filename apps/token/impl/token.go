@@ -48,16 +48,22 @@ func (s *service) IssueToken(ctx context.Context, req *token.IssueTokenRequest) 
 }
 
 func (s *service) FillIpInfo(ctx context.Context, req *token.IssueTokenRequest) error {
+	if req.Location == nil || req.Location.IpLocation == nil {
+		return nil
+	}
+
 	// 查询Ip地域信息
 	ipInfo, err := ip2region.Get().LookupIP(req.Location.IpLocation.RemoteIp)
 	if err != nil {
 		return err
 	}
-	req.Location.IpLocation.Country = ipInfo.Country
-	req.Location.IpLocation.Region = ipInfo.Region
-	req.Location.IpLocation.Province = ipInfo.Province
-	req.Location.IpLocation.City = ipInfo.City
-	req.Location.IpLocation.Isp = ipInfo.ISP
+	if ipInfo != nil {
+		req.Location.IpLocation.Country = ipInfo.Country
+		req.Location.IpLocation.Region = ipInfo.Region
+		req.Location.IpLocation.Province = ipInfo.Province
+		req.Location.IpLocation.City = ipInfo.City
+		req.Location.IpLocation.Isp = ipInfo.ISP
+	}
 	return nil
 }
 
