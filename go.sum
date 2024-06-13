@@ -108,8 +108,8 @@ github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec h1:qv2VnGeEQHchGaZ/u
 github.com/hinshun/vt10x v0.0.0-20220119200601-820417d04eec/go.mod h1:Q48J4R4DvxnHolD5P8pOtXigYlRuPLGl6moFx3ulM68=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
-github.com/infraboard/mcube/v2 v2.0.15 h1:zlbWWM79JIh2P5qd7NvfRvjaAOeO0ydMVnFvBa2uxQE=
-github.com/infraboard/mcube/v2 v2.0.15/go.mod h1:/apZR+IORKQV+xAZcMGJwiohlO2sg7q/XSsW3COt0VU=
+github.com/infraboard/mcube/v2 v2.0.16 h1:XSprILfDbim40WtW0znz+KTSSiX0vKhUkiDdsLQdKfg=
+github.com/infraboard/mcube/v2 v2.0.16/go.mod h1:/apZR+IORKQV+xAZcMGJwiohlO2sg7q/XSsW3COt0VU=
 github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8HmY=
 github.com/josharian/intern v1.0.0/go.mod h1:5DoeVV0s6jJacbCEi61lwdGj/aVlrQvzHFFd8Hwg//Y=
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
