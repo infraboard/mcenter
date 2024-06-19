@@ -13,6 +13,7 @@ import (
 	// 非功能性模块
 	_ "github.com/infraboard/mcube/v2/ioc/apps/apidoc/restful"
 	_ "github.com/infraboard/mcube/v2/ioc/apps/metric/restful"
+	_ "github.com/infraboard/mcube/v2/ioc/config/cors/gorestful"
 )
 
 // startCmd represents the start command
