@@ -362,7 +362,11 @@ func (i *User) SetupDefault() {
 }
 
 func (i *User) Patch(req *UpdateUserRequest) error {
-	i.Meta.UpdateAt = time.Now().UnixMicro()
+	i.Meta.UpdateAt = time.Now().Unix()
+
+	if i.Spec.Profile == nil {
+		i.Spec.Profile = NewProfile()
+	}
 	err := mergo.MergeWithOverwrite(i.Spec.Profile, req.Profile)
 	if err != nil {
 		return err
@@ -370,31 +374,31 @@ func (i *User) Patch(req *UpdateUserRequest) error {
 
 	// 合并配置信息
 	if req.Feishu != nil {
-		err = mergo.MergeWithOverwrite(i.Spec.Feishu, req.Feishu)
+		err := mergo.MergeWithOverwrite(i.Spec.Feishu, req.Feishu)
 		if err != nil {
 			return err
 		}
 	}
 	if req.Dingding != nil {
-		err = mergo.MergeWithOverwrite(i.Spec.Dingding, req.Dingding)
+		err := mergo.MergeWithOverwrite(i.Spec.Dingding, req.Dingding)
 		if err != nil {
 			return err
 		}
 	}
 	if req.Wechatwork != nil {
-		err = mergo.MergeWithOverwrite(i.Spec.Wechatwork, req.Wechatwork)
+		err := mergo.MergeWithOverwrite(i.Spec.Wechatwork, req.Wechatwork)
 		if err != nil {
 			return err
 		}
 	}
 	if req.FeishuToken != nil {
-		err = mergo.MergeWithOverwrite(i.FeishuToken, req.FeishuToken)
+		err := mergo.MergeWithOverwrite(i.FeishuToken, req.FeishuToken)
 		if err != nil {
 			return err
 		}
 	}
 	if req.Labels != nil {
-		err = mergo.MergeWithOverwrite(i.Spec.Labels, req.Labels)
+		err := mergo.MergeWithOverwrite(i.Spec.Labels, req.Labels)
 		if err != nil {
 			return err
 		}

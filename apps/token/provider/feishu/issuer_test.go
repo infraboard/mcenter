@@ -2,9 +2,9 @@ package feishu_test
 
 import (
 	"context"
-	"os"
 	"testing"
 
+	"github.com/infraboard/mcenter/apps/domain"
 	"github.com/infraboard/mcenter/apps/token"
 	"github.com/infraboard/mcenter/apps/token/provider"
 	"github.com/infraboard/mcenter/test/tools"
@@ -16,7 +16,7 @@ var (
 )
 
 func TestIssueToken(t *testing.T) {
-	req := token.NewFeishuAuthCodeIssueTokenRequest(os.Getenv("AUTH_CODE"), "11111", "")
+	req := token.NewFeishuAuthCodeIssueTokenRequest("176s89d2a1704d1980388805aacac2c9", "", domain.DEFAULT_DOMAIN)
 	tk, err := impl.IssueToken(ctx, req)
 	if err != nil {
 		t.Fatal(err)
