@@ -22,10 +22,6 @@ import (
 func NewExecutorFromCLI() (*excutor, error) {
 	e := newExcutor()
 
-	// if err := i.checkIsInit(context.Background()); err != nil {
-	// 	return nil, err
-	// }
-
 	err := survey.AskOne(
 		&survey.Input{
 			Message: "请输入公司(组织)名称:",
