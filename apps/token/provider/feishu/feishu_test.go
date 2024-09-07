@@ -31,7 +31,7 @@ func TestLogin(t *testing.T) {
 
 	// 登陆
 	client = feishu.NewFeishuClient(conf)
-	tk, err := client.Login(ctx, "e39m349b5001471d9d3207d56234c9a8")
+	tk, err := client.Login(ctx, "083kc3b5b13040b980a64c2947872a69")
 	if err != nil {
 		t.Fatal(err)
 	}
