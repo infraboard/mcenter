@@ -23,7 +23,7 @@ func TestValidateToken(t *testing.T) {
 	req := token.NewValidateTokenRequest("t9EE4ov1J9hap3YE6fDNxE5m")
 	tk, err := c.Token().ValidateToken(ctx, req)
 	if err != nil {
-		if e, ok := err.(*exception.APIException); ok {
+		if e, ok := err.(*exception.ApiException); ok {
 			t.Fatal(e.ToJson())
 		} else {
 			t.Fatal(err)

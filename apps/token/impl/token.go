@@ -273,7 +273,7 @@ func (s *service) ValidateToken(ctx context.Context, req *token.ValidateTokenReq
 	return tk.Desense(), nil
 }
 
-func (s *service) makeBlockExcption(bt token.BLOCK_TYPE, message string) *exception.APIException {
+func (s *service) makeBlockExcption(bt token.BLOCK_TYPE, message string) *exception.ApiException {
 	switch bt {
 	case token.BLOCK_TYPE_REFRESH_TOKEN_EXPIRED:
 		return exception.NewSessionTerminated(message)

@@ -82,13 +82,13 @@ func (a *GrpcAuther) Auth(
 	// 注入自定义异常
 	if err != nil {
 		var setErr error
-		if e, ok := err.(*exception.APIException); ok {
+		if e, ok := err.(*exception.ApiException); ok {
 			setErr = grpc.SetTrailer(ctx, metadata.Pairs(exception.TRAILER_ERROR_JSON_KEY, e.ToJson()))
 			err = status.Errorf(codes.Code(e.ErrorCode()), e.Error())
 		} else {
-			e := exception.NewAPIException(exception.InternalServerError, "系统内部错误").WithMessagef(err.Error()).WithNamespace(a.namespace)
+			e := exception.NewApiException(exception.CODE_INTERNAL_SERVER_ERROR, "系统内部错误").WithMessagef(err.Error()).WithNamespace(a.namespace)
 			setErr = grpc.SetTrailer(ctx, metadata.Pairs(exception.TRAILER_ERROR_JSON_KEY, e.ToJson()))
-			err = status.Errorf(codes.Code(exception.InternalServerError), e.Error())
+			err = status.Errorf(codes.Code(exception.CODE_INTERNAL_SERVER_ERROR), e.Error())
 		}
 		if setErr != nil {
 			a.log.Error().Msgf("%s", setErr)

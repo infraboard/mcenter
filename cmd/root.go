@@ -67,5 +67,5 @@ func Execute() {
 func init() {
 	RootCmd.PersistentFlags().StringVarP(&confType, "config-type", "t", "file", "the service config type [file/env]")
 	RootCmd.PersistentFlags().StringVarP(&confFile, "config-file", "f", "etc/config.toml", "the service config from file")
-	RootCmd.PersistentFlags().BoolVarP(&vers, "version", "v", false, "the mcenter version")
+	RootCmd.PersistentFlags().BoolVarP(&vers, "version", "v", false, "the service version")
 }
