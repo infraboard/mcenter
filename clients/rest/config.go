@@ -9,7 +9,7 @@ var (
 func NewDefaultConfig() *Config {
 	return &Config{
 		Address:    "http://127.0.0.1:8010",
-		PathPrefix: "/mcenter/api/v1/",
+		PathPrefix: "/api/mcenter/v1/",
 	}
 }
 

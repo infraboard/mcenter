@@ -16,7 +16,7 @@ func TestCheckPermissionOk(t *testing.T) {
 
 	// 检查test用户在默认空间下是否有访问mpaas服务的构建配置功能
 	req.ServiceId = "mcenter-api"
-	req.Path = "GET./mcenter/api/v1/service"
+	req.Path = "GET./api/mcenter/v1/service"
 	r, err := impl.CheckPermission(ctx, req)
 	if err != nil {
 		t.Fatal(err)
@@ -32,7 +32,7 @@ func TestCheckPermissionDeny(t *testing.T) {
 
 	// 查询Guest用户是否可以访问服务列表
 	req.ServiceId = "mcenter"
-	req.Path = "GET./mcenter/api/v1/service/"
+	req.Path = "GET./api/mcenter/v1/service/"
 	_, err := impl.CheckPermission(ctx, req)
 	if err != nil {
 		t.Fatal(err)
