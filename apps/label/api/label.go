@@ -49,6 +49,7 @@ func (h *handler) Registry() {
 
 	ws.Route(ws.PUT("/{id}").To(h.UpdateLabel(request.UpdateMode_PUT)).
 		Doc("更新标签").
+		Operation("更新标签").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(http_label.Resource, h.Name()).
 		Metadata(http_label.Action, http_label.Update.Value()).
@@ -60,6 +61,7 @@ func (h *handler) Registry() {
 
 	ws.Route(ws.PATCH("/{id}").To(h.UpdateLabel(request.UpdateMode_PATCH)).
 		Doc("更新标签").
+		Operation("更新标签").
 		Metadata(restfulspec.KeyOpenAPITags, tags).
 		Metadata(http_label.Resource, h.Name()).
 		Metadata(http_label.Action, http_label.Update.Value()).

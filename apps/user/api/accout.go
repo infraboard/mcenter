@@ -51,7 +51,7 @@ func (h *sub) Registry() {
 		Metadata(label.PERMISSION_MODE, label.PERMISSION_MODE_ACL.Value()).
 		Metadata(label.Allow, user.TypeToString(user.TYPE_SUB)).
 		Reads(user.UpdatePasswordRequest{}).
-		Returns(0, "OK", &user.User{}))
+		Returns(200, "OK", &user.User{}))
 }
 
 func (h *sub) UpdatePassword(r *restful.Request, w *restful.Response) {
