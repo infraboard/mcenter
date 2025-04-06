@@ -79,7 +79,7 @@ gen: ## Init Service
 	@protoc -I=.. --go_out=. --go_opt=module=${PKG} --go-grpc_out=. --go-grpc_opt=module=${PKG} ../mcenter/apps/*/pb/*.proto
 	@go fmt ./...
 
-	@protoc-go-inject-tag -input=apps/*/*.pb.go
+	@protoc-go-inject-tag -input=apps/\*/\*.pb.go
 	@mcube enum -p -m apps/*/*.pb.go
 
 

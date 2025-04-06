@@ -68,6 +68,9 @@ message CreateServiceRequest {
     // 镜像仓库信息
     // @gotags: bson:"image_repository" json:"image_repository"
     ImageRepository image_repository = 11;
+    // 应用分组
+    // @gotags: bson:"group" json:"group"
+    string group = 13;
     // 服务标签
     // @gotags: bson:"labels" json:"labels"
     map<string, string> labels = 14;
